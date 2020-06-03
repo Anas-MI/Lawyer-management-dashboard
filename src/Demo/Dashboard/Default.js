@@ -77,13 +77,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Total task due</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
                                              297</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
@@ -98,13 +98,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Total calendar Events</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
                                              314</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Events</a>
                                     </div>
                                 </div>
@@ -119,13 +119,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Draft bills</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
                                             453</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
                                     </div>
                                 </div>
@@ -186,13 +186,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Total in draft</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
                                              724</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
@@ -206,13 +206,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Unpaid bills</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
                                              25</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
@@ -228,13 +228,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Total unpaid bills</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
                                              98</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
@@ -249,13 +249,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Overdue bills</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
                                              423</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Events</a>
                                     </div>
                                 </div>
@@ -270,13 +270,13 @@ class Dashboard extends React.Component {
                             <Card.Body>
                                 <h6 className='mb-4'>Total overdue bills</h6>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-6">
+                                    <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
                                             666</h3>
                                     </div>
 
-                                    <div className="col-6 text-right">
+                                    <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
                                     </div>
                                 </div>
