@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
 
 importScripts(
-  "/datta-able/react/default/precache-manifest.b7773fe10afbaf4330d1860d30bb19ec.js"
+  "/datta-able/react/default/precache-manifest.7098160ebdf49bcb8fe0cb63233c9b6b.js"
 );
 
 self.addEventListener('message', (event) => {
