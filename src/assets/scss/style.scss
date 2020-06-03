@@ -47,9 +47,9 @@ File: style.css
 @import "partials/theme-elements/modal";
 
 // // Other
-@import "partials/other/chat";
-@import "partials/other/prism";
-@import "partials/other/Switches";
+@import "partials/other/_chat.scss";
+@import "partials/other/_prism.scss";
+@import "partials/other/_Switches.scss";
 
 @import "partials/other/chart";
 @import "partials/other/icon-lauouts";
