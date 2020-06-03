@@ -2,7 +2,7 @@
   "name": "datta-able-rv18.0.4",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://pensive-feynman-a90fc9.netlify.app/datta-able/react/default/dashboard/default",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
