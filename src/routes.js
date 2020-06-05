@@ -26,7 +26,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 
-const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
+// const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
@@ -42,7 +42,7 @@ const routes = [
     { path: '/maps/google-map', exact: true, name: 'Google Map', component: GoogleMap },
     { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
-    { path: '/calendar', exact: true, name: 'Calendar', component: Calendar}
+    // { path: '/calendar', exact: true, name: 'Calendar', component: Calendar}
 ];
 
 export default routes;
