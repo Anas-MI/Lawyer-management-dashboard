@@ -1,0 +1,18 @@
+// button
+.cust-btn-primary{
+    @include cust-btn;
+  }
+  .cta-btn-blank{
+    display: inline-block;
+    &:after {
+      content: "\f105";
+      font-family: FontAwesome;
+      font-size: 20px;
+      /* bottom: 2px; */
+      /* right: calc(1.25*1rem); */
+      /* position: absolute; */
+      transform: translateX(0);
+      transition: transform .2s ease-out;
+      margin-left: 10px;
+    }
+}

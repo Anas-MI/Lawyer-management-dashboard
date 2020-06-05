@@ -1,0 +1,49 @@
+.subscription {
+    background: #F4F4F4;
+}
+.sub_card {
+    box-shadow: 0 15px 30px rgba(77,87,222,.15);
+    border: none !important;
+    transition: all .4s ease 0s;
+    padding: 25px;
+    background: #fff;
+    margin-bottom: 30px;
+}
+
+.sub_card:hover{
+    transform: scale(1.05);
+    background-image: linear-gradient(to top left, #FF6179, #FF7C5E);
+    color: #fff;
+    .card-title{
+        color: #ffffff;
+    }
+    .sub-button{
+        display: block;
+        color: #fff;
+        border: 2px solid #fff;
+        padding: 7px 30px;
+        text-align: center;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        background-color: transparent;
+        border-radius: 30px;
+    }
+}
+.card-title{
+    font-weight: 500;
+}
+.sub-button{
+    display: none;
+}
+.sub-list {
+    text-align: left;
+    font-size: 0.8em;
+    i {
+        margin-right: 8px;
+        opacity: 0.4;
+    }
+    li {
+        padding: 10px 5%;
+    }
+}
