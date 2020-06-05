@@ -1,11 +1,17 @@
-import * as actionTypes from './actions';
+import * as actionTypes from './ActionTypes';
 import config from './../config';
+import { getPersistedState } from './persist';
 
 const initialState = {
     isOpen: [], //for active default menu
     isTrigger: [], //for active default menu, set blank for horizontal
     ...config,
-    isFullScreen: false, // static can't change
+    isFullScreen: false, // static can't change,
+    //Auth 
+    user:null || getPersistedState('user'),
+    //Add Target Modal
+    targetModal :false,
+
 };
 
 const reducer = (state = initialState, action) => {
@@ -83,6 +89,16 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 layout: action.layout
             };
+        case actionTypes.LOGIN_USER_SUCCESS:
+            return {
+                ...state,
+                user:action.payload
+            }
+        case actionTypes.TOGGLE_ADD_TARGET_MODAL:
+                return {
+                    ...state,
+                    targetModal:!state.targetModal
+            }
         default:
             return state;
     }

@@ -7,7 +7,7 @@ import NavLogo from './NavLogo';
 import NavContent from './NavContent';
 import OutsideClick from './OutsideClick';
 import Aux from './../../../../hoc/_Aux'
-import * as actionTypes from './../../../../store/actions';
+import * as actionTypes from './../../../../store/ActionTypes';
 import navigation from '../../../../menu-items';
 
 class Navigation extends Component {

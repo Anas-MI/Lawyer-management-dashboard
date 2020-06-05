@@ -6,7 +6,8 @@ import windowSize from 'react-window-size';
 import NavSearch from './NavSearch';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
-import * as actionTypes from "../../../../../store/actions";
+import * as actionTypes from "../../../../../store/ActionTypes";
+import {toggleAddTargetModal} from '../../../.././../store/Actions'
 
 class NavLeft extends Component {
 
@@ -24,6 +25,9 @@ class NavLeft extends Component {
         }
 
 
+
+
+
         return (
             <Aux>
                 <ul className="navbar-nav mr-auto">
@@ -35,7 +39,7 @@ class NavLeft extends Component {
                             </Dropdown.Toggle>
                             <ul>
                                 <Dropdown.Menu>
-                                    <li><a className="dropdown-item" href={DEMO.BLANK_LINK}>Action</a></li>
+                                    <li><a onClick={this.props.toggleModal} className="dropdown-item" href={DEMO.BLANK_LINK}>Add Target</a></li>
                                     <li><a className="dropdown-item" href={DEMO.BLANK_LINK}>Another action</a></li>
                                     <li><a className="dropdown-item" href={DEMO.BLANK_LINK}>Something else here</a></li>
                                 </Dropdown.Menu>
@@ -59,6 +63,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFullScreen: () => dispatch({type: actionTypes.FULL_SCREEN}),
+        toggleModal: () => dispatch(toggleAddTargetModal())
     }
 };
 

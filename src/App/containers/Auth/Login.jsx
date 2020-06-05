@@ -1,13 +1,20 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React , {useState} from "react";
+import { loginUser } from "../../../store/Actions";
+import { useDispatch } from "react-redux";
 
 const  Login = (props) => {
+
+  const dispatch = useDispatch()
+
+  const [username ,setUsername] = useState('')
+  const [password ,setPassword] = useState('')
 
 
   const handleLogin = e => {
     e.preventDefault()
-    props.setAuth(true)
-    // props.history.push('/dashboard')
+    console.log({username,password})
+    dispatch(loginUser({username,password}))
+  
   }
 
   const RedirectTo = (e,path) => {
@@ -29,8 +36,8 @@ const  Login = (props) => {
                 <div className="row">
                   <div className="col-md-12">
                   <div className="form-group">
-                      <input
-                        type="email"
+                      <input onChange={e=>setUsername(e.target.value)}
+                        type="email" value={username}
                         id="email"
                         className="form-control"
                         placeholder="Email"
@@ -41,8 +48,8 @@ const  Login = (props) => {
                   </div>
                   <div className="col-md-12">
                     <div className="form-group">
-                      <input
-                        type="password"
+                      <input onChange={e=>setPassword(e.target.value)}
+                        type="password" value={password}
                         id="password"
                         className="form-control"
                         placeholder="Password"

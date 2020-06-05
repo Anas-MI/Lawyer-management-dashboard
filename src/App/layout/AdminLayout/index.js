@@ -10,9 +10,10 @@ import Breadcrumb from './Breadcrumb';
 import Loader from "../Loader";
 import routes from "../../../routes";
 import Aux from "../../../hoc/_Aux";
-import * as actionTypes from "../../../store/actions";
+import * as actionTypes from "../../../store/ActionTypes";
 
 import './app.scss';
+import AddTargetModal from '../../components/AddTargetModal';
 
 class AdminLayout extends Component {
 
@@ -73,6 +74,7 @@ class AdminLayout extends Component {
                                                     <Redirect from="/" to={this.props.defaultPath} />
                                                 </Switch>
                                             </Suspense>
+                                            <AddTargetModal />
                                         </div>
                                     </div>
                                 </div>

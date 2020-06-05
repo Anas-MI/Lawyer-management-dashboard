@@ -1,6 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { register } from "../../../store/Actions";
 
-function Registration() {
+function Registration(props) {
+
+  const dispatch = useDispatch()
+
+  const [state , setState] = useState({})
+
+  const handleChange = e => {
+    e.persist()
+    setState(st => ({...st,[e.target.name]:e.target.value}))
+
+  }
+
+  const handleRegister = e => {
+    e.preventDefault()
+    if(state.password !== state.confirmPass !== '')return alert('Pass Dont Match')
+    dispatch(register(state))
+    props.history.push('/login')
+  }
+
   return (
     <div className="Login">
       <div className="container text-center">
@@ -14,9 +35,9 @@ function Registration() {
                 <div className="row">
                   <div className="col-md-6">
                   <div className="form-group">
-                      <input
-                        type="text"
-                        id="firstname"
+                      <input name='firstname'
+                        type="text" onChange={handleChange}
+                        id="firstname" value={state['firstname']}
                         className="form-control"
                         placeholder="First Name"
                         required="required"
@@ -28,8 +49,8 @@ function Registration() {
                   <div className="form-group">
                       <input
                         type="text"
-                        id="lastname"
-                        className="form-control"
+                        id="lastname" name='lastname' onChange={handleChange}
+                        className="form-control" value={state['lastname']}
                         placeholder="Last Name"
                         required="required"
                       />
@@ -38,7 +59,7 @@ function Registration() {
                   </div>
                   <div className="col-md-12">
                   <div className="form-group">
-                  <select name="country" id="country">
+                  <select name="country" id="country"  onChange={handleChange}>
                     <option value="a">Country1</option>
                     <option value="b">Country2</option>
                     <option value="c">Country3</option>
@@ -49,10 +70,36 @@ function Registration() {
                   </div>
                   <div className="col-md-12">
                   <div className="form-group">
+                  <select name="lawfirm" id="lawfirm" onChange={handleChange}
+                  value={state['lawfirm']} >
+                    <option value="a">Law Firm 1</option>
+                    <option value="b">Law Firm 2</option>
+                    <option value="c">Law Firm 3</option>
+                    <option value="d">Law Firm 4</option>
+                  </select>
+                      <p className="help-block text-danger"></p>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                  <div className="form-group">
+                  <input
+                        type="number"
+                        id="phone" name="phone" onChange={handleChange}
+                        className="form-control" value={state['phone']}
+                        placeholder="Mobile No."
+                        required="required"
+                      />
+                      <p className="help-block text-danger"></p>
+                    </div>
+                  </div>
+
+
+                  <div className="col-md-12">
+                  <div className="form-group">
                       <input
                         type="email"
-                        id="email"
-                        className="form-control"
+                        id="email" name="username" onChange={handleChange}
+                        className="form-control" value={state['username']}
                         placeholder="Email"
                         required="required"
                       />
@@ -61,8 +108,8 @@ function Registration() {
                   </div>
                   <div className="col-md-12">
                     <div className="form-group">
-                      <input
-                        type="password"
+                      <input name="password" onChange={handleChange}
+                        type="password" value={state['password']}
                         id="password"
                         className="form-control"
                         placeholder="Password"
@@ -73,9 +120,9 @@ function Registration() {
                   </div>
                  <div className="col-md-12">
                     <div className="form-group">
-                      <input
-                        type="c-password"
-                        id="c-password"
+                      <input name='confirmPass'
+                        type="c-password" value={state['confirmPass']}
+                        id="c-password" onChange={handleChange}
                         className="form-control"
                         placeholder="Confirm Password"
                         required="required"
@@ -85,12 +132,12 @@ function Registration() {
                   </div>
                  </div>
                <div id="success"></div>
-                <button type="submit" className="text-white page-scroll btn cust-btn-primary mt-3">
-                  Registration
+                <button type="submit" onClick={handleRegister} className="text-white page-scroll btn cust-btn-primary mt-3">
+                  Registration 
                 </button>
                 <div class="text-block text-center my-3">
                   <span class="text-small font-weight-semibold">Already have an account ?</span>
-                  <a href="/login" class="text-custom-primary text-small"> Login</a>
+                  <Link to="/login" class="text-custom-primary text-small"> Login</Link>
                 </div>
               </form>
             </div>

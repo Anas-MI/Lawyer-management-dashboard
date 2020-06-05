@@ -1,7 +1,7 @@
 import React, { Component, Suspense, useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import '../../node_modules/font-awesome/scss/font-awesome.scss';
+import 'font-awesome/css/font-awesome.min.css';
 import './App.css';
 import "./App.scss"
 
@@ -16,6 +16,7 @@ import LoginPage from './containers/Auth/Login.jsx'
 import ForgotPass from './containers/Auth/ForgotPass';
 import Registration from './containers/Auth/registration';
 import Reset from './containers/Auth/resetpass';
+import { useSelector } from 'react-redux';
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -24,14 +25,8 @@ const AdminLayout = Loadable({
 
 const App = () => {
 
-    const [auth , setAuth] = useState(false)
+const user = useSelector(state => state.user)
 
-
-    useEffect(()=>{
-        //Auto Login Check
-
-
-    },[])
 
 
     const menu = routes.map((route, index) => {
@@ -51,14 +46,15 @@ const App = () => {
       var Paths = (
           <Switch >
                 <Route path='/' exact component={HomePage} />
-                <Route path='/login' exact component={props => <LoginPage {...props} setAuth={setAuth} />} />
+                <Route path='/login' exact component={LoginPage} />
                 <Route path='/forgot' exact component={ForgotPass} />
                 <Route path='/reset' exact component={Reset} />
                 <Route path='/registration' exact component={Registration} />
+                <Redirect from="*" to='/' />
           </Switch>
       )
 
-      if(auth){
+      if(user){
           Paths = (
               <Switch>
                     {menu}

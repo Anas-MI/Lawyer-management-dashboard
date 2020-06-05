@@ -7,7 +7,7 @@ import windowSize from 'react-window-size';
 import Aux from "../../../../../../hoc/_Aux";
 import NavIcon from "./../NavIcon";
 import NavBadge from "./../NavBadge";
-import * as actionTypes from "../../../../../../store/actions";
+import * as actionTypes from "../../../../../../store/ActionTypes";
 
 class NavItem extends Component {
 
