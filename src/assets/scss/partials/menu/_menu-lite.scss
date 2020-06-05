@@ -576,7 +576,7 @@
 }
 
 .navbar-brand {
-    background: $menu-dark-background;
+    background: #e21c01;
 }
 
 .pcoded-header,
@@ -592,7 +592,7 @@
     z-index: 1029;
     position: fixed;
     transition: all 0.3s ease-in-out;
-    box-shadow: 1px 0 20px 0 rgb(63, 77, 103);
+    box-shadow: 1px 0 20px 0 #acaeb1;
 
     ul {
         padding-left: 0;
@@ -650,7 +650,7 @@
             display: block;
             width: 100%;
             height: 2.8px;
-            background-color: $menu-dark-text-color;
+            background-color: #ffffff;
             transition: all 0.3s ease-in-out;
             backface-visibility: hidden;
             border-radius: 2px;
@@ -661,7 +661,7 @@
                 position: absolute;
                 left: 0;
                 height: 2.8px;
-                background-color: $menu-dark-text-color;
+                background-color: #ffffff;
                 transition: all 0.3s;
                 backface-visibility: hidden;
                 border-radius: 2px;
@@ -833,8 +833,8 @@
     width: $Menu-width;
     height: 100vh;
     top: 0;
-    background: $menu-dark-background;
-    color: $menu-dark-text-color;
+    background: #ffffff;
+    color: #ec4933;
 
     .pcoded-submenu {
         background: darken($header-dark-background,3%);
@@ -842,7 +842,7 @@
     }
 
     a {
-        color: $menu-dark-text-color;
+        color: #222;
     }
 
     .navbar-content,
@@ -1089,7 +1089,7 @@
     }
 
     .pcoded-menu-caption {
-        color: #e8edf7;
+        color: #e21c01;
     }
 
     .pcoded-inner-navbar {
@@ -1098,7 +1098,7 @@
             &:focus,
             &:hover {
 
-                    color: #1dc4e9;
+                    color: #e21c01;
 
             }
 

@@ -11,7 +11,7 @@ export default {
                     title: 'Calendar',
                     type: 'item',
                     icon: 'feather icon-server',
-                    url: '/'
+                    url: '/calendar'
                 },
                 {
                     id: 'task',
