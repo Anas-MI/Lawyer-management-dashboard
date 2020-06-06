@@ -6,14 +6,14 @@ const  Login = (props) => {
 
   const dispatch = useDispatch()
 
-  const [username ,setUsername] = useState('')
+  const [emailAddress ,setEmail] = useState('')
   const [password ,setPassword] = useState('')
 
 
   const handleLogin = e => {
     e.preventDefault()
-    console.log({username,password})
-    dispatch(loginUser({username,password}))
+    console.log({emailAddress,password})
+    dispatch(loginUser({emailAddress,password}))
   
   }
 
@@ -36,8 +36,8 @@ const  Login = (props) => {
                 <div className="row">
                   <div className="col-md-12">
                   <div className="form-group">
-                      <input onChange={e=>setUsername(e.target.value)}
-                        type="email" value={username}
+                      <input onChange={e=>setEmail(e.target.value)}
+                        type="email" value={emailAddress}
                         id="email"
                         className="form-control"
                         placeholder="Email"

@@ -98,7 +98,7 @@ function Registration(props) {
                   <div className="form-group">
                       <input
                         type="email"
-                        id="email" name="username" onChange={handleChange}
+                        id="emailAddress" name="emailAddresss" onChange={handleChange}
                         className="form-control" value={state['username']}
                         placeholder="Email"
                         required="required"

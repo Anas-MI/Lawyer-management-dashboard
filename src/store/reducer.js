@@ -8,11 +8,17 @@ const initialState = {
     ...config,
     isFullScreen: false, // static can't change,
     //Auth 
-    user:null || getPersistedState('user'),
+    user:getPersistedState('user') || null,
     //Add Target Modal
     targetModal :false,
-
+    timer : getPersistedState('timer') || 0 ,
+    toaster: {
+        msg:null,
+        timeout:0
+    }
 };
+
+let intervalId ;
 
 const reducer = (state = initialState, action) => {
     let trigger = [];
@@ -95,10 +101,38 @@ const reducer = (state = initialState, action) => {
                 user:action.payload
             }
         case actionTypes.TOGGLE_ADD_TARGET_MODAL:
-                return {
+            return {
                     ...state,
                     targetModal:!state.targetModal
             }
+        case actionTypes.UPDATE_TIMER:{
+            return {
+                ...state,
+                timer:state.timer++
+            }
+        }
+        case actionTypes.RESET_TIMER:{
+            return {
+                ...state,
+                timer : 0
+            }
+        }
+        case actionTypes.SET_TIMER:{
+            return {
+                ...state,
+                timer : action.payload
+            }
+        }
+        case actionTypes.TOGGLE_TOASTER:{
+            return {
+                ...state,
+                toaster:{
+                    msg:action.payload.msg,
+                    timeout:action.payload.timeout
+                }
+            }
+        }
+
         default:
             return state;
     }

@@ -8,6 +8,7 @@ import DEMO from "../../../../../store/constant";
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
 import Avatar3 from '../../../../../assets/images/user/avatar-3.jpg';
+import Timer from '../../../../components/Timer';
 
 class NavRight extends Component {
     state = {
@@ -18,6 +19,7 @@ class NavRight extends Component {
 
         return (
             <Aux>
+                <Timer />
                 <ul className="navbar-nav ml-auto">
                     <li>
                         <Dropdown alignRight={!this.props.rtlLayout}>

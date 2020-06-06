@@ -20,5 +20,13 @@ export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS'
 //Add Target Modal
 export const TOGGLE_ADD_TARGET_MODAL = "TOGGLE_ADD_TARGET_MODAL"
 
+//Timer
+export const UPDATE_TIMER = 'UPDATE_TIMER'
+export const RESET_TIMER = 'RESET_TIMER'
+export const SET_TIMER = 'SET_TIMER'
+
+//Error Notifier
+export const TOGGLE_TOASTER = "TOGGLE_TOASTER"
+
 
 
