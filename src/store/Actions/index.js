@@ -10,6 +10,7 @@ import {
 } from '../ActionTypes'
 
 import api from '../../resources/api'
+import { toggleToaster } from 'h:/coot-apps/src/app/State/reducers/ToasterReducer'
 
 
 //Auth
@@ -34,9 +35,18 @@ export const loginUser = payload => {
         api.post('/auth/login' , payload)
         .then(res=>{
             dispatch(setLoginSuccess(res.data))
+            dispatch(toggleToaster({
+                msg:'Login Succes',
+                color:'green',
+            }))
         })
         .catch(err=>{
-            console.log(err) //Dispatch Toaster Notificaton
+            console.log(Object.keys(err)) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+
         })
     }
 }
@@ -45,11 +55,19 @@ export const register = payload => {
     return dispatch => {
         api.post('/auth/register',payload)
         .then(res=>{
-            console.log(res.data)
+            dispatch(toggleToaster({
+                msg:res.data.message,
+                color:'green',
+            }))
 
         })
         .catch(err=>{
             console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+
         })
     }
 }

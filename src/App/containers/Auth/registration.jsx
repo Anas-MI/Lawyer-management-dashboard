@@ -19,7 +19,7 @@ function Registration(props) {
 
   const handleRegister = e => {
     e.preventDefault()
-    if(state.password !== state.confirmPass !== '')return alert('Pass Dont Match')
+    if(state.password !== state.confirmPass)return alert('Pass Dont Match')
     dispatch(register(state))
     props.history.push('/login')
   }

@@ -10,7 +10,7 @@ import Aux from "../hoc/_Aux";
 import ScrollToTop from './layout/ScrollToTop';
 import routes from "../route";
 
-
+import Toaster from './components/Toaster'
 import HomePage from './containers/HomePage'
 import LoginPage from './containers/Auth/Login.jsx'
 import ForgotPass from './containers/Auth/ForgotPass';
@@ -80,6 +80,7 @@ const user = useSelector(state => state.user)
                         {Paths}
                         {/* <Redirect from="*" to={redirect} /> */}
                     </Switch>
+                    <Toaster/>
                 </Suspense>
             </ScrollToTop>
         </Aux>

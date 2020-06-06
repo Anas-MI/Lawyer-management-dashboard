@@ -14,7 +14,8 @@ const initialState = {
     timer : getPersistedState('timer') || 0 ,
     toaster: {
         msg:null,
-        timeout:0
+        timeout:0,
+        color:'green'
     }
 };
 
@@ -128,7 +129,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 toaster:{
                     msg:action.payload.msg,
-                    timeout:action.payload.timeout
+                    timeout:action.payload.timeout || 3000,
+                    color:action.payload.color
                 }
             }
         }
