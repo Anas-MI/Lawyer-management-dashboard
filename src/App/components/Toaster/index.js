@@ -12,7 +12,7 @@ const Toaster = (props) => {
   useEffect(() => {
     if(toaster.msg){
       setTimeout(() => {
-        dispatch(toggleToaster({}))      
+        dispatch(toggleToaster({msg:null}))      
       }, toaster.timeout);
     }
   }, [toaster]);

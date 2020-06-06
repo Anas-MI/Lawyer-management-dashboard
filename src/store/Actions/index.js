@@ -36,7 +36,8 @@ export const loginUser = payload => {
         .then(res=>{
             dispatch(setLoginSuccess(res.data))
             dispatch(toggleToaster({
-                msg:'Login Succes',
+                msg:'Login Success',
+                timeout:5000,
                 color:'green',
             }))
         })
