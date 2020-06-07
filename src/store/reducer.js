@@ -11,15 +11,16 @@ const initialState = {
     user:getPersistedState('user') || null,
     //Add Target Modal
     targetModal :false,
-    timer : getPersistedState('timer') || 0 ,
     toaster: {
         msg:null,
         timeout:0,
         color:'green'
+    },
+    Calendar:{
+        Events:[]
     }
 };
 
-let intervalId ;
 
 const reducer = (state = initialState, action) => {
     let trigger = [];
@@ -106,24 +107,24 @@ const reducer = (state = initialState, action) => {
                     ...state,
                     targetModal:!state.targetModal
             }
-        case actionTypes.UPDATE_TIMER:{
-            return {
-                ...state,
-                timer:state.timer++
-            }
-        }
-        case actionTypes.RESET_TIMER:{
-            return {
-                ...state,
-                timer : 0
-            }
-        }
-        case actionTypes.SET_TIMER:{
-            return {
-                ...state,
-                timer : action.payload
-            }
-        }
+        // case actionTypes.UPDATE_TIMER:{
+        //     return {
+        //         ...state,
+        //         timer:state.timer++
+        //     }
+        // }
+        // case actionTypes.RESET_TIMER:{
+        //     return {
+        //         ...state,
+        //         timer : 0
+        //     }
+        // }
+        // case actionTypes.SET_TIMER:{
+        //     return {
+        //         ...state,
+        //         timer : action.payload
+        //     }
+        // }
         case actionTypes.TOGGLE_TOASTER:{
             return {
                 ...state,
@@ -131,6 +132,14 @@ const reducer = (state = initialState, action) => {
                     msg:action.payload.msg,
                     timeout:action.payload.timeout || 3000,
                     color:action.payload.color
+                }
+            }
+        }
+        case actionTypes.SET_EVENTS_SUCCESS:{
+            return {
+                ...state,
+                Calendar:{
+                    Events:action.payload
                 }
             }
         }

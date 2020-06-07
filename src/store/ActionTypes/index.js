@@ -28,5 +28,9 @@ export const SET_TIMER = 'SET_TIMER'
 //Error Notifier
 export const TOGGLE_TOASTER = "TOGGLE_TOASTER"
 
+//Calendar Events
+export const GET_EVENTS = 'GET_EVENTS'
+export const SET_EVENTS_SUCCESS = 'SET_EVENTS_SUCCESS'
+
 
 

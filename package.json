@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@syncfusion/ej2-base": "^18.1.53",
+    "@syncfusion/ej2-react-calendars": "^18.1.53",
+    "@syncfusion/ej2-react-dropdowns": "^18.1.55",
+    "@syncfusion/ej2-react-schedule": "^18.1.55",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "font-awesome": "^4.7.0",

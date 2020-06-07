@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import CalendarContainer from './App/containers/Calendar';
 
 window.jQuery = $;
 window.$ = $;
@@ -42,7 +43,7 @@ const routes = [
     { path: '/maps/google-map', exact: true, name: 'Google Map', component: GoogleMap },
     { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
-    // { path: '/calendar', exact: true, name: 'Calendar', component: Calendar}
+    { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer}
 ];
 
 export default routes;
