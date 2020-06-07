@@ -10,14 +10,14 @@ export default {
                     id: 'calendar',
                     title: 'Calendar',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-calendar',
                     url: '/calendar'
                 },
                 {
                     id: 'task',
                     title: 'Task',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-tasks',
                     url: '/'
                 },
                 {
@@ -59,7 +59,7 @@ export default {
                     id: 'documents',
                     title: 'Documents',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-file',
                     url: '/'
                 },
                 {

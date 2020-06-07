@@ -1,20 +1,22 @@
 import React from 'react';
+import Navigation from '../components/HomePage/navigation'
 import Header from '../components/HomePage/header';
-// import Pricing from '../components/pricing';
-import Features from '../components/HomePage/footer';
+import Features from '../components/HomePage/features';
 import Blog from '../components/HomePage/Blog';
 import Contact from '../components/HomePage/contact';
-import Subscription from './Subscription'
+import Footer from '../components/HomePage/footer'
+import Subscription from '../components/HomePage/subscription'
 
 function Home() {
   return (
     <div className="Home">
+        <Navigation />
         <Header />
         <Features />
         <Subscription />
-        {/* <Pricing /> */}
         <Blog />
         <Contact />
+        <Footer />
     </div>
   );
 }

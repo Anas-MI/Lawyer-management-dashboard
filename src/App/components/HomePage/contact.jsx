@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Footer from './footer'
+
 
 export class Contact extends Component {
   static propTypes = {};
@@ -81,7 +81,6 @@ export class Contact extends Component {
              </div>
         </div>
       </div>
-      <Footer />
       </div>
     );
   }

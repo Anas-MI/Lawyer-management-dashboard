@@ -108,7 +108,7 @@ const footer = () => {
                 </li>
                 <li>
                   <div className="o-region-selector l-region-selector js-region-selector">
-                    <select
+                    <select 
                       data-tracking-trigger="change"
                       data-tracking-action="Region Selector"
                     >

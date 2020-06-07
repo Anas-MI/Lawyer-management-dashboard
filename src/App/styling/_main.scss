@@ -446,12 +446,15 @@ header {
   }
   .o-region-selector select {
     border: none;
-    box-shadow: none;
+	box-shadow: none;
+	padding: 2px;
+	height: auto;
     border-radius: 0;
     color: $white;
     background: transparent;
     cursor: pointer;
-    outline: none;
+	outline: none;
+	font-size: 14px;
 	option{
 		color:#55656d;
 		font-size: 14px;
