@@ -15,6 +15,7 @@ class subscription extends Component {
             qdata: res.data.data,
             qmsg: res.data.message
         });
+        console.log(this.state.qdata)
         })
     }
 
