@@ -8,12 +8,13 @@ class subscription extends Component {
     };
 
     componentDidMount () {
-        axios.get('http://localhost:3000/api/plans/showall')
+        axios.get(`${apiUrl}/api/plans/showall`)
         .then(res =>{
           this.setState({
             qdata: res.data.data,
             qmsg: res.data.message
         });
+        console.log(this.state.qdata)
         })
     }
 

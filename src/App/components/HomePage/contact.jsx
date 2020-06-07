@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from 'axios'
+import { apiUrl } from "../../../resources/api";
 
 
 export class Contact extends Component {
@@ -30,7 +30,7 @@ export class Contact extends Component {
     event.preventDefault();
     axios({
       method: "POST", 
-      url:"http://localhost:3000/api/contactus/create", 
+      url:`${apiUrl }/contactus/create`, 
       data:  this.state
     }).then((response)=>{
       if (response.data.status === 'success'){
