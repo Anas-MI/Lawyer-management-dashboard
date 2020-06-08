@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import CalendarContainer from './App/containers/Calendar';
+import AdminDashboard from './Demo/Dashboard/Admin';
 
 window.jQuery = $;
 window.$ = $;
@@ -31,6 +32,7 @@ const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
+    { path: '/dashboard/admin', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },

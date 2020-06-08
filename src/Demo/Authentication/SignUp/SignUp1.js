@@ -22,7 +22,7 @@ const AdminRegister = props =>  {
   
     const handleRegister = e => {
       e.preventDefault()
-      dispatch(register(state))
+      dispatch(register({...state,admin:true}))
       props.history.push('/admin/login')
     }
 

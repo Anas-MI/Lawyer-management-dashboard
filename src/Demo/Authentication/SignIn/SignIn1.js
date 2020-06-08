@@ -22,7 +22,7 @@ const AdminLogin = props => {
     const handleLogin = e => {
       e.preventDefault()
       dispatch(loginUser(state))
-      props.history.push('/admin/dashboard')
+      props.history.push('/dashboard/admin')
     }
   
   
