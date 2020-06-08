@@ -1,3 +1,49 @@
+export const navigation = {
+    items:[
+        {
+            id: 'navigation',
+            title: 'Navigation',
+            type: 'group',
+            icon: 'icon-navigation',
+            children: [
+                {
+                    id: 'lawyermanage',
+                    title: 'Manage Lawyers',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/lawyers'
+                },
+                {
+                    id: 'subscriptionmanage',
+                    title: 'Manage Subscriptions',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/supscriptions'
+                },
+                {
+                    id: 'support',
+                    title: 'Support',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/support'
+                },
+                {
+                    id: 'content',
+                    title: 'Manage Content',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/content'
+                },
+
+
+
+            ]
+
+        }
+
+    ]
+}
+
 export default {
     items: [
         {

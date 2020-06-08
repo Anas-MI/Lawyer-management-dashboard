@@ -75,7 +75,7 @@ class AdminDashboard extends React.Component {
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Total task due</h6>
+                                <h6 className='mb-4'>Total Lawyers</h6>
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
@@ -83,9 +83,9 @@ class AdminDashboard extends React.Component {
                                              297</h3>
                                     </div>
 
-                                    <div className="col-8 text-right">
+                                    {/* <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
@@ -96,7 +96,7 @@ class AdminDashboard extends React.Component {
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Total calendar Events</h6>
+                                <h6 className='mb-4'>Total Matters</h6>
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
@@ -104,9 +104,9 @@ class AdminDashboard extends React.Component {
                                              314</h3>
                                     </div>
 
-                                    <div className="col-8 text-right">
+                                    {/* <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Events</a>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
@@ -117,7 +117,7 @@ class AdminDashboard extends React.Component {
                     <Col xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Draft bills</h6>
+                                <h6 className='mb-4'>Total Contacts</h6>
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
@@ -125,9 +125,9 @@ class AdminDashboard extends React.Component {
                                             453</h3>
                                     </div>
 
-                                    <div className="col-8 text-right">
+                                    {/* <div className="col-8 text-right">
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
@@ -135,6 +135,50 @@ class AdminDashboard extends React.Component {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <Col xl={4}>
+                        <Card>
+                            <Card.Body>
+                                <h6 className='mb-4'>Total Subscribers</h6>
+                                <div className="row d-flex align-items-center">
+                                    <div className="col-4">
+                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
+                                            453</h3>
+                                    </div>
+
+                                    {/* <div className="col-8 text-right">
+                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
+                                    </div> */}
+                                </div>
+                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
+                                </div> */}
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col xl={4}>
+                        <Card>
+                            <Card.Body>
+                                <h6 className='mb-4'>Total Amount</h6>
+                                <div className="row d-flex align-items-center">
+                                    <div className="col-4">
+                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
+                                            453</h3>
+                                    </div>
+
+                                    {/* <div className="col-8 text-right">
+                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
+                                    </div> */}
+                                </div>
+                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
+                                </div> */}
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+
                     <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
                             <Card.Header>

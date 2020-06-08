@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 
 import AdminLogin from '../Demo/Authentication/SignIn/SignIn1'
 import AdminRegister from '../Demo/Authentication/SignUp/SignUp1'
+import LawyerLayout from './layout/LawyerLayout';
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -72,7 +73,11 @@ const user = useSelector(state => state.user)
           Paths = (
               <Switch>
                     {menu}
+                    {
+                    user.token.user.admin?
                     <Route path="/" component={AdminLayout} />
+                    :<Route path="/" component={()=>(<h2>Lawyer</h2>)} />
+                    }
               </Switch>
           )
       }

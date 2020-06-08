@@ -2,6 +2,8 @@ import React from 'react';
 import $ from 'jquery';
 import CalendarContainer from './App/containers/Calendar';
 import AdminDashboard from './Demo/Dashboard/Admin';
+import LawyerManagement from './App/containers/LawyerManagement';
+import LawyerDetail from './App/containers/LawyerDetailPage';
 
 window.jQuery = $;
 window.$ = $;
@@ -30,9 +32,28 @@ const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
+export const adminRoutes = [
+    { path: '/dashboard/admin', exact: true, name: 'AdminDashboard', component: AdminDashboard },
+    { path: '/lawyers', exact: true, name: 'Lawyer Management', component: LawyerManagement },
+    { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
+    // { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
+    // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
+    // { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },
+    // { path: '/basic/collapse', exact: true, name: 'Basic Collapse', component: UIBasicCollapse },
+    // { path: '/basic/tabs-pills', exact: true, name: 'Basic Tabs & Pills', component: UIBasicTabsPills },
+    // { path: '/basic/typography', exact: true, name: 'Basic Typography', component: UIBasicBasicTypography },
+    // { path: '/forms/form-basic', exact: true, name: 'Forms Elements', component: FormsElements },
+    // { path: '/tables/bootstrap', exact: true, name: 'Bootstrap Table', component: BootstrapTable },
+    // { path: '/charts/nvd3', exact: true, name: 'Nvd3 Chart', component: Nvd3Chart },
+    // { path: '/maps/google-map', exact: true, name: 'Google Map', component: GoogleMap },
+    // { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
+    // { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
+    // { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer}
+
+
+]
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
-    { path: '/dashboard/admin', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },

@@ -18,7 +18,8 @@ const initialState = {
     },
     Calendar:{
         Events:[]
-    }
+    },
+    lawyers:[]
 };
 
 
@@ -141,6 +142,12 @@ const reducer = (state = initialState, action) => {
                 Calendar:{
                     Events:action.payload
                 }
+            }
+        }
+        case actionTypes.SET_LAWYERS:{
+            return {
+                ...state,
+                lawyers:action.payload
             }
         }
 

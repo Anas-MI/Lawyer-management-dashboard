@@ -8,6 +8,10 @@ import {
     RESET_TIMER,
     UPDATE_TIMER,
     SET_EVENTS_SUCCESS,
+    SET_LAWYERS,
+    BLOCK_USER,
+    BLOCK_USER_SUCCESS,
+    UNBLOCK_USER_SUCCESS,
 } from '../ActionTypes'
 
 import api from '../../resources/api'
@@ -105,3 +109,75 @@ export const register = payload => {
         })
     }
 }
+
+//Lawyers
+const setLawyers = payload => ({type:SET_LAWYERS,payload})
+
+export const getLawyers = payload => {
+    return dispatch => {
+        api.post('/admin/showall')
+        .then(res=>{
+            dispatch(setLawyers(res.data.data))
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+
+        })
+    }
+}
+
+//Block/Unblock
+const blockUserSuccess = payload => ({type:BLOCK_USER_SUCCESS,payload})
+const unblockUserSuccess = payload => ({type:UNBLOCK_USER_SUCCESS,payload})
+
+export const blockUser = payload => {
+    return dispatch => {
+        api.get(`/admin/block/${payload}`)
+        .then(res=>{
+            dispatch(blockUserSuccess(res.data.data))
+            dispatch(toggleToaster({
+                msg:'Blocked Successfully',
+                timeout:5000,
+                color:'green',
+            }))
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+
+        })
+    }
+}
+
+export const unblockUser = payload => {
+    return dispatch => {
+        api.get(`/admin/unblock/${payload}`)
+        .then(res=>{
+            dispatch(unblockUserSuccess(res.data.data))
+            dispatch(toggleToaster({
+                msg:'Unblocked Successfully',
+                timeout:5000,
+                color:'green',
+            }))
+            console.log(res.data)
+
+
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+
+        })
+    }
+}
+
