@@ -13,7 +13,7 @@ export class Team extends Component {
               <div class="border-0 card mb-3 shadow-sm">
                 <img
                   class="card-img-top"
-                  src="img/portfolio/01-small.jpg"
+                  src="/img/portfolio/01-small.jpg"
                   alt="blog"
                 />
                 <div class="card-body">
@@ -29,7 +29,7 @@ export class Team extends Component {
               <div class="border-0 card mb-3 shadow-sm">
                 <img
                   class="card-img-top"
-                  src="img/portfolio/01-small.jpg"
+                  src="/img/portfolio/01-small.jpg"
                   alt="blog"
                 />
                 <div class="card-body">
@@ -45,7 +45,7 @@ export class Team extends Component {
               <div class="border-0 card mb-3 shadow-sm">
                 <img
                   class="card-img-top"
-                  src="img/portfolio/01-small.jpg"
+                  src="/img/portfolio/01-small.jpg"
                   alt="blog"
                 />
                 <div class="card-body">

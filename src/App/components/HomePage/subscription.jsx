@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import axios from 'axios'
+import api from '../../../resources/api';
+
 
 class subscription extends Component {
     state = {
@@ -8,7 +9,7 @@ class subscription extends Component {
     };
 
     componentDidMount () {
-        axios.get(`${apiUrl}/api/plans/showall`)
+        api.get('/plans/showall')
         .then(res =>{
           this.setState({
             qdata: res.data.data,
