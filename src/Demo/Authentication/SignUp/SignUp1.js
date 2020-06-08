@@ -1,13 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {NavLink} from 'react-router-dom';
 
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import DEMO from "../../../store/constant";
+import { register } from '../../../store/Actions';
+import { useDispatch } from 'react-redux';
 
-class SignUp1 extends React.Component {
-    render () {
+const AdminRegister = props =>  {
+
+    const dispatch = useDispatch()
+
+    const [state , setState] = useState({})
+
+    const handleChange = e => {
+      e.persist()
+      setState(st => ({...st,[e.target.name]:e.target.value}))
+
+    }
+  
+    const handleRegister = e => {
+      e.preventDefault()
+      dispatch(register(state))
+      props.history.push('/admin/login')
+    }
+
         return(
             <Aux>
                 <Breadcrumb/>
@@ -26,13 +44,19 @@ class SignUp1 extends React.Component {
                                 </div>
                                 <h3 className="mb-4">Sign up</h3>
                                 <div className="input-group mb-3">
-                                    <input type="text" className="form-control" placeholder="Username"/>
+                                <input name='username' value={state['username']}
+                                onChange={handleChange}
+                                    type="text" className="form-control" placeholder="Username"/>
                                 </div>
                                 <div className="input-group mb-3">
-                                    <input type="email" className="form-control" placeholder="Email"/>
+                                <input name='emailAddress' value={state['emailAddress']}
+                                onChange={handleChange}
+                                    type="email" className="form-control" placeholder="Email"/>
                                 </div>
                                 <div className="input-group mb-4">
-                                    <input type="password" className="form-control" placeholder="password"/>
+                                <input name='password' value={state['password']}
+                                onChange={handleChange}
+                                    type="password" className="form-control" placeholder="password"/>
                                 </div>
                                 <div className="form-group text-left">
                                     <div className="checkbox checkbox-fill d-inline">
@@ -40,7 +64,7 @@ class SignUp1 extends React.Component {
                                             <label htmlFor="checkbox-fill-2" className="cr">Send me the <a href={DEMO.BLANK_LINK}> Newsletter</a> weekly.</label>
                                     </div>
                                 </div>
-                                <button className="btn btn-primary shadow-2 mb-4">Sign up</button>
+                                <button onClick={handleRegister} className="btn btn-primary shadow-2 mb-4">Sign up</button>
                                 <p className="mb-0 text-muted">Allready have an account? <NavLink to="/auth/signin-1">Login</NavLink></p>
                             </div>
                         </div>
@@ -48,7 +72,6 @@ class SignUp1 extends React.Component {
                 </div>
             </Aux>
         );
-    }
 }
 
-export default SignUp1;
+export default AdminRegister;

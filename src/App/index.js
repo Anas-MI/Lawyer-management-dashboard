@@ -23,6 +23,9 @@ import Subscription from './containers/Auth/subscription';
 
 import { useSelector } from 'react-redux';
 
+import AdminLogin from '../Demo/Authentication/SignIn/SignIn1'
+import AdminRegister from '../Demo/Authentication/SignUp/SignUp1'
+
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
     loading: Loader
@@ -59,6 +62,8 @@ const user = useSelector(state => state.user)
                 <Route path='/blogpage' exact component={BlogPage} />
                 <Route path='/contact' exact component={ContactUs} />
                 <Route path='/subscription' exact component={Subscription} />
+                <Route path='/admin/login' exact component={AdminLogin} />
+                <Route path='/admin/register' exact component={AdminRegister} />
                 <Redirect from="*" to='/' />
           </Switch>
       )
