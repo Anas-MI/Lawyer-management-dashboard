@@ -76,7 +76,7 @@ const user = useSelector(state => state.user)
                     {
                     user.token.user.admin?
                     <Route path="/" component={AdminLayout} />
-                    :<Route path="/" component={()=>(<h2>Lawyer</h2>)} />
+                    :<Route path="/" component={LawyerLayout} />
                     }
               </Switch>
           )
