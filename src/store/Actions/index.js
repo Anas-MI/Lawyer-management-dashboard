@@ -15,7 +15,6 @@ import {
 } from '../ActionTypes'
 
 import api from '../../resources/api'
-import { toggleToaster } from 'h:/coot-apps/src/app/State/reducers/ToasterReducer'
 
 
 //Auth
@@ -31,7 +30,10 @@ export const updateTimer = payload => ({type:UPDATE_TIMER,payload})
 export const resetTimer = payload => ({type:RESET_TIMER,payload})
 export const setTimer = payload => ({type:SET_TIMER,payload})
 
-
+ const toggleToaster = (payload) => ({
+    type: TOGGLE_TOASTER,
+    payload,
+  });
 
 //calendar
 const setEvents = payload => ({type:SET_EVENTS_SUCCESS,payload})
