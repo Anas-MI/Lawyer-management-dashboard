@@ -150,7 +150,7 @@ const setLawyers = payload => ({type:SET_LAWYERS,payload})
 
 export const getLawyers = payload => {
     return dispatch => {
-        api.post('/admin/showall')
+        api.get('/admin/showall')
         .then(res=>{
             dispatch(setLawyers(res.data.data))
         })
