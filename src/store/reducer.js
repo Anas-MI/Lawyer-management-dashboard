@@ -150,14 +150,6 @@ const reducer = (state = initialState, action) => {
                 lawyers:action.payload
             }
         }
-        case actionTypes.SET_EVENTS_SUCCESS:{
-            return {
-                ...state,
-                Calendar:{
-                    Events:action.payload
-                }
-            }
-        }
 
         default:
             return state;

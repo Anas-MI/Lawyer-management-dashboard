@@ -1,11 +1,59 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Footer from '../../components/HomePage/footer'
 import Navigation from '../../components/HomePage/navigation'
 import Contactimg from '../../components/img/contact-us.png'
+import axios from 'axios'
+import { apiUrl } from "../../../resources/api";
 
-const contactus = () => {
- return(
-     <>
+class contactus extends Component {
+    
+  state ={
+    name: '',
+    number: '',
+  	email: '',
+  	description: '',
+  }
+  onNameChange = (event) => {
+    this.setState({name: event.target.value})
+  }
+
+  onNumberChange = (event) => {
+    this.setState({number: event.target.value})
+  }
+
+  onEmailChange = (event) =>{
+    this.setState({email: event.target.value})
+  }
+
+  onDescriptionChange = (event)  => {
+    this.setState({description: event.target.value})
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    axios({
+      method: "POST", 
+      url:`${apiUrl}/contactus/create`, 
+      data:  this.state
+    }).then((response)=>{
+      if (response.data.status === 'success'){
+        alert("Message Sent."); 
+        this.resetForm()
+      }else if(response.data.status === 'fail'){
+        alert("Message failed to send.")
+      }
+    })
+    this.setState({
+      name: '',
+      number: '',
+  	  email: '',
+  	  description: '',
+    })
+  }
+
+    render() {
+    return(
+        <>
          <Navigation />
          <div className="banner">
             <div className="container">
@@ -21,7 +69,7 @@ const contactus = () => {
                         <div className="col-md-12">
                             <div className="row justify-content-md-center">
                                 <div className="col-md-8">                       
-                                    <form name="sentMessage" id="contactForm" noValidate>
+                                    <form name="sentMessage" id="contactForm" noValidate onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col-md-6">
                                         <div className="form-group">
@@ -31,6 +79,7 @@ const contactus = () => {
                                             className="form-control"
                                             placeholder="Name"
                                             required="required"
+                                            onChange={this.onNameChange}
                                             />
                                             <p className="help-block text-danger"></p>
                                         </div>
@@ -38,11 +87,12 @@ const contactus = () => {
                                         <div className="col-md-6">
                                         <div className="form-group">
                                             <input
-                                            type="text"
+                                            type="number"
                                             id="number"
                                             className="form-control"
                                             placeholder="Number"
                                             required="required"
+                                            onChange={this.onNumberChange}
                                             />
                                             <p className="help-block text-danger"></p>
                                         </div>
@@ -55,6 +105,7 @@ const contactus = () => {
                                             className="form-control"
                                             placeholder="Email"
                                             required="required"
+                                            onChange={this.onEmailChange}
                                             />
                                             <p className="help-block text-danger"></p>
                                         </div>
@@ -67,7 +118,8 @@ const contactus = () => {
                                         className="form-control"
                                         rows="4"
                                         placeholder="Description"
-                                        required
+                                        required ="required"
+                                        onChange={this.onDescriptionChange}
                                         ></textarea>
                                         <p className="help-block text-danger"></p>
                                     </div>
@@ -86,5 +138,6 @@ const contactus = () => {
          <Footer />
      </>
  )
+    }
 }
 export default contactus

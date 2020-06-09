@@ -21,11 +21,11 @@ const footer = () => {
                   <div className="ftr-set">
                     <h3>Contact</h3>
                     <ul className="nav ftr-nav flex-column">
-                      <li><a href="#home" className="page-scroll">Home</a></li>
-                      <li><a href="#features" className="page-scroll">Feature</a></li>
-                      <li><a href="#pricing" className="page-scroll">Pricing</a></li>
-                      <li><a href="#blog" className="page-scroll">Blog</a></li>
-                      <li><a href="#contactus" className="page-scroll">Contact us</a></li>
+                      <li><a href="/" className="page-scroll">Home</a></li>
+                      <li><a href="/features" className="page-scroll">Feature</a></li>
+                      <li><a href="/subscription" className="page-scroll">Pricing</a></li>
+                      <li><a href="/blog" className="page-scroll">Blog</a></li>
+                      <li><a href="/contact" className="page-scroll">Contact us</a></li>
                     </ul>
                   </div>
                 </div>

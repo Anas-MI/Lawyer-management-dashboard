@@ -1,6 +1,20 @@
 import React, { Component } from "react";
+import axios from 'axios'
+import { apiUrl } from "../../../resources/api";
 
 export class Team extends Component {
+  state = {
+    blogs : []
+}
+
+componentDidMount () {
+    axios.get(`${apiUrl}/blogs/showall`)
+    .then( res => 
+        this.setState({
+            blogs : res.data.data
+        })
+        )
+}
   render() {
     return (
       <div id="blog" className="text-center">
@@ -9,74 +23,24 @@ export class Team extends Component {
             <h2 className="title-bdr">Blog</h2>            
           </div>
           <div className="row">
-            <div className="col-md-4">
-              <div class="border-0 card mb-3 shadow-sm">
-                <img
-                  class="card-img-top"
-                  src="/img/portfolio/01-small.jpg"
-                  alt="blog"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div class="border-0 card mb-3 shadow-sm">
-                <img
-                  class="card-img-top"
-                  src="/img/portfolio/01-small.jpg"
-                  alt="blog"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div class="border-0 card mb-3 shadow-sm">
-                <img
-                  class="card-img-top"
-                  src="/img/portfolio/01-small.jpg"
-                  alt="blog"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </p>
-                </div>
-              </div>
-            </div>
+            {this.state.blogs.map( blog => (
+              <div className="col-md-4">
+                <div className="border-0 card mb-3 shadow-sm blogcard">
+                  <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
+                    <div className="card-body">
+                        <a href="/blogpage">
+                          <h5 className="card-title">{blog.title}</h5>
+                        </a>
+                        <p className="card-text">{blog.shortDescription}</p>
+                    </div>
+                  </div>
+                </div> 
+              ))
+              }                    
           </div>
           <div className="col-md-12 col-md-offset-1 text-center">
               <a href="/blog" class="mt-5 text-custom-primary cta-btn-blank"><span>View More</span></a>
           </div>
-
-          {/* <div id="row">
-          {this.props.data ? this.props.data.map(d => 
-             <div className="col-md-3 col-sm-6 team">
-             <div className="thumbnail"> <img src={d.img} alt="..." className="team-img" />
-               <div className="caption">
-                 <h4>{d.name}</h4>
-                 <p>{d.job}</p>
-               </div>
-             </div>
-           </div>
-            
-            
-            ) : 'loading'}
-          
-          </div> */}
         </div>
       </div>
     );
