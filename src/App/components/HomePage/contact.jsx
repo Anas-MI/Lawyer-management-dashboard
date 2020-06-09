@@ -30,7 +30,7 @@ export class Contact extends Component {
     event.preventDefault();
     axios({
       method: "POST", 
-      url:`${apiUrl }/contactus/create`, 
+      url:`${apiUrl}/contactus/create`, 
       data:  this.state
     }).then((response)=>{
       if (response.data.status === 'success'){
