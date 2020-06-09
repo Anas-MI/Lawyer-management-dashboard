@@ -85,6 +85,7 @@ const App = props => {
                     )
                     :<Route path="/" component={LawyerLayout} />
                     }
+                    <Route path='/logout' exact render={()=>dispatch(logoutUser())} />
               </Switch>
           )
       }
