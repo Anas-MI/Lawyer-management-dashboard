@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleToaster } from 'h:/coot-apps/src/app/State/reducers/ToasterReducer';
+import {toggleToaster} from '../../../store/Actions'
 
 import './index.css'
 const Toaster = (props) => {

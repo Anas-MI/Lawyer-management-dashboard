@@ -12,6 +12,7 @@ import {
     BLOCK_USER,
     BLOCK_USER_SUCCESS,
     UNBLOCK_USER_SUCCESS,
+    TOGGLE_TOASTER
 } from '../ActionTypes'
 
 import api from '../../resources/api'
@@ -30,7 +31,7 @@ export const updateTimer = payload => ({type:UPDATE_TIMER,payload})
 export const resetTimer = payload => ({type:RESET_TIMER,payload})
 export const setTimer = payload => ({type:SET_TIMER,payload})
 
- const toggleToaster = (payload) => ({
+export const toggleToaster = (payload) => ({
     type: TOGGLE_TOASTER,
     payload,
   });
