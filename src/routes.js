@@ -33,7 +33,7 @@ const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
 export const adminRoutes = [
-    { path: '/dashboard/admin', exact: true, name: 'AdminDashboard', component: AdminDashboard },
+    { path: '/admin/dashboard', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/lawyers', exact: true, name: 'Lawyer Management', component: LawyerManagement },
     { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
     // { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },

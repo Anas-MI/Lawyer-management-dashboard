@@ -1,4 +1,6 @@
 import React, { Component, Suspense } from 'react';
+import './app.scss';
+
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
@@ -12,8 +14,9 @@ import routes from "../../../routes";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/ActionTypes";
 
-import './app.scss';
 import AddTargetModal from '../../components/AddTargetModal';
+// import TimeEditModal from '../../components/EditTimerModal'
+
 
 class LawyerLayout extends Component {
 
@@ -75,6 +78,7 @@ class LawyerLayout extends Component {
                                                 </Switch>
                                             </Suspense>
                                             <AddTargetModal />
+                                            {/* <TimeEditModal /> */}
                                         </div>
                                     </div>
                                 </div>

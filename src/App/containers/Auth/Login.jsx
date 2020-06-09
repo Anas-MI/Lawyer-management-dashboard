@@ -1,28 +1,38 @@
-import React , {useState} from "react";
-import { loginUser } from "../../../store/Actions";
+import React , {useState, useEffect} from "react";
+import { loginUser, setLoginSuccess } from "../../../store/Actions";
 import { useDispatch } from "react-redux";
 import Navigation from '../../components/HomePage/navigation'
 import Footer from '../../components/HomePage/footer'
+import {useParams} from 'react-router'
+import { Link } from "react-router-dom";
 
 const  Login = (props) => {
 
   const dispatch = useDispatch()
 
+  // const lawyerdata = useParams()
+
   const [emailAddress ,setEmail] = useState('')
   const [password ,setPassword] = useState('')
+
+
+  // useEffect(()=>{
+  //   if(lawyerdata){
+  //     dispatch(setLoginSuccess(lawyerdata))
+  //     props.history.push('/dashboard/default')
+  //   }
+
+  // },[])
 
 
   const handleLogin = e => {
     e.preventDefault()
     console.log({emailAddress,password})
     dispatch(loginUser({emailAddress,password}))
+    props.history.push('/dashboard/default')
   
   }
 
-  const RedirectTo = (e,path) => {
-    e.preventDefault()
-    props.history.push( `/${path}`)
-  }
 
 
   return (
@@ -64,15 +74,16 @@ const  Login = (props) => {
                   </div>
                  </div>
                <div id="success"></div>
-                <button type="submit" onClick={handleLogin} className="text-white page-scroll btn cust-btn-primary mt-3">
+                <button type="submit" onClick={handleLogin} style={{borderRadius:'0.25rem'}}
+                className="text-white page-scroll cust-btn-primary mt-3">
                   Login
                 </button>
                 <div class="text-block text-center my-3">
-                    <a onClick={e => RedirectTo(e ,'forgot')} class="text-small forgot-password text-primary">Forgot Password</a>
+                    <Link to='/forgot' class="text-small forgot-password text-primary">Forgot Password</Link>
                   </div>
                   <div class="text-block text-center my-3">
                   <span class="text-small font-weight-semibold">New user?</span>
-                  <a onClick={e => RedirectTo(e ,'registration')} className="text-custom-primary text-small"> Register</a>
+                  <Link to="/registration" className="text-custom-primary text-small"> Register</Link>
                 </div>
               </form>
             </div>

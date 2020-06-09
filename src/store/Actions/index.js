@@ -1,6 +1,7 @@
 import {
     LOGIN_USER,
     LOGIN_USER_SUCCESS,
+    LOGOUT_USER,
     REGISTER_USER,
     REGISTER_USER_SUCCESS,
     TOGGLE_ADD_TARGET_MODAL,
@@ -12,18 +13,20 @@ import {
     BLOCK_USER,
     BLOCK_USER_SUCCESS,
     UNBLOCK_USER_SUCCESS,
-    TOGGLE_TOASTER
+    TOGGLE_TOASTER,
+    TOGGLE_TIME_EDIT_MODAL
 } from '../ActionTypes'
 
 import api from '../../resources/api'
 
 
 //Auth
-const setLoginSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
+export const setLoginSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
 const setRegisterSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
 
 //Dashboard
 export const toggleAddTargetModal = payload => ({type:TOGGLE_ADD_TARGET_MODAL,payload})
+export const toggleTimeEditModal = payload => ({type:TOGGLE_TIME_EDIT_MODAL,payload})
 
 
 //Timer
@@ -92,6 +95,8 @@ export const loginUser = payload => {
         })
     }
 }
+
+export const logoutUser = payload => ({type:LOGOUT_USER,payload})
 
 export const register = payload => {
     return dispatch => {

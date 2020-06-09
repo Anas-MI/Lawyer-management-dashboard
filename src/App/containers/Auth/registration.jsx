@@ -375,7 +375,8 @@ function Registration(props) {
                  </div>
                <div id="success"></div>
                 <button type="submit" 
-                onClick={handleRegister}className="text-white page-scroll btn cust-btn-primary mt-3">
+                onClick={handleRegister} style={{borderRadius:'0.25rem'}}
+                className="text-white page-scroll cust-btn-primary mt-3">
                   Registration
                 </button>
                 <div class="text-block text-center my-3">

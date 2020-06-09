@@ -11,7 +11,7 @@ export const navigation = {
                     title: 'Dashboard',
                     type: 'item',
                     icon: 'feather icon-calendar',
-                    url: '/dashboard/admin'
+                    url: '/admin/dashboard'
                 },
                 {
                     id: 'lawyermanage',
@@ -41,6 +41,14 @@ export const navigation = {
                     icon: 'feather icon-calendar',
                     url: '/content'
                 },
+                {
+                    id: 'logout',
+                    title: 'Logout',
+                    type: 'item',
+                    icon: 'feather icon-server',
+                    url: '/logout'
+                }
+
 
 
 
@@ -59,6 +67,13 @@ export default {
             type: 'group',
             icon: 'icon-navigation',
             children: [
+                {
+                    id: 'dashboard',
+                    title: 'Dashboard',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/dashboard/default'
+                },
                 {
                     id: 'calendar',
                     title: 'Calendar',
@@ -142,7 +157,15 @@ export default {
                     type: 'item',
                     icon: 'feather icon-server',
                     url: '/'
+                },
+                {
+                    id: 'logout',
+                    title: 'Logout',
+                    type: 'item',
+                    icon: 'feather icon-server',
+                    url: '/logout'
                 }
+
             ]
         },
         // for test commit

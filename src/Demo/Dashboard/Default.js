@@ -180,6 +180,8 @@ class Dashboard extends React.Component {
                                 </Table>
                             </Card.Body>
                         </Card>
+                   
+                   
                     </Col>
                     <Col md={6} xl={4}>
                         <Card>

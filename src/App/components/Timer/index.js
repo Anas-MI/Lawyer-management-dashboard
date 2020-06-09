@@ -1,20 +1,30 @@
-import React, { useState,useRef } from 'react'
+import React, { useState,useRef, useEffect } from 'react'
 import './Timer.css'
+import {TimePicker} from 'antd'
 import { useSelector,useDispatch } from 'react-redux'
-import {updateTimer} from '../../../store/Actions'
+import {updateTimer, toggleTimeEditModal} from '../../../store/Actions'
 
 const Timer = props => {
 
     const intervalId = useRef()
     const [started , setStarted] = useState(false)
-    const [timer,setTimer] = useState((localStorage.getItem("timer") || 0))
+    const [timer,setTimer] = useState(0)
 
     const dispatch = useDispatch()
     const updateTimer = () => dispatch(updateTimer())
 
+    const seconds = useSelector(state=>state.timer)
+
     var measuredTime = new Date(null);
     // measuredTime.setSeconds(4995); // specify value of SECONDS
     // var MHSTime = measuredTime.toISOString().substr(11, 8);
+
+    useEffect(()=>{
+        setTimer(seconds)
+    },[seconds])
+
+    const editModal = useSelector(state=>state.timeEditModal)
+    const toggleModal = ()=> dispatch(toggleTimeEditModal())
     
 
     const handleStart = e => {
@@ -33,16 +43,27 @@ const Timer = props => {
         clearInterval(intervalId.current)
     }
 
+    const handleChange = e => {
+        var H = e.hours() * 3600
+        var M = e.minutes() * 60
+        var S = e.seconds()
+        setTimer(H+M+S)
+        toggleModal()
+    }
+
 
     return (
         <div className="cdh-fv cdh-auto uni-height">
-        <div className="chd-trayico cdh-trayico-small cdh-tray-active">
+        {!editModal 
+            ?<div className="chd-trayico cdh-trayico-small cdh-tray-active">
 
-            <div className="cdh-tray-primary">
-                <div className="cdh-tray-xs-font cdh-tray-small-xs cdh-color-green">
-                    {new Date(timer * 1000).toISOString().substr(11, 8)}
-                </div>
-            </div> 
+            <div className="cdh-tray-primary" onClick={toggleModal}>
+            <div className="cdh-tray-xs-font cdh-tray-small-xs cdh-color-green">
+                {new Date(timer * 1000).toISOString().substr(11, 8)}
+            </div>
+        </div> 
+        
+            
 
             <div className="cdh-tray-secondary cdh-tray-ico-xs">
                 <div style={{cursor:'pointer'}} className="cdh-timeaction--btn w-inline-block">
@@ -55,11 +76,11 @@ const Timer = props => {
                     <div className="cdh-ico cdh-tray-playico cdh-trayico-small" onClick={handleStart}
                     ></div>
                 }
-
                 </div>
             </div>
-
-        </div>
+        </div>:<TimePicker value={''}
+         onChange={handleChange} />
+        }
     </div>
 
 

@@ -22,7 +22,7 @@ const AdminLogin = props => {
     const handleLogin = e => {
       e.preventDefault()
       dispatch(loginUser(state))
-      props.history.push('/dashboard/admin')
+      props.history.push('/admin/dashboard')
     }
   
   
@@ -61,8 +61,8 @@ const AdminLogin = props => {
                                     </div>
                                 </div>
                                 <button onClick={handleLogin} className="btn btn-primary shadow-2 mb-4">Login</button>
-                                <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
-                                <p className="mb-0 text-muted">Don’t have an account? <NavLink to="/auth/signup-1">Signup</NavLink></p>
+                                <p className="mb-2 text-muted">Forgot password? <NavLink to="/forgot">Reset</NavLink></p>
+                                <p className="mb-0 text-muted">Don’t have an account? <NavLink to="/admin/register">Signup</NavLink></p>
                             </div>
                         </div>
                     </div>

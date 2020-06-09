@@ -1,4 +1,6 @@
 import React, { Component, Suspense } from 'react';
+import './app.scss';
+
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
@@ -12,8 +14,8 @@ import {adminRoutes} from "../../../routes";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/ActionTypes";
 
-import './app.scss';
 import AddTargetModal from '../../components/AddTargetModal';
+// import TimeEditModal from '../../components/EditTimerModal'
 
 class AdminLayout extends Component {
 
@@ -71,10 +73,11 @@ class AdminLayout extends Component {
                                             <Suspense fallback={<Loader/>}>
                                                 <Switch>
                                                     {menu}
-                                                    {/* <Redirect from="/" to={this.props.defaultPath} /> */}
+                                                    <Redirect from="*" to='/admin/dashboard' />
                                                 </Switch>
                                             </Suspense>
                                             <AddTargetModal />
+                                            {/* <TimeEditModal /> */}
                                         </div>
                                     </div>
                                 </div>

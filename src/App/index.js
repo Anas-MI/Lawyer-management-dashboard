@@ -1,9 +1,10 @@
+
 import React, { Component, Suspense, useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import 'font-awesome/css/font-awesome.min.css';
-import './App.css';
 import "./App.scss"
+import './App.css';
+
 
 import Loader from './layout/Loader'
 import Aux from "../hoc/_Aux";
@@ -21,21 +22,22 @@ import BlogPage from './containers/Auth/blogpage';
 import ContactUs from './containers/Auth/contactus';
 import Subscription from './containers/Auth/subscription';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AdminLogin from '../Demo/Authentication/SignIn/SignIn1'
 import AdminRegister from '../Demo/Authentication/SignUp/SignUp1'
 import LawyerLayout from './layout/LawyerLayout';
+import { logoutUser } from '../store/Actions';
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
     loading: Loader
 });
 
-const App = () => {
+const App = props => {
 
-const user = useSelector(state => state.user)
-
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
 
 
     const menu = routes.map((route, index) => {
@@ -74,22 +76,31 @@ const user = useSelector(state => state.user)
               <Switch>
                     {menu}
                     {
-                    user.token.user.admin?
-                    <Route path="/" component={AdminLayout} />
+                    user.token.user.admin
+                    ?(
+                        <Aux>
+                            <Route path="/" component={AdminLayout} />
+                            <Route path='/login' exact component={LoginPage} />
+                        </Aux>
+                    )
                     :<Route path="/" component={LawyerLayout} />
                     }
               </Switch>
           )
       }
 
+
+      const handleLogout = () => {
+            dispatch(logoutUser())
+            return <Redirect to='/' />
+
+      }
+
       return (
         <Aux>
             <ScrollToTop>
                 <Suspense fallback={<Loader/>}>
-                    <Switch>
                         {Paths}
-                        {/* <Redirect from="*" to={redirect} /> */}
-                    </Switch>
                     <Toaster/>
                 </Suspense>
             </ScrollToTop>
