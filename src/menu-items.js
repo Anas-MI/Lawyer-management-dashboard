@@ -7,6 +7,13 @@ export const navigation = {
             icon: 'icon-navigation',
             children: [
                 {
+                    id: 'dashboard',
+                    title: 'Dashboard',
+                    type: 'item',
+                    icon: 'feather icon-calendar',
+                    url: '/dashboard/admin'
+                },
+                {
                     id: 'lawyermanage',
                     title: 'Manage Lawyers',
                     type: 'item',
