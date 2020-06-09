@@ -5,6 +5,7 @@ import calendar from '../img/calendar.png'
 import contact from '../img/contact.png'
 import account from '../img/account.png'
 import axios from 'axios'
+import api from '../../../resources/api'
 
 export class features extends Component {
   state = {
@@ -12,7 +13,7 @@ export class features extends Component {
     };
 
 componentDidMount () {
-    axios.get('http://localhost:3000/api/features/showall')
+    api.get('/features/showall')
     .then(res =>{
       this.setState({
         features: res.data.data,
