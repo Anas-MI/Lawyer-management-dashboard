@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { register } from "../../../store/Actions";
+import Navigation from '../../components/HomePage/navigation'
+import Footer from '../../components/HomePage/footer'
 
 function Registration(props) {
 
@@ -23,6 +25,8 @@ function Registration(props) {
   }
 
   return (
+    <>
+    <Navigation />
     <div className="Login">
       <div className="container text-center">
         <div className="align-content-center form-size py-3 row">
@@ -145,6 +149,8 @@ function Registration(props) {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

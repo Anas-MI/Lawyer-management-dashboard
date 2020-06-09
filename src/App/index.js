@@ -16,6 +16,11 @@ import LoginPage from './containers/Auth/Login.jsx'
 import ForgotPass from './containers/Auth/ForgotPass';
 import Registration from './containers/Auth/registration';
 import Reset from './containers/Auth/resetpass';
+import Blog from './containers/Auth/blogcard';
+import BlogPage from './containers/Auth/blogpage';
+import ContactUs from './containers/Auth/contactus';
+import Subscription from './containers/Auth/subscription';
+
 import { useSelector } from 'react-redux';
 
 const AdminLayout = Loadable({
@@ -50,6 +55,10 @@ const user = useSelector(state => state.user)
                 <Route path='/forgot' exact component={ForgotPass} />
                 <Route path='/reset' exact component={Reset} />
                 <Route path='/registration' exact component={Registration} />
+                <Route path='/blog' exact component={Blog} />
+                <Route path='/blogpage' exact component={BlogPage} />
+                <Route path='/contact' exact component={ContactUs} />
+                <Route path='/subscription' exact component={Subscription} />
                 <Redirect from="*" to='/' />
           </Switch>
       )

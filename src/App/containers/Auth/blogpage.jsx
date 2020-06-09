@@ -1,9 +1,11 @@
 import React from 'react';
-import Footer from '../components/footer'
+import Footer from '../../components/HomePage/footer'
+import Navigation from '../../components/HomePage/navigation'
 
 const blogpage = () =>{
     return(
         <>
+        <Navigation />
         <div className="blogpage my-5">
             <div className="container">
                 <div className="row justify-content-md-center">
@@ -16,7 +18,7 @@ const blogpage = () =>{
                                 <span datetime="2020-06-04T19:33:31+05:30" itemprop="dateModified" className="entry-time mr-1">June 04, 2020</span> 
                                 <span className="entry-author "> written by
                                     <a href="/" className="entry-author-link" rel="author">
-                                        <span className="entry-author-name ml-2">Gourav Goyal</span>
+                                        <span className="entry-author-name ml-2">xyz</span>
                                     </a>
                                 </span> 
                             </p>

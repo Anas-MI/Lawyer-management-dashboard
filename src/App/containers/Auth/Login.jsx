@@ -1,6 +1,8 @@
 import React , {useState} from "react";
 import { loginUser } from "../../../store/Actions";
 import { useDispatch } from "react-redux";
+import Navigation from '../../components/HomePage/navigation'
+import Footer from '../../components/HomePage/footer'
 
 const  Login = (props) => {
 
@@ -24,6 +26,8 @@ const  Login = (props) => {
 
 
   return (
+    <>
+    <Navigation />
     <div className="Login">
       <div className="container text-center">
         <div className="align-content-center form-size py-3 row">
@@ -76,6 +80,8 @@ const  Login = (props) => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 
