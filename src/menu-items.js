@@ -82,13 +82,6 @@ export default {
                     url: '/calendar'
                 },
                 {
-                    id: 'task',
-                    title: 'Task',
-                    type: 'item',
-                    icon: 'feather icon-tasks',
-                    url: '/'
-                },
-                {
                     id: 'matters',
                     title: 'Matters',
                     type: 'item',
