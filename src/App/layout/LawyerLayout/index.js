@@ -74,7 +74,7 @@ class LawyerLayout extends Component {
                                             <Suspense fallback={<Loader/>}>
                                                 <Switch>
                                                     {menu}
-                                                    <Redirect from="/" to={this.props.defaultPath} />
+                                                    <Redirect from="*" to='/dashboard/default' />
                                                 </Switch>
                                             </Suspense>
                                             <AddTargetModal />

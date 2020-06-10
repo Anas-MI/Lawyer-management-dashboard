@@ -77,7 +77,6 @@ class AdminLayout extends Component {
                                                 </Switch>
                                             </Suspense>
                                             <AddTargetModal />
-                                            {/* <TimeEditModal /> */}
                                         </div>
                                     </div>
                                 </div>
