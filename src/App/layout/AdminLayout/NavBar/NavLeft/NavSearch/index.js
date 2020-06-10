@@ -64,7 +64,7 @@ class NavSearch extends Component {
             <Aux>
                 <div id="main-search" className={searchClass.join(' ')}>
                 <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Calendar'}]}
-                    className="form-control" placeholder="Search . . ." style={{width: this.state.searchString}}/>
+                    className="form-control" placeholder="Search . . ." style={{width: '90px'}}/>
 
                     {/* <div className="input-group">
                         <input type="text" id="m-search" value={this.searchValue} onChange={this.onSearch} className="form-control" placeholder="Search . . ." style={{width: this.state.searchString}}/>
