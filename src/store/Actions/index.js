@@ -78,6 +78,7 @@ export const loginUser = payload => {
     return dispatch => {
         api.post('/auth/login' , payload)
         .then(res=>{
+            console.log(res.data)
             if(res.data.token.user.blocked){
                 throw Error('Blocked')
             }
@@ -89,6 +90,7 @@ export const loginUser = payload => {
             }))
         })
         .catch(err=>{
+            console.log(err)
             //Dispatch Toaster Notificaton
             dispatch(toggleToaster({
                 msg:err.message || "Someting Went Wrong",
