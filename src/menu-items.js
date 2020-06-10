@@ -10,42 +10,42 @@ export const navigation = {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather fa-book',
                     url: '/admin/dashboard'
                 },
                 {
                     id: 'lawyermanage',
                     title: 'Manage Lawyers',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-legal',
                     url: '/lawyers'
                 },
                 {
                     id: 'subscriptionmanage',
                     title: 'Manage Subscriptions',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-cog',
                     url: '/supscriptions'
                 },
                 {
                     id: 'support',
                     title: 'Support',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-info-sign',
                     url: '/support'
                 },
                 {
                     id: 'content',
                     title: 'Manage Content',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-envelope',
                     url: '/content'
                 },
                 {
                     id: 'logout',
                     title: 'Logout',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-signout',
                     url: '/logout'
                 }
 
@@ -71,7 +71,7 @@ export default {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather icon-desktop',
+                    icon: 'feather fa-book',
                     url: '/dashboard/default'
                 },
                 {

@@ -19,7 +19,9 @@ export class Header extends Component {
                     width={"100%"}
                     height={"calc(100vh - 93px)"}
                     images={images}
-                />
+          />
+          <div className="head-centered overlay-slider"><h1>Your clients rely on you. Lawyers rely on Us.</h1></div>
+          
             {/* <div className="container">
               <div className="row">
                 <div className="col-md-8 col-md-offset-2 intro-text">

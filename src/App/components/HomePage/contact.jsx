@@ -9,7 +9,7 @@ export class Contact extends Component {
     name: '',
     number: '',
   	email: '',
-  	description: '',
+    description: '',
   }
   onNameChange = (event) => {
     this.setState({name: event.target.value})
