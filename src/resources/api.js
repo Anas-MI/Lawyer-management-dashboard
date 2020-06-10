@@ -2,9 +2,9 @@ import axios from 'axios'
 
 
 const api = axios.create({
-    baseURL:'http://localhost:5000/api',
+    baseURL:'http://localhost:3001/api',
     withCredentials:true,
 })
 
-export const apiUrl = 'http://localhost:5000/api'
+export const apiUrl = 'http://localhost:3001/api'
 export default api

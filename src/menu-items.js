@@ -71,7 +71,7 @@ export default {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-desktop',
                     url: '/dashboard/default'
                 },
                 {
@@ -92,28 +92,28 @@ export default {
                     id: 'matters',
                     title: 'Matters',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-legal',
                     url: '/'
                 },
                 {
                     id: 'contacts',
                     title: 'Contact',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-envelope',
                     url: '/'
                 },
                 {
                     id: 'activities',
                     title: 'Activities',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-bolt',
                     url: '/'
                 },
                 {
                     id: 'billings',
                     title: 'Billings',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-usd',
                     url: '/'
                 },
                 {
@@ -134,14 +134,14 @@ export default {
                     id: 'communication',
                     title: 'Communication ',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-comment-alt',
                     url: '/'
                 },
                 {
                     id: 'reports',
                     title: 'Reports',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-book',
                     url: '/'
                 },
                 {
@@ -155,14 +155,14 @@ export default {
                     id: 'help',
                     title: 'Help centre',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-info-sign',
                     url: '/'
                 },
                 {
                     id: 'logout',
                     title: 'Logout',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-signout',
                     url: '/logout'
                 }
 
