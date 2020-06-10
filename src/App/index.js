@@ -117,12 +117,18 @@ const App = (props) => {
         <Suspense fallback={<Loader />}>
           {user ? (
             user.token.user.admin ? (
-              <Switch>{adminmenu}</Switch>
+              <Switch>{adminmenu}
+              <Redirect from='*' to='/' />
+              </Switch>
             ) : (
-              <Switch>{lawyermenu}</Switch>
+              <Switch>{lawyermenu}
+              <Redirect from='*' to='/' />
+              </Switch>
             )
           ) : (
-            <Switch>{menu}</Switch>
+            <Switch>{menu}
+                <Redirect from='*' to='/' />
+            </Switch>
           )}
           <Toaster />
         </Suspense>
