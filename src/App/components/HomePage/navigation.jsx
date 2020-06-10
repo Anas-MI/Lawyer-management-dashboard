@@ -10,7 +10,7 @@ export class Navigation extends Component {
       <div className="row">
         <div className="col-12">
           <nav className="navbar navbar-expand-md navbar-light">
-          <Link className="navbar-brand page-scroll" to="/">Case Management</Link>
+          <Link className="navbar-brand-name page-scroll" to="/">Case Management</Link>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -25,7 +25,7 @@ export class Navigation extends Component {
 
           <div className="navbar-login ml-auto"> 
           <ul className="navbar-nav py-4 py-md-0">      
-            <li className="nav-item"><Link to="/login" className="nav-link page-scroll">Login</Link></li>
+            <li className="nav-item mr-3"><Link to="/login" className="nav-link page-scroll">Login</Link></li>
             <li className="nav-item"><Link to="/registration" className="text-white page-scroll cust-btn-primary" style={{borderRadius:'0.25rem'}}>Register</Link></li>
           </ul>
         </div>
