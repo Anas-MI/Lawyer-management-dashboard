@@ -65,7 +65,7 @@ const AdminRegister = props =>  {
                                     </div>
                                 </div>
                                 <button onClick={handleRegister} className="btn btn-primary shadow-2 mb-4">Sign up</button>
-                                <p className="mb-0 text-muted">Allready have an account? <NavLink to="/auth/signin-1">Login</NavLink></p>
+                                <p className="mb-0 text-muted">Allready have an account? <NavLink to="/admin/login">Login</NavLink></p>
                             </div>
                         </div>
                     </div>

@@ -61,12 +61,12 @@
   }
   
   .chd-trayico.cdh-trayico-small.cdh-tray-active {
-    width: 100px;
-    height: 28px;
+    width: 150px;
+    height: 35px;
     padding-top: 6px;
     padding-bottom: 6px;
     border-radius: 3px;
-    background-color: #38bf1d;
+    background-color: #5993df;
   }
 
   .cdh-tray-primary {
@@ -84,19 +84,19 @@
     align-items: center;
   }
   .cdh-tray-xs-font {
-    font-size: 0.9rem;
-    line-height: 1.2rem;
+    font-size: 1.2rem;
+    line-height: 1.8rem;
   }
   
   .cdh-tray-xs-font.cdh-tray-small-xs {
-    font-size: 0.8rem;
-    line-height: 1.1rem;
+    font-size: 1.3rem;
+    line-height: 1.5rem;
   }
   
   .cdh-tray-xs-font.cdh-tray-small-xs.cdh-color-green {
     color: #fff;
-    font-size: 0.75rem;
-    line-height: 0.9rem;
+    font-size: 1.1rem;
+    line-height: 1.3rem;
   }
   .cdh-tray-secondary {
     display: -webkit-box;
@@ -123,7 +123,7 @@
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    padding: 3px;
+    padding: 5px;
     -webkit-box-pack: center;
     -webkit-justify-content: center;
     -ms-flex-pack: center;

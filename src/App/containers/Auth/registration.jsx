@@ -40,9 +40,9 @@ function Registration(props) {
                 <div className="row">
                   <div className="col-md-6">
                   <div className="form-group">
-                      <input name='firstname' value={state['firstname']}
+                      <input name='firstName' value={state['firstName']}
                         type="text" onChange={handleChange}
-                        id="firstname"
+                        id="firstName"
                         className="form-control"
                         placeholder="First Name"
                         required="required"
@@ -52,9 +52,9 @@ function Registration(props) {
                   </div>
                   <div className="col-md-6">
                   <div className="form-group">
-                    <input name='lastname' value={state['lastname']}
+                    <input name='lastName' value={state['lastName']}
                         type="text" onChange={handleChange}
-                        id="lastname"
+                        id="lastName"
                         className="form-control"
                         placeholder="Last Name"
                         required="required"
@@ -375,7 +375,8 @@ function Registration(props) {
                  </div>
                <div id="success"></div>
                 <button type="submit" 
-                onClick={handleRegister}className="text-white page-scroll btn cust-btn-primary mt-3">
+                onClick={handleRegister} style={{borderRadius:'0.25rem'}}
+                className="text-white page-scroll cust-btn-primary mt-3">
                   Registration
                 </button>
                 <div class="text-block text-center my-3">

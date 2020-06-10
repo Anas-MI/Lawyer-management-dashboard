@@ -1,7 +1,7 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import '/css/.min.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
@@ -15,8 +15,7 @@ import config from './config';
 
 const app = (
     <Provider store={store}>
-        <BrowserRouter basename={config.basename}>
-            {/* basename="/datta-able" */}
+        <BrowserRouter>
             <App />
         </BrowserRouter>
     </Provider>

@@ -1,6 +1,7 @@
 import {
     LOGIN_USER,
     LOGIN_USER_SUCCESS,
+    LOGOUT_USER,
     REGISTER_USER,
     REGISTER_USER_SUCCESS,
     TOGGLE_ADD_TARGET_MODAL,
@@ -12,18 +13,20 @@ import {
     BLOCK_USER,
     BLOCK_USER_SUCCESS,
     UNBLOCK_USER_SUCCESS,
-    TOGGLE_TOASTER
+    TOGGLE_TOASTER,
+    TOGGLE_TIME_EDIT_MODAL
 } from '../ActionTypes'
 
 import api from '../../resources/api'
 
 
 //Auth
-const setLoginSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
+export const setLoginSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
 const setRegisterSuccess = payload => ({type:LOGIN_USER_SUCCESS,payload})
 
 //Dashboard
 export const toggleAddTargetModal = payload => ({type:TOGGLE_ADD_TARGET_MODAL,payload})
+export const toggleTimeEditModal = payload => ({type:TOGGLE_TIME_EDIT_MODAL,payload})
 
 
 //Timer
@@ -36,37 +39,6 @@ export const toggleToaster = (payload) => ({
     payload,
   });
 
-//calendar
-const setEvents = payload => ({type:SET_EVENTS_SUCCESS,payload})
-
-export const getEvents = payload => {
-    return dispatch => {
-        //Fetch Events
-
-        
-        dispatch(setEvents([{//Temp Data
-            Id: 1,
-            Subject: 'Explosion of Betelgeuse Star',
-            StartTime: new Date(2018, 1, 15, 9, 30),
-            EndTime: new Date(2018, 1, 15, 11, 0)
-        }, {
-            Id: 2,
-            Subject: 'Thule Air Crash Report',
-            StartTime: new Date(2018, 1, 12, 12, 0),
-            EndTime: new Date(2018, 1, 12, 14, 0)
-        }, {
-            Id: 3,
-            Subject: 'Blue Moon Eclipse',
-            StartTime: new Date(2018, 1, 13, 9, 30),
-            EndTime: new Date(2018, 1, 13, 11, 0)
-        }, {
-            Id: 4,
-            Subject: 'Meteor Showers in 2018',
-            StartTime: new Date(2018, 1, 14, 13, 0),
-            EndTime: new Date(2018, 1, 14, 14, 30)
-        }]))
-    }
-}
 
 //calendar
 const setEvents = payload => ({type:SET_EVENTS_SUCCESS,payload})
@@ -106,17 +78,22 @@ export const loginUser = payload => {
     return dispatch => {
         api.post('/auth/login' , payload)
         .then(res=>{
+            console.log(res.data)
+            if(res.data.token.user.blocked){
+                throw Error('Blocked')
+            }
             dispatch(setLoginSuccess(res.data))
             dispatch(toggleToaster({
                 msg:'Login Success',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
         })
         .catch(err=>{
-            console.log(Object.keys(err)) //Dispatch Toaster Notificaton
+            console.log(err)
+            //Dispatch Toaster Notificaton
             dispatch(toggleToaster({
-                msg:"Someting Went Wrong",
+                msg:err.message || "Someting Went Wrong",
                 color:'red',
             }))
 
@@ -124,13 +101,15 @@ export const loginUser = payload => {
     }
 }
 
+export const logoutUser = payload => ({type:LOGOUT_USER,payload})
+
 export const register = payload => {
     return dispatch => {
         api.post('/auth/register',payload)
         .then(res=>{
             dispatch(toggleToaster({
                 msg:res.data.message,
-                color:'green',
+                color:'#38BF1D',
             }))
 
         })
@@ -177,7 +156,7 @@ export const blockUser = payload => {
             dispatch(toggleToaster({
                 msg:'Blocked Successfully',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
         })
         .catch(err=>{
@@ -199,7 +178,7 @@ export const unblockUser = payload => {
             dispatch(toggleToaster({
                 msg:'Unblocked Successfully',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
             console.log(res.data)
 

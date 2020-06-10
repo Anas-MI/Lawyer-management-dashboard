@@ -7,3 +7,21 @@
 .contactPageForm{
     background-color: #fff !important;
 }
+
+.head-centered{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: .5s ease;
+  opacity: 1;
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  h1 {
+    font-size: 60px !important;
+  }
+}
+.image-slider:hover{
+    opacity: 0.6;
+}
+

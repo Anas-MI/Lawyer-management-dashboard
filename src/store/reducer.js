@@ -16,6 +16,8 @@ const initialState = {
         timeout:0,
         color:'green'
     },
+    timeEditModal:false,
+    timer: parseInt(localStorage.getItem('timer')) || 0,
     Calendar:{
         Events:[]
     },
@@ -103,6 +105,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 user:action.payload
             }
+        case actionTypes.LOGOUT_USER:{
+            return {
+                ...state,
+                user:null
+            }
+        }
         case actionTypes.TOGGLE_ADD_TARGET_MODAL:
             return {
                     ...state,
@@ -120,12 +128,12 @@ const reducer = (state = initialState, action) => {
         //         timer : 0
         //     }
         // }
-        // case actionTypes.SET_TIMER:{
-        //     return {
-        //         ...state,
-        //         timer : action.payload
-        //     }
-        // }
+        case actionTypes.SET_TIMER:{
+            return {
+                ...state,
+                timer : action.payload
+            }
+        }
         case actionTypes.TOGGLE_TOASTER:{
             return {
                 ...state,
@@ -150,14 +158,28 @@ const reducer = (state = initialState, action) => {
                 lawyers:action.payload
             }
         }
-        case actionTypes.SET_EVENTS_SUCCESS:{
+        case actionTypes.TOGGLE_TIME_EDIT_MODAL:{
             return {
                 ...state,
-                Calendar:{
-                    Events:action.payload
-                }
+                timeEditModal:!state.timeEditModal
             }
         }
+        case actionTypes.BLOCK_USER_SUCCESS:
+            return {
+                ...state,
+                lawyers:state.lawyers.map(l=>{
+                    if(l._id===action.payload._id)l=action.payload
+                    return l
+                })
+            }
+        case actionTypes.UNBLOCK_USER_SUCCESS:
+            return {
+                ...state,
+                lawyers:state.lawyers.map(l=>{
+                    if(l._id===action.payload._id)l=action.payload
+                    return l
+                })
+            }
 
         default:
             return state;

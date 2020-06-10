@@ -7,6 +7,7 @@ import DEMO from "../../store/constant";
 import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
+import GrowthChart from '../../App/components/GrowthChart'
 
 class AdminDashboard extends React.Component {
     render() {
@@ -177,8 +178,12 @@ class AdminDashboard extends React.Component {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <Col md={6} xl={8}>
+                        <GrowthChart/>
+                    </Col>
 
 
+{/* 
                     <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
                             <Card.Header>
@@ -232,7 +237,7 @@ class AdminDashboard extends React.Component {
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                             <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>
                                              724</h3>
                                     </div>
 
@@ -242,7 +247,7 @@ class AdminDashboard extends React.Component {
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
+                                </div> 
                             </Card.Body>
                         </Card>
                         
@@ -252,7 +257,7 @@ class AdminDashboard extends React.Component {
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                             <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> 
                                              25</h3>
                                     </div>
 
@@ -260,9 +265,9 @@ class AdminDashboard extends React.Component {
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                 <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
+                                </div> 
                             </Card.Body>
                         </Card>
                     
@@ -274,7 +279,7 @@ class AdminDashboard extends React.Component {
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                             <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> 
                                              98</h3>
                                     </div>
 
@@ -282,9 +287,9 @@ class AdminDashboard extends React.Component {
                                         <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
                                     </div>
                                 </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                 <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
+                                </div> 
                             </Card.Body>
                         </Card>
                     </Col>
@@ -295,7 +300,7 @@ class AdminDashboard extends React.Component {
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
+                                             <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> 
                                              423</h3>
                                     </div>
 
@@ -303,9 +308,9 @@ class AdminDashboard extends React.Component {
                                         <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Events</a>
                                     </div>
                                 </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                 <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
+                                </div>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -316,7 +321,7 @@ class AdminDashboard extends React.Component {
                                 <div className="row d-flex align-items-center">
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
+                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> 
                                             666</h3>
                                     </div>
 
@@ -326,10 +331,14 @@ class AdminDashboard extends React.Component {
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
                                     <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
+                                </div>
                             </Card.Body>
                         </Card>
                     </Col>
+                    <Col md={6} xl={8}>
+                        <GrowthChart />
+                    </Col>
+
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Header>
@@ -401,6 +410,7 @@ class AdminDashboard extends React.Component {
                             </Tab>
                         </Tabs>
                     </Col>
+                 */}
                 </Row>
             </Aux>
         );

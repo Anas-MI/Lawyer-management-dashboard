@@ -10,37 +10,45 @@ export const navigation = {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather icon-calendar',
-                    url: '/dashboard/admin'
+                    icon: 'feather fa-book',
+                    url: '/admin/dashboard'
                 },
                 {
                     id: 'lawyermanage',
                     title: 'Manage Lawyers',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-legal',
                     url: '/lawyers'
                 },
                 {
                     id: 'subscriptionmanage',
                     title: 'Manage Subscriptions',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-cog',
                     url: '/supscriptions'
                 },
                 {
                     id: 'support',
                     title: 'Support',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-info-sign',
                     url: '/support'
                 },
                 {
                     id: 'content',
                     title: 'Manage Content',
                     type: 'item',
-                    icon: 'feather icon-calendar',
+                    icon: 'feather icon-envelope',
                     url: '/content'
                 },
+                {
+                    id: 'logout',
+                    title: 'Logout',
+                    type: 'item',
+                    icon: 'feather icon-signout',
+                    url: '/logout'
+                }
+
 
 
 
@@ -60,6 +68,13 @@ export default {
             icon: 'icon-navigation',
             children: [
                 {
+                    id: 'dashboard',
+                    title: 'Dashboard',
+                    type: 'item',
+                    icon: 'feather fa-book',
+                    url: '/dashboard/default'
+                },
+                {
                     id: 'calendar',
                     title: 'Calendar',
                     type: 'item',
@@ -67,38 +82,31 @@ export default {
                     url: '/calendar'
                 },
                 {
-                    id: 'task',
-                    title: 'Task',
-                    type: 'item',
-                    icon: 'feather icon-tasks',
-                    url: '/'
-                },
-                {
                     id: 'matters',
                     title: 'Matters',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-legal',
                     url: '/'
                 },
                 {
                     id: 'contacts',
                     title: 'Contact',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-envelope',
                     url: '/'
                 },
                 {
                     id: 'activities',
                     title: 'Activities',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-bolt',
                     url: '/'
                 },
                 {
                     id: 'billings',
                     title: 'Billings',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-usd',
                     url: '/'
                 },
                 {
@@ -119,14 +127,14 @@ export default {
                     id: 'communication',
                     title: 'Communication ',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-comment-alt',
                     url: '/'
                 },
                 {
                     id: 'reports',
                     title: 'Reports',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-book',
                     url: '/'
                 },
                 {
@@ -140,9 +148,17 @@ export default {
                     id: 'help',
                     title: 'Help centre',
                     type: 'item',
-                    icon: 'feather icon-server',
+                    icon: 'feather icon-info-sign',
                     url: '/'
+                },
+                {
+                    id: 'logout',
+                    title: 'Logout',
+                    type: 'item',
+                    icon: 'feather icon-signout',
+                    url: '/logout'
                 }
+
             ]
         },
         // for test commit

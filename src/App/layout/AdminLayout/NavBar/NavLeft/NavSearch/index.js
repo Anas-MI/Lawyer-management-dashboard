@@ -5,7 +5,7 @@ import Aux from "../../../../../../hoc/_Aux";
 import DEMO from "../../../../../../store/constant";
 import searchData from './searchdata'
 import { Card ,ListGroup} from 'react-bootstrap';
-
+import {AutoComplete} from 'antd'
 
 class NavSearch extends Component {
     state = {
@@ -63,14 +63,17 @@ class NavSearch extends Component {
             <Aux>
             <Aux>
                 <div id="main-search" className={searchClass.join(' ')}>
-                    <div className="input-group">
+                <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Calendar'}]}
+                    className="form-control" placeholder="Search . . ." style={{width: '90px'}}/>
+
+                    {/* <div className="input-group">
                         <input type="text" id="m-search" value={this.searchValue} onChange={this.onSearch} className="form-control" placeholder="Search . . ." style={{width: this.state.searchString}}/>
                         <a href={DEMO.BLANK_LINK} className="input-group-append search-close" onClick={this.searchOffHandler}>
                             <i className="feather icon-x input-group-text"/>
                         </a>                        <span className="input-group-append search-btn btn btn-primary" onClick={this.searchOnHandler}>
                         <i className="feather icon-search input-group-text"/>
                     </span>
-                    </div>
+                    </div> */}
                 </div>
             </Aux>
             {

@@ -4,6 +4,7 @@ import CalendarContainer from './App/containers/Calendar';
 import AdminDashboard from './Demo/Dashboard/Admin';
 import LawyerManagement from './App/containers/LawyerManagement';
 import LawyerDetail from './App/containers/LawyerDetailPage';
+import Logout from './App/components/Logout';
 
 window.jQuery = $;
 window.$ = $;
@@ -33,10 +34,12 @@ const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
 export const adminRoutes = [
-    { path: '/dashboard/admin', exact: true, name: 'AdminDashboard', component: AdminDashboard },
+    { path: '/admin/dashboard', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/lawyers', exact: true, name: 'Lawyer Management', component: LawyerManagement },
     { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
-    // { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
+    { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
+    { path: '/logout', exact: true, name: 'Logout', component: Logout},
+
     // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     // { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },
     // { path: '/basic/collapse', exact: true, name: 'Basic Collapse', component: UIBasicCollapse },
@@ -66,7 +69,8 @@ const routes = [
     { path: '/maps/google-map', exact: true, name: 'Google Map', component: GoogleMap },
     { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
-    { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer}
+    { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer},
+    { path: '/logout', exact: true, name: 'Logout', component: Logout},
 ];
 
 export default routes;
