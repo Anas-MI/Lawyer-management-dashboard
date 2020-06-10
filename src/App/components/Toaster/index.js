@@ -24,7 +24,7 @@ const Toaster = (props) => {
         className='cms-overlay cms-notification-toast cms-toast'
         style={{
           opacity: toaster.msg?1:0,
-          backgroundColor: 'blue',
+          backgroundColor: toaster.color,
           zIndex:99999999
         }}
       >

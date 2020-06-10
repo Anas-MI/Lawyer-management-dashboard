@@ -23,7 +23,7 @@ const LawyerManagement = (props) => {
   const columns = [
     {
       title: "First Name",
-      dataIndex: "firstname",
+      dataIndex: "firstName",
       key: "_id",
       sorter: (a, b ,c) => ( 
         c==='ascend'
@@ -33,7 +33,7 @@ const LawyerManagement = (props) => {
     },
     {
       title: "Last Name",
-      dataIndex: "lastname",
+      dataIndex: "lastName",
       key: "_id",
       sorter: (a, b ,c) => ( 
         c==='ascend'

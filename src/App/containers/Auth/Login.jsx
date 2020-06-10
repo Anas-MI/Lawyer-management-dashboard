@@ -1,6 +1,6 @@
 import React , {useState, useEffect} from "react";
 import { loginUser, setLoginSuccess } from "../../../store/Actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navigation from '../../components/HomePage/navigation'
 import Footer from '../../components/HomePage/footer'
 import {useParams} from 'react-router'
@@ -16,23 +16,11 @@ const  Login = (props) => {
   const [password ,setPassword] = useState('')
 
 
-  // useEffect(()=>{
-  //   if(lawyerdata){
-  //     dispatch(setLoginSuccess(lawyerdata))
-  //     props.history.push('/dashboard/default')
-  //   }
-
-  // },[])
-
-
   const handleLogin = e => {
     e.preventDefault()
     console.log({emailAddress,password})
     dispatch(loginUser({emailAddress,password}))
-    props.history.push('/dashboard/default')
-  
   }
-
 
 
   return (

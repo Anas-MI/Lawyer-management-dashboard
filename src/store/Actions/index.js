@@ -78,17 +78,20 @@ export const loginUser = payload => {
     return dispatch => {
         api.post('/auth/login' , payload)
         .then(res=>{
+            if(res.data.token.user.blocked){
+                throw Error('Blocked')
+            }
             dispatch(setLoginSuccess(res.data))
             dispatch(toggleToaster({
                 msg:'Login Success',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
         })
         .catch(err=>{
-            console.log(Object.keys(err)) //Dispatch Toaster Notificaton
+            //Dispatch Toaster Notificaton
             dispatch(toggleToaster({
-                msg:"Someting Went Wrong",
+                msg:err.message || "Someting Went Wrong",
                 color:'red',
             }))
 
@@ -104,7 +107,7 @@ export const register = payload => {
         .then(res=>{
             dispatch(toggleToaster({
                 msg:res.data.message,
-                color:'green',
+                color:'#38BF1D',
             }))
 
         })
@@ -151,7 +154,7 @@ export const blockUser = payload => {
             dispatch(toggleToaster({
                 msg:'Blocked Successfully',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
         })
         .catch(err=>{
@@ -173,7 +176,7 @@ export const unblockUser = payload => {
             dispatch(toggleToaster({
                 msg:'Unblocked Successfully',
                 timeout:5000,
-                color:'green',
+                color:'#38BF1D',
             }))
             console.log(res.data)
 
