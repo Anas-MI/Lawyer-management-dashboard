@@ -4,6 +4,7 @@ import SimpleImageSlider from "react-simple-image-slider";
 
 export class Header extends Component {
   render() {
+    
     const images = [
       { url: "/img/slider2.jpg" },
       { url: "/img/slider3.jpg" },

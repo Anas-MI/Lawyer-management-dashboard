@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import axios from 'axios'
 import { apiUrl } from "../../../resources/api";
+import { Modal } from 'react-bootstrap';
 
-
+const validEmailRegex = 
+  RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
 export class Contact extends Component {
   
   state ={
@@ -10,44 +12,85 @@ export class Contact extends Component {
     number: '',
   	email: '',
     description: '',
-  }
-  onNameChange = (event) => {
-    this.setState({name: event.target.value})
-  }
-
-  onNumberChange = (event) => {
-    this.setState({number: event.target.value})
-  }
-
-  onEmailChange = (event) =>{
-    this.setState({email: event.target.value})
+    show : false,
+    errors: {
+      name: '',
+      email: '',
+      number: '',
+    }
   }
 
-  onDescriptionChange = (event)  => {
-    this.setState({description: event.target.value})
+
+  handleChange=(event) =>{
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = this.state.errors;
+    switch (name) {
+      case 'name': 
+        errors.name = 
+          value.length < 5
+            ? 'Name must be 5 characters long!'
+            : '';
+        break;
+      case 'number': 
+        errors.number = 
+          value.length < 10
+            ? 'Number must be 10 digit long!'
+            : '';
+        break;
+      case 'email': 
+        errors.email = 
+          validEmailRegex.test(value)
+            ? ''
+            : 'Email is not valid!';
+        break;
+      default:
+        break;
+    }
+    this.setState({errors, [name]: value}, ()=> {
+      console.log(errors)
+    })
+    this.setState({ [name] : value})
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    axios({
-      method: "POST", 
-      url:`${apiUrl}/contactus/create`, 
-      data:  this.state
-    }).then((response)=>{
-      if (response.data.status === 'success'){
-        alert("Message Sent."); 
-        this.resetForm()
-      }else if(response.data.status === 'fail'){
-        alert("Message failed to send.")
-      }
-    })
-    this.setState({
-      name: '',
-      number: '',
-  	  email: '',
-  	  description: '',
-    })
+    const validateForm = (errors) => {
+      let valid = true;
+      Object.values(errors).forEach(
+        // if we have an error string set valid to false
+        (val) => val.length > 0 && (valid = false)
+      );
+      return valid;
+    }
+    if(validateForm(this.state.errors)) {
+      this.setState({show:true});
+      axios({
+        method: "POST", 
+        url:`${apiUrl}/contactus/create`, 
+        data:  this.state
+      }).then((response)=>{
+        if (response.data.status === 'success'){
+          alert("Message Sent."); 
+          this.resetForm()
+        }else if(response.data.status === 'fail'){
+          alert("Message failed to send.")
+        }
+      })
+      this.setState({
+        name: '',
+        number: '',
+        email: '',
+        description: '',
+      })
+    }else{
+      alert("Message failed to send.")
+    }
+    
   }
+
+  
+
   render() {
     return (
       <div>
@@ -70,12 +113,13 @@ export class Contact extends Component {
                         <input
                           type="text"
                           id="name"
+                          name="name"
                           className="form-control"
                           placeholder="Name"
                           required="required"
-                          onChange={this.onNameChange}
+                          onChange={this.handleChange}
                         />
-                        <p className="help-block text-danger"></p>
+                        <p className="help-block text-danger">{this.state.errors.name}</p>
                       </div>
                     </div>
                     <div className="col-md-6">
@@ -83,12 +127,13 @@ export class Contact extends Component {
                         <input
                           type="number"
                           id="number"
+                          name="number"
                           className="form-control"
                           placeholder="Number"
                           required="required"
-                          onChange={this.onNumberChange}
+                          onChange={this.handleChange}
                         />
-                        <p className="help-block text-danger"></p>
+                        <p className="help-block text-danger">{this.state.errors.number}</p>
                       </div>
                     </div>
                     <div className="col-md-12">
@@ -96,12 +141,13 @@ export class Contact extends Component {
                         <input
                           type="email"
                           id="email"
+                          name="email"
                           className="form-control"
                           placeholder="Email"
                           required="required"
-                          onChange={this.onEmailChange}
+                          onChange={this.handleChange}
                         />
-                        <p className="help-block text-danger"></p>
+                        <p className="help-block text-danger">{this.state.errors.email}</p>
                       </div>
                     </div>
                   </div>
@@ -109,11 +155,12 @@ export class Contact extends Component {
                     <textarea
                       name="Description"
                       id="message"
+                      name="description"
                       className="form-control"
                       rows="4"
                       placeholder="Description"
                       required ="required"
-                      onChange={this.onDescriptionChange}
+                      onChange={this.handleChange}
                     ></textarea>
                     <p className="help-block text-danger"></p>
                   </div>
@@ -129,6 +176,18 @@ export class Contact extends Component {
              </div>
         </div>
       </div>
+      <Modal
+        show={this.state.show}
+        onHide={() => this.setState({show : false})}
+        dialogClassName="modal-90w"
+        aria-labelledby="example-custom-modal-styling-title"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-custom-modal-styling-title">
+            <p className="text-success">Message Sent.</p>         
+          </Modal.Title>
+        </Modal.Header>
+      </Modal>
       </div>
     );
   }

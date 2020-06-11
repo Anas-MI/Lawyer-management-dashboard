@@ -21,7 +21,11 @@
     font-size: 60px !important;
   }
 }
-// .image-slider:hover{
-//     opacity: 0.6;
-// }
 
+.image-slider {
+  div {  
+    background: rgba(0, 0, 0, .6);
+    opacity: 0.8;
+  }
+
+}
