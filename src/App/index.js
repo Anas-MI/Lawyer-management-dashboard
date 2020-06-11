@@ -106,10 +106,6 @@ const App = (props) => {
   //       )
   //   }
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    return <Redirect to="/" />;
-  };
 
   return (
     <Aux>

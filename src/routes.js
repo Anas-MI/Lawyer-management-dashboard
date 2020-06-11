@@ -31,6 +31,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 
+const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
 export const adminRoutes = [
@@ -39,6 +40,7 @@ export const adminRoutes = [
     { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
+    { path: '/login/:lawyer', exact: true, name: 'Logout', component: Login},
 
     // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     // { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },

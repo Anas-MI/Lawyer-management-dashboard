@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
-import { getLawyers, unblockUser, blockUser } from "../../../store/Actions";
+import { getLawyers, unblockUser, blockUser,selectLawyer } from "../../../store/Actions";
 
 
 
@@ -77,6 +77,10 @@ const LawyerManagement = (props) => {
     )
   })
 
+  const handleLawyerSelect = (record) => {
+    dispatch(selectLawyer(record))
+    props.history.push('/lawyer/details')
+  }
   
   const columns = [
     {
@@ -131,13 +135,15 @@ const LawyerManagement = (props) => {
         key: "_id",
         render:(_,record)=>{
             return (
-                <Button onClick={()=>props.history.push({pathname:`/lawyer/details/`,user:record})}>
+                <Button onClick={()=>handleLawyerSelect(record)}>
                     View
                 </Button>
             )
         }
     },
   ];
+
+
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
