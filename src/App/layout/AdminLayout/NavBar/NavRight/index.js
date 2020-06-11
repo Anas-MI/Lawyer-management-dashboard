@@ -20,8 +20,8 @@ class NavRight extends Component {
 
         return (
             <Aux>
-                <Timer />
                 <ul className="navbar-nav ml-auto">
+                    <li><Timer/></li>
                     <li>
                         <Dropdown alignRight={!this.props.rtlLayout}>
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">

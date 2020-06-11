@@ -89,14 +89,14 @@
   }
   
   .cdh-tray-xs-font.cdh-tray-small-xs {
-    font-size: 1.3rem;
-    line-height: 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1.9rem;
   }
   
   .cdh-tray-xs-font.cdh-tray-small-xs.cdh-color-green {
     color: #fff;
-    font-size: 1.1rem;
-    line-height: 1.3rem;
+    font-size: 1.4rem;
+    line-height: 1.8rem;
   }
   .cdh-tray-secondary {
     display: -webkit-box;
