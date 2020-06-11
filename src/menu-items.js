@@ -10,42 +10,42 @@ export const navigation = {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather fa-book',
+                    icon: 'feather icon-bar-chart',
                     url: '/admin/dashboard'
                 },
                 {
                     id: 'lawyermanage',
                     title: 'Manage Lawyers',
                     type: 'item',
-                    icon: 'feather icon-legal',
+                    icon: 'feather icon-target',
                     url: '/lawyers'
                 },
                 {
                     id: 'subscriptionmanage',
                     title: 'Manage Subscriptions',
                     type: 'item',
-                    icon: 'feather icon-cog',
+                    icon: 'feather icon-users',
                     url: '/supscriptions'
                 },
                 {
                     id: 'support',
                     title: 'Support',
                     type: 'item',
-                    icon: 'feather icon-info-sign',
+                    icon: 'feather icon-help-circle',
                     url: '/support'
                 },
                 {
                     id: 'content',
                     title: 'Manage Content',
                     type: 'item',
-                    icon: 'feather icon-envelope',
+                    icon: 'feather icon-mail',
                     url: '/content'
                 },
                 {
                     id: 'logout',
                     title: 'Logout',
                     type: 'item',
-                    icon: 'feather icon-signout',
+                    icon: 'feather icon-log-out',
                     url: '/logout'
                 }
 
@@ -71,7 +71,7 @@ export default {
                     id: 'dashboard',
                     title: 'Dashboard',
                     type: 'item',
-                    icon: 'feather fa-book',
+                    icon: 'feather icon-bar-chart',
                     url: '/dashboard/default'
                 },
                 {
@@ -85,28 +85,28 @@ export default {
                     id: 'matters',
                     title: 'Matters',
                     type: 'item',
-                    icon: 'feather icon-legal',
+                    icon: 'feather icon-target',
                     url: '/'
                 },
                 {
                     id: 'contacts',
                     title: 'Contact',
                     type: 'item',
-                    icon: 'feather icon-envelope',
+                    icon: 'feather icon-mail',
                     url: '/'
                 },
                 {
                     id: 'activities',
                     title: 'Activities',
                     type: 'item',
-                    icon: 'feather icon-bolt',
+                    icon: 'feather icon-users',
                     url: '/'
                 },
                 {
                     id: 'billings',
                     title: 'Billings',
                     type: 'item',
-                    icon: 'feather icon-usd',
+                    icon: 'feather icon-book',
                     url: '/'
                 },
                 {
@@ -127,7 +127,7 @@ export default {
                     id: 'communication',
                     title: 'Communication ',
                     type: 'item',
-                    icon: 'feather icon-comment-alt',
+                    icon: 'feather icon-phone-call',
                     url: '/'
                 },
                 {
@@ -148,14 +148,14 @@ export default {
                     id: 'help',
                     title: 'Help centre',
                     type: 'item',
-                    icon: 'feather icon-info-sign',
+                    icon: 'feather icon-help-circle',
                     url: '/'
                 },
                 {
                     id: 'logout',
                     title: 'Logout',
                     type: 'item',
-                    icon: 'feather icon-signout',
+                    icon: 'feather icon-log-out',
                     url: '/logout'
                 }
 
