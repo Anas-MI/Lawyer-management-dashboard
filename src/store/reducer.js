@@ -11,18 +11,38 @@ const initialState = {
     user:getPersistedState('user') || null,
     //Add Target Modal
     targetModal :false,
+    //TOSATER
     toaster: {
         msg:null,
         timeout:0,
         color:'green'
     },
+    //Timer
     timeEditModal:false,
     timer: parseInt(localStorage.getItem('timer')) || 0,
+    //CALENDAR
     Calendar:{
         Events:[]
     },
+    //LAWYER MANAGEMENT
     lawyers:[],
-    selectedLawyer: getPersistedState('selectedLawyer') || {}
+    selectedLawyer: getPersistedState('selectedLawyer') || {},
+    //BLOGS
+    Blog : {
+        blogs : [] , 
+        selected : null
+    },
+    //features
+    Feature : {
+        features : [] , 
+        selected : null
+    },
+    //Plan
+    Plan : {
+        plans : [] , 
+        selected : null
+    }
+
 };
 
 
@@ -106,12 +126,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 user:action.payload
             }
-        case actionTypes.LOGOUT_USER:{
+        case actionTypes.LOGOUT_USER:
             return {
                 ...state,
                 user:null
             }
-        }
         case actionTypes.TOGGLE_ADD_TARGET_MODAL:
             return {
                     ...state,
@@ -129,13 +148,12 @@ const reducer = (state = initialState, action) => {
         //         timer : 0
         //     }
         // }
-        case actionTypes.SET_TIMER:{
+        case actionTypes.SET_TIMER:
             return {
                 ...state,
                 timer : action.payload
             }
-        }
-        case actionTypes.TOGGLE_TOASTER:{
+        case actionTypes.TOGGLE_TOASTER:
             return {
                 ...state,
                 toaster:{
@@ -144,48 +162,162 @@ const reducer = (state = initialState, action) => {
                     color:action.payload.color
                 }
             }
-        }
-        case actionTypes.SET_EVENTS_SUCCESS:{
+        case actionTypes.SET_EVENTS_SUCCESS:
             return {
                 ...state,
                 Calendar:{
                     Events:action.payload
                 }
             }
-        }
-        case actionTypes.SET_LAWYERS:{
+        case actionTypes.SET_LAWYERS:
             return {
                 ...state,
                 lawyers:action.payload
             }
-        }
-        case actionTypes.TOGGLE_TIME_EDIT_MODAL:{
+        case actionTypes.TOGGLE_TIME_EDIT_MODAL:
             return {
                 ...state,
                 timeEditModal:!state.timeEditModal
             }
-        }
         case actionTypes.BLOCK_USER_SUCCESS:
             return {
                 ...state,
-                lawyers:state.lawyers.map(l=>{
-                    if(l._id===action.payload._id)l=action.payload
-                    return l
-                })
+                lawyers:[...state.lawyers].map(l=>l._id===action.payload._id?action.payload:l)
             }
         case actionTypes.UNBLOCK_USER_SUCCESS:
             return {
                 ...state,
-                lawyers:state.lawyers.map(l=>{
-                    if(l._id===action.payload._id)l=action.payload
-                    return l
-                })
+                lawyers:[...state.lawyers].map(l=>l._id===action.payload._id?action.payload:l)
             }
         case actionTypes.SELECT_LAWYER:
             return {
                 ...state,
                 selectedLawyer:action.payload
             }
+        case actionTypes.SET_BLOGS:{
+            return {
+                ...state,
+                Blog : {
+                    ...state.Blog,
+                    blogs : action.payload
+                }
+            }
+        }
+        case actionTypes.CREATE_BLOG_SUCCESS:
+            return {
+                ...state,
+                Blog:{
+                    ...state.Blog,
+                    blogs : [...state.Blog.blogs,action.payload]
+                }
+            }
+        case actionTypes.UPDATE_BLOG_SUCCESS:
+            return {
+                ...state,
+                Blog : {
+                    ...state.Blog,
+                    blogs : [...state.Blog.blogs].map(f=>f._id===action.payload._id?action.payload:f)
+                }
+            }
+        case actionTypes.DELETE_BLOG_SUCCESS:
+            return {
+                ...state,
+                Blog : {
+                    ...state.Blog,
+                    blogs : [...state.Blog.blogs].filter(f=>f._id!==action.payload._id)
+                }
+            }
+        case actionTypes.SET_FEATURES:
+            return {
+                ...state,
+                Feature : {
+                    ...state.Feature,
+                    features : action.payload
+                }
+            }
+        case actionTypes.CREATE_FEATURE_SUCCESS:
+            return {
+                ...state,
+                Feature:{
+                    ...state.Feature,
+                    features : [...state.Feature.features,action.payload]
+                }
+            }
+        case actionTypes.UPDATE_FEATURE_SUCCESS:
+            return {
+                ...state,
+                Feature : {
+                    ...state.Feature,
+                    features : [...state.Feature.features].map(f=>f._id===action.payload._id?action.payload:f)
+                }
+            }
+        case actionTypes.DELETE_FEATURE_SUCCESS:
+            return {
+                ...state,
+                Feature : {
+                    ...state.Feature,
+                    features : [...state.Feature.features].filter(f=>f._id!==action.payload._id)
+                }
+            }
+        case actionTypes.SET_PLANS:
+            return {
+                ...state,
+                Plan : {
+                    ...state.Plan,
+                    plans : action.payload
+                }
+            }
+        case actionTypes.CREATE_PLAN_SUCCESS:
+            return {
+                ...state,
+                Plan:{
+                    ...state.Plan,
+                    plans : [...state.Plan.plans,action.payload]
+                }
+            }
+        case actionTypes.UPDATE_PLAN_SUCCESS:
+            return {
+                ...state,
+                Plan: {
+                    ...state.Plan,
+                    plans : [...state.Plan.plans].map(f=>f._id===action.payload._id?action.payload:f)
+                }
+            }
+        case actionTypes.DELETE_PLAN_SUCCESS:
+            return {
+                ...state,
+                Plan : {
+                    ...state.Plan,
+                    plans : [...state.Plan.plans].filter(f=>f._id!==action.payload._id)
+                }
+            }
+        case actionTypes.SELECT_BLOG:
+            return {
+                ...state,
+                Blog:{
+                    ...state.Blog,
+                    selected:action.payload
+                }
+            }
+        case actionTypes.SELECT_FEATURE:
+            return {
+                ...state,
+                Feature:{
+                    ...state.Feature,
+                    selected:action.payload
+                }
+            }
+        case actionTypes.SELECT_PLAN:
+            return {
+                ...state,
+                Plan:{
+                    ...state.Plan,
+                    selected:action.payload
+                }
+            }
+    
+    
+
 
         default:
             return state;

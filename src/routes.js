@@ -5,6 +5,12 @@ import AdminDashboard from './Demo/Dashboard/Admin';
 import LawyerManagement from './App/containers/LawyerManagement';
 import LawyerDetail from './App/containers/LawyerDetailPage';
 import Logout from './App/components/Logout';
+import FeaturesManage from './App/containers/ContentManagement/Features';
+import PlansManage from './App/containers/ContentManagement/Plans';
+import BlogsManage from './App/containers/ContentManagement/Blogs';
+import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
+import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
+import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
 
 window.jQuery = $;
 window.$ = $;
@@ -40,7 +46,14 @@ export const adminRoutes = [
     { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
-    { path: '/login/:lawyer', exact: true, name: 'Logout', component: Login},
+    { path: '/login/:lawyer', exact: true, name: 'Lawyer Login', component: Login},
+    { path: '/manage/blogs', exact: true, name: 'Manage Blogs', component: BlogsManage},
+    { path: '/manage/features', exact: true, name: 'Manage Features', component: FeaturesManage},
+    { path: '/manage/plans', exact: true, name: 'Manage Plans', component: PlansManage},
+    { path: '/manage/blogs/:manage', exact: true, name: 'Add Edit Blogs', component: AddEditBlogs},
+    { path: '/manage/features/:manage', exact: true, name: 'Add Edit Features', component: AddEditFeatures},
+    { path: '/manage/plans/:manage', exact: true, name: 'Add Edit Plans', component: AddEditPlans},
+
 
     // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     // { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },

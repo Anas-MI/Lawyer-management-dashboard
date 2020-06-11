@@ -37,9 +37,33 @@ export const navigation = {
                 {
                     id: 'content',
                     title: 'Manage Content',
-                    type: 'item',
+                    type: 'collapse',
                     icon: 'feather icon-mail',
-                    url: '/content'
+                    children:[
+                        {
+                            id: 'blogs',
+                            title: 'Blogs',
+                            type: 'item',
+                            icon: 'feather icon-help-circle',
+                            url: '/manage/blogs'
+                        },
+                        {
+                            id: 'features',
+                            title: 'Features',
+                            type: 'item',
+                            icon: 'feather icon-help-circle',
+                            url: '/manage/features'
+                        },
+                        {
+                            id: 'plans',
+                            title: 'Plans',
+                            type: 'item',
+                            icon: 'feather icon-help-circle',
+                            url: '/manage/plans'
+                        },
+        
+        
+                    ]
                 },
                 {
                     id: 'logout',

@@ -48,5 +48,50 @@ export const UNBLOCK_USER = "UNBLOCK_USER"
 export const UNBLOCK_USER_SUCCESS = 'UNBLOCK_USER_SUCCESS'
 
 
+//Blogs Manage
+// export const GET_BLOGS = 'GET_BLOGS'
+export const SET_BLOGS = 'SET_BLOGS'
+export const SELECT_BLOG = 'SELECT_BLOG'
+
+// export const CREATE_BLOG = 'CREATE_BLOG'
+export const CREATE_BLOG_SUCCESS = 'CREATE_BLOG_SUCCESS'
+
+// export const UPDATE_BLOG = 'UPDATE_BLOG'
+export const UPDATE_BLOG_SUCCESS = 'UPDATE_BLOG_SUCCESS'
+
+// export const DELETE_BLOG = 'DELETE_BLOG'
+export const DELETE_BLOG_SUCCESS = 'DELETE_BLOG_SUCCESS'
+
+//Features
+// export const GET_FEATURES = 'GET_FEATURES'
+export const SET_FEATURES = 'SET_FEATURES'
+export const SELECT_FEATURE = 'SELECT_FEATURE'
+
+
+// export const CREATE_FEATURE = 'CREATE_FEATURE'
+export const CREATE_FEATURE_SUCCESS = 'CREATE_FEATURE_SUCCESS'
+
+// export const UPDATE_FEATURE = 'UPDATE_FEATURE'
+export const UPDATE_FEATURE_SUCCESS = 'UPDATE_FEATURE_SUCCESS'
+
+// export const DELETE_FEATURE = 'DELETE_FEATURE'
+export const DELETE_FEATURE_SUCCESS = 'DELETE_FEATURE_SUCCESS'
+
+//PLANS
+// export const GET_PLANS = 'GET_PLANS'
+export const SET_PLANS = 'SET_PLANS'
+export const SELECT_PLAN = 'SELECT_PLAN'
+
+// export const CREATE_PLAN = 'CREATE_PLAN'
+export const CREATE_PLAN_SUCCESS = 'CREATE_PLAN_SUCCESS'
+
+// export const UPDATE_PLAN = 'UPDATE_PLAN'
+export const UPDATE_PLAN_SUCCESS = 'UPDATE_PLAN_SUCCESS'
+
+// export const DELETE_PLAN = 'DELETE_PLAN'
+export const DELETE_PLAN_SUCCESS = 'DELETE_PLAN_SUCCESS'
+
+
+
 
 

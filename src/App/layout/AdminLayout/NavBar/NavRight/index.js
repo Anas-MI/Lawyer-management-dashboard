@@ -9,6 +9,7 @@ import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
 import Avatar3 from '../../../../../assets/images/user/avatar-3.jpg';
 import Timer from '../../../../components/Timer';
+import { Link } from 'react-router-dom';
 
 class NavRight extends Component {
     state = {
@@ -90,9 +91,9 @@ class NavRight extends Component {
                                 <div className="pro-head">
                                     <img src={Avatar1} className="img-radius" alt="User Profile"/>
                                     <span>John Doe</span>
-                                    <a href={DEMO.BLANK_LINK} className="dud-logout" title="Logout">
+                                    <Link to='/logout' className="dud-logout" title="Logout">
                                         <i className="feather icon-log-out"/>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <ul className="pro-body">
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Settings</a></li>

@@ -4,28 +4,27 @@ import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
-import { getLawyers, unblockUser, blockUser,selectLawyer } from "../../../store/Actions";
+import { getBlogs, deleteBlog,selectBlog } from "../../../../store/Actions";
 
 
 
 
-const LawyerManagement = (props) => {
+const BlogsManage = (props) => {
 
   const dispatch = useDispatch();
   const [tableData , setTableData] = useState([])
 
   //Search Related 
   const [state,setState] = useState({})
-
-  const lawyers = useSelector((state) => state.lawyers).filter((u) => !u.admin);
+  const blogs = useSelector((state) => state.Blog.blogs)
 
 
   useEffect(()=>{
-    setTableData(lawyers)
-  },[lawyers])
+    setTableData(blogs)
+  },[blogs])
 
   useEffect(() => {
-    dispatch(getLawyers());
+    dispatch(getBlogs());
   }, []);
 
 
@@ -82,66 +81,92 @@ const LawyerManagement = (props) => {
     )
   })
 
-  const handleLawyerSelect = (record) => {
-    dispatch(selectLawyer(record))
-    props.history.push('/lawyer/details')
+  const handleBlogSelect = (record) => {
+    // dispatch(selectBlog(record))
+    // props.history.push('/lawyer/details')
+  }
+
+  const handleAddNew = () => {
+    dispatch(selectBlog())
+    props.history.push('/manage/blogs/add')
+
+  }
+
+  const handleEdit = record => {
+      dispatch(selectBlog(record))
+      props.history.push('/manage/blogs/edit')
   }
   
+  const handleDelete = record => {
+      dispatch(deleteBlog({id:record._id}))
+  }
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstName",
+      title: "Title",
+      dataIndex: "title",
       key: "_id",
-      ...getColumnSearchProps('firstName'),
+      ...getColumnSearchProps('title'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
-        ?a.firstName<b.firstName
-        :a.firstName>b.firstName
+        ?a.title<b.title
+        :a.title>b.title
       )
     },
     {
-      title: "Last Name",
-      dataIndex: "lastName",
+      title: "Author",
+      dataIndex: "author",
       key: "_id",
-      ...getColumnSearchProps('lastName'),
+      ...getColumnSearchProps('author'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
-        ?a.lastName<b.lastName
-        :a.lastName>b.lastName
+        ?a.author<b.author
+        :a.author>b.author
       )
 
 
     },
     {
-      title: "Email",
-      dataIndex: "emailAddress",
+      title: "Short Description",
+      dataIndex: "shortDescription",
       key: "_id",
-      ...getColumnSearchProps('emailAddress'),
+      ...getColumnSearchProps('shortDescription'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
-        ?a.emailAddress<b.emailAddress
-        :a.emailAddress>b.emailAddress
+        ?a.shortDescription<b.shortDescription
+        :a.shortDescription>b.shortDescription
       )
     },
     {
-      title:'Status',
-      sorting:true,
-      dataIndex: "block",
-      key: "_id",
-      render:(_,record)=>{
-          return (
-              <Button onClick={()=>handleBlock(record.blocked,record._id)}>{record.blocked?"Unblock":'Block'}</Button>
-          )
-      },
+        title: "Description",
+        dataIndex: "description",
+        key: "_id",
+        ...getColumnSearchProps('description'),
+        sorter: (a, b ,c) => ( 
+          c==='ascend'
+          ?a.description<b.description
+          :a.description>b.description
+        )
     },
     {
-        title:'View',
-        dataIndex: "view",
+        title:'Edit',
+        dataIndex: "edit",
         key: "_id",
         render:(_,record)=>{
             return (
-                <Button onClick={()=>handleLawyerSelect(record)}>
-                    View
+                <Button color='warning' onClick={()=>handleEdit(record)}>
+                    Edit
+                </Button>
+            )
+        }
+    },
+    {
+        title:'Delete',
+        dataIndex: "delete",
+        key: "_id",
+        render:(_,record)=>{
+            return (
+                <Button variant='danger' onClick={()=>handleDelete(record)}>
+                    Delete
                 </Button>
             )
         }
@@ -163,27 +188,12 @@ const LawyerManagement = (props) => {
     setState({ searchText: '' });
   };
 
-  const handleBlock = (blocked,id)=>{
-      if(blocked){
-          dispatch(unblockUser(id))
-      }else{
-          dispatch(blockUser(id))
-      }
-  }
-
-  // const onSearch = value => {
-
-  //   setTableData(lawyers.filter(o=>(
-  //     Object.keys(o).some(k =>
-  //       String(o[k])
-  //         .toLowerCase()
-  //         .startsWith(value.toLowerCase())
-  //     )
-  //   )))
-  // }
 
   return (
     <div>
+      <div className='p-2 '>
+        <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
+      </div>
       <Table dataSource={tableData} columns={columns}
         onRow={(record, rowIndex) => {
             return {
@@ -199,4 +209,4 @@ const LawyerManagement = (props) => {
   );
 };
 
-export default LawyerManagement;
+export default BlogsManage;
