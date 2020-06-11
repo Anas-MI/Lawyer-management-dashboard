@@ -13,6 +13,7 @@ const store = createStore(reducer , composeWithDevTools(applyMiddleware(thunk)))
 const listener = throttle(() => {
     let state = store.getState()
     persist(state, 'user') //Persist state.user
+    persist(state, 'selectedLawyer') //Persist state.user
   }, 2000)
 
   

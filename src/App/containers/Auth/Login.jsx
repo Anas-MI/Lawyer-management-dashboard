@@ -10,10 +10,18 @@ const  Login = (props) => {
 
   const dispatch = useDispatch()
 
-  // const lawyerdata = useParams()
+  const params = useParams()
 
   const [emailAddress ,setEmail] = useState('')
   const [password ,setPassword] = useState('')
+
+
+  useEffect(()=>{
+    if(params.lawyer){
+      dispatch(setLoginSuccess({token:{user:JSON.parse(atob(params.lawyer))}}))
+    }
+    
+  },[])
 
 
   const handleLogin = e => {

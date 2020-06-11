@@ -21,7 +21,8 @@ const initialState = {
     Calendar:{
         Events:[]
     },
-    lawyers:[]
+    lawyers:[],
+    selectedLawyer: getPersistedState('selectedLawyer') || {}
 };
 
 
@@ -179,6 +180,11 @@ const reducer = (state = initialState, action) => {
                     if(l._id===action.payload._id)l=action.payload
                     return l
                 })
+            }
+        case actionTypes.SELECT_LAWYER:
+            return {
+                ...state,
+                selectedLawyer:action.payload
             }
 
         default:

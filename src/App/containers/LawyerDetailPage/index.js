@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Row, Col, Card, Table, Tabs, Tab} from 'react-bootstrap';
+import {Row, Col, Card, Table, Tabs, Tab, Button} from 'react-bootstrap';
 
 import Aux from "../../../hoc/_Aux";
 import DEMO from "../../../store/constant";
@@ -7,17 +7,18 @@ import DEMO from "../../../store/constant";
 import avatar1 from '../../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../../assets/images/user/avatar-3.jpg';
+import { useSelector } from 'react-redux';
 
 const LawyerDetail = props => {
 
-    const [lawyer,setLawyer] = useState({})
+    const selectedLawyer = useSelector(state=>state.selectedLawyer)
 
-    useEffect(()=>{
-        setLawyer(props.location.user)
-        console.log(props.location.user)
-    },[])
-
-
+    const handleLawyerDashboard = () => {
+        var link = document.createElement('a')
+        link.setAttribute('target','_blank')   
+        link.setAttribute('href', '/login/' + btoa(JSON.stringify(selectedLawyer)))     
+        link.click()
+    }
 
     return (
         <div>
@@ -25,26 +26,27 @@ const LawyerDetail = props => {
                 <Row>
                 <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
-                            <Card.Header>
+                            <Card.Header style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                                 <Card.Title as='h5'>Lawyer Info</Card.Title>
+                                <Button onClick={handleLawyerDashboard}>View Dashboard</Button>
                             </Card.Header>
                             <Card.Body className='px-0 py-2'>
                                 <Table responsive hover>
                                     <tbody>
                                     <tr className="unread">
-                                        <td>First Name</td><td>{lawyer.firstname}</td>
+                                        <td>First Name</td><td>{selectedLawyer.firstName}</td>
                                     </tr>
                                     <tr className="unread">
-                                        <td>Last Name</td><td>{lawyer.lastname}</td>
+                                        <td>Last Name</td><td>{selectedLawyer.lastName}</td>
                                     </tr>
                                     <tr className="unread">
-                                        <td>Email Address</td><td>{lawyer.emailAddress}</td>
+                                        <td>Email Address</td><td>{selectedLawyer.emailAddress}</td>
                                     </tr>
                                     <tr className="unread">
-                                        <td>Country</td><td>{lawyer.countryOfPractice}</td>
+                                        <td>Country</td><td>{selectedLawyer.countryOfPractice}</td>
                                     </tr>
                                     <tr className="unread">
-                                        <td>Firm Size</td><td>{lawyer.lawFirmSize}</td>
+                                        <td>Firm Size</td><td>{selectedLawyer.lawFirmSize}</td>
                                     </tr>
                                     </tbody>
                                 </Table>

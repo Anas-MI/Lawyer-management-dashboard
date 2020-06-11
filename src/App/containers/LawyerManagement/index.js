@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input } from "antd";
-
+import { Table,Button,Input, Space } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
+import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
-import { getLawyers, unblockUser, blockUser } from "../../../store/Actions";
+import { getLawyers, unblockUser, blockUser,selectLawyer } from "../../../store/Actions";
 
 
 
@@ -13,6 +14,9 @@ const LawyerManagement = (props) => {
   const dispatch = useDispatch();
   const [tableData , setTableData] = useState(null)
 
+  //Search Related 
+  const [state,setState] = useState({})
+
   const lawyers = useSelector((state) => state.lawyers).filter((u) => !u.admin);
 
   useEffect(() => {
@@ -20,11 +24,70 @@ const LawyerManagement = (props) => {
   }, []);
 
 
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            console.log('Node',node)
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() =>handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>{
+      console.log(dataIndex,record)
+      return record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+    },
+      
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        // setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+    state.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ) : (
+      text
+    )
+  })
+
+  const handleLawyerSelect = (record) => {
+    dispatch(selectLawyer(record))
+    props.history.push('/lawyer/details')
+  }
+  
   const columns = [
     {
       title: "First Name",
       dataIndex: "firstName",
       key: "_id",
+      ...getColumnSearchProps('firstName'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.firstname<b.firstname
@@ -35,6 +98,7 @@ const LawyerManagement = (props) => {
       title: "Last Name",
       dataIndex: "lastName",
       key: "_id",
+      ...getColumnSearchProps('lastName'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.lastname<b.lastname
@@ -47,6 +111,7 @@ const LawyerManagement = (props) => {
       title: "Email",
       dataIndex: "emailAddress",
       key: "_id",
+      ...getColumnSearchProps('emailAddress'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.emailAddress<b.emailAddress
@@ -70,13 +135,28 @@ const LawyerManagement = (props) => {
         key: "_id",
         render:(_,record)=>{
             return (
-                <Button onClick={()=>props.history.push({pathname:`/lawyer/details/`,user:record})}>
+                <Button onClick={()=>handleLawyerSelect(record)}>
                     View
                 </Button>
             )
         }
     },
   ];
+
+
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  const handleReset = clearFilters => {
+    clearFilters();
+    setState({ searchText: '' });
+  };
 
   const handleBlock = (blocked,id)=>{
       if(blocked){

@@ -14,7 +14,8 @@ import {
     BLOCK_USER_SUCCESS,
     UNBLOCK_USER_SUCCESS,
     TOGGLE_TOASTER,
-    TOGGLE_TIME_EDIT_MODAL
+    TOGGLE_TIME_EDIT_MODAL,
+    SELECT_LAWYER
 } from '../ActionTypes'
 
 import api from '../../resources/api'
@@ -126,6 +127,8 @@ export const register = payload => {
 
 //Lawyers
 const setLawyers = payload => ({type:SET_LAWYERS,payload})
+
+export const selectLawyer = payload => ({type:SELECT_LAWYER,payload})
 
 export const getLawyers = payload => {
     return dispatch => {

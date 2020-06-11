@@ -39,6 +39,8 @@ export const SET_EVENTS_SUCCESS = 'SET_EVENTS_SUCCESS'
 export const GET_LAWYERS = 'GET_LAWYERS'
 export const SET_LAWYERS = 'SET_LAWYERS'
 
+export const SELECT_LAWYER = 'SELECT_LAWYER'
+
 export const BLOCK_USER = "BLOCK_USER"
 export const BLOCK_USER_SUCCESS = 'BLOCK_USER_SUCCESS'
 

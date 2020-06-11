@@ -23,7 +23,7 @@ const route = [
     { path: '/blogpage', exact: true, name: 'Signin 1', component: BlogPage },
     { path: '/contact', exact: true, name: 'Signin 1', component: Contact },
     { path: '/subscription', exact: true, name: 'Signin 1', component: Subscription },
-    { path: '/admin/login', exact: true, name: 'Signin 1', component: AdminLogin },
+    { path: '/admin', exact: true, name: 'Signin 1', component: AdminLogin },
     { path: '/admin/register', exact: true, name: 'Signin 1', component: AdminRegister },
 ];
 
