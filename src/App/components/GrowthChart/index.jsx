@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Line } from "@ant-design/charts";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Row, Col } from "react-bootstrap";
 
 const GrowthChart = (props) => {
   const [type,setType] = useState('user')
@@ -20,7 +20,7 @@ const GrowthChart = (props) => {
     data,
     title: {
       visible: true,
-      text: "Growth Chart",
+      text: "User Growth Chart",
     },
     xField: "year",
     yField: "value",
@@ -49,8 +49,14 @@ const GrowthChart = (props) => {
 
 
   return (
-    <div>
-      <Dropdown >
+    <div style={{display:'flex'}}>
+
+          <Line {...config} style={{width:'auto'}} />
+      
+          <Line {...subconfig}  style={{width:'auto'}} />
+
+
+      {/* <Dropdown >
         <Dropdown.Toggle variant={"link"} id="dropdown-basic">
           Growth Chart
         </Dropdown.Toggle>
@@ -78,9 +84,7 @@ const GrowthChart = (props) => {
 
       {
         type==='user'
-          ?<Line {...config} />
-          :<Line {...subconfig} />
-      }
+      } */}
       
     </div>
   );
