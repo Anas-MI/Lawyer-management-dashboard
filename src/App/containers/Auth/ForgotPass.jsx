@@ -1,7 +1,11 @@
 import React from "react";
+import Footer from '../../components/HomePage/footer'
+import Navigation from '../../components/HomePage/navigation'
 
 function Forgot() {
   return (
+    <>
+    <Navigation />
     <div className="Forgot">
       <div className="container text-center">
         <div className="align-content-center form-size py-3 row">
@@ -36,6 +40,8 @@ function Forgot() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

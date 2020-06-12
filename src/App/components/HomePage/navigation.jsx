@@ -10,7 +10,7 @@ export class Navigation extends Component {
       <div className="row">
         <div className="col-12">
           <nav className="navbar navbar-expand-md navbar-light">
-          <Link className="navbar-brand-name page-scroll" to="/">Case Management</Link>
+          <Link className="navbar-brand-name page-scroll  mr-3" to="/">Case Management</Link>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>

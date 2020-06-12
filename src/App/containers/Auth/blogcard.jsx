@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Footer from '../../components/HomePage/footer'
 import Navigation from '../../components/HomePage/navigation'
+import { apiUrl }from '../../../resources/api'
 
 import axios from 'axios'
 
@@ -8,9 +9,9 @@ class Blogcard extends Component{
     state = {
         blogs : []
     }
-
+     
     componentDidMount () {
-        axios.get('http://localhost:3000/api/blogs/showall')
+        axios.get(`${apiUrl}/blogs/showall`)
         .then( res => 
             this.setState({
                 blogs : res.data.data
@@ -26,10 +27,10 @@ class Blogcard extends Component{
                 <div className="container">
                     <div className="col-12"><h2 className="title-bdr">Blog</h2></div>
                     <div className="row">
-                        {this.state.blogs.map( blog => (
+                    {this.state.blogs.map( blog => (
                         <div className="col-md-4">
                             <div className="border-0 card mb-3 shadow-sm blogcard">
-                                <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
+                            <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
                                 <div className="card-body">
                                     <a href="/blogpage">
                                     <h5 className="card-title">{blog.title}</h5>
@@ -37,9 +38,9 @@ class Blogcard extends Component{
                                     <p className="card-text">{blog.shortDescription}</p>
                                 </div>
                             </div>
-                        </div> 
+                            </div> 
                         ))
-                        }                    
+                    }                         
                     </div>
                 </div>
             </div>

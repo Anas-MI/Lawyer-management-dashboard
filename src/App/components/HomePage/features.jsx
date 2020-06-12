@@ -5,9 +5,9 @@ import calendar from '../img/calendar.png'
 import contact from '../img/contact.png'
 import account from '../img/account.png'
 import axios from 'axios'
-import apiUrl from '../../../resources/api'
+import { apiUrl } from '../../../resources/api'
 
-export class features extends Component {
+export class Features extends Component {
   state = {
       features : [ ]
     };
@@ -33,7 +33,7 @@ componentDidMount () {
                 <img className="img-fluid" src="https://legodesk.com/intro_css_js/images/feature-laptop.png" alt="img" />
               </div>
               <div className="work_inner row d-flex justify-content-between mx-2">
-                { this.state.features.map( (feature) => 
+                { this.state.features.map( feature => 
                   <div class="col-lg-4 d-flex align-items-stretch" key={feature.id}>
                     <div class="work_item w-100 align-items-center">
                       <img class="img-fluid" src={dashboard} alt="img" />
@@ -50,4 +50,4 @@ componentDidMount () {
   }
 }
 
-export default features
+export default Features
