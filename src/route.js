@@ -18,7 +18,7 @@ const route = [
     { path: '/login', exact: true, name: 'Login', component: LoginPage },
     { path: '/registration', exact: true, name: 'Registration', component: Registration },
     { path: '/forgot', exact: true, name: 'Forgot', component: ForgotPass },
-    { path: '/reset', exact: true, name: 'Reset', component: ResetPass },
+    { path: '/setpassword', exact: true, name: 'Reset', component: ResetPass },
     { path: '/blog', exact: true, name: 'Signin 1', component: BlogCard },
     { path: '/blogpage', exact: true, name: 'Signin 1', component: BlogPage },
     { path: '/contact', exact: true, name: 'Signin 1', component: Contact },

@@ -1,6 +1,30 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { setNewPass } from "../../../store/Actions";
+import { useEffect } from "react";
+import queryString from 'query-string'
 
-function Reset() {
+
+function Reset(props) {
+  const dispatch = useDispatch()
+
+  const [state,setState] = useState({})
+
+  const {token} = queryString.parse(props.location.search)
+
+  const handleChange = e => {
+    e.persist()
+    setState(st=>({...st,[e.target.name]:e.target.value}))
+  }
+
+  const handleNewPass = e => {
+    e.preventDefault()
+    dispatch(setNewPass({...state,userid:token}))
+    props.history.push('/login')
+  }
+
+
   return (
     <div className="Forgot">
       <div className="container text-center">
@@ -15,8 +39,8 @@ function Reset() {
                 <div className="row"> 
                 <div className="col-md-12">
                     <div className="form-group">
-                      <input
-                        type="password"
+                      <input name="newPassword" value={state['newPassword']}
+                        type="password" onChange={handleChange}
                         id="password"
                         className="form-control"
                         placeholder="Password"
@@ -27,8 +51,8 @@ function Reset() {
                   </div>
                  <div className="col-md-12">
                     <div className="form-group">
-                      <input
-                        type="c-password"
+                      <input name='confirm_pass' value={state['confirm_pass']}
+                        type="password" onChange={handleChange}
                         id="c-password"
                         className="form-control"
                         placeholder="Confirm Password"
@@ -39,7 +63,7 @@ function Reset() {
                   </div>
                 </div>
                <div id="success"></div>
-                <button type="submit" className="text-white page-scroll btn cust-btn-primary mt-3">
+                <button type="submit" onClick={handleNewPass} className="text-white page-scroll btn cust-btn-primary mt-3">
                   Save
                 </button>                
               </form>

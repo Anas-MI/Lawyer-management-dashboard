@@ -40,6 +40,9 @@ const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
+const ContactsManage = React.lazy(()=> import('./App/containers/ContactManagement'))
+const AddEditContact = React.lazy(()=>import('./App/components/AddEditContact'))
+
 export const adminRoutes = [
     { path: '/admin/dashboard', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/lawyers', exact: true, name: 'Lawyer Management', component: LawyerManagement },
@@ -53,6 +56,8 @@ export const adminRoutes = [
     { path: '/manage/blogs/:manage', exact: true, name: 'Add Edit Blogs', component: AddEditBlogs},
     { path: '/manage/features/:manage', exact: true, name: 'Add Edit Features', component: AddEditFeatures},
     { path: '/manage/plans/:manage', exact: true, name: 'Add Edit Plans', component: AddEditPlans},
+    { path: '/manage/contacts', exact: true, name: 'Contacts Management', component: ContactsManage},
+    { path: '/manage/contacts/:manage', exact: true, name: 'Add Edit Contact', component: AddEditContact},
 
 
     // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },

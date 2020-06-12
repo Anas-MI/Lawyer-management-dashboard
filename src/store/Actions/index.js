@@ -30,7 +30,14 @@ import {
     DELETE_PLAN_SUCCESS,
     SELECT_BLOG,
     SELECT_FEATURE,
-    SELECT_PLAN
+    SELECT_PLAN,
+    SELECT_CONTACT,
+    SET_CONTACTS,
+    CREATE_CONTACT_SUCCESS,
+    UPDATE_CONTACT_SUCCESS,
+    RESET_PASS_SUCCESS,
+    SET_RESET_TOKEN,
+    DELETE_CONTACT_SUCCESS
 } from '../ActionTypes'
 
 import api from '../../resources/api'
@@ -98,6 +105,9 @@ export const loginUser = payload => {
             if(res.data.token.user.blocked){
                 throw Error('Blocked')
             }
+            if(!res.data.token.user.verified){
+                throw Error('Verify Your E-mail Id')
+            }
             dispatch(setLoginSuccess(res.data))
             dispatch(toggleToaster({
                 msg:'Login Success',
@@ -127,7 +137,6 @@ export const register = payload => {
                 msg:res.data.message,
                 color:'#38BF1D',
             }))
-
         })
         .catch(err=>{
             console.log(err) //Dispatch Toaster Notificaton
@@ -139,6 +148,60 @@ export const register = payload => {
         })
     }
 }
+
+//Forgot
+// const forgotPassSuccess = payload => ({type:FORGOT_PASS_SUCCESS,payload})
+// const resetPassSuccess = payload => ({type:RESET_PASS_SUCCESS,payload})
+export const setResetToken = payload => ({type:SET_RESET_TOKEN,payload})
+export const resetPass = (payload,history) => {
+    console.log(payload)
+    return dispatch => {
+        api.post('/user/resetpassword',payload)
+        .then(res=>{
+            console.log(res.data)
+            if(!res.data.success){
+                throw Error(JSON.stringify(res.data.message.code))
+            }
+            dispatch(toggleToaster({
+                msg:"Check your E-mail for reset link",
+                color:'#38BF1D',
+            }))
+
+        })
+        .catch(err => {
+            dispatch(toggleToaster({
+                msg:err.message,
+                color:'red',
+            }))
+
+        })
+    }
+}
+
+export const setNewPass = payload => {
+    return dispatch => {
+        api.post('/user/setpassword',payload)
+        .then(res=>{
+            if(!res.data.success){
+                throw Error(res.data.message)
+            }
+            dispatch(toggleToaster({
+                msg:"Password Changed Successfully",
+                color:'#38BF1D',
+            }))
+        })
+        .catch(err => {
+            dispatch(toggleToaster({
+                msg:err.message,
+                color:'red',
+            }))
+
+        })
+    }
+}
+
+
+
 
 //Lawyers
 const setLawyers = payload => ({type:SET_LAWYERS,payload})
@@ -484,6 +547,103 @@ export const deletePlan = payload => {
 export const selectBlog = payload => ({type:SELECT_BLOG,payload})
 export const selectFeature = payload => ({type:SELECT_FEATURE,payload})
 export const selectPlan = payload => ({type:SELECT_PLAN,payload})
+
+
+//Contacts
+export const selectContact = payload => ({type:SELECT_CONTACT,payload})
+
+const setContacts = payload => ({type:SET_CONTACTS,payload})
+const createContactSuccess = payload => ({type:CREATE_CONTACT_SUCCESS,payload})
+const updateContactSuccess = payload => ({type:UPDATE_CONTACT_SUCCESS,payload})
+const deleteContactSuccess = payload => ({type:DELETE_CONTACT_SUCCESS,payload})
+
+
+export const getContacts = payload => {
+    return dispatch => {
+        api.get('/contacts/showall')
+        .then(res=>{
+            setContacts(res.data.data)
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+        })
+    }
+}
+
+export const createContact = payload => {
+    return dispatch => {
+        console.log(payload)
+        api.post('/contactus/create',payload)
+        .then(res=>{
+           dispatch(createPlanSuccess(res.data.data))
+            dispatch(toggleToaster({
+                msg:'Conatct Added',
+                timeout:5000,
+                color:'#38BF1D',
+            }))
+
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+        })
+    }
+}
+
+// const updateContactSuccess = payload => ({type:UPDATE_CONTACT_SUCCESS,payload})
+// export const updateContact = payload => {
+//     var {id,body} = payload
+//     return dispatch => {
+//         api.post(`/plans/edit/${id}`,body)
+//         .then(res=>{
+//            dispatch(updatePlanSuccess(res.data.data))
+//             dispatch(toggleToaster({
+//                 msg:'Plan Updated',
+//                 timeout:5000,
+//                 color:'#38BF1D',
+//             }))
+
+//         })
+//         .catch(err=>{
+//             console.log(err) //Dispatch Toaster Notificaton
+//             dispatch(toggleToaster({
+//                 msg:"Someting Went Wrong",
+//                 color:'red',
+//             }))
+//         })
+//     }
+// }
+
+export const deleteContact = payload => {
+    var {id} = payload
+    return dispatch => {
+        api.get(`/contactus/deletelist/${id}`)
+        .then(res=>{
+            dispatch(deleteContactSuccess(res.data.data))
+            dispatch(toggleToaster({
+                msg:'Contact Deleted',
+                timeout:5000,
+                color:'#38BF1D',
+            }))
+
+        })
+        .catch(err=>{
+            console.log(err) //Dispatch Toaster Notificaton
+            dispatch(toggleToaster({
+                msg:"Someting Went Wrong",
+                color:'red',
+            }))
+        })
+    }
+}
+
 
 
 

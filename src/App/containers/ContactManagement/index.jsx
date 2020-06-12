@@ -4,27 +4,27 @@ import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
-import { getBlogs, deleteBlog,selectBlog } from "../../../../store/Actions";
+import { getBlogs, deleteBlog,selectBlog } from "../../../store/Actions";
 
 
 
 
-const BlogsManage = (props) => {
+const ContactsManage = (props) => {
 
   const dispatch = useDispatch();
   const [tableData , setTableData] = useState([])
 
   //Search Related 
   const [state,setState] = useState({})
-  const blogs = useSelector((state) => state.Blog.blogs)
+  const contacts = useSelector((state) => state.Contact.contacts)
 
 
   useEffect(()=>{
-    setTableData(blogs)
-  },[blogs])
+    setTableData(contacts)
+  },[contacts])
 
   useEffect(() => {
-    dispatch(getBlogs());
+    // dispatch(getBlogs());
   }, []);
 
 
@@ -81,24 +81,24 @@ const BlogsManage = (props) => {
     )
   })
 
-  // const handleBlogSelect = (record) => {
-  //   // dispatch(selectBlog(record))
-  //   // props.history.push('/lawyer/details')
-  // }
+//   const handleciSelect = (record) => {
+//     // dispatch(selectBlog(record))
+//     // props.history.push('/lawyer/details')
+//   }
 
   const handleAddNew = () => {
-    dispatch(selectBlog())
-    props.history.push('/manage/blogs/add')
+    // dispatch(selectBlog())
+    props.history.push('/manage/contacts/add')
 
   }
 
   const handleEdit = record => {
-      dispatch(selectBlog(record))
-      props.history.push('/manage/blogs/edit')
+    //   dispatch(selectBlog(record))
+      props.history.push('/manage/contacts/edit')
   }
   
   const handleDelete = record => {
-      dispatch(deleteBlog({id:record._id}))
+    //   dispatch(deleteBlog({id:record._id}))
   }
   const columns = [
     {
@@ -209,4 +209,4 @@ const BlogsManage = (props) => {
   );
 };
 
-export default BlogsManage;
+export default ContactsManage;

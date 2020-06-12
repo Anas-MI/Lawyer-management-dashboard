@@ -1,8 +1,27 @@
 import React from "react";
 import Footer from '../../components/HomePage/footer'
 import Navigation from '../../components/HomePage/navigation'
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { resetPass } from "../../../store/Actions";
 
-function Forgot() {
+function Forgot (props) {
+
+  const dispatch = useDispatch()
+
+  const [state,setState] = useState({})
+
+  const handleChange = e => {
+    e.persist()
+    setState(st=>({...st,[e.target.name]:e.target.value}))
+  }
+
+  const handleForgot = e => {
+    e.preventDefault()
+    dispatch(resetPass(state,props.history))
+  }
+
+
   return (
     <>
     <Navigation />
@@ -20,9 +39,9 @@ function Forgot() {
                   <div className="col-md-12">
                   <div className="form-group">
                       <input
-                        type="email"
-                        id="email"
-                        className="form-control"
+                        type="email" name='emailAddress'
+                        id="emailAddress" value={state['emailAddress']}
+                        className="form-control" onChange={handleChange}
                         placeholder="Email"
                         required="required"
                       />
@@ -31,7 +50,8 @@ function Forgot() {
                   </div>
                 </div>
                <div id="success"></div>
-                <button type="submit" className="text-white page-scroll btn cust-btn-primary mt-3">
+                <button onClick={handleForgot} type="submit" className="text-white page-scroll cust-btn-primary mt-3"
+                style={{borderRadius:'0.25rem'}}>
                   Reset password
                 </button>                
               </form>

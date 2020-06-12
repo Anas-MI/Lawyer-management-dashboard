@@ -61,10 +61,16 @@ export const navigation = {
                             icon: 'feather icon-help-circle',
                             url: '/manage/plans'
                         },
-        
-        
-                    ]
+                    ],
                 },
+                {
+                    id: 'contactmanage',
+                    title: 'Manage Contacts',
+                    type: 'item',
+                    icon: 'feather icon-help-circle',
+                    url: '/manage/contacts'
+                },
+
                 {
                     id: 'logout',
                     title: 'Logout',

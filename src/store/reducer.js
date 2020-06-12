@@ -9,6 +9,7 @@ const initialState = {
     isFullScreen: false, // static can't change,
     //Auth 
     user:getPersistedState('user') || null,
+    resetToken:null,
     //Add Target Modal
     targetModal :false,
     //TOSATER
@@ -40,6 +41,11 @@ const initialState = {
     //Plan
     Plan : {
         plans : [] , 
+        selected : null
+    },
+    //Conatcts
+    Contact : {
+        contacts : [] ,
         selected : null
     }
 
@@ -315,9 +321,51 @@ const reducer = (state = initialState, action) => {
                     selected:action.payload
                 }
             }
-    
-    
-
+        case actionTypes.SET_CONTACTS:
+            return {
+                ...state,
+                Contact : {
+                    ...state.Contact,
+                    contacts : action.payload
+                }
+            }
+            case actionTypes.CREATE_CONTACT_SUCCESS:
+                return {
+                    ...state,
+                    Contact:{
+                        ...state.Contact,
+                        contacts : [...state.Contact.contacts,action.payload]
+                    }
+                }
+            case actionTypes.UPDATE_CONTACT_SUCCESS:
+                return {
+                    ...state,
+                    Contact: {
+                        ...state.Contact,
+                        contacts : [...state.Contact.contacts].map(f=>f._id===action.payload._id?action.payload:f)
+                    }
+                }
+            case actionTypes.DELETE_CONTACT_SUCCESS:
+                return {
+                    ...state,
+                    Contact : {
+                        ...state.Contact,
+                        contacts : [...state.Contact.contacts].filter(f=>f._id!==action.payload._id)
+                    }
+                }
+            case actionTypes.SELECT_CONTACT:
+                return {
+                    ...state,
+                    Contact:{
+                        ...state.Contact,
+                        selected:action.payload
+                    }
+                }
+            case actionTypes.SET_RESET_TOKEN:
+                return {
+                    ...state,
+                    resetToken:action.payload
+                }
 
         default:
             return state;
