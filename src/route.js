@@ -8,6 +8,7 @@ const ForgotPass = React.lazy(()=>import('./App/containers/Auth/ForgotPass'))
 const ResetPass = React.lazy(()=>import('./App/containers/Auth/resetpass'))
 const BlogCard = React.lazy(()=>import('./App/containers/Auth/blogcard'))
 const BlogPage = React.lazy(()=>import('./App/containers/Auth/blogpage'))
+const Features = React.lazy(()=>import('./App/containers/Auth/features'))
 const Contact = React.lazy(()=>import('./App/containers/Auth/contactus'))
 const Subscription = React.lazy(()=>import('./App/containers/Auth/subscription'))
 const AdminRegister = React.lazy(() => import('./Demo/Authentication/SignUp/SignUp1'));
@@ -20,7 +21,8 @@ const route = [
     { path: '/forgot', exact: true, name: 'Forgot', component: ForgotPass },
     { path: '/setpassword', exact: true, name: 'Reset', component: ResetPass },
     { path: '/blog', exact: true, name: 'Signin 1', component: BlogCard },
-    { path: '/blogpage', exact: true, name: 'Signin 1', component: BlogPage },
+    { path: '/blogpage', exact: false, name: 'Signin 1', component: BlogPage },
+    { path: '/features', exact: true, name: 'Signin 1', component: Features },
     { path: '/contact', exact: true, name: 'Signin 1', component: Contact },
     { path: '/subscription', exact: true, name: 'Signin 1', component: Subscription },
     { path: '/admin', exact: true, name: 'Signin 1', component: AdminLogin },

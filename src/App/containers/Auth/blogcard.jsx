@@ -17,6 +17,7 @@ class Blogcard extends Component{
                 blogs : res.data.data
             })
             )
+            console.log(this.state.blogs)
     }
 
     render () {
@@ -28,11 +29,11 @@ class Blogcard extends Component{
                     <div className="col-12"><h2 className="title-bdr">Blog</h2></div>
                     <div className="row">
                     {this.state.blogs.map( blog => (
-                        <div className="col-md-4">
+                        <div className="col-md-4" key={blog._id}>
                             <div className="border-0 card mb-3 shadow-sm blogcard">
                             <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
                                 <div className="card-body">
-                                    <a href="/blogpage">
+                                    <a href={`/blogpage/${blog._id}`}>
                                     <h5 className="card-title">{blog.title}</h5>
                                     </a>
                                     <p className="card-text">{blog.shortDescription}</p>
