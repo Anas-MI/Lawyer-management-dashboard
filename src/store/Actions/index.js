@@ -105,7 +105,7 @@ export const loginUser = payload => {
             if(res.data.token.user.blocked){
                 throw Error('Blocked')
             }
-            if(!res.data.token.user.verified){
+            if(!res.data.token.user.verified && !res.data.token.user.verified){
                 throw Error('Verify Your E-mail Id')
             }
             dispatch(setLoginSuccess(res.data))
