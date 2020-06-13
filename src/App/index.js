@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Loadable from "react-loadable";
 import "./App.scss";
 import "./App.css";
-
+import 'antd/dist/antd.css';
 import Loader from "./layout/Loader";
 import Aux from "../hoc/_Aux";
 import ScrollToTop from "./layout/ScrollToTop";
@@ -21,11 +21,6 @@ import Toaster from "./components/Toaster";
 // import Subscription from "./containers/Auth/subscription";
 
 import { useSelector, useDispatch } from "react-redux";
-
-// import AdminLogin from "../Demo/Authentication/SignIn/SignIn1";
-// import AdminRegister from "../Demo/Authentication/SignUp/SignUp1";
-// import LawyerLayout from "./layout/LawyerLayout";
-import { logoutUser } from "../store/Actions";
 
 const AdminLayout = Loadable({
   loader: () => import("./layout/AdminLayout"),
@@ -114,11 +109,11 @@ const App = (props) => {
           {user ? (
             user.token.user.admin ? (
               <Switch>{adminmenu}
-              <Redirect from='*' to='/' />
+              <Redirect from='*' to='/admin/dashboard' />
               </Switch>
             ) : (
               <Switch>{lawyermenu}
-              <Redirect from='*' to='/' />
+              <Redirect from='*' to='/dashboard/default' />
               </Switch>
             )
           ) : (

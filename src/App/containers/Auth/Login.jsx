@@ -5,6 +5,7 @@ import Navigation from '../../components/HomePage/navigation'
 import Footer from '../../components/HomePage/footer'
 import {useParams} from 'react-router'
 import { Link } from "react-router-dom";
+import { notification } from "antd";
 
 const  Login = (props) => {
 
@@ -20,14 +21,30 @@ const  Login = (props) => {
     if(params.lawyer){
       dispatch(setLoginSuccess({token:{user:JSON.parse(atob(params.lawyer))}}))
     }
-    
   },[])
 
 
   const handleLogin = e => {
     e.preventDefault()
-    console.log({emailAddress,password})
-    dispatch(loginUser({emailAddress,password}))
+    checkValidity()
+  }
+
+  const checkValidity = () => {
+
+    if(emailAddress==='' || password===''){
+      return notification.warning({
+        message:'Fields Should Not Be Empty'
+      })
+    }else {
+      dispatch(loginUser({emailAddress,password} , (err,response)=>{
+        if(err){
+          notification.error(err);
+        }else{
+          notification.success(response);
+        }
+      }))
+    }
+
   }
 
 

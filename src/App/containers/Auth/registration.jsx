@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { notification } from "antd";
 import { register } from "../../../store/Actions";
 import Navigation from '../../components/HomePage/navigation'
 import Footer from '../../components/HomePage/footer'
@@ -9,7 +10,15 @@ function Registration(props) {
 
   const dispatch = useDispatch()
 
-  const [state , setState] = useState({})
+  const [state , setState] = useState({
+    firstName:'',
+    lastName:'',
+    countryOfPractice:'',
+    lawFirmSize:'',
+    emailAddress:'',
+    password:'',
+    confirmPass:'',
+  })
 
   const handleChange = e => {
     e.persist()
@@ -19,9 +28,32 @@ function Registration(props) {
 
   const handleRegister = e => {
     e.preventDefault()
-    if(state.password !== state.confirmPass)return alert('Pass Dont Match')
-    dispatch(register(state))
-    props.history.push('/login')
+    checkValidity()
+  }
+
+    function checkValidity(){
+
+      if(!Object.keys(state).every(k=>state[k]!=='')){
+        return notification.warning({
+          message:'Fields Should Not Be Empty'
+        })
+      }
+      else if(state['password'] !== state['confirmPass']){
+        return notification.warning({
+          message:'Passwords Don\'t Match' 
+        })
+      }
+    else{
+      return dispatch(register(state,(err,response)=>{
+        if(err){
+          notification.error(err);
+        }else{
+          notification.success(response);
+          props.history.push('/login')
+        }
+      }))
+    }
+ 
   }
 
   return (

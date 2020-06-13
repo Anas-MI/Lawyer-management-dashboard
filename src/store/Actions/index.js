@@ -97,54 +97,48 @@ export const getEvents = payload => {
 
 
 
-export const loginUser = payload => {
+export const loginUser = (payload,cb) => {
     return dispatch => {
         api.post('/auth/login' , payload)
         .then(res=>{
             console.log(res.data)
             if(res.data.token.user.blocked){
-                throw Error('Blocked')
+                cb({
+                    message:'Blocked'
+                })
             }
-            if(!res.data.token.user.verified && !res.data.token.user.verified){
-                throw Error('Verify Your E-mail Id')
+            if(!res.data.token.user.verified && !res.data.token.user.admin){
+                cb({
+                    message:"E-Mail not Verified"
+                })
             }
             dispatch(setLoginSuccess(res.data))
-            dispatch(toggleToaster({
-                msg:'Login Success',
-                timeout:5000,
-                color:'#38BF1D',
-            }))
+            cb(null,{
+                message:'Logged In'
+            })
         })
         .catch(err=>{
             console.log(err)
-            //Dispatch Toaster Notificaton
-            dispatch(toggleToaster({
-                msg:err.message || "Someting Went Wrong",
-                color:'red',
-            }))
-
+            cb({message:'Something Went Wrong'})
         })
     }
 }
 
 export const logoutUser = payload => ({type:LOGOUT_USER,payload})
 
-export const register = payload => {
+export const register = (payload,cb) => {
     return dispatch => {
         api.post('/auth/register',payload)
         .then(res=>{
-            dispatch(toggleToaster({
-                msg:res.data.message,
-                color:'#38BF1D',
-            }))
+            cb(null,{
+                message:'Registered Successfully'
+            })
         })
         .catch(err=>{
             console.log(err) //Dispatch Toaster Notificaton
-            dispatch(toggleToaster({
-                msg:"Someting Went Wrong",
-                color:'red',
-            }))
-
+            cb({
+                message:'Something Went Wrong'
+            })
         })
     }
 }
