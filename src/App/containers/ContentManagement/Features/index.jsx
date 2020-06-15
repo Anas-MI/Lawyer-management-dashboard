@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space } from "antd";
+import { Table, Button, Input, Space, notification } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
@@ -24,7 +24,15 @@ const FeaturesManage = (props) => {
   }, [features]);
 
   useEffect(() => {
-    dispatch(getFeatures());
+    dispatch(
+      getFeatures(null, (err, response) => {
+        if (err) {
+          notification.error(err);
+        } else {
+          notification.success(response);
+        }
+      })
+    );
   }, []);
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -107,7 +115,15 @@ const FeaturesManage = (props) => {
   };
 
   const handleDelete = (record) => {
-    dispatch(deleteFeature({ id: record._id }));
+    dispatch(
+      deleteFeature({ id: record._id }, (err, response) => {
+        if (err) {
+          notification.error(err);
+        } else {
+          notification.success(response);
+        }
+      })
+    );
   };
   const columns = [
     {
@@ -169,8 +185,10 @@ const FeaturesManage = (props) => {
 
   return (
     <div>
-      <div className='p-2 '>
-        <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
+      <div className="p-2 ">
+        <Button className="ml-auto" color="success" onClick={handleAddNew}>
+          Add New
+        </Button>
       </div>
       <Table
         dataSource={tableData}

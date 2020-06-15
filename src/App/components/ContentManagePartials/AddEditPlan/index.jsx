@@ -5,6 +5,7 @@ createPlan,
   updatePlan,
 } from "../../../../store/Actions";
 import { Form,Button } from "react-bootstrap";
+import { notification } from "antd";
 
 const AddEditPlan = (props) => {
   const [state, setState] = useState({});
@@ -30,9 +31,21 @@ const AddEditPlan = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editMode) {
-      dispatch(updatePlan({id:state._id,body:state}));
+      dispatch(updatePlan({id:state._id,body:state},(err,response)=>{
+        if(err){
+          notification.error(err)
+        }else{
+          notification.success(response)
+        }
+      }));
     } else {
-      dispatch(createPlan(state));
+      dispatch(createPlan(state,(err,response)=>{
+        if(err){
+          notification.error(err)
+        }else{
+          notification.success(response)
+        }
+      }));
     }
     props.history.goBack()
   };

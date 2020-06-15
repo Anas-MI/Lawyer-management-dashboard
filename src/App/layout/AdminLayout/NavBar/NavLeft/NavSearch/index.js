@@ -16,10 +16,14 @@ class NavSearch extends Component {
     };
 
 
-    onSearch = e => {
-        e.persist()
-        this.setState(prevState => ({...prevState,searchValue:e.target.value}))
-    }
+    onSearch = () => {
+        this.setState(prevSate => {
+            return {
+                searchWidth: prevSate.searchWidth + 15,
+                searchString: prevSate.searchWidth + 'px'
+            }
+        });
+}
 
     searchOnHandler = (e) => {
         this.setState({isOpen: true});
