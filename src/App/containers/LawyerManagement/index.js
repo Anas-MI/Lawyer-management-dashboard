@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space } from "antd";
+import { Table,Button,Input, Space, notification } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
@@ -19,14 +19,13 @@ const LawyerManagement = (props) => {
 
   const lawyers = useSelector((state) => state.lawyers).filter((u) => !u.admin);
 
-
-  useEffect(()=>{
-    setTableData(lawyers)
-  },[lawyers])
-
   useEffect(() => {
-    dispatch(getLawyers());
+    dispatch(getLawyers())
   }, []);
+
+  // useEffect(()=>{
+  //   setTableData(lawyers)
+  // },[])
 
 
   const getColumnSearchProps = dataIndex => ({
@@ -165,9 +164,21 @@ const LawyerManagement = (props) => {
 
   const handleBlock = (blocked,id)=>{
       if(blocked){
-          dispatch(unblockUser(id))
+          dispatch(unblockUser(id,(err,response)=>{
+            if(err){
+              notification.error(err)
+            }else{
+              notification.success(response)
+            }
+          }))
       }else{
-          dispatch(blockUser(id))
+          dispatch(blockUser(id,(err,response)=>{
+            if(err){
+              notification.error(err)
+            }else{
+              notification.success(response)
+            }
+          }))
       }
   }
 
@@ -184,7 +195,7 @@ const LawyerManagement = (props) => {
 
   return (
     <div>
-      <Table dataSource={tableData} columns={columns}
+      <Table dataSource={lawyers} columns={columns}
         onRow={(record, rowIndex) => {
             return {
               onDoubleClick: event => {}, // double click row

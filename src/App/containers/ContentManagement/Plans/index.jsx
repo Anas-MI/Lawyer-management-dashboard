@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space } from "antd";
+import { Table, Button, Input, Space, notification } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
@@ -20,7 +20,13 @@ const PlansManage = (props) => {
   }, [plans]);
 
   useEffect(() => {
-    dispatch(getPlans());
+    dispatch(getPlans(null,(err,response)=>{
+      if(err){
+        notification.error(err)
+      }else{
+        notification.success(response)
+      }
+    }));
   }, []);
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -103,7 +109,13 @@ const PlansManage = (props) => {
   };
 
   const handleDelete = (record) => {
-    dispatch(deletePlan({ id: record._id }));
+    dispatch(deletePlan({ id: record._id },(err,response)=>{
+      if(err){
+        notification.error(err)
+      }else{
+        notification.success(response)
+      }
+    }));
   };
 
   const columns = [

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateFeature, createFeature } from "../../../../store/Actions";
 import { Form,Button } from "react-bootstrap";
+import { notification } from "antd";
 
 const AddEditFeature = (props) => {
   const [state, setState] = useState({});
@@ -27,9 +28,21 @@ const AddEditFeature = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editMode) {
-      dispatch(updateFeature({id:state._id,body:state}));
+      dispatch(updateFeature({id:state._id,body:state},(err,response)=>{
+        if(err){
+          notification.error(err)
+        }else{
+          notification.success(response)
+        }
+      }));
     } else {
-      dispatch(createFeature(state));
+      dispatch(createFeature(state,(err,response)=>{
+        if(err){
+          notification.error(err)
+        }else{
+          notification.success(response)
+        }
+      }));
     }
     props.history.goBack()
   };
