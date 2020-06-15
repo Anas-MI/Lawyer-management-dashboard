@@ -145,6 +145,19 @@ const LawyerManagement = (props) => {
             )
         }
     },
+    {
+      title:'Delete',
+      dataIndex: "delete",
+      key: "_id",
+      render:(_,record)=>{
+          return (
+              <Button>
+                  Delete
+              </Button>
+          )
+      }
+  },
+
   ];
 
 
