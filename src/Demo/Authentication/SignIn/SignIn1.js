@@ -6,11 +6,12 @@ import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../store/Actions';
-import { notification } from 'antd';
+import { notification, Spin } from 'antd';
 
 const AdminLogin = props => {
 
     const dispatch = useDispatch()
+    const [spinner,setSpinner] = useState(false)
 
     const [state , setState] = useState({})
 
@@ -22,6 +23,7 @@ const AdminLogin = props => {
   
     const handleLogin = e => {
         e.preventDefault()
+        setSpinner(true)
         checkValidity()
       }
     
@@ -38,6 +40,7 @@ const AdminLogin = props => {
             }else{
               notification.success(response);
             }
+            setSpinner(false)
           }))
         }
     
@@ -71,6 +74,8 @@ const AdminLogin = props => {
                                 onChange={handleChange}
                                     type="password" className="form-control" placeholder="password"/>
                                 </div>
+                                {spinner && <Spin/>}
+
                                 <div className="form-group text-left">
                                     <div className="checkbox checkbox-fill d-inline">
                                         <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" />

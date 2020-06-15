@@ -1,6 +1,9 @@
 import React from 'react';
 import Logout from './App/components/Logout';
 import EmailConfirm from './App/components/EmailConfirm'
+import { Spin } from 'antd';
+import Loadable from "react-loadable";
+import Loader from './App/layout/Loader';
 
 const HomePage = React.lazy(()=>import('./App/containers/HomePage'))
 const LoginPage = React.lazy(()=>import('./App/containers/Auth/Login'))
@@ -31,10 +34,23 @@ const route = [
     {path:'/verified',exact:true,name:'Email Confirm',component:EmailConfirm}
 ];
 
+const AdminLayout = Loadable({
+    loader: () => import('./App/layout/AdminLayout'),
+    loading: Loader,
+  });
+
+  const LawyerLayout = Loadable({
+    loader: () => import('./App/layout/LawyerLayout'),
+    loading: Loader,
+  });
 
 
-const AdminLayout = React.lazy(() => import('./App/layout/AdminLayout'));
-const LawyerLayout = React.lazy(() => import('./App/layout/LawyerLayout'));
+
+  
+  
+
+// const AdminLayout = React.lazy(() => import('./App/layout/AdminLayout'));
+// const LawyerLayout = React.lazy(() => import('./App/layout/LawyerLayout'));
 
 export const adminroute = [
     {path:'/' , exact:false, name:'AdminLayout',component:AdminLayout},

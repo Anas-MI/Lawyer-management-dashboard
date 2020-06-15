@@ -6,12 +6,15 @@ import Footer from '../../components/HomePage/footer'
 import {useParams} from 'react-router'
 import { Link } from "react-router-dom";
 import { notification } from "antd";
+import { Spin } from 'antd';
 
 const  Login = (props) => {
 
   const dispatch = useDispatch()
 
   const params = useParams()
+
+  const [spinner,setSpinner] = useState(false)
 
   const [emailAddress ,setEmail] = useState('')
   const [password ,setPassword] = useState('')
@@ -26,12 +29,14 @@ const  Login = (props) => {
 
   const handleLogin = e => {
     e.preventDefault()
+    setSpinner(true)
     checkValidity()
   }
 
   const checkValidity = () => {
 
     if(emailAddress==='' || password===''){
+      setSpinner(false)
       return notification.warning({
         message:'Fields Should Not Be Empty'
       })
@@ -42,6 +47,8 @@ const  Login = (props) => {
         }else{
           notification.success(response);
         }
+        setSpinner(false)
+
       }))
     }
 
@@ -86,11 +93,14 @@ const  Login = (props) => {
                     </div>
                   </div>
                  </div>
+                 {spinner && <Spin/>}
+
                <div id="success"></div>
                 <button type="submit" onClick={handleLogin} style={{borderRadius:'0.25rem'}}
                 className="text-white page-scroll cust-btn-primary mt-3">
                   Login
                 </button>
+
                 <div class="text-block text-center my-3">
                     <Link to='/forgot' class="text-small forgot-password text-primary">Forgot Password</Link>
                   </div>
