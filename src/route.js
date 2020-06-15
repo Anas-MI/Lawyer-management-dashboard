@@ -1,5 +1,6 @@
 import React from 'react';
 import Logout from './App/components/Logout';
+import EmailConfirm from './App/components/EmailConfirm'
 
 const HomePage = React.lazy(()=>import('./App/containers/HomePage'))
 const LoginPage = React.lazy(()=>import('./App/containers/Auth/Login'))
@@ -27,6 +28,7 @@ const route = [
     { path: '/subscription', exact: true, name: 'Signin 1', component: Subscription },
     { path: '/admin', exact: true, name: 'Signin 1', component: AdminLogin },
     { path: '/admin/register', exact: true, name: 'Signin 1', component: AdminRegister },
+    {path:'/verified',exact:true,name:'Email Confirm',component:EmailConfirm}
 ];
 
 

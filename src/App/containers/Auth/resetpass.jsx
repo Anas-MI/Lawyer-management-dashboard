@@ -4,6 +4,7 @@ import { useState } from "react";
 import { setNewPass } from "../../../store/Actions";
 import { useEffect } from "react";
 import queryString from 'query-string'
+import { notification } from "antd";
 
 
 function Reset(props) {
@@ -20,8 +21,31 @@ function Reset(props) {
 
   const handleNewPass = e => {
     e.preventDefault()
-    dispatch(setNewPass({...state,userid:token}))
-    props.history.push('/login')
+   checkValidity()
+  }
+
+  const checkValidity = () => {
+    if(!Object.keys(state).every(k=>state[k]!=='')){
+      return notification.warning({
+        message:'Fields Should Not Be Empty'
+      })
+    }
+    else if(state['newPassword'] !== state['confirm_pass']){
+      return notification.warning({
+        message:'Passwords Don\'t Match' 
+      })
+    }
+  else{
+    return dispatch(setNewPass({...state,userid:token},(err,response)=>{
+      if(err){
+        notification.error(err);
+      }else{
+        props.history.push('/login')
+        notification.success(response);
+      }
+    }))
+  }
+
   }
 
 
