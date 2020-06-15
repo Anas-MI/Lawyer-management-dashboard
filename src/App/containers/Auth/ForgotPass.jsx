@@ -4,6 +4,7 @@ import Navigation from '../../components/HomePage/navigation'
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { resetPass } from "../../../store/Actions";
+import { notification } from "antd";
 
 function Forgot (props) {
 
@@ -18,8 +19,29 @@ function Forgot (props) {
 
   const handleForgot = e => {
     e.preventDefault()
-    dispatch(resetPass(state,props.history))
+    checkValidity()
   }
+
+  function checkValidity(){
+
+    if(!Object.keys(state).every(k=>state[k]!=='')){
+      return notification.warning({
+        message:'Fields Should Not Be Empty'
+      })
+    }
+  else{
+    return dispatch(resetPass(state,(err,response)=>{
+      if(err){
+        notification.error(err);
+      }else{
+        notification.success(response);
+        setState({emailAddress:''})
+      }
+    }))
+  }
+
+}
+
 
 
   return (

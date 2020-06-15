@@ -101,16 +101,28 @@ export const loginUser = (payload,cb) => {
     return dispatch => {
         api.post('/auth/login' , payload)
         .then(res=>{
-            console.log(res.data)
-            if(res.data.token.user.blocked){
-                cb({
-                    message:'Blocked'
-                })
-            }
-            if(!res.data.token.user.verified && !res.data.token.user.admin){
-                cb({
-                    message:"E-Mail not Verified"
-                })
+            if(payload.type==='user'){
+                if(res.data.token.user.admin){
+                    return cb({
+                        message: 'Only For Users'
+                    })
+                }
+                if(res.data.token.user.blocked){
+                    return cb({
+                        message:'Blocked'
+                    })
+                }
+                if(!res.data.token.user.verified){
+                    return cb({
+                        message:"E-Mail not Verified"
+                    })
+                }
+            }else{
+                if(!res.data.token.user.admin){
+                    return cb({
+                        message: 'Only For Admin'
+                    })
+                }
             }
             dispatch(setLoginSuccess(res.data))
             cb(null,{
@@ -119,7 +131,9 @@ export const loginUser = (payload,cb) => {
         })
         .catch(err=>{
             console.log(err)
-            cb({message:'Something Went Wrong'})
+            cb({
+                message:err.response.data.message
+            })
         })
     }
 }
@@ -130,16 +144,39 @@ export const register = (payload,cb) => {
     return dispatch => {
         api.post('/auth/register',payload)
         .then(res=>{
+            console.log(res.data)
             cb(null,{
                 message:'Registered Successfully'
             })
         })
         .catch(err=>{
-            console.log(err) //Dispatch Toaster Notificaton
+            //Dispatch Toaster Notificaton
+            console.log(err.response)
             cb({
-                message:'Something Went Wrong'
+                message:err.response.data.message
             })
         })
+    }
+}
+
+export const verifyEmail = (payload,cb) => {
+    return dispatch => {
+        api.post('/user/verify' , {userid:payload})
+        .then(res=>{
+            if(res.data.success){
+                cb(null,{
+                    message:res.data.message
+                })
+            }else{
+                throw Error("Try Again Later")
+            }
+        })
+        .catch(err=>{
+            cb({
+                message:err.message
+            })
+        })
+        
     }
 }
 
@@ -147,48 +184,43 @@ export const register = (payload,cb) => {
 // const forgotPassSuccess = payload => ({type:FORGOT_PASS_SUCCESS,payload})
 // const resetPassSuccess = payload => ({type:RESET_PASS_SUCCESS,payload})
 export const setResetToken = payload => ({type:SET_RESET_TOKEN,payload})
-export const resetPass = (payload,history) => {
+export const resetPass = (payload,cb) => {
     console.log(payload)
     return dispatch => {
         api.post('/user/resetpassword',payload)
         .then(res=>{
-            console.log(res.data)
-            if(!res.data.success){
-                throw Error(JSON.stringify(res.data.message.code))
-            }
-            dispatch(toggleToaster({
-                msg:"Check your E-mail for reset link",
-                color:'#38BF1D',
-            }))
 
+            cb(null,{
+                message:'Check your email to reset your password'
+            })
         })
         .catch(err => {
-            dispatch(toggleToaster({
-                msg:err.message,
-                color:'red',
-            }))
+            console.log(err)
+            cb({
+                message:err.response.data.message
+            })
 
         })
     }
 }
 
-export const setNewPass = payload => {
+export const setNewPass = (payload,cb) => {
     return dispatch => {
         api.post('/user/setpassword',payload)
         .then(res=>{
             if(!res.data.success){
-                throw Error(res.data.message)
+                throw Error("Invalid User")
+            }else{
+                cb(null,{
+                    message:res.data.message
+                })
             }
-            dispatch(toggleToaster({
-                msg:"Password Changed Successfully",
-                color:'#38BF1D',
-            }))
         })
         .catch(err => {
-            dispatch(toggleToaster({
-                msg:err.message,
-                color:'red',
-            }))
+            console.log(err)
+            cb({
+                message:err.message
+            })
 
         })
     }

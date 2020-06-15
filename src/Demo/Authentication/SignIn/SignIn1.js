@@ -32,7 +32,7 @@ const AdminLogin = props => {
             message:'Fields Should Not Be Empty'
           })
         }else {
-          dispatch(loginUser(state, (err,response)=>{
+          dispatch(loginUser({...state,type:'admin'}, (err,response)=>{
             if(err){
               notification.error(err);
             }else{

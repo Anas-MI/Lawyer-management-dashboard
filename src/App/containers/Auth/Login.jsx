@@ -36,7 +36,7 @@ const  Login = (props) => {
         message:'Fields Should Not Be Empty'
       })
     }else {
-      dispatch(loginUser({emailAddress,password} , (err,response)=>{
+      dispatch(loginUser({emailAddress,password,type:'user'} , (err,response)=>{
         if(err){
           notification.error(err);
         }else{

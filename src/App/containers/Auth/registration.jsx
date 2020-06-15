@@ -48,8 +48,8 @@ function Registration(props) {
         if(err){
           notification.error(err);
         }else{
-          notification.success(response);
           props.history.push('/login')
+          notification.success(response);
         }
       }))
     }
