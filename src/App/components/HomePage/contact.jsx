@@ -17,6 +17,7 @@ export class Contact extends Component {
       name: '',
       email: '',
       number: '',
+      description: '',
     }
   }
 
@@ -36,6 +37,12 @@ export class Contact extends Component {
         errors.number = 
           value.length < 10
             ? 'Number must be 10 digit long!'
+            : '';
+        break;
+        case 'description': 
+        errors.description = 
+          value.length < 10
+            ? 'The Description field is required!'
             : '';
         break;
       case 'email': 
@@ -162,7 +169,7 @@ export class Contact extends Component {
                       required ="required"
                       onChange={this.handleChange}
                     ></textarea>
-                    <p className="help-block text-danger"></p>
+                    <p className="help-block text-danger">{this.state.errors.description}</p>
                   </div>
                   <div id="success"></div>
                   <button type="submit" className="btn btn-custom btn-lg">
