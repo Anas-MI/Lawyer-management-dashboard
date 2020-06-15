@@ -6,6 +6,10 @@ import { register } from "../../../store/Actions";
 import Navigation from '../../components/HomePage/navigation'
 import Footer from '../../components/HomePage/footer'
 
+const validEmailRegex = 
+  RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+
+
 function Registration(props) {
 
   const dispatch = useDispatch()
@@ -19,16 +23,77 @@ function Registration(props) {
     password:'',
     confirmPass:'',
   })
+  const [error, setError] = useState({
+    firstName: '',
+    lastName: '',
+    lawFirmSize:'',
+    emailAddress: '',
+    countryOfPractice:'',
+    password:'',
+    phoneNumber: '',
+  })
+
+  
 
   const handleChange = e => {
     e.persist()
+    const { name, value } = e.target;
+    let errors = error;
+    switch (name) {
+      case 'firstName': 
+        errors.firstName = 
+          value.length < 5
+            ? 'First Name must be 5 characters long!'
+            : '';
+        break;
+      case 'lastName': 
+        errors.lastName = 
+          value.length < 3
+            ? 'Last Name must be 3 characters long!'
+            : '';
+        break;
+      case 'lawFirmSize': 
+        errors.lawFirmSize = 
+          value === "nn"
+            ? 'Law Firm Size is required!'
+            : '';
+        break;
+      case 'emailAddress': 
+        errors.emailAddress = 
+          validEmailRegex.test(value)
+            ? ''
+            : 'Email is not valid!';
+        break;
+      case 'countryOfPractice': 
+        errors.countryOfPractice = 
+          value === "default"
+          ? 'Country is required!'
+          : '';
+        break; 
+      case 'phoneNumber': 
+        errors.phoneNumber = 
+          value.length < 13
+          ? 'phone number must be 13 digits'
+          : '';
+        break;  
+      case 'password': 
+        errors.password = 
+          value.length < 6
+          ? 'Password must be at least 6 characters'
+          : '';
+        break;  
+      default:
+        break;
+    }
+    setError({...errors})
     setState(st => ({...st,[e.target.name]:e.target.value}))
 
   }
 
   const handleRegister = e => {
     e.preventDefault()
-    checkValidity()
+    checkValidity();
+    
   }
 
     function checkValidity(){
@@ -75,11 +140,12 @@ function Registration(props) {
                       <input name='firstName' value={state['firstName']}
                         type="text" onChange={handleChange}
                         id="firstName"
+                        name="firstName"
                         className="form-control"
                         placeholder="First Name"
                         required="required"
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.firstName}</p>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -91,7 +157,7 @@ function Registration(props) {
                         placeholder="Last Name"
                         required="required"
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.lastName}</p>
                     </div>
                   </div>
                   <div className="col-md-12 pt-3">
@@ -346,26 +412,27 @@ function Registration(props) {
                     <option value="Zambia">Zambia</option>
                     <option value="Zimbabwe">Zimbabwe</option>
                   </select>
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.countryOfPractice}</p>
                     </div>
                   </div>                
                   <div className="col-md-12 pt-3">
                     <div class="form-group">
                       <input className="form-control" name='phoneNumber' value={state['phoneNumber']}
                       onChange={handleChange}
-                      type="number" placeholder="1-(555)-555-5555" id="phone_number" required="required"/>
+                      type="number" placeholder="1-(555)-555-5555" id="phone_number" required="required"/>  
+                      <p className="help-block text-danger">{error.phoneNumber}</p>                  
                     </div>
                   </div>
                   <div className="col-md-12 pt-3">
                   <div className="form-group">
                   <select name="lawFirmSize" id="firm_size" onChange={handleChange}
                   value={state['lawFirmSize']} required="required">
-                    <option>Law Firm Size</option>
+                    <option value="nn">Law Firm Size</option>
                     <option value="a">1</option>
                     <option value="b">2-5</option>
                     <option value="c">over 5+</option>
                   </select>
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.lawFirmSize}</p>
                     </div>
                   </div>  
                   <div className="col-md-12 pt-3">
@@ -377,7 +444,7 @@ function Registration(props) {
                         placeholder="Email"
                         required="required"
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.emailAddress}</p>
                     </div>
                   </div>
                   <div className="col-md-12 pt-3">
@@ -389,7 +456,7 @@ function Registration(props) {
                         placeholder="Password"
                         required="required"
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.password}</p>
                     </div>
                   </div>
                  <div className="col-md-12 pt-3">

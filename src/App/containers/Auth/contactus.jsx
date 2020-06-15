@@ -39,8 +39,8 @@ class contactus extends Component {
         break;
       case 'number': 
         errors.number = 
-          value.length < 10
-            ? 'Number must be 10 digit long!'
+          value.length < 13
+            ? 'Number must be 13 digit long!'
             : '';
         break;
       case 'description': 
