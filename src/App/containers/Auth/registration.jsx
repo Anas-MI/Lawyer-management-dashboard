@@ -377,7 +377,7 @@ function Registration(props) {
                 <button type="submit" 
                 onClick={handleRegister} style={{borderRadius:'0.25rem'}}
                 className="text-white page-scroll cust-btn-primary mt-3">
-                  Registration
+                  Register
                 </button>
                 <div class="text-block text-center my-3">
                   <span class="text-small font-weight-semibold">Already have an account ?</span>
