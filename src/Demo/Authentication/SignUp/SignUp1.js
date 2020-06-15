@@ -7,12 +7,17 @@ import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import DEMO from "../../../store/constant";
 import { register } from '../../../store/Actions';
 import { useDispatch } from 'react-redux';
+import { notification } from 'antd';
 
 const AdminRegister = props =>  {
 
     const dispatch = useDispatch()
 
-    const [state , setState] = useState({})
+    const [state , setState] = useState({
+        username:'',
+        emailAddress:'',
+        password:''
+    })
 
     const handleChange = e => {
       e.persist()
@@ -22,9 +27,29 @@ const AdminRegister = props =>  {
   
     const handleRegister = e => {
       e.preventDefault()
-      dispatch(register({...state,admin:true}))
-      props.history.push('/admin/login')
+      checkValidity()
     }
+
+    function checkValidity(){
+        if(!Object.keys(state).every(k=>state[k]!='')){
+          return notification.warning({
+            message:'Fields Should Not Be Empty'
+          })
+        }
+      else{
+        return dispatch(register({...state,admin:true},(err,response)=>{
+          if(err){
+              console.log(err)
+            notification.error(err);
+          }else{
+            notification.success(response);
+            props.history.push('/admin')
+          }
+        }))
+      }
+   
+    }
+  
 
         return(
             <Aux>
@@ -65,7 +90,7 @@ const AdminRegister = props =>  {
                                     </div>
                                 </div>
                                 <button onClick={handleRegister} className="btn btn-primary shadow-2 mb-4">Sign up</button>
-                                <p className="mb-0 text-muted">Allready have an account? <NavLink to="/admin/login">Login</NavLink></p>
+                                <p className="mb-0 text-muted">Allready have an account? <NavLink to="/admin">Login</NavLink></p>
                             </div>
                         </div>
                     </div>

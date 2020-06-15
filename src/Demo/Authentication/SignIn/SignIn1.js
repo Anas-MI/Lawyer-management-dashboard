@@ -6,6 +6,7 @@ import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../store/Actions';
+import { notification } from 'antd';
 
 const AdminLogin = props => {
 
@@ -20,11 +21,27 @@ const AdminLogin = props => {
     }
   
     const handleLogin = e => {
-      e.preventDefault()
-      dispatch(loginUser(state))
-      props.history.push('/admin/dashboard')
-    }
-  
+        e.preventDefault()
+        checkValidity()
+      }
+    
+      const checkValidity = () => {
+    
+        if(state['emailAddress']==='' || state['password']===''){
+          return notification.warning({
+            message:'Fields Should Not Be Empty'
+          })
+        }else {
+          dispatch(loginUser(state, (err,response)=>{
+            if(err){
+              notification.error(err);
+            }else{
+              notification.success(response);
+            }
+          }))
+        }
+    
+      }  
   
 
         return(
