@@ -18,7 +18,7 @@ export class Navigation extends Component {
           <ul className="navbar-nav py-4 py-md-0">
             <li className="nav-item"><Link to="/" className="nav-link page-scroll">Home</Link></li>
             <li className="nav-item"><Link to="/features" className="nav-link page-scroll">Feature</Link></li>
-            <li className="nav-item"><Link to="/subscription" className="nav-link page-scroll">Pricing</Link></li>
+            <li className="nav-item"><Link to="/features" className="nav-link page-scroll">Pricing</Link></li>
             <li className="nav-item"><Link to="/blog" className="nav-link page-scroll">Blog</Link></li>
             <li className="nav-item"><Link to="/contact" className="nav-link page-scroll">Contact us</Link></li>
           </ul>
