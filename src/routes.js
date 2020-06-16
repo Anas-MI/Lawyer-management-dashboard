@@ -11,6 +11,7 @@ import BlogsManage from './App/containers/ContentManagement/Blogs';
 import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
 import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
 import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
+// import Profile from './App/containers/Profile';
 
 window.jQuery = $;
 window.$ = $;
@@ -37,6 +38,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 
+const Profile = React.lazy(()=>import('./App/containers/Profile'));
 const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
@@ -47,6 +49,7 @@ export const adminRoutes = [
     { path: '/admin/dashboard', exact: true, name: 'AdminDashboard', component: AdminDashboard },
     { path: '/lawyers', exact: true, name: 'Lawyer Management', component: LawyerManagement },
     { path: '/lawyer/details', exact: true, name: 'Lawyer Details', component: LawyerDetail },
+    { path: '/profile', exact: true, name: 'Profile', component: Profile },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
     { path: '/login/:lawyer', exact: true, name: 'Lawyer Login', component: Login},
@@ -77,6 +80,7 @@ export const adminRoutes = [
 ]
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
+    { path: '/profile', exact: true, name: 'Profile', component: Profile },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
     { path: '/basic/breadcrumb-paging', exact: true, name: 'Basic Breadcrumb Pagination', component: UIBasicBreadcrumbPagination },

@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
-import { getLawyers, unblockUser, blockUser,selectLawyer } from "../../../store/Actions";
+import { getLawyers, unblockUser, blockUser,selectLawyer, verifyEmail } from "../../../store/Actions";
 
 
 
@@ -123,6 +123,20 @@ const LawyerManagement = (props) => {
       )
     },
     {
+      title:'Verified',
+      sorting:true,
+      dataIndex: "verified",
+      key: "_id",
+      render:(_,record)=>{
+          return (
+            record.verified 
+            ? <td>Verified</td>
+            :  <Button onClick={()=>verifyUser(record._id)}>Verify</Button>
+          )
+      },
+    },
+
+    {
       title:'Status',
       sorting:true,
       dataIndex: "block",
@@ -160,6 +174,15 @@ const LawyerManagement = (props) => {
 
   ];
 
+  const verifyUser = (userId) => {
+    dispatch(verifyEmail(userId,(err,response)=>{
+      if(err){
+        notification.error(err)
+      }else{
+        notification.success(response)
+      }
+    }))
+  }
 
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
