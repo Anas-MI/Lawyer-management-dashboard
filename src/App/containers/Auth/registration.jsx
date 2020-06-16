@@ -92,8 +92,21 @@ function Registration(props) {
 
   const handleRegister = e => {
     e.preventDefault()
-    checkValidity();
-    
+    const validateForm = (error) => {
+      let valid = true;
+      Object.values(error).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      return valid;
+    }
+    if(validateForm(error)) {
+      checkValidity();
+    }
+    else{
+      return notification.warning({
+        message:'Failed to Register.'
+      })
+    }
   }
 
     function checkValidity(){
