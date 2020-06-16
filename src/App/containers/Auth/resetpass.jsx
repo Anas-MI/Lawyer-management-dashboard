@@ -20,7 +20,7 @@ function Reset(props) {
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
-      case "password":
+      case "newPassword":
         errors.password =
           value.length < 6 ? "Password must be at least 6 characters" : "";
         break;
@@ -92,7 +92,6 @@ function Reset(props) {
                         className="form-control"
                         placeholder="Password"
                         required="required"
-                        name="password"
                       />
                       <p className="help-block text-danger">{error.password}</p>
                     </div>
