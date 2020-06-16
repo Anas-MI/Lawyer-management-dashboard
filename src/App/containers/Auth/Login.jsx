@@ -1,122 +1,190 @@
-import React , {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { loginUser, setLoginSuccess } from "../../../store/Actions";
 import { useDispatch, useSelector } from "react-redux";
-import Navigation from '../../components/HomePage/navigation'
-import Footer from '../../components/HomePage/footer'
-import {useParams} from 'react-router'
+import Navigation from "../../components/HomePage/navigation";
+import Footer from "../../components/HomePage/footer";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { notification } from "antd";
-import { Spin } from 'antd';
+import { Spin } from "antd";
 
-const  Login = (props) => {
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
 
-  const dispatch = useDispatch()
+const Login = (props) => {
+  const dispatch = useDispatch();
 
-  const params = useParams()
+  const params = useParams();
 
-  const [spinner,setSpinner] = useState(false)
+  const [spinner, setSpinner] = useState(false);
 
-  const [emailAddress ,setEmail] = useState('')
-  const [password ,setPassword] = useState('')
+  const [state, setState] = useState({
+    emailAddress: "",
+    password: "",
+  });
 
+  const [errors, setErrors] = useState({
+    emailAddress: "",
+    password: "",
+  });
 
-  useEffect(()=>{
-    if(params.lawyer){
-      dispatch(setLoginSuccess({token:{user:JSON.parse(atob(params.lawyer))}}))
+  const handleChange = (e) => {
+    e.persist();
+    const { name, value } = e.target;
+    setState((st) => ({ ...st, [name]: value }));
+    var err = errors;
+    switch (name) {
+      case "emailAddress":
+        err.emailAddress = validEmailRegex.test(value)
+          ? ""
+          : "Email is not valid!";
+        break;
+      case "password":
+        errors.password =
+          value.length < 6 ? "Password must be at least 6 characters" : "";
+        break;
+      default:
+        break;
     }
-  },[])
+    setErrors({ ...err });
+  };
 
+  useEffect(() => {
+    if (params.lawyer) {
+      dispatch(
+        setLoginSuccess({ token: { user: JSON.parse(atob(params.lawyer)) } })
+      );
+    }
+  }, []);
 
-  const handleLogin = e => {
-    e.preventDefault()
-    setSpinner(true)
-    checkValidity()
-  }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setSpinner(true);
+    const validateForm = (error) => {
+      let valid = true;
+      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+      return valid;
+    };
+    if (validateForm(errors)) {
+      checkValidity();
+    } else {
+      setSpinner(false);
+      return notification.warning({
+        message: "Failed to Register.",
+      });
+    }
+  };
 
   const checkValidity = () => {
-
-    if(emailAddress==='' || password===''){
-      setSpinner(false)
+    if (state["emailAddress"] === "" || state["password"] === "") {
+      setSpinner(false);
       return notification.warning({
-        message:'Fields Should Not Be Empty'
-      })
-    }else {
-      dispatch(loginUser({emailAddress,password,type:'user'} , (err,response)=>{
-        if(err){
-          notification.error(err);
-        }else{
-          notification.success(response);
-        }
-        setSpinner(false)
-
-      }))
+        message: "Fields Should Not Be Empty",
+      });
+    } else {
+      dispatch(
+        loginUser({ ...state, type: "user" }, (err, response) => {
+          if (err) {
+            notification.error(err);
+          } else {
+            notification.success(response);
+          }
+          setSpinner(false);
+        })
+      );
     }
-
-  }
-
+  };
 
   return (
     <>
-    <Navigation />
-    <div className="Login">
-      <div className="container text-center">
-        <div className="align-content-center form-size py-3 row">
-          <div className="col-md-6 offset-md-3">
-            <div className="bg-light l-wrapper p-3 p-md-5 shadow">
-              <div className="section-title mb-2">
-                <h2 className="text-center">Login</h2>                
-              </div>
-              <form id="forgotForm">
-                <div className="row">
-                  <div className="col-md-12">
-                  <div className="form-group">
-                      <input onChange={e=>setEmail(e.target.value)}
-                        type="email" value={emailAddress}
-                        id="email"
-                        className="form-control"
-                        placeholder="Email"
-                        required="required"
-                      />
-                      <p className="help-block text-danger"></p>
+      <Navigation />
+      <div className="Login">
+        <div className="container text-center">
+          <div className="align-content-center form-size py-3 row">
+            <div className="col-md-6 offset-md-3">
+              <div className="bg-light l-wrapper p-3 p-md-5 shadow">
+                <div className="section-title mb-2">
+                  <h2 className="text-center">Login</h2>
+                </div>
+                <form id="forgotForm">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <input
+                          onChange={handleChange}
+                          type="email"
+                          name="emailAddress"
+                          value={state["emailAddress"]}
+                          id="email"
+                          className="form-control"
+                          placeholder="Email"
+                          required="required"
+                        />
+                        <p className="help-block text-danger">
+                          {errors.emailAddress}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <input
+                          onChange={handleChange}
+                          type="password"
+                          name="password"
+                          value={state["password"]}
+                          id="password"
+                          className="form-control"
+                          placeholder="Password"
+                          required="required"
+                        />
+                        <p className="help-block text-danger">
+                          {errors.password}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-12">
-                    <div className="form-group">
-                      <input onChange={e=>setPassword(e.target.value)}
-                        type="password" value={password}
-                        id="password"
-                        className="form-control"
-                        placeholder="Password"
-                        required="required"
-                      />
-                      <p className="help-block text-danger"></p>
-                    </div>
-                  </div>
-                 </div>
-                 {spinner && <Spin/>}
+                  {spinner && <Spin />}
 
-               <div id="success"></div>
-                <button type="submit" onClick={handleLogin} style={{borderRadius:'0.25rem'}}
-                className="text-white page-scroll cust-btn-primary mt-3">
-                  Login
-                </button>
+                  <div id="success"></div>
+                  <button
+                    type="submit"
+                    onClick={handleLogin}
+                    style={{ borderRadius: "0.25rem" }}
+                    className="text-white page-scroll cust-btn-primary mt-3"
+                  >
+                    Login
+                  </button>
 
-                <div class="text-block text-center my-3">
-                    <Link to='/forgot' class="text-small forgot-password text-primary">Forgot Password</Link>
+                  <div class="text-block text-center my-3">
+                    <Link
+                      to="/forgot"
+                      class="text-small forgot-password text-primary"
+                    >
+                      Forgot Password
+                    </Link>
                   </div>
                   <div class="text-block text-center my-3">
-                  <span class="text-small font-weight-semibold">New user?</span>
-                  <Link to="/registration" className="text-custom-primary text-small"> Register</Link>
-                </div>
-              </form>
+                    <span class="text-small font-weight-semibold">
+                      New user?
+                    </span>
+                    <Link
+                      to="/registration"
+                      className="text-custom-primary text-small"
+                    >
+                      {" "}
+                      Register
+                    </Link>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
-}
+};
 
 export default Login;
