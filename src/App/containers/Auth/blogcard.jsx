@@ -27,14 +27,16 @@ class Blogcard extends Component{
             <Navigation />
             <div className="text-center my-5">
                 <div className="container">
-                    <div className="row" >
-                            <div className="banner-text col-lg-8 p-5">
-                                <h2>Blog</h2>
-                                <p className="pt-3 text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo molestias aspernatur libero nulla, qui repellendus commodi id a deserunt magnam.</p>
-                            </div>
-                            <div className="banner-img col-lg-4">
-                                <img src={Contactimg} width="90%" alt="Banner Img"/>
-                            </div>
+                <div className="row mb-5">
+                    <div className="banner-text col-lg-8 p-5 section-title">
+                        <h2 className="text-center">Blog</h2>
+                        <p className="pt-3 text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo molestias aspernatur libero nulla, qui repellendus commodi id a deserunt magnam.</p>
+                    </div>
+                    <div className="banner-img col-lg-4">
+                        <img src={Contactimg} width="90%" alt="Banner Img"/>
+                    </div>
+                </div>
+                <div className="row" >
                     {this.state.blogs.map( blog => (
                         <div className="col-md-4" key={blog._id}>
                             <div className="border-0 card mb-3 shadow-sm blogcard">
@@ -53,7 +55,7 @@ class Blogcard extends Component{
                 </div>
             </div>
             <Footer />
-            </>
+        </>
         )
     }
 }

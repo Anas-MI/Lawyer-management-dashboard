@@ -16,6 +16,7 @@ componentDidMount () {
         )
 }
   render() {
+    const blogsdata = this.state.blogs.slice(0, 6)
     return (
       <div id="blog" className="text-center">
         <div className="container">
@@ -23,7 +24,7 @@ componentDidMount () {
             <h2 className="title-bdr">Blog</h2>            
           </div>
           <div className="row">
-            {this.state.blogs.map( blog => (
+            {blogsdata.map( blog => (
               <div className="col-md-4">
                 <div className="border-0 card mb-3 shadow-sm blogcard">
                   <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
