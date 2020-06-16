@@ -6,21 +6,50 @@ import { useState } from "react";
 import { resetPass } from "../../../store/Actions";
 import { notification } from "antd";
 
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
+
 function Forgot (props) {
 
   const dispatch = useDispatch()
 
   const [state,setState] = useState({})
+  const [error, setError] = useState({emailAddress: ""});
 
   const handleChange = e => {
     e.persist()
+    const { name, value } = e.target;
+    let errors = error;
+    switch (name) {
+      case "emailAddress":
+        errors.emailAddress = validEmailRegex.test(value)
+          ? ""
+          : "Email is not valid!";
+        break;
+      default:
+        break;
+    }
+    setError({ ...errors });
     setState(st=>({...st,[e.target.name]:e.target.value}))
   }
 
   const handleForgot = e => {
     e.preventDefault()
-    checkValidity()
-  }
+    const validateForm = (error) => {
+      let valid = true;
+      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+      return valid;
+    };
+    if (validateForm(error)) {
+      checkValidity();
+    } else {
+      return notification.warning({
+        message: "Failed to Send Reset password.",
+      });
+    }
+  };
+
 
   function checkValidity(){
 
@@ -41,8 +70,6 @@ function Forgot (props) {
   }
 
 }
-
-
 
   return (
     <>
@@ -66,8 +93,9 @@ function Forgot (props) {
                         className="form-control" onChange={handleChange}
                         placeholder="Email"
                         required="required"
+                        name={"emailAddress"}
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.emailAddress}</p>
                     </div>
                   </div>
                 </div>

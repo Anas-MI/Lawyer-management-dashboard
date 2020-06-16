@@ -33,20 +33,20 @@ class contactus extends Component {
     switch (name) {
       case 'name': 
         errors.name = 
-          value.length < 5
-            ? 'Name must be 5 characters long!'
-            : '';
+           value.length > 20
+            ? "Name must be less than 20 characters long!"
+            : "";
         break;
       case 'number': 
         errors.number = 
-          value.length < 13
-            ? 'Number must be 13 digit long!'
-            : '';
+            value.length < 10 || value.length > 13
+            ? "phone number must be between 10 and 13 digits"
+            : "";
         break;
       case 'description': 
         errors.description = 
           value.length < 10
-            ? 'The Description field is required!'
+            ? 'The Description too short!'
             : '';
         break;
       case 'email': 
