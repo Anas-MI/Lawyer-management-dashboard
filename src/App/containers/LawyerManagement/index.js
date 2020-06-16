@@ -60,7 +60,7 @@ const LawyerManagement = (props) => {
     filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
     onFilter: (value, record) =>{
       console.log(dataIndex,record)
-      return record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+      return( record[dataIndex] || '').toString().toLowerCase().includes((value || '').toLowerCase())
     },
       
     onFilterDropdownVisibleChange: visible => {
@@ -74,7 +74,7 @@ const LawyerManagement = (props) => {
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
         searchWords={[state.searchText]}
         autoEscape
-        textToHighlight={text.toString()}
+        textToHighlight={(text || '').toString()}
       />
     ) : (
       text

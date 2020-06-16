@@ -6,6 +6,7 @@ import DEMO from "../../../../../../store/constant";
 import searchData from './searchdata'
 import { Card ,ListGroup} from 'react-bootstrap';
 import {AutoComplete} from 'antd'
+import { withRouter } from 'react-router-dom';
 
 class NavSearch extends Component {
     state = {
@@ -16,46 +17,53 @@ class NavSearch extends Component {
     };
 
 
-    onSearch = () => {
-        this.setState(prevSate => {
-            return {
-                searchWidth: prevSate.searchWidth + 15,
-                searchString: prevSate.searchWidth + 'px'
-            }
-        });
-}
+    onSearch = (val) => {
+        console.log(val)
+        this.setState({searchValue:val})
+        // this.setState(prevSate => {
+        //     return {
+        //         searchWidth: prevSate.searchWidth + 15,
+        //         searchString: prevSate.searchWidth + 'px'
+        //     }
+        // });
+    }
 
-    searchOnHandler = (e) => {
-        this.setState({isOpen: true});
-        const searchInterval = setInterval(() => {
-            if (this.state.searchWidth >= 91) {
-                clearInterval(searchInterval);
-                return false;
-            }
-            this.setState(prevSate => {
-                return {
-                    searchWidth: prevSate.searchWidth + 15,
-                    searchString: prevSate.searchWidth + 'px'
-                }
-            });
-        }, 35);
-    };
+    onSelect = value => {
+        console.log((value))
+        this.props.history.push(value)
+    }
 
-    searchOffHandler = () => {
-        const searchInterval = setInterval(() => {
-            if (this.state.searchWidth < 0) {
-                this.setState({isOpen: false});
-                clearInterval(searchInterval);
-                return false;
-            }
-            this.setState(prevSate => {
-                return {
-                    searchWidth: prevSate.searchWidth - 15,
-                    searchString: prevSate.searchWidth + 'px'
-                }
-            });
-        }, 35);
-    };
+    // searchOnHandler = (e) => {
+    //     this.setState({isOpen: true});
+    //     const searchInterval = setInterval(() => {
+    //         if (this.state.searchWidth >= 91) {
+    //             clearInterval(searchInterval);
+    //             return false;
+    //         }
+    //         this.setState(prevSate => {
+    //             return {
+    //                 searchWidth: prevSate.searchWidth + 15,
+    //                 searchString: prevSate.searchWidth + 'px'
+    //             }
+    //         });
+    //     }, 35);
+    // };
+
+    // searchOffHandler = () => {
+    //     const searchInterval = setInterval(() => {
+    //         if (this.state.searchWidth < 0) {
+    //             this.setState({isOpen: false});
+    //             clearInterval(searchInterval);
+    //             return false;
+    //         }
+    //         this.setState(prevSate => {
+    //             return {
+    //                 searchWidth: prevSate.searchWidth - 15,
+    //                 searchString: prevSate.searchWidth + 'px'
+    //             }
+    //         });
+    //     }, 35);
+    // };
 
     render() {
         let searchClass = ['main-search'];
@@ -66,9 +74,9 @@ class NavSearch extends Component {
         return (
             <Aux>
             <Aux>
-                <div id="main-search" className={searchClass.join(' ')}>
-                <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Calendar'}]}
-                    className="form-control" placeholder="Search . . ." style={{width: '120px' ,border:'none'}}/>
+                <div id="main-search" className={searchClass.join(' ')} style={{width:'120px'}}>
+                <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Dashboard',value:'/admin/dashboard'},{label:'Lawyers',value:'/lawyers'}]}
+                  onSelect={this.onSelect}  className="form-control" placeholder="Search . . ." style={{width: '150px' ,border:'none'}}/>
 
                     {/* <div className="input-group">
                         <input type="text" id="m-search" value={this.searchValue} onChange={this.onSearch} className="form-control" placeholder="Search . . ." style={{width: this.state.searchString}}/>
@@ -80,7 +88,7 @@ class NavSearch extends Component {
                     </div> */}
                 </div>
             </Aux>
-            {
+            {/* {
                 this.state.searchValue!=''?(
                     <Card style={{ width: '15rem' }}>
                     <ListGroup variant="flush">
@@ -93,10 +101,10 @@ class NavSearch extends Component {
                 </Card>
 
                 ):null
-            }
+            } */}
             </Aux>
         );
     }
 }
 
-export default windowSize(NavSearch);
+export default withRouter(windowSize(NavSearch));
