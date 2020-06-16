@@ -11,17 +11,40 @@ function Reset(props) {
   const dispatch = useDispatch()
 
   const [state,setState] = useState({})
+  const [error, setError] = useState({password: "",});
 
   const {token} = queryString.parse(props.location.search)
 
   const handleChange = e => {
     e.persist()
+    const { name, value } = e.target;
+    let errors = error;
+    switch (name) {
+      case "password":
+        errors.password =
+          value.length < 6 ? "Password must be at least 6 characters" : "";
+        break;
+      default:
+        break;
+    }
+    setError({ ...errors });
     setState(st=>({...st,[e.target.name]:e.target.value}))
   }
 
   const handleNewPass = e => {
     e.preventDefault()
-   checkValidity()
+    const validateForm = (error) => {
+      let valid = true;
+      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+      return valid;
+    };
+    if (validateForm(error)) {
+      checkValidity();
+    } else {
+      return notification.warning({
+        message: "Failed to Reset Password.",
+      });
+    }
   }
 
   const checkValidity = () => {
@@ -69,8 +92,9 @@ function Reset(props) {
                         className="form-control"
                         placeholder="Password"
                         required="required"
+                        name="password"
                       />
-                      <p className="help-block text-danger"></p>
+                      <p className="help-block text-danger">{error.password}</p>
                     </div>
                   </div>
                  <div className="col-md-12">
