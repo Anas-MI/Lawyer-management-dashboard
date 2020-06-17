@@ -10,6 +10,8 @@ const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
 
+const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
+
 function Registration(props) {
   const dispatch = useDispatch();
 
@@ -21,6 +23,7 @@ function Registration(props) {
     emailAddress: "",
     password: "",
     confirmPass: "",
+    phoneNumber: "",
   });
   const [error, setError] = useState({
     firstName: "",
@@ -39,15 +42,23 @@ function Registration(props) {
     switch (name) {
       case "firstName":
         errors.firstName =
-          value.length > 20
-            ? "First Name must be less than 20 characters long!"
+            (value.length == 0) 
+            ? "" 
+            : (!validNameRegex.test(value))
+            ? "First Name must be in characters!"
+            : (value.length > 20) 
+            ? "First Name must be less than 20 characters long!" 
             : "";
-        break;
+       break;
       case "lastName":
         errors.lastName =
-          value.length > 20
-            ? "Last Name must be less than 20 characters long!"
-            : "";
+          (value.length == 0) 
+          ? "" 
+          : (!validNameRegex.test(value))
+          ? "Last Name must be in characters!"
+          : (value.length > 20) 
+          ? "Last Name must be less than 20 characters long!" 
+          : "";
         break;
       case "lawFirmSize":
         errors.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
@@ -515,9 +526,9 @@ function Registration(props) {
                           required="required"
                         >
                           <option value="nn">Law Firm Size</option>
-                          <option value="a">1</option>
-                          <option value="b">2-5</option>
-                          <option value="c">over 5+</option>
+                          <option value="1">1</option>
+                          <option value="2-5">2-5</option>
+                          <option value="over 5+">over 5+</option>
                         </select>
                         <p className="help-block text-danger">
                           {error.lawFirmSize}
