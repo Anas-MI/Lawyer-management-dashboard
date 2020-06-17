@@ -5,6 +5,21 @@ import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
 import { getLawyers, unblockUser, blockUser,selectLawyer, verifyEmail } from "../../../store/Actions";
+import api from "../../../resources/api"
+import { Popconfirm, message } from 'antd';
+
+function confirm(e) {
+  // api.get(`/user/delete/${id}`).then(res => {
+  //   console.log({res})
+  // }).catch(error => {
+  //   console.log({error})
+  // message.error('Click on No');
+  // })
+}
+
+function cancel(e) {
+  // console.log(e);
+}
 
 
 
@@ -165,9 +180,16 @@ const LawyerManagement = (props) => {
       key: "_id",
       render:(_,record)=>{
           return (
-              <Button>
-                  Delete
-              </Button>
+            <Button onClick={()=>handleDelete(record._id)}>Delete</Button>
+          //   <Popconfirm
+          //   title="Are you sure you want to delete this User?"
+          //   onConfirm={handleDelete(record._id)}
+          //   onCancel={cancel}
+          //   okText="Yes"
+          //   cancelText="No"
+          // >
+          //   <Button >Delete</Button>
+          // </Popconfirm>
           )
       }
   },
@@ -197,6 +219,29 @@ const LawyerManagement = (props) => {
     clearFilters();
     setState({ searchText: '' });
   };
+
+
+  const handleDelete = (id)=>{
+  
+    api.get(`/user/delete/${id}`).then(res => {
+      console.log({res})
+      // notification.success({"User Deleted!"})
+
+    }).catch(error => {
+      console.log({error})
+      notification.error("Cant delete user")
+
+    })
+
+        // dispatch(unblockUser(id,(err,response)=>{
+        //   if(err){
+        //     notification.error(err)
+        //   }else{
+        //     notification.success(response)
+        //   }
+        // }))
+      }
+
 
   const handleBlock = (blocked,id)=>{
       if(blocked){
