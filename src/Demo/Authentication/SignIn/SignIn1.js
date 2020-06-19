@@ -1,22 +1,29 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-
-import "./../../../assets/scss/style.scss";
-import Aux from "../../../hoc/_Aux";
-import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../../store/Actions";
-import { notification, Spin } from "antd";
+import React, { useState, useEffect } from "react";
+import { loginUser, setLoginSuccess } from "../../../store/Actions";
+import { useDispatch, useSelector } from "react-redux";
+import Navigation from "../../components/HomePage/navigation";
+import Footer from "../../components/HomePage/footer";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { notification } from "antd";
+import { Spin } from "antd";
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
 
-const AdminLogin = (props) => {
+const Login = (props) => {
   const dispatch = useDispatch();
+
+  const params = useParams();
+
   const [spinner, setSpinner] = useState(false);
 
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    emailAddress: "",
+    password: "",
+  });
+
   const [errors, setErrors] = useState({
     emailAddress: "",
     password: "",
@@ -34,7 +41,7 @@ const AdminLogin = (props) => {
           : "Email is not valid!";
         break;
       case "password":
-        err.password =
+        errors.password =
           value.length < 6 ? "Password must be at least 6 characters" : "";
         break;
       default:
@@ -43,9 +50,18 @@ const AdminLogin = (props) => {
     setErrors({ ...err });
   };
 
+  useEffect(() => {
+    if (params.lawyer) {
+      dispatch(
+        setLoginSuccess({ token: { user: JSON.parse(atob(params.lawyer)) } })
+      );
+    }
+  }, []);
+
   const handleLogin = (e) => {
     e.preventDefault();
     setSpinner(true);
+    notification.destroy()
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -63,12 +79,13 @@ const AdminLogin = (props) => {
 
   const checkValidity = () => {
     if (state["emailAddress"] === "" || state["password"] === "") {
+      setSpinner(false);
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
     } else {
       dispatch(
-        loginUser({ ...state, type: "admin" }, (err, response) => {
+        loginUser({ ...state, type: "user" }, (err, response) => {
           if (err) {
             notification.error(err);
           } else {
@@ -81,80 +98,94 @@ const AdminLogin = (props) => {
   };
 
   return (
-    <Aux>
-      <Breadcrumb />
-      <div className="auth-wrapper">
-        <div className="auth-content">
-          <div className="auth-bg">
-            <span className="r" />
-            <span className="r s" />
-            <span className="r s" />
-            <span className="r" />
-          </div>
-          <div className="card">
-            <div className="card-body text-center">
-              <div className="mb-4">
-                <i className="feather icon-unlock auth-icon" />
-              </div>
-              <h3 className="mb-4">Login</h3>
-              <div className="input-group mb-3">
-                <input
-                  name="emailAddress"
-                  value={state["emailAddress"]}
-                  onChange={handleChange}
-                  type="email"
-                  className="form-control"
-                  placeholder="Email"
-                />
-              </div>
-              <p className="help-block text-danger">{errors.emailAddress}</p>
-
-              <div className="input-group mb-4">
-                <input
-                  name="password"
-                  value={state["password"]}
-                  onChange={handleChange}
-                  type="password"
-                  className="form-control"
-                  placeholder="password"
-                />
-              </div>
-              {spinner && <Spin />}
-
-              <div className="form-group text-left">
-                <div className="checkbox checkbox-fill d-inline">
-                  <input
-                    type="checkbox"
-                    name="checkbox-fill-1"
-                    id="checkbox-fill-a1"
-                  />
-                  <p className="help-block text-danger">{errors.password}</p>
-
-                  <label htmlFor="checkbox-fill-a1" className="cr">
-                    {" "}
-                    Save credentials
-                  </label>
+    <>
+      <Navigation />
+      <div className="Login">
+        <div className="container text-center">
+          <div className="align-content-center form-size py-3 row">
+            <div className="col-md-6 offset-md-3">
+              <div className="bg-light l-wrapper p-3 p-md-5 shadow">
+                <div className="section-title mb-2">
+                  <h2 className="text-center">Login</h2>
                 </div>
+                <form id="forgotForm">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <input
+                          onChange={handleChange}
+                          type="email"
+                          name="emailAddress"
+                          value={state["emailAddress"]}
+                          id="email"
+                          className="form-control"
+                          placeholder="Email"
+                          required="required"
+                        />
+                        <p className="help-block text-danger">
+                          {errors.emailAddress}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <input
+                          onChange={handleChange}
+                          type="password"
+                          name="password"
+                          value={state["password"]}
+                          id="password"
+                          className="form-control"
+                          placeholder="Password"
+                          required="required"
+                        />
+                        <p className="help-block text-danger">
+                          {errors.password}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {spinner && <Spin />}
+
+                  <div id="success"></div>
+                  <button
+                    type="submit"
+                    onClick={handleLogin}
+                    style={{ borderRadius: "0.25rem" }}
+                    className="text-white page-scroll cust-btn-primary mt-3"
+                  >
+                    Login
+                  </button>
+
+                  <div class="text-block text-center my-3">
+                    <Link
+                      to="/forgot"
+                      class="text-small forgot-password text-primary"
+                    >
+                      Forgot Password
+                    </Link>
+                  </div>
+                  <div class="text-block text-center my-3">
+                    <span class="text-small font-weight-semibold">
+                      New user?
+                    </span>
+                    <Link
+                      to="/registration"
+                      className="text-custom-primary text-small"
+                    >
+                      {" "}
+                      Register
+                    </Link>
+                  </div>
+                </form>
               </div>
-              <button
-                onClick={handleLogin}
-                className="btn btn-primary shadow-2 mb-4"
-              >
-                Login
-              </button>
-              <p className="mb-2 text-muted">
-                Forgot password? <NavLink to="/forgot">Reset</NavLink>
-              </p>
-              <p className="mb-0 text-muted">
-                Don’t have an account?{" "}
-                <NavLink to="/admin/register">Signup</NavLink>
-              </p>
             </div>
           </div>
         </div>
       </div>
-    </Aux>
+      <Footer />
+    </>
   );
 };
 
-export default AdminLogin;
+export default Login;
