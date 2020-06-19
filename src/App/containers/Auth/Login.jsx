@@ -31,7 +31,6 @@ const Login = (props) => {
 
   const handleChange = (e) => {
     e.persist();
-    notification.destroy()
     const { name, value } = e.target;
     setState((st) => ({ ...st, [name]: value }));
     var err = errors;
@@ -62,6 +61,7 @@ const Login = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
     setSpinner(true);
+    notification.destroy()
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
