@@ -252,6 +252,13 @@ hr {
   border-radius: 0;
 }
 
+@media (max-width: 405px) {
+  .navbar-brand-name {
+    width: 0.3vh;
+    margin-left: -20px;
+  }
+}
+
 .section-title {
   margin-bottom: 70px;
 }
@@ -957,3 +964,6 @@ label {
   }
 }
 /*# sourceMappingURL=App.css.map */
+
+@media (max-width: 576px) {
+}

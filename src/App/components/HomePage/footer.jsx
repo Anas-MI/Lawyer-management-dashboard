@@ -55,7 +55,7 @@ const footer = () => {
                 <ul className="nav ftr-nav flex-column">
                   <li>
                     <a href="#home" className="page-scroll">
-                      Work form Home
+                      Work from Home
                     </a>
                   </li>
                   <li>
