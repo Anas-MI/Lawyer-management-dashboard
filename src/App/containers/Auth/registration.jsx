@@ -14,7 +14,7 @@ const validNameRegex = RegExp(/^[a-zA-Zàáâäãåąčćęèéêëėįìíîï�
 
 function Registration(props) {
   const dispatch = useDispatch();
-
+  const [display, setDisplay] = useState(false);
   const [state, setState] = useState({
     firstName: "",
     lastName: "",
@@ -37,6 +37,7 @@ function Registration(props) {
 
   const handleChange = (e) => {
     e.persist();
+    setDisplay(false)
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
@@ -91,27 +92,32 @@ function Registration(props) {
 
   const handleRegister = (e) => {
     e.preventDefault();
-     notification.destroy()
-    const validateForm = (error) => {
-      let valid = true;
-      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
-      return valid;
-    };
-    if (validateForm(error)) {
-      checkValidity();
-    } else {
-      return notification.warning({
-        message: "Failed to Register.",
-      });
+    if(!display){
+      const validateForm = (error) => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        return valid;
+      };
+      if (validateForm(error)) {
+        checkValidity();
+      } else {
+        setDisplay(true)
+        return notification.warning({
+          message: "Failed to Register.",
+        });
+      }
     }
+    
   };
 
   function checkValidity() {
     if (!Object.keys(state).every((k) => state[k] !== "")) {
+      setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
     } else if (state["password"] !== state["confirmPass"]) {
+      setDisplay(true)
       return notification.warning({
         message: "Passwords Don't Match",
       });
@@ -119,6 +125,7 @@ function Registration(props) {
       return dispatch(
         register(state, (err, response) => {
           if (err) {
+            setDisplay(true)
             notification.error(err);
           } else {
             props.history.push("/login");
