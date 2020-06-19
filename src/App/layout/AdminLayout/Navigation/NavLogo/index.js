@@ -17,7 +17,7 @@ const navLogo = (props) => {
                     </div>
                     <span className="b-title">Case Management</span>
                  </a>
-                <a href={DEMO.BLANK_LINK} className={toggleClass.join(' ')} id="mobile-collapse" onClick={props.onToggleNavigation}><span /></a>
+                {/* <a href={DEMO.BLANK_LINK} className={toggleClass.join(' ')} id="mobile-collapse" onClick={props.onToggleNavigation}><span /></a> */}
             </div>
         </Aux>
     );

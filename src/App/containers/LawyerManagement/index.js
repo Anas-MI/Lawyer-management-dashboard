@@ -127,6 +127,26 @@ const LawyerManagement = (props) => {
 
     },
     {
+      title: "Created on",
+      dataIndex: "created_at",
+      key: "created_at",
+      defaultSortOrder: 'ascend',
+      // ...getColumnSearchProps('lastName'),
+      sorter: (a, b ,c) => ( 
+        c==='ascend'
+        ?a.created_at<b.created_at
+        :a.created_at>b.created_at
+      ),
+      render:(_,record)=>{
+        let date = new Date(record.created_at.toString())
+        console.log(record.created_at)
+        console.log(date)
+        
+        return <span>{date.toLocaleDateString().toString()}</span>}
+
+
+    },
+    {
       title: "Email",
       dataIndex: "emailAddress",
       key: "_id",
