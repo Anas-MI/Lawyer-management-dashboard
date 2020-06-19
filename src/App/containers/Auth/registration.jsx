@@ -91,6 +91,7 @@ function Registration(props) {
 
   const handleRegister = (e) => {
     e.preventDefault();
+     notification.destroy()
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));

@@ -3,14 +3,28 @@ import {Row, Col, Card, Table, Tabs, Tab} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
-
+import api from "../../resources/api"
 import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
 import GrowthChart from '../../App/components/GrowthChart'
 
 class AdminDashboard extends React.Component {
+
+    constructor(){
+        super()
+        this.state={
+            totalLawyers:0
+        }
+    }
+    componentDidMount(){
+        api.get("/user/count").then(data => {if(data.data.status){
+            this.setState({totalLawyers: data.data.data})
+        }})
+    }
+
     render() {
+        
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">
@@ -81,7 +95,7 @@ class AdminDashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             297</h3>
+                                            {this.state.totalLawyers}</h3>
                                     </div>
 
                                     {/* <div className="col-8 text-right">

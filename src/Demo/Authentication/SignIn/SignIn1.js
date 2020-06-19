@@ -46,6 +46,7 @@ const AdminLogin = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
     setSpinner(true);
+    notification.destroy()
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
