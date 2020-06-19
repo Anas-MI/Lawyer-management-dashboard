@@ -15,7 +15,7 @@ const validEmailRegex = RegExp(
 const AdminLogin = (props) => {
   const dispatch = useDispatch();
   const [spinner, setSpinner] = useState(false);
-
+  const [checked, setChecked] = useState(true);
   const [state, setState] = useState({});
   const [errors, setErrors] = useState({
     emailAddress: "",
@@ -46,7 +46,6 @@ const AdminLogin = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
     setSpinner(true);
-    notification.destroy()
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -121,28 +120,30 @@ const AdminLogin = (props) => {
                 />
               </div>
               {spinner && <Spin />}
-
+              {/*
               <div className="form-group text-left">
-                <div className="checkbox checkbox-fill d-inline">
-                  <input
-                    type="checkbox"
-                    name="checkbox-fill-1"
-                    id="checkbox-fill-a1"
-                  />
+                  
                   <p className="help-block text-danger">{errors.password}</p>
 
-                  <label htmlFor="checkbox-fill-a1" className="cr">
-                    {" "}
-                    Save credentials
-                  </label>
-                </div>
+                  <label>
+                    Remember me 
+                    <input type="checkbox"
+                    name="checkbox-fill-1"
+                    id="checkbox-fill-a1"
+                      checked={checked}
+                      onChange={() => setChecked(!checked)}
+                    />
+                  </label><br></br>
+               
               </div>
+              */}
               <button
                 onClick={handleLogin}
                 className="btn btn-primary shadow-2 mb-4"
               >
                 Login
               </button>
+              {/*
               <p className="mb-2 text-muted">
                 Forgot password? <NavLink to="/forgot">Reset</NavLink>
               </p>
@@ -150,6 +151,7 @@ const AdminLogin = (props) => {
                 Don’t have an account?{" "}
                 <NavLink to="/admin/register">Signup</NavLink>
               </p>
+              */}
             </div>
           </div>
         </div>
