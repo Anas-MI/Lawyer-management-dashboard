@@ -9,7 +9,7 @@
 /* Contact Section */
 /* Footer Section*/
 body {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   color: #777;
@@ -19,7 +19,7 @@ body {
 }
 
 html {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   color: #777;
@@ -29,7 +29,7 @@ html {
 }
 
 h2 {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   text-transform: uppercase;
   margin: 0 0 20px 0;
   font-weight: 800;
@@ -38,14 +38,14 @@ h2 {
 }
 
 h3 {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   font-size: 20px;
   font-weight: 600;
   color: #333;
 }
 
 h4 {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   font-size: 18px;
   color: #333;
   font-weight: 600;
@@ -102,7 +102,7 @@ hr {
   width: 70px;
   text-align: center;
   position: relative;
-  background: #1E7A46;
+  background: #1e7a46;
   margin-bottom: 20px;
   border: 0;
 }
@@ -114,7 +114,7 @@ hr {
 }
 
 #menu a.navbar-brand {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   font-size: 24px;
   font-weight: 700;
   color: #333;
@@ -125,11 +125,11 @@ hr {
   background-color: #fff;
   border-color: rgba(231, 231, 231, 0);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
 #menu.navbar-default .navbar-nav > li > a {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   color: #2d3c43;
   cursor: pointer;
   font-weight: 600;
@@ -144,9 +144,9 @@ hr {
   top: -0.4em;
   font-size: 8px;
   -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
-  -webkit-transition: all .3s;
-  transition: all .3s;
+  transform: rotate(0deg);
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 #menu.navbar-default .navbar-nav > li > a:hover {
@@ -159,7 +159,7 @@ hr {
 
 #menu.navbar-default .navbar-nav > li > a:hover .fa {
   -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 #menu.navbar-default .navbar-nav > li > a.cust-btn-primary {
@@ -170,8 +170,8 @@ hr {
   border-radius: 500px;
   padding: 9px 26px;
   text-decoration: none;
-  -webkit-transition: background-color .5s,border-color .5s;
-  transition: background-color .5s,border-color .5s;
+  -webkit-transition: background-color 0.5s, border-color 0.5s;
+  transition: background-color 0.5s, border-color 0.5s;
   background-color: #0070e0;
   color: #fff;
 }
@@ -201,7 +201,13 @@ hr {
   bottom: -1px !important;
   width: 100% !important;
   height: 2px !important;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb)) !important;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  ) !important;
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%) !important;
   content: "" !important;
   -webkit-transition: width 0.2s !important;
@@ -215,7 +221,13 @@ hr {
   bottom: -1px !important;
   width: 100% !important;
   height: 2px !important;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb)) !important;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  ) !important;
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%) !important;
   content: "" !important;
   -webkit-transition: width 0.2s !important;
@@ -254,7 +266,13 @@ hr {
 .section-title h2::after {
   position: absolute;
   content: "";
-  background: -webkit-gradient(linear, left top, right top, from(#5ca9fb), to(#6372ff));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#5ca9fb),
+    to(#6372ff)
+  );
   background: linear-gradient(to right, #5ca9fb 0%, #6372ff 100%);
   height: 4px;
   width: 60px;
@@ -268,11 +286,17 @@ hr {
 }
 
 .btn-custom {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   text-transform: uppercase;
   color: #fff;
   background-color: #5ca9fb;
-  background-image: -webkit-gradient(linear, left top, right top, from(#5ca9fb), to(#6372ff));
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#5ca9fb),
+    to(#6372ff)
+  );
   background-image: linear-gradient(to right, #5ca9fb 0%, #6372ff 100%);
   padding: 14px 34px;
   letter-spacing: 1px;
@@ -374,7 +398,7 @@ hr {
 }
 
 .intro h1 {
-  font-family: "Open Sans","Helvetica","sans-serif","Arial";
+  font-family: "Open Sans", "Helvetica", "sans-serif", "Arial";
   color: #fff;
   font-size: 82px;
   font-weight: 700;
@@ -418,10 +442,16 @@ header .intro-text {
   height: 100px;
   padding: 30px 0;
   border-radius: 50%;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  );
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%);
   -webkit-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
-          box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
 }
 
 #about {
@@ -442,7 +472,13 @@ header .intro-text {
 #about h2::after {
   position: absolute;
   content: "";
-  background: -webkit-gradient(linear, left top, right top, from(#5ca9fb), to(#6372ff));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#5ca9fb),
+    to(#6372ff)
+  );
   background: linear-gradient(to right, #5ca9fb 0%, #6372ff 100%);
   height: 4px;
   width: 60px;
@@ -458,8 +494,8 @@ header .intro-text {
 }
 
 #about .about-text li:before {
-  content: '\f00c';
-  font-family: 'FontAwesome';
+  content: "\f00c";
+  font-family: "FontAwesome";
   color: #5ca9fb;
   font-size: 11px;
   font-weight: 300;
@@ -472,7 +508,7 @@ header .intro-text {
   background: #fff;
   border-right: 0;
   -webkit-box-shadow: 0 0 50px rgba(0, 0, 0, 0.06);
-          box-shadow: 0 0 50px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.06);
 }
 
 #about p {
@@ -482,7 +518,13 @@ header .intro-text {
 
 #services {
   padding: 100px 0;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  );
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%);
   color: #fff;
 }
@@ -512,12 +554,18 @@ header .intro-text {
   width: 120px;
   height: 120px;
   padding: 40px 0;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  );
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%);
   border-radius: 50%;
   color: #fff;
   -webkit-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
-          box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
 }
 
 #services h3 {
@@ -550,8 +598,18 @@ header .intro-text {
   text-align: center;
   margin: 0 auto;
   color: #fff;
-  background: -webkit-gradient(linear, left top, right top, from(rgba(99, 114, 255, 0.8)), to(rgba(92, 169, 251, 0.8)));
-  background: linear-gradient(to right, rgba(99, 114, 255, 0.8) 0%, rgba(92, 169, 251, 0.8) 100%);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(rgba(99, 114, 255, 0.8)),
+    to(rgba(92, 169, 251, 0.8))
+  );
+  background: linear-gradient(
+    to right,
+    rgba(99, 114, 255, 0.8) 0%,
+    rgba(92, 169, 251, 0.8) 100%
+  );
   padding: 30% 0 0 0;
   height: 100%;
   width: 100%;
@@ -658,7 +716,13 @@ header .intro-text {
 
 #contact {
   padding: 100px 0 60px 0;
-  background: -webkit-gradient(linear, left top, right top, from(#6372ff), to(#5ca9fb));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#6372ff),
+    to(#5ca9fb)
+  );
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%);
   color: rgba(255, 255, 255, 0.75);
 }
@@ -786,7 +850,7 @@ header .intro-text {
 label {
   font-size: 12px;
   font-weight: 400;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   float: left;
 }
 
@@ -826,7 +890,8 @@ label {
   padding-left: 0;
 }
 
-#footer .ftr-nav li a:hover, #footer .ftr-nav li a:focus {
+#footer .ftr-nav li a:hover,
+#footer .ftr-nav li a:focus {
   background: transparent;
   text-decoration: underline;
 }
@@ -846,7 +911,7 @@ label {
 }
 
 #footer a:hover {
-  color: #FFF;
+  color: #fff;
   text-decoration: underline;
 }
 
@@ -868,7 +933,7 @@ label {
 #footer .o-region-selector select {
   border: none;
   -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   border-radius: 0;
   color: #fff;
   background: transparent;
@@ -884,6 +949,11 @@ label {
 @media (max-width: 768px) {
   #about img {
     margin: 50px 0;
+  }
+
+  #footer .ftr-set h3 {
+    /* color: #fff; */
+    margin-bottom: 10px;
   }
 }
 /*# sourceMappingURL=App.css.map */
