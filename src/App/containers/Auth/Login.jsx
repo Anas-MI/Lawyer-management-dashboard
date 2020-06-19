@@ -16,7 +16,7 @@ const Login = (props) => {
   const dispatch = useDispatch();
 
   const params = useParams();
-
+  const [display, setDisplay] = useState(false);
   const [spinner, setSpinner] = useState(false);
 
   const [state, setState] = useState({
@@ -31,6 +31,7 @@ const Login = (props) => {
 
   const handleChange = (e) => {
     e.persist();
+    setDisplay(false)
     const { name, value } = e.target;
     setState((st) => ({ ...st, [name]: value }));
     var err = errors;
@@ -60,8 +61,8 @@ const Login = (props) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setSpinner(true);
-    notification.destroy()
+    if(!display){
+      setSpinner(true);
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -71,15 +72,18 @@ const Login = (props) => {
       checkValidity();
     } else {
       setSpinner(false);
+      setDisplay(true)
       return notification.warning({
         message: "Failed to Register.",
       });
+    }
     }
   };
 
   const checkValidity = () => {
     if (state["emailAddress"] === "" || state["password"] === "") {
       setSpinner(false);
+      setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
@@ -87,6 +91,7 @@ const Login = (props) => {
       dispatch(
         loginUser({ ...state, type: "user" }, (err, response) => {
           if (err) {
+            setDisplay(true)
             notification.error(err);
           } else {
             notification.success(response);
@@ -189,3 +194,4 @@ const Login = (props) => {
 };
 
 export default Login;
+
