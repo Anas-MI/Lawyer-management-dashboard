@@ -14,6 +14,7 @@ const validEmailRegex = RegExp(
 
 const AdminLogin = (props) => {
   const dispatch = useDispatch();
+  const [Display, setDisplay] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [checked, setChecked] = useState(true);
   const [state, setState] = useState({});
@@ -24,6 +25,7 @@ const AdminLogin = (props) => {
 
   const handleChange = (e) => {
     e.persist();
+    setDisplay(false)
     const { name, value } = e.target;
     setState((st) => ({ ...st, [name]: value }));
     var err = errors;
@@ -45,7 +47,8 @@ const AdminLogin = (props) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setSpinner(true);
+    if(!Display){
+      setSpinner(true);
     const validateForm = (error) => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -55,14 +58,17 @@ const AdminLogin = (props) => {
       checkValidity();
     } else {
       setSpinner(false);
+      setDisplay(true)
       return notification.warning({
         message: "Failed to Register.",
       });
+    }
     }
   };
 
   const checkValidity = () => {
     if (state["emailAddress"] === "" || state["password"] === "") {
+      setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
@@ -71,6 +77,7 @@ const AdminLogin = (props) => {
         loginUser({ ...state, type: "admin" }, (err, response) => {
           if (err) {
             notification.error(err);
+            setDisplay(true)
           } else {
             notification.success(response);
           }
