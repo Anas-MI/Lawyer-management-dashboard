@@ -31,6 +31,7 @@ const Login = (props) => {
 
   const handleChange = (e) => {
     e.persist();
+    notification.destroy()
     const { name, value } = e.target;
     setState((st) => ({ ...st, [name]: value }));
     var err = errors;
