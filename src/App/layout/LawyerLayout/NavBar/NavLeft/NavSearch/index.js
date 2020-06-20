@@ -77,7 +77,7 @@ class NavSearch extends Component {
             <Aux>
             <Aux>
             <div id="main-search" className={searchClass.join(' ')} style={{width:'120px'}}>
-                <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Dashboard',value:'/dashboard/default'},{label:'Profile',value:'/profile'}]}
+                <AutoComplete value={this.searchValue} onChange={this.onSearch} options={[{label:'Dashboard',value:'/dashboard/default'},{label:'Lawyer',value:'/lawyer'},{label:'Profile',value:'/profile'}]}
                   onSelect={this.onSelect}  className="form-control" placeholder="Search . . ." style={{width: '175px' ,border:'none'}}/>
                     {/* <div className="input-group">
                         <input type="text" id="m-search" value={this.searchValue} onChange={this.onSearch} className="form-control" placeholder="Search . . ." style={{width: this.state.searchString}}/>
