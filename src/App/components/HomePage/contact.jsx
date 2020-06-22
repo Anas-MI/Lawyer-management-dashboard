@@ -5,7 +5,11 @@ import { Modal } from 'react-bootstrap';
 
 const validEmailRegex = 
   RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
-export class Contact extends Component {
+
+const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
+
+
+  export class Contact extends Component {
   
   state ={
     name: '',
@@ -27,12 +31,16 @@ export class Contact extends Component {
     const { name, value } = event.target;
     let errors = this.state.errors;
     switch (name) {
-      case 'name': 
-        errors.name = 
-           value.length > 20
-            ? "Name must be less than 20 characters long!"
-            : "";
-        break;
+      case "name":
+          errors.name =
+              (value.length == 0) 
+              ? "" 
+              : (!validNameRegex.test(value))
+              ? "Name must be in characters!"
+              : (value.length > 20) 
+              ? "Name must be less than 20 characters long!" 
+              : "";
+         break;  
       case 'number': 
         errors.number = 
             value.length < 10 || value.length > 13
@@ -70,33 +78,37 @@ export class Contact extends Component {
       );
       return valid;
     }
+    const isFormValid = () => {
+      const {name, number, email, description} = this.state;
+      
+      if (name && number && email && description){
+        axios({
+          method: "POST", 
+          url:`${apiUrl}/contactus/create`, 
+          data:  this.state
+        }).then((response)=>{
+          if (response.data.status === 'success'){
+            alert("Message Sent."); 
+            this.resetForm()
+          }else if(response.data.status === 'fail'){
+            alert("Message failed to send.")
+          }
+        })
+        this.setState({
+          name: '',
+          number: '',
+          email: '',
+          description: '',
+        })
+        return this.setState({show:true});
+      }
+    }
     if(validateForm(this.state.errors)) {
-      this.setState({show:true});
-      axios({
-        method: "POST", 
-        url:`${apiUrl}/contactus/create`, 
-        data:  this.state
-      }).then((response)=>{
-        if (response.data.status === 'success'){
-          alert("Message Sent."); 
-          this.resetForm()
-        }else if(response.data.status === 'fail'){
-          alert("Message failed to send.")
-        }
-      })
-      this.setState({
-        name: '',
-        number: '',
-        email: '',
-        description: '',
-      })
+      isFormValid()
     }else{
       alert("Message failed to send.")
     }
-    
   }
-
-  
 
   render() {
     return (
