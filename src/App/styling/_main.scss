@@ -96,7 +96,7 @@ hr {
 	.nav-link{
 		font-weight: 600;
 		color: $main-color;
-		padding-left: 16px;
+		padding-left: 12px;
 		padding-right: 16px;
 		&:hover{
 			color: $primary-color;
@@ -404,6 +404,7 @@ header {
 	.ftr-nav {
 		li {
 			float:none;
+			padding: 0 5px;
 			a {
 				color: $white;
 				padding-top: 0;
@@ -454,10 +455,21 @@ header {
     cursor: pointer;
 	outline: none;
 	font-size: 14px;
+	padding: 8px 1px;
+	width: auto;
 	option{
 		color:#55656d;
 		font-size: 14px;
 		}
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	.f-menu-items {
+		line-height: 2;
+    	justify-content: space-between;
+    	display: flex;
+    	flex-direction: column;
 	}
 }
 

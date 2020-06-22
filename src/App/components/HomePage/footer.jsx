@@ -114,7 +114,7 @@ const footer = () => {
         </div>
       </div>
       <div className="f-nav">
-        <div className="container text-center">
+        <div className="container">
           <ul className="clearfix f-menu-items" style={{"line-height" : "2",}}>
             <li>
               <small>© 2020 Thirdessential.com</small>
