@@ -52,6 +52,10 @@ const AddEditContact = props => {
     e.persist()
     setState(st=>({...st,[e.target.name]:e.target.value}))
 }
+const handleImageChange = e => {
+  console.log(e)
+  //setState(st=>({...st,[e.target.name]:e.target.value}))
+}
 const imageHandler = {
   name: 'file',
   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -75,9 +79,10 @@ const imageHandler = {
     const handleSubmit = e => {
         e.preventDefault()
         if(editMode){
-           //  dispatch(updateBlog({id:state._id,body:state}))
+             dispatch(updateBlog({id:state._id,body:state}))
         }else{
-           //  dispatch(createBlog(state))
+          console.log(state)
+             dispatch(createBlog(state))
         }
         props.history.goBack()
     }
@@ -86,12 +91,12 @@ const imageHandler = {
         <div className='w-75 m-auto'>
         <h3 className='text-center' >Add New Contact</h3>
         <Form>
-            <Upload {...imageHandler} onChange={handleChange}>
+            <Upload {...imageHandler} onChange={handleImageChange}>
               <antdButton>
                 <UploadOutlined /> Click to Upload
               </antdButton>
             </Upload><br></br>
-          <Form.Group controlId="formGroupEmail">
+          <Form.Group controlId="formGroupPrefix">
             <Form.Label>Prefix</Form.Label>
             <Form.Control name='Prefix' type="text" placeholder="Prefix" 
             value={state['Prefix']} onChange={handleChange}/>
@@ -99,21 +104,21 @@ const imageHandler = {
 
           <Form.Row>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control name='FirstName' type="text" placeholder="First Name" 
                 value={state['FirstName']} onChange={handleChange}/>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupMiddleName">
                 <Form.Label>Middle Name</Form.Label>
                 <Form.Control name='MiddleName' type="text" placeholder="Middle Name" 
                 value={state['MiddleName']} onChange={handleChange}/>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupLastName">
                 <Form.Label>Last Name</Form.Label>
                 <Form.Control name='LastName' type="text" placeholder="Last Name" 
                 value={state['LastName']} onChange={handleChange}/>
@@ -123,7 +128,7 @@ const imageHandler = {
           
           <Row>
             <Col>
-              <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Group controlId="formGroupCompany">
                 <Form.Label>Company</Form.Label>
                 <Form.Control as="select">
                   <option>Third Essential</option>
@@ -141,14 +146,14 @@ const imageHandler = {
 
           <Row>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupTitle">
                 <Form.Label>Title</Form.Label>
                 <Form.Control name='Title' type="text" placeholder="Title" 
                 value={state['Title']} onChange={handleChange}/>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupNumber">
                 <Form.Label>Phone Number</Form.Label>
                 <Form.Control name='PhoneNumber' type="number" placeholder="Phone Number" 
                 value={state['PhoneNumber']} onChange={handleChange}/>
@@ -157,13 +162,13 @@ const imageHandler = {
           </Row>
 
 
-          <Form.Group controlId="formGroupEmail">
+          <Form.Group controlId="formGroupWebsite">
             <Form.Label>Website</Form.Label>
             <Form.Control name='Website' type="text" placeholder="Website" 
             value={state['Website']} onChange={handleChange}/>
           </Form.Group>
           <p className='text-center' >Address</p>
-          <Form.Group controlId="formGroupEmail">
+          <Form.Group controlId="formGroupStreet">
             <Form.Label>Street</Form.Label>
             <Form.Control name='Street' type="text" placeholder="Street" 
             value={state['Street']} onChange={handleChange}/>
@@ -171,28 +176,28 @@ const imageHandler = {
 
           <Form.Row>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupCity">
                 <Form.Label>City</Form.Label>
                 <Form.Control name='City' type="text" placeholder="City" 
                 value={state['City']} onChange={handleChange}/>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formGroupEmail">
+              <Form.Group controlId="formGroupState">
                 <Form.Label>State</Form.Label>
                 <Form.Control name='State' type="text" placeholder="State" 
                 value={state['State']} onChange={handleChange}/>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formGroupEmail">n
+              <Form.Group controlId="formGroupZipCode">
                 <Form.Label>ZipCode</Form.Label>
                 <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
                 value={state['ZipCode']} onChange={handleChange}/>
               </Form.Group>
             </Col>
           </Form.Row>
-          <Form.Group controlId="formGroupEmail">
+          <Form.Group controlId="formGroupType">
             <Form.Label>Type</Form.Label>
             <Form.Control name='Type' type="text" placeholder="Type" 
              value={state['Type']} onChange={handleChange}/>
