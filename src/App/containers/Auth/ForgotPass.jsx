@@ -76,7 +76,7 @@ function Forgot (props) {
     <Navigation />
     <div className="Forgot">
       <div className="container text-center">
-        <div className="align-content-center form-size py-3 row">
+        <div className="align-content-center py-5 row">
           <div className="col-md-6 offset-md-3">
             <div className="bg-light l-wrapper p-3 p-md-5 shadow">
               <div className="section-title mb-2">

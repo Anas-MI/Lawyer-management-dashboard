@@ -17,7 +17,7 @@ const footer = () => {
                 </p>
               </div>
             </div>
-            <div className="col-md-2 col-md-offset-1 col-sm-3 col-4 ">
+            <div className="col-md-2 col-md-offset-1 col-sm-5 col-4 ">
               <div className="ftr-set">
                 <h3>Contact</h3>
                 <ul className="nav ftr-nav flex-column">
@@ -49,7 +49,7 @@ const footer = () => {
                 </ul>
               </div>
             </div>
-            <div className="col-md-3 col-sm-5 col-4">
+            <div className="col-md-3 col-sm-5 col-4 mb-4">
               <div className="ftr-set">
                 <h3>Link</h3>
                 <ul className="nav ftr-nav flex-column">
@@ -81,7 +81,7 @@ const footer = () => {
                 </ul>
               </div>
             </div>
-            <div className=" col-md-3 col-4 ">
+            <div className="col-md-3 col-sm-12 ">
               <div className="ftr-set">
                 <div className="social">
                   <h3>Address</h3>
@@ -115,7 +115,7 @@ const footer = () => {
       </div>
       <div className="f-nav">
         <div className="container text-center">
-          <ul className="clearfix f-menu-items">
+          <ul className="clearfix f-menu-items" style={{"line-height" : "2",}}>
             <li>
               <small>© 2020 Thirdessential.com</small>
             </li>

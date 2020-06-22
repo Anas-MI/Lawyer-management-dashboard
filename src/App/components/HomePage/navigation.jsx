@@ -35,7 +35,7 @@ export class Navigation extends Component {
                   className="collapse navbar-collapse"
                   id="bs-example-navbar-collapse-1"
                 >
-                  <ul className="navbar-nav py-1 px-md-3" id=" topNav">
+                  <ul className="navbar-nav pt-1 px-md-3" id=" topNav">
                     <li className="nav-item">
                       <Link to="/features" className="nav-link page-scroll">
                         Feature
@@ -59,8 +59,8 @@ export class Navigation extends Component {
                   </ul>
 
                   <div className="navbar-login ml-auto" id="bottomNav">
-                    <ul className="navbar-nav py-1 px-md-3">
-                      <li className="nav-item mr-3 ">
+                    <ul className="navbar-nav px-md-3">
+                      <li className="nav-item mr-3 mb-2">
                         <Link to="/login" className="nav-link page-scroll">
                           Login
                         </Link>

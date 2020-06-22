@@ -23,9 +23,20 @@
 }
 
 .image-slider {
-  div {  
+  div:nth-child(1) {  
     background: rgba(0, 0, 0, .6);
     opacity: 0.8;
   }
 
+}
+
+@media only screen and (max-width: 820px) {
+  .head-centered{
+    h1 {
+      font-size: 50px !important;
+    }
+  }
+  .navbar-brand-name{
+    font-size: 22px !important;
+  }
 }
