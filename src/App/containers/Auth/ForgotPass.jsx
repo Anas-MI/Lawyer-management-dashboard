@@ -13,12 +13,13 @@ const validEmailRegex = RegExp(
 function Forgot (props) {
 
   const dispatch = useDispatch()
-
+   const [Display, setDisplay] = useState(false);
   const [state,setState] = useState({})
   const [error, setError] = useState({emailAddress: ""});
 
   const handleChange = e => {
     e.persist()
+    setDisplay(false)
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
@@ -36,17 +37,21 @@ function Forgot (props) {
 
   const handleForgot = e => {
     e.preventDefault()
-    const validateForm = (error) => {
-      let valid = true;
-      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
-      return valid;
-    };
-    if (validateForm(error)) {
-      checkValidity();
-    } else {
-      return notification.warning({
-        message: "Failed to Send Reset password.",
-      });
+   
+    if(!Display){
+      const validateForm = (error) => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        return valid;
+      };
+      if (validateForm(error)) {
+        checkValidity();
+      } else {
+        setDisplay(true)
+        return notification.warning({
+          message: "Failed to Send Reset password.",
+        });
+      }
     }
   };
 
@@ -54,6 +59,7 @@ function Forgot (props) {
   function checkValidity(){
 
     if(!Object.keys(state).every(k=>state[k]!=='')){
+      setDisplay(true)
       return notification.warning({
         message:'Fields Should Not Be Empty'
       })
@@ -61,8 +67,10 @@ function Forgot (props) {
   else{
     return dispatch(resetPass(state,(err,response)=>{
       if(err){
+        setDisplay(true)
         notification.error(err);
       }else{
+        
         notification.success(response);
         setState({emailAddress:''})
       }
