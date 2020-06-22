@@ -6,7 +6,7 @@ const footer = () => {
       <div className="f-top">
         <div className="container">
           <div className="row">
-            <div className="col-md-3 col-sm-12 ">
+            <div className="col-md-3 col-sm-12 pb-4">
               <div className="ftr-set">
                 <h3>LOGO</h3>
                 <p>
@@ -17,7 +17,7 @@ const footer = () => {
                 </p>
               </div>
             </div>
-            <div className="col-md-2 col-md-offset-1 col-sm-5 col-4 ">
+            <div className="col-md-3 col-sm-12 pb-4 ">
               <div className="ftr-set">
                 <h3>Contact</h3>
                 <ul className="nav ftr-nav flex-column">
@@ -49,7 +49,7 @@ const footer = () => {
                 </ul>
               </div>
             </div>
-            <div className="col-md-3 col-sm-5 col-4 mb-4">
+            <div className="col-md-3 col-sm-12 pb-4">
               <div className="ftr-set">
                 <h3>Link</h3>
                 <ul className="nav ftr-nav flex-column">
