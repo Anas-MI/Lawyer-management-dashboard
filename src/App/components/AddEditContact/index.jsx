@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateBlog, createBlog } from '../../../store/Actions'
 import { Form,Button, Row , Col } from "react-bootstrap";
-import Classes from './index.css'
+//import Classes from './index.css'
 import { Upload, message, antdButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
