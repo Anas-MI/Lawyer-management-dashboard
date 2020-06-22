@@ -117,7 +117,7 @@ const footer = () => {
         <div className="container">
           <ul className="clearfix f-menu-items" style={{"line-height" : "2",}}>
             <li>
-              <small>© 2020 Thirdessential.com</small>
+              <small>© 2020 casemanagement.com</small>
             </li>
             <li>
               <a
