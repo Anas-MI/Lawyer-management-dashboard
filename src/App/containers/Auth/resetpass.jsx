@@ -9,7 +9,7 @@ import { notification } from "antd";
 
 function Reset(props) {
   const dispatch = useDispatch()
-
+  const [Display, setDisplay] = useState(false);
   const [state,setState] = useState({})
   const [error, setError] = useState({password: "",});
 
@@ -31,29 +31,35 @@ function Reset(props) {
     setState(st=>({...st,[e.target.name]:e.target.value}))
   }
 
+
   const handleNewPass = e => {
     e.preventDefault()
-    const validateForm = (error) => {
-      let valid = true;
-      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
-      return valid;
-    };
-    if (validateForm(error)) {
-      checkValidity();
-    } else {
-      return notification.warning({
-        message: "Failed to Reset Password.",
-      });
+    if(!Display){
+      const validateForm = (error) => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        return valid;
+      };
+      if (validateForm(error)) {
+        checkValidity();
+      } else {
+        setDisplay(true)
+        return notification.warning({
+          message: "Failed to Reset Password.",
+        });
+      }
     }
   }
 
   const checkValidity = () => {
     if(!Object.keys(state).every(k=>state[k]!=='')){
+      setDisplay(true)
       return notification.warning({
         message:'Fields Should Not Be Empty'
       })
     }
     else if(state['newPassword'] !== state['confirm_pass']){
+      setDisplay(true)
       return notification.warning({
         message:'Passwords Don\'t Match' 
       })
@@ -61,6 +67,7 @@ function Reset(props) {
   else{
     return dispatch(setNewPass({...state,userid:token},(err,response)=>{
       if(err){
+        setDisplay(true)
         notification.error(err);
       }else{
         props.history.push('/login')
@@ -70,7 +77,6 @@ function Reset(props) {
   }
 
   }
-
 
   return (
     <div className="Forgot">
