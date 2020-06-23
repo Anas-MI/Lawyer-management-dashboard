@@ -5,7 +5,7 @@ import { Form,Button, Row , Col } from "react-bootstrap";
 //import Classes from './index.css'
 import { Upload, message, antdButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-
+import DynamicFeilds from './DynamicFeild/Index'
 
 
 const AddEditContact = props => {
@@ -23,39 +23,65 @@ const AddEditContact = props => {
             setEditMode(true)
         }
     },[])
+    const [inputList, setInputList] = useState({Address : [""], Email : [""], Number : [""],
+    CompanyAddress : [""], CompanyEmail : [""], CompanyNumber : [""], CompanyWebsite: [""]
+  });
 
-    const [inputList, setInputList] = useState([{ type: "" }]);
- {/*
-  // handle input change
-  const handleInputChange = (e, index) => {
-    const temp = e.target;
-    const list = [...inputList];
-    list[index] = temp;
-    setInputList(list);
-  };
- 
 
-   
-    const handleRemoveClick = index => {
-      const list = [...inputList];
-      list.splice(index, 1);
-      setInputList(list);
-    };
-   
-    // handle click event of the Add button
-    const handleAddClick = () => {
-      setInputList([...inputList, { firstName: "", lastName: "" }]);
-    };
-
-  */}
-  const handleChange = e => {
+  const handleChange = (e,index) => {
     e.persist()
+    console.log(e.target.value)
+    console.log(index)
+    if (["Address","Email", "Number", "CompanyWebsite", "CompanyAddress","CompanyEmail", "CompanyNumber"].includes(e.target.className) ) {
+      let list = inputList
+      const path = e.target.className
+      list.path[e.target.dataset.id] = e.target.value
+      console.log(list)
+      setInputList({list})
+      let newState = [...state]
+      newState.push(...inputList)
+      setState(newState)
+    } else {
     setState(st=>({...st,[e.target.name]:e.target.value}))
-}
-const handleImageChange = e => {
-  console.log(e)
-  //setState(st=>({...st,[e.target.name]:e.target.value}))
-}
+    }
+  }
+
+  const handleImageChange = e => {
+    console.log(e)
+    //setState(st=>({...st,[e.target.name]:e.target.value}))
+    }
+   const addFeild = (type) => {
+    let list = inputList
+      if(type==="Email"){
+        list.Email.push("")
+        setInputList(list)
+      }else
+      if(type==="Address"){
+        list.Address.push("")
+        setInputList(list)
+      }else if(type==="Number"){
+        list.Number.push("")
+        setInputList(list)
+      }else if(type==="CompanyWebsite"){
+        list.CompanyWebsite.push("")
+        setInputList(list)
+      }if(type==="CompanyEmail"){
+        list.CompanyEmail.push("")
+        setInputList(list)
+      }else
+      if(type==="CompanyAddress"){
+        list.CompanyAddress.push("")
+        setInputList(list)
+      }else if(type==="CompanyNumber"){
+        list.CompanyNumber.push("")
+        setInputList(list)
+     
+    }
+    console.log(inputList)
+    let newState = state
+    newState= [state, inputList]
+    setState(newState)
+  }
 const imageHandler = {
   name: 'file',
   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -89,7 +115,8 @@ const imageHandler = {
 
     return (
         <div className='w-75 m-auto'>
-        <h3 className='text-center' >Add New Contact</h3>
+        <p className='text-center' >Add New Contact</p>
+        <h3 className='text-center' >Personal Details</h3>
         <Form>
             <Upload {...imageHandler} onChange={handleImageChange}>
               <antdButton>
@@ -135,14 +162,9 @@ const imageHandler = {
                 </Form.Control>
               </Form.Group>
             </Col>
-            <Col>
-              <Form.Group controlId="formGroupEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control name='Email' type="text" placeholder="Email" 
-                value={state['Email']} onChange={handleChange}/>
-              </Form.Group>
-            </Col>
           </Row>
+          <Button onClick={()=>addFeild("Email")}>+</Button>
+          <DynamicFeilds type={"Email"} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
 
           <Row>
             <Col>
@@ -152,14 +174,10 @@ const imageHandler = {
                 value={state['Title']} onChange={handleChange}/>
               </Form.Group>
             </Col>
-            <Col>
-              <Form.Group controlId="formGroupNumber">
-                <Form.Label>Phone Number</Form.Label>
-                <Form.Control name='PhoneNumber' type="number" placeholder="Phone Number" 
-                value={state['PhoneNumber']} onChange={handleChange}/>
-              </Form.Group>
-            </Col>
           </Row>
+
+          <Button onClick={()=>addFeild("Number")}>+</Button>
+          <DynamicFeilds type={"PhoneNumber"} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
 
 
           <Form.Group controlId="formGroupWebsite">
@@ -197,33 +215,76 @@ const imageHandler = {
               </Form.Group>
             </Col>
           </Form.Row>
-          <Form.Group controlId="formGroupType">
-            <Form.Label>Type</Form.Label>
-            <Form.Control name='Type' type="text" placeholder="Type" 
-             value={state['Type']} onChange={handleChange}/>
-          </Form.Group>
-          {/*
-          <div>
-              {inputList.map((x, i) => {
-                return (
-                  <div>
-                    <Form.Group controlId="formGroupEmail">
-                      <Form.Label>Type</Form.Label>
-                      <Form.Control name='Type' type="text" placeholder="Type" 
-                      value={state['Type']} onChange={handleChange}/>
-                    </Form.Group>
-                    <div>
-                      {inputList.length !== 1 && <Button
-                        className="mr10"
-                        onClick={() => handleRemoveClick(i)}>Remove</Button>}
-                      {inputList.length - 1 === i && <Button onClick={handleAddClick}>Add</Button>}
-                    </div>
-                  </div>
-                );
-              })}
+      
+          <Button onClick={()=>addFeild("Address")}>+</Button> 
+          <DynamicFeilds type={"Address"} inputList={inputList.Address} change={handleChange}></DynamicFeilds>
+          
+          <h3 className='text-center' >Company</h3>
+          <Upload {...imageHandler} onChange={handleImageChange}>
+              <antdButton>
+                <UploadOutlined /> Click to Upload
+              </antdButton>
+            </Upload><br></br>
+
+          <Form.Row>
+            <Col>
+              <Form.Group controlId="formGroupFirstName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control name='FirstName' type="text" placeholder="First Name" 
+                value={state['FirstName']} onChange={handleChange}/>
+              </Form.Group>
+            </Col>
+            <Col>
               
-            </div>*/}
-            
+            </Col>
+            <Col>
+              
+            </Col>
+          </Form.Row>
+          
+          <Button onClick={()=>addFeild("CompanyEmail")}>+</Button>
+          <DynamicFeilds type={"CompanyEmail"} inputList={inputList.CompanyEmail} change={handleChange}></DynamicFeilds>
+
+          <Button onClick={()=>addFeild("CompanyNumber")}>+</Button>
+          <DynamicFeilds type={"CompanyPhoneNumber"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+
+          <Button onClick={()=>addFeild("CompanyWebsite")}>+</Button>
+          <DynamicFeilds type={"CompanyWebsite"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
+
+          <p className='text-center' >Address</p>
+          <Form.Group controlId="formGroupStreet">
+            <Form.Label>Street</Form.Label>
+            <Form.Control name='Street' type="text" placeholder="Street" 
+            value={state['Street']} onChange={handleChange}/>
+          </Form.Group>
+
+          <Form.Row>
+            <Col>
+              <Form.Group controlId="formGroupCity">
+                <Form.Label>City</Form.Label>
+                <Form.Control name='City' type="text" placeholder="City" 
+                value={state['City']} onChange={handleChange}/>
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="formGroupState">
+                <Form.Label>State</Form.Label>
+                <Form.Control name='State' type="text" placeholder="State" 
+                value={state['State']} onChange={handleChange}/>
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="formGroupZipCode">
+                <Form.Label>ZipCode</Form.Label>
+                <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
+                value={state['ZipCode']} onChange={handleChange}/>
+              </Form.Group>
+            </Col>
+          </Form.Row>
+      
+          <Button onClick={()=>addFeild("CompanyAddress")}>+</Button> 
+          <DynamicFeilds type={"CompanyAddress"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
+
           <Button onClick={handleSubmit}>{editMode?'Update':'Create'}</Button>
         </Form>
       </div>
@@ -231,3 +292,4 @@ const imageHandler = {
 }
 
 export default AddEditContact
+
