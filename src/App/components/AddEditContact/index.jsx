@@ -5,7 +5,7 @@ import { Form,Button, Row , Col } from "react-bootstrap";
 //import Classes from './index.css'
 import { Upload, message, antdButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DynamicFeilds from './DynamicFeild/Index'
+import DynamicFeilds from './DynamicFeilds'
 
 
 const AddEditContact = props => {
@@ -115,11 +115,15 @@ const imageHandler = {
 
     return (
         <div className='w-75 m-auto'>
-        <p className='text-center' >Add New Contact</p>
-        <h3 className='text-center' >Personal Details</h3>
-        <Form>
+        <h3 className="text-center mb-4 form-header-text">Add New Contact</h3>
+        
+        <div className="card" style={{"padding" : "1rem"}}>
+          
+          <Form className="form-details">
+            <h4 className='text-center' >Personal Details</h4>
+
             <Upload {...imageHandler} onChange={handleImageChange}>
-              <antdButton>
+              <antdButton className="form-upload-button">
                 <UploadOutlined /> Click to Upload
               </antdButton>
             </Upload><br></br>
@@ -128,7 +132,7 @@ const imageHandler = {
             <Form.Control name='Prefix' type="text" placeholder="Prefix" 
             value={state['Prefix']} onChange={handleChange}/>
           </Form.Group>
-
+        
           <Form.Row>
             <Col>
               <Form.Group controlId="formGroupFirstName">
@@ -163,9 +167,9 @@ const imageHandler = {
               </Form.Group>
             </Col>
           </Row>
-          <Button onClick={()=>addFeild("Email")}>+</Button>
-          <DynamicFeilds type={"Email"} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
-
+          
+          <DynamicFeilds type={"Email"} name={"Email"} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("Email")} className="form-add-button">+ Email</Button>
           <Row>
             <Col>
               <Form.Group controlId="formGroupTitle">
@@ -176,16 +180,16 @@ const imageHandler = {
             </Col>
           </Row>
 
-          <Button onClick={()=>addFeild("Number")}>+</Button>
-          <DynamicFeilds type={"PhoneNumber"} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
-
+          
+          <DynamicFeilds type={"PhoneNumber"} name={"Phone Number"} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("Number")} className="form-add-button">+ Phone Number</Button>
 
           <Form.Group controlId="formGroupWebsite">
             <Form.Label>Website</Form.Label>
             <Form.Control name='Website' type="text" placeholder="Website" 
             value={state['Website']} onChange={handleChange}/>
           </Form.Group>
-          <p className='text-center' >Address</p>
+          <p className='text-center' style={{"color" : "#4e4e91"}}><b>Address</b></p>
           <Form.Group controlId="formGroupStreet">
             <Form.Label>Street</Form.Label>
             <Form.Control name='Street' type="text" placeholder="Street" 
@@ -216,12 +220,13 @@ const imageHandler = {
             </Col>
           </Form.Row>
       
-          <Button onClick={()=>addFeild("Address")}>+</Button> 
-          <DynamicFeilds type={"Address"} inputList={inputList.Address} change={handleChange}></DynamicFeilds>
           
-          <h3 className='text-center' >Company</h3>
+          <DynamicFeilds type={"Address"} name={"Address"} inputList={inputList.Address} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("Address")} className="form-add-button">+ Address</Button> 
+
+          <h4 className='text-center' >Company Details</h4>
           <Upload {...imageHandler} onChange={handleImageChange}>
-              <antdButton>
+              <antdButton className="form-upload-button">
                 <UploadOutlined /> Click to Upload
               </antdButton>
             </Upload><br></br>
@@ -242,16 +247,19 @@ const imageHandler = {
             </Col>
           </Form.Row>
           
-          <Button onClick={()=>addFeild("CompanyEmail")}>+</Button>
-          <DynamicFeilds type={"CompanyEmail"} inputList={inputList.CompanyEmail} change={handleChange}></DynamicFeilds>
+          
+          <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("CompanyEmail")} className="form-add-button">+ Company Email</Button>
 
-          <Button onClick={()=>addFeild("CompanyNumber")}>+</Button>
-          <DynamicFeilds type={"CompanyPhoneNumber"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+          
+          <DynamicFeilds type={"CompanyPhoneNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("CompanyNumber")} className="form-add-button">+ Company Phone Number</Button>
 
-          <Button onClick={()=>addFeild("CompanyWebsite")}>+</Button>
-          <DynamicFeilds type={"CompanyWebsite"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
+          
+          <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("CompanyWebsite")} className="form-add-button">+ Company Website</Button>
 
-          <p className='text-center' >Address</p>
+          <p className='text-center' style={{"color" : "#4e4e91"}}><b>Address</b></p>
           <Form.Group controlId="formGroupStreet">
             <Form.Label>Street</Form.Label>
             <Form.Control name='Street' type="text" placeholder="Street" 
@@ -282,11 +290,12 @@ const imageHandler = {
             </Col>
           </Form.Row>
       
-          <Button onClick={()=>addFeild("CompanyAddress")}>+</Button> 
-          <DynamicFeilds type={"CompanyAddress"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
-
+           
+          <DynamicFeilds type={"CompanyAddress"} name={"Company Address"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
+          <Button onClick={()=>addFeild("CompanyAddress")} className="form-add-button">+ Company Address</Button> <br/> <br/>
           <Button onClick={handleSubmit}>{editMode?'Update':'Create'}</Button>
         </Form>
+        </div>
       </div>
     )
 }

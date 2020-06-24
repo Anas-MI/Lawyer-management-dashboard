@@ -10,6 +10,44 @@ label {
 	font-family: $main-fonts;
 	float: left;
 }
+.form-add-button{
+    height: 30px;
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+    margin-bottom: 10px !important;
+}
+.form-upload-button{
+    cursor: pointer;
+    text-align: center;
+    border-radius: 4px;
+    box-shadow: none;
+    padding: .65rem 1rem;
+    display: inline-block;
+    background: #fff;
+    color: #4e4e91;
+    border: 1px solid #4e4e91;
+    margin: 0;
+}
+
+.form-header-text{
+    color: #004;
+    font-family: Noto Sans,Tahoma,sans-serif;
+}
+    
+
+.form-details{
+    label {
+        color: #4e4e91;
+        cursor: pointer;
+        display: block;
+        font-size: 13px;
+        font-weight: 400;
+    }
+    h4 {
+        color: #4e4e91;
+    }
+}
+
 .form-control,
 select {
     display: block;
@@ -18,7 +56,7 @@ select {
     font-size: 16px;
     line-height: 1.42857143;
     color: #444;
-    background-color: $white;
+    background-color: $white !important;
     background-image: none;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -34,7 +72,7 @@ select {
         -webkit-box-shadow: transparent;
         box-shadow: transparent;
     }
-    
+       
 }
 .form-control {
 	&::-webkit-input-placeholder {

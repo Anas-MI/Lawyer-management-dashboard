@@ -194,17 +194,19 @@ const ContactsManage = (props) => {
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
       </div>
-      <Table dataSource={tableData} columns={columns}
-        onRow={(record, rowIndex) => {
-            return {
-              onDoubleClick: event => {}, // double click row
-              onContextMenu: event => {}, // right button click row
-              onMouseEnter: event => {}, // mouse enter row
-              onMouseLeave: event => {}, // mouse leave row
-            };
-          }}>
+      <div className="overflow-auto">
+        <Table dataSource={tableData} columns={columns}
+          onRow={(record, rowIndex) => {
+              return {
+                onDoubleClick: event => {}, // double click row
+                onContextMenu: event => {}, // right button click row
+                onMouseEnter: event => {}, // mouse enter row
+                onMouseLeave: event => {}, // mouse leave row
+              };
+            }}>
 
-      </Table>
+        </Table>
+      </div>
     </div>
   );
 };

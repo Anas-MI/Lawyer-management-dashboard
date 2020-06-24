@@ -15,8 +15,8 @@ class DynamicFeilds extends React.Component {
                   return (
                     <div key={idx}>
                       <Form.Group controlId={this.props.type}>
-                        <Form.Label>{this.props.type}</Form.Label>
-                         <Form.Control name={this.props.type} className={this.props.type} type="text" placeholder={this.props.type} 
+                        <Form.Label>{this.props.name}</Form.Label>
+                         <Form.Control name={this.props.type} className={this.props.type} type="text" placeholder={this.props.name} 
                          onChange={(e,idx)=>this.props.change(e,idx)}/>
                       </Form.Group>
                     </div>
