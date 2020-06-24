@@ -37,7 +37,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
-
+const tasks = React.lazy(() => import('./App/containers/Tasks/index'));
 const Profile = React.lazy(()=>import('./App/containers/Profile'));
 const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
@@ -80,6 +80,7 @@ export const adminRoutes = [
 ]
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
+    { path: '/tasks', exact: true, name: 'Tasks', component:tasks },
     { path: '/profile', exact: true, name: 'Profile', component: Profile },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
