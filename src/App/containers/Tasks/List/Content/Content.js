@@ -1,31 +1,68 @@
-
+import { Modal, Button } from 'antd';
 import React from 'react'
+import Content from './Content/Content'
+class AddList extends React.Component {
+  state = {
+    ModalText: 'Content of the modal',
+    visible: false,
+    confirmLoading: false,
+  };
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
-class Content extends React.Component {
-  constructor(props){
-  super(props)
-  this.state = {
-    data: [{Name:"Jayesh", Discription : "We Dont Know", PractiseArea : "Same" },
-    {Name:"Smith", Discription : "We Dont Know this one too", PractiseArea : "Same Again" }]
-  }}
-  
+  handleOk = () => {
+    this.setState({
+      ModalText: 'The modal will be closed after two seconds',
+      confirmLoading: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        visible: false,
+        confirmLoading: false,
+      });
+    }, 2000);
+  };
+
+  handleCancel = () => {
+    console.log('Clicked cancel button');
+    this.setState({
+      visible: false,
+    });
+  };
+
   render() {
-    let newData = this.state.data.map((value, index)=>{
-      return <div>
-        <p>{value.Name}</p>
-        <p>{value.Discription}</p>
-        <p>{value.PractiseArea}</p>
-        <button>Edit</button>
-        <button>Delete</button>
-      </div>
-    })
+    const { visible, confirmLoading } = this.state;
     return (
       <div>
-        {newData}
-      </div>     
-    )
+        <div > 
+        <Button type="primary" onClick={this.showModal}>
+           Add List
+        </Button>
+        </div>
+        <Modal
+            title="Add to List"
+            visible={visible}
+            onOk={this.handleOk}
+            confirmLoading={confirmLoading}
+            onCancel={this.handleCancel}
+            >
+          <div>
+            <input placeholder="Name" type="text"></input>
+            <input placeholder="Descripton" type="text"></input>
+            <select id="Area" name="Area">
+                    <option value="volvo">Volvo</option>
+                </select>
+          </div>
+        </Modal>
+        <br></br>
+        <Content></Content>
+      </div>
+    );
   }
 }
 
-export default Content 
+export default AddList
