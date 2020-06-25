@@ -16,7 +16,9 @@ const ContactsManage = (props) => {
 
   //Search Related 
   const [state,setState] = useState({})
-  const contacts = useSelector((state) => state.Contact.contacts)
+  const contacts = useSelector((state) => {
+    return state.Contact.contacts;
+  })
 
 
   useEffect(()=>{
@@ -24,7 +26,7 @@ const ContactsManage = (props) => {
   },[contacts])
 
   useEffect(() => {
-    // dispatch(getBlogs());
+    dispatch(getBlogs());
   }, []);
 
 
@@ -86,10 +88,13 @@ const ContactsManage = (props) => {
 //     // props.history.push('/lawyer/details')
 //   }
 
-  const handleAddNew = () => {
-    // dispatch(selectBlog())
-    props.history.push('/manage/contacts/add')
-
+  const handleAddNew = (type) => {
+   //  dispatch(selectBlog())
+   if(type==="Person"){
+    props.history.push('/manage/contacts/add/Person')
+  }else if(type==="Company"){
+    props.history.push('/manage/contacts/add/Company')
+  }
   }
 
   const handleEdit = record => {
@@ -103,9 +108,9 @@ const ContactsManage = (props) => {
   const columns = [
     {
       title: "Title",
-      dataIndex: "title",
+      dataIndex: "Title",
       key: "_id",
-      ...getColumnSearchProps('title'),
+      ...getColumnSearchProps('Title'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.title<b.title
@@ -113,10 +118,10 @@ const ContactsManage = (props) => {
       )
     },
     {
-      title: "Author",
-      dataIndex: "author",
+      title: "First Name",
+      dataIndex: "FirstName",
       key: "_id",
-      ...getColumnSearchProps('author'),
+      ...getColumnSearchProps('FirstName'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.author<b.author
@@ -126,10 +131,10 @@ const ContactsManage = (props) => {
 
     },
     {
-      title: "Short Description",
-      dataIndex: "shortDescription",
+      title: "Email",
+      dataIndex: "Email",
       key: "_id",
-      ...getColumnSearchProps('shortDescription'),
+      ...getColumnSearchProps('Email'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.shortDescription<b.shortDescription
@@ -137,10 +142,10 @@ const ContactsManage = (props) => {
       )
     },
     {
-        title: "Description",
-        dataIndex: "description",
+        title: "Last Name",
+        dataIndex: "LastName",
         key: "_id",
-        ...getColumnSearchProps('description'),
+        ...getColumnSearchProps('LastName'),
         sorter: (a, b ,c) => ( 
           c==='ascend'
           ?a.description<b.description
@@ -192,21 +197,21 @@ const ContactsManage = (props) => {
   return (
     <div>
       <div className='p-2 '>
-        <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
+        <Button className='ml-auto' color='success' >Export</Button>
+        <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Person")}>Add Person</Button>
+        <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Company")}>Add Company</Button>
       </div>
-      <div className="overflow-auto">
-        <Table dataSource={tableData} columns={columns}
-          onRow={(record, rowIndex) => {
-              return {
-                onDoubleClick: event => {}, // double click row
-                onContextMenu: event => {}, // right button click row
-                onMouseEnter: event => {}, // mouse enter row
-                onMouseLeave: event => {}, // mouse leave row
-              };
-            }}>
+      <Table dataSource={tableData} columns={columns}
+        onRow={(record, rowIndex) => {
+            return {
+              onDoubleClick: event => {}, // double click row
+              onContextMenu: event => {}, // right button click row
+              onMouseEnter: event => {}, // mouse enter row
+              onMouseLeave: event => {}, // mouse leave row
+            };
+          }}>
 
-        </Table>
-      </div>
+      </Table>
     </div>
   );
 };
