@@ -8,7 +8,7 @@ function AddEmployee (props){
 
     const [state,setState] = useState({})
     const [index,setindex] = useState({})
-    const [inputList, setInputList] = useState({ Name : "",
+    const [inputList, setInputList] = useState({Name : "",
         CompanyAddress : [""], CompanyEmail : [""], CompanyNumber : [""], CompanyWebsite: [""]
       });
       
@@ -34,26 +34,26 @@ function AddEmployee (props){
 
       })
      
-    
-      const handleChange = (e,index) => {
+      
+      const handleChange = (e) => {
         e.persist()
+        console.log(e)
         if ([ "CompanyWebsite", "CompanyAddress","CompanyEmail", "CompanyNumber"].includes(e.target.className) ) {
-          let list = inputList
-          const path = e.target.className
-          list.path[e.target.dataset.id] = e.target.value
-          setInputList({list})
-        } else {
-          let list = inputList
-          const path = e.target.className
-          list.path=e.target.value
-          setInputList(list)
-        }
-        let newState = state
-        newState[index]=inputList
-        setState({newState})
-        console.log(state)
-      }
-    
+            let list = inputList
+            const path = e.target.className
+            list.path[e.target.dataset.id] = e.target.value
+            console.log(list)
+            setInputList({list})
+            let newState = [...state]
+            newState.push(...inputList)
+            setState(newState)
+          } else {
+          setState(st=>({...st,[e.target.name]:e.target.value}))
+          }
+
+            
+            }
+          
       const handleImageChange = e => {
         //setState(st=>({...st,[e.target.name]:e.target.value}))
         }
@@ -73,6 +73,9 @@ function AddEmployee (props){
             list.CompanyNumber.push("")
             setInputList(list)     
         }
+        let newState = state
+        newState= [state, inputList]
+        setState(newState)
       }
     const imageHandler = {
       name: 'file',
@@ -106,7 +109,7 @@ function AddEmployee (props){
         <Form.Group controlId="formGroupFirstName">
           <Form.Label>Name</Form.Label>
           <Form.Control name='FirstName' type="text" placeholder="First Name" 
-          value={state['FirstName']} onChange={handleChange}/>
+          value={state['FirstName']} onChange={(e)=>handleChange(e)}/>
         </Form.Group>
       </Col>
       <Col>
@@ -118,12 +121,12 @@ function AddEmployee (props){
     </Form.Row>
     
     
-    <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={handleChange}></DynamicFeilds>
+    <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={(e)=>handleChange(e)}></DynamicFeilds>
     <Button onClick={()=>addFeild("CompanyEmail")} className="form-add-button">+ Company Email</Button>
 
     
-    <DynamicFeilds type={"CompanyPhoneNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
-    <Button onClick={()=>addFeild("CompanyNumber")} className="form-add-button">+ Company Phone Number</Button>
+    <DynamicFeilds type={"CompanyNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+    <Button onClick={()=>addFeild("CompanyNumber")} className="form-add-button">+ Company Number</Button>
 
     
     <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
