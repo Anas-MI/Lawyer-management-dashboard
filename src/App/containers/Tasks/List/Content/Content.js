@@ -1,68 +1,48 @@
-import { Modal, Button } from 'antd';
+
 import React from 'react'
-import Content from './Content/Content'
-class AddList extends React.Component {
-  state = {
-    ModalText: 'Content of the modal',
-    visible: false,
-    confirmLoading: false,
-  };
+import {Button} from 'antd'
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = () => {
-    this.setState({
-      ModalText: 'The modal will be closed after two seconds',
-      confirmLoading: true,
-    });
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-        confirmLoading: false,
-      });
-    }, 2000);
-  };
-
-  handleCancel = () => {
-    console.log('Clicked cancel button');
-    this.setState({
-      visible: false,
-    });
-  };
-
+class Content extends React.Component {
+  constructor(props){
+  super(props)
+  this.state = {
+    data: [{Name:"Jayesh", Discription : "We Dont Know", PractiseArea : "Same" },
+    {Name:"Smith", Discription : "We Dont Know this one too", PractiseArea : "Same Again" }]
+  }}
+  
   render() {
-    const { visible, confirmLoading } = this.state;
+    let newData = this.state.data.map((value, index)=>{
+      return <tr>
+            <th scope="row">{value.Name}</th>
+            <td>{value.Discription}</td>
+            <td>{value.PractiseArea}</td>
+            <td><Button>Edit</Button></td>
+            <td><Button danger>Delete</Button></td>
+          </tr>
+       
+        
+      
+    })
     return (
       <div>
-        <div > 
-        <Button type="primary" onClick={this.showModal}>
-           Add List
-        </Button>
-        </div>
-        <Modal
-            title="Add to List"
-            visible={visible}
-            onOk={this.handleOk}
-            confirmLoading={confirmLoading}
-            onCancel={this.handleCancel}
-            >
-          <div>
-            <input placeholder="Name" type="text"></input>
-            <input placeholder="Descripton" type="text"></input>
-            <select id="Area" name="Area">
-                    <option value="volvo">Volvo</option>
-                </select>
-          </div>
-        </Modal>
-        <br></br>
-        <Content></Content>
-      </div>
-    );
+        <table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Discription</th>
+      <th scope="col">Area</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {newData}
+  </tbody>
+</table>
+
+      </div>     
+    )
   }
 }
 
-export default AddList
+export default Content 
