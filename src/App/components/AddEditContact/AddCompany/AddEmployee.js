@@ -2,7 +2,7 @@ import React, { useState, useEffect, usePrevious, useRef} from 'react'
 import { Form,Button, Row , Col } from "react-bootstrap";
 import { Upload, message, } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DynamicFeilds from '../DynamicFeild/Index'
+import DynamicFeilds from '../DynamicFeilds/Index'
 
 function AddEmployee (props){
 
