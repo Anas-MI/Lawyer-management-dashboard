@@ -10,10 +10,16 @@ label {
 	font-family: $main-fonts;
 	float: left;
 }
+
+button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
+    cursor: pointer;
+    outline: none;
+}
+
 .form-add-button{
     height: 30px;
     font-size: 12px !important;
-    padding: 8px 12px !important;
+    padding: 6px 12px !important;
     margin-bottom: 10px !important;
 }
 .form-upload-button{

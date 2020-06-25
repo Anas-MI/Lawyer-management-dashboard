@@ -10,7 +10,7 @@ function callback(key) {
 }
 
 const Tasks = () => (
-  <Tabs defaultActiveKey="1" onChange={callback}>
+  <Tabs defaultActiveKey="1" onChange={callback} className="card p-4">
     <TabPane tab="Upcoming Tasks" key="1">
       <UnpcomingTasks></UnpcomingTasks>
     </TabPane>

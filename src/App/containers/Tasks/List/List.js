@@ -1,6 +1,7 @@
-import { Modal, Button } from 'antd';
+import { Modal} from 'antd';
 import React from 'react'
 import Content from './Content/Content'
+import { Form,Button, Row , Col} from "react-bootstrap";
 class AddList extends React.Component {
   state = {
     ModalText: 'Content of the modal',
@@ -38,8 +39,8 @@ class AddList extends React.Component {
     const { visible, confirmLoading } = this.state;
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
-          Add AddList
+        <Button type="primary" onClick={this.showModal} className="form-add-button">
+          + AddList
         </Button>
         <Modal
             title="Add to List"
@@ -48,13 +49,23 @@ class AddList extends React.Component {
             confirmLoading={confirmLoading}
             onCancel={this.handleCancel}
             >
-          <div>
-            <input placeholder="Name" type="text"></input>
-            <input placeholder="Descripton" type="text"></input>
-            <select id="Area" name="Area">
-                    <option value="volvo">Volvo</option>
-                </select>
-          </div>
+          <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="text" placeholder="Name" />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Descripton</Form.Label>
+                <Form.Control type="text" placeholder="Descripton" />
+              </Form.Group>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Area select</Form.Label>
+                <Form.Control as="select">
+                  <option value="volvo">Volvo</option>
+                </Form.Control>
+              </Form.Group>
+            </Form>
         </Modal>
         <Content></Content>
       </div>
