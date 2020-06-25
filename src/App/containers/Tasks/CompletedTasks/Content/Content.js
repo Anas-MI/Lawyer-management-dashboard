@@ -12,16 +12,28 @@ class Content extends React.Component {
   
   render() {
     let newData = this.state.data.map((value, index)=>{
-      return <div>
-        <p>{value.Date}</p>
-        <p>{value.Discription}</p>
-        <p>{value.Task}</p>
-        <p>{value.Matter}</p>
-      </div>
+      return  <tr>
+      <th scope="row">{value.Date}</th>
+      <td>{value.Discription}</td>
+      <td>{value.Task}</td>
+      <td>{value.Matter}</td>
+    </tr>
     })
     return (
       <div>
-        {newData}
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Discription</th>
+              <th scope="col">Task</th>
+              <th scope="col">Matter</th>
+            </tr>
+          </thead>
+          <tbody>
+            {newData}
+          </tbody>
+      </table>
       </div>     
     )
   }
