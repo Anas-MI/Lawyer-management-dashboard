@@ -5,7 +5,7 @@ import { Form,Button, Row , Col } from "react-bootstrap";
 //import Classes from './index.css'
 import { Upload, message, antdButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DynamicFeilds from './DynamicFeild/Index'
+import DynamicFeilds from './DynamicFeilds/Index'
 
 
 const AddEditContact = props => {
