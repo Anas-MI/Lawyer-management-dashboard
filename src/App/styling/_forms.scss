@@ -22,6 +22,24 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     padding: 6px 12px !important;
     margin-bottom: 10px !important;
 }
+.form-add{
+    span{
+        cursor: pointer;
+        font-weight: 600;
+        color: #04a9f5;
+    }
+}
+.form-add::before {
+    content: "+";
+    height: 20px;
+    font-size: 12px;
+    padding: 1px 5px;
+    border-radius: 50%;
+    background-color: #04a9f5;
+    color: #fff;
+    margin-right: 10px;
+}
+
 .form-upload-button{
     cursor: pointer;
     text-align: center;
@@ -38,6 +56,10 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 .form-header-text{
     color: #004;
     font-family: Noto Sans,Tahoma,sans-serif;
+    font-size: 19px;
+}
+.form-header-container{
+    border-bottom:  1px solid #c5c5c5;
 }
     
 
@@ -47,7 +69,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         cursor: pointer;
         display: block;
         font-size: 13px;
-        font-weight: 400;
+        font-weight: 600;
     }
     h4 {
         color: #4e4e91;

@@ -50,16 +50,17 @@ class AddEditContact extends React.Component {
     })
 
     return (
-        <div className='w-75 m-auto'>
-        <h3 className="text-center mb-4 form-header-text">Add New Contact</h3>
-        
-     
-        <h4 className='text-center' >Company Details</h4>
+      <>
+        <div className="form-header-container mb-4">
+          <h3 className="form-header-text">Add Company</h3>
+        </div>
+        <div className='w-75'>
           {Employee}          
-          <Button onClick={HandleAddEmployee}>Add Employee</Button>
+          <Button onClick={HandleAddEmployee} className="btn btn-success">Add Employee</Button>
          {/* <Button onClick={handleSubmit}>{editMode?'Update':'Create'}</Button> */}
           <Button onClick={handleSubmit}>Create</Button>
-      </div>
+        </div>
+      </>
     )}
 }
 
