@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import { useDispatch, useSelector } from "react-redux";
 import { getBlogs, deleteBlog,selectBlog } from "../../../store/Actions";
-
+import api from '../../../resources/api'
 
 
 
@@ -13,22 +13,46 @@ const ContactsManage = (props) => {
 
   const dispatch = useDispatch();
   const [tableData , setTableData] = useState([])
-
+  let response = {}
   //Search Related 
   const [state,setState] = useState({})
   const contacts = useSelector((state) => {
     return state.Contact.contacts;
   })
-
-
+/*
   useEffect(()=>{
     setTableData(contacts)
+    console.log(contacts)
   },[contacts])
-
   useEffect(() => {
     dispatch(getBlogs());
+  }, []); */
+  useEffect(() => {
+    
+    async function fetchData() {
+      response = await api.get('/contact/showall')
+      setTable()
+    }
+    fetchData();
   }, []);
-
+ 
+ 
+  const setTable=()=>{
+    response.data.data.map((value,id)=>{
+      let key=id
+      const data={
+        firstName : value.firstName ,
+        lastName : value.lastName,
+        billingCustomRate : value.billingCustomRate,
+        company : value.company.name
+      }
+      let newtableData = tableData
+      newtableData.push(data)
+      setTableData(newtableData)
+      console.log(tableData)
+    }) 
+  }
+  
 
   const getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -105,23 +129,14 @@ const ContactsManage = (props) => {
   const handleDelete = record => {
     //   dispatch(deleteBlog({id:record._id}))
   }
+  
   const columns = [
-    {
-      title: "Title",
-      dataIndex: "Title",
-      key: "_id",
-      ...getColumnSearchProps('Title'),
-      sorter: (a, b ,c) => ( 
-        c==='ascend'
-        ?a.title<b.title
-        :a.title>b.title
-      )
-    },
+    
     {
       title: "First Name",
-      dataIndex: "FirstName",
+      dataIndex: "firstName",
       key: "_id",
-      ...getColumnSearchProps('FirstName'),
+      ...getColumnSearchProps('firstName'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.author<b.author
@@ -130,11 +145,23 @@ const ContactsManage = (props) => {
 
 
     },
+
     {
-      title: "Email",
-      dataIndex: "Email",
+        title: "Last Name",
+        dataIndex: "lastName",
+        key: "_id",
+        ...getColumnSearchProps('lastName'),
+        sorter: (a, b ,c) => ( 
+          c==='ascend'
+          ?a.description<b.description
+          :a.description>b.description
+        )
+    },
+    {
+      title: "billingCustomRate",
+      dataIndex: "billingCustomRate",
       key: "_id",
-      ...getColumnSearchProps('Email'),
+      ...getColumnSearchProps('billingCustomRate'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.shortDescription<b.shortDescription
@@ -142,15 +169,15 @@ const ContactsManage = (props) => {
       )
     },
     {
-        title: "Last Name",
-        dataIndex: "LastName",
-        key: "_id",
-        ...getColumnSearchProps('LastName'),
-        sorter: (a, b ,c) => ( 
-          c==='ascend'
-          ?a.description<b.description
-          :a.description>b.description
-        )
+      title: "Company",
+      dataIndex: "company",
+      key: "_id",
+      ...getColumnSearchProps('company'),
+      sorter: (a, b ,c) => ( 
+        c==='ascend'
+        ?a.shortDescription<b.shortDescription
+        :a.shortDescription>b.shortDescription
+      )
     },
     {
         title:'Edit',
