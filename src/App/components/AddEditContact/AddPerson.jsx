@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateBlog, createBlog } from '../../../store/Actions'
-import { Form,Button, Row , Col } from "react-bootstrap";
+import { Form, Row , Col } from "react-bootstrap";
 //import Classes from './index.css'
-import { Upload, message, antdButton } from 'antd';
+import { Upload, message, Button, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 
@@ -11,10 +11,30 @@ import DynamicFeilds from './DynamicFeilds/index.js'
 const AddEditContact = props => {
 
     const [state,setState] = useState({})
+    const [companyData,setcompanyData] = useState({})
+    const [modal , setModal] = useState()
     const [editMode,setEditMode] = useState(false)
     const dispatch = useDispatch()
+    let [options, setOptions] = useState() 
+    let response = {}
     const selectedContact = useSelector(state=>state.Contact.selected)
-
+    useEffect(() => {
+    
+      async function fetchData() {
+        response = await api.get('/company/showall')
+        setOptionsList()
+      }
+      fetchData();
+    }, []);
+   
+   
+    const setOptionsList=()=>{
+      let temp = response.data.data.map((value,id)=>{
+        let key=id
+      return <option>{value.name}</option>
+      })
+      setOptions(temp)
+    }
     useEffect(()=>{
         if(!selectedContact){
             setEditMode(false)
@@ -27,24 +47,31 @@ const AddEditContact = props => {
     CompanyAddress : [""], CompanyEmail : [""], CompanyNumber : [""], CompanyWebsite: [""]
   });
 
-
-  const handleChange = (e,index) => {
+  
+  const handleChange = (e) => {
     e.persist()
-    console.log(e.target.value)
-    console.log(index)
-    if (["Address","Email", "Number"].includes(e.target.className) ) {
-      let list = inputList
-      const path = e.target.className
-      list.path[e.target.dataset.id] = e.target.value
-      console.log(list)
-      setInputList({list})
-      let newState = [...state]
-      newState.push(...inputList)
-      setState(newState)
-    } else {
+    if(e.target.name == "Address" ){
+
+    }else 
+    if(e.target.name == "Email") {
+
+    }else
+    if(e.target.name == "Email") {
+
+    }else
+    {
     setState(st=>({...st,[e.target.name]:e.target.value}))
     }
+    console.log(state)
+  
   }
+  const handleMultipleChange = (e, index) => {
+      const { name, value } = e.target;
+      const list = [...inputList];
+      list[name][index] = value;
+      setInputList(list); 
+  }
+  
 
   const handleImageChange = e => {
     console.log(e)
@@ -63,10 +90,10 @@ const AddEditContact = props => {
         list.Number.push("")
         setInputList(list)
       }
-      console.log(inputList)
-    let newState = state
-    newState= [state, inputList]
-    setState(newState)
+      let newState = state
+      newState= [state, inputList]
+      setState(newState)
+   
   }
 const imageHandler = {
   name: 'file',
@@ -85,16 +112,39 @@ const imageHandler = {
     }
   },
 };
+  
+ const AddCompanyHandler = ()=>{
+   api.post('/company/create', {companyData})
+   setModal(false)
+
+ }
+
+ const companyDataHandler=(e)=>{
+  e.persist()
+  /*
+  console.log(e.target.value)
+  if (["Address","Email", "Number"].includes(e.target.className) ) {
+    let list = inputList
+    const path = e.target.className
+    list.path[e.target.dataset.id] = e.target.value
+    console.log(list)
+    setInputList({list})
+    let newState = [...state]
+    newState.push(...inputList)
+    setState(newState)
+  } else */ {
+  setcompanyData(st=>({...st,[e.target.name]:e.target.value}))
+  }
+ }
 
 
     
     const handleSubmit = e => {
         e.preventDefault()
         if(editMode){
-             dispatch(updateBlog({id:state._id,body:state}))
+           //  dispatch(updateBlog({id:state._id,body:state}))
         }else{
-          console.log(state)
-             dispatch(createBlog(state))
+           api.post('contact/create', state)
         }
         props.history.goBack()
     }
@@ -219,6 +269,29 @@ const imageHandler = {
 
             <Button onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
+              <Modal
+          title="Vertically centered modal dialog"
+          centered
+          visible={modal}
+          onOk={AddCompanyHandler}
+          onCancel={() => setModal(false)}
+        >
+          <input placeholder="Name" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="Email" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="Phone Number" type="text" onChange={companyDataHandler}></input>
+          <select id="type" name="type" onChange={companyDataHandler}>
+            <option value="volvo">Work</option>
+            <option value="saab">Home</option>
+          </select>
+          <input placeholder="Website" type="text" onChange={companyDataHandler}></input>
+          <p>Address</p>
+          <input placeholder="Street" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="City" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="State" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="ZipCode" type="text" onChange={companyDataHandler}></input>
+          <input placeholder="Country" type="text" onChange={companyDataHandler}></input>
+
+        </Modal>
           </div>
       </div>
     </>  
