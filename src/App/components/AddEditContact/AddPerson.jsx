@@ -7,6 +7,7 @@ import { Upload, message,  Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
+import AddCompany from './AddCompany/index'
 
 const AddEditContact = props => {
 
@@ -194,15 +195,18 @@ const imageHandler = {
             </Form.Row>
             
             <Row>
-              <Col>
-                <Form.Group controlId="formGroupCompany">
-                  <Form.Label>Company</Form.Label>
-                  <Form.Control as="select">
-                    <option>Third Essential</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-            </Row>
+            <Col>
+              <Form.Group controlId="formGroupCompany">
+                <Form.Label>Company</Form.Label>
+                <Form.Control as="select">
+                  {options}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Button type="primary" onClick={() => setModal(true)}>
+          Add Company
+        </Button>
             
             <DynamicFeilds type={"Email"} name={"Email"} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
@@ -269,26 +273,13 @@ const imageHandler = {
             <Button onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
           <Modal
-          title="Vertically centered modal dialog"
+          title="Add Company"
           centered
           visible={modal}
           onOk={AddCompanyHandler}
           onCancel={() => setModal(false)}
         >
-          <input placeholder="Name" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="Email" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="Phone Number" type="text" onChange={companyDataHandler}></input>
-          <select id="type" name="type" onChange={companyDataHandler}>
-            <option value="volvo">Work</option>
-            <option value="saab">Home</option>
-          </select>
-          <input placeholder="Website" type="text" onChange={companyDataHandler}></input>
-          <p>Address</p>
-          <input placeholder="Street" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="City" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="State" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="ZipCode" type="text" onChange={companyDataHandler}></input>
-          <input placeholder="Country" type="text" onChange={companyDataHandler}></input>
+         <AddCompany></AddCompany>
 
         </Modal>
           </div>
