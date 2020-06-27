@@ -45,6 +45,8 @@ const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 const ContactsManage = React.lazy(()=> import('./App/containers/ContactManagement'))
 const AddPerson = React.lazy(()=>import('./App/components/AddEditContact/AddPerson'))
 const AddCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCompany/index'))
+const ViewContact = React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewContact'))
+const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
 
 
 export const adminRoutes = [
@@ -64,6 +66,8 @@ export const adminRoutes = [
     { path: '/manage/contacts/:manage/Person', exact: true, name: 'Add Edit Contact', component: AddPerson},
     { path: '/manage/contacts/:manage/Company', exact: true, name: 'Add Edit Contact', component: AddCompany},
     { path: '/manage/contacts', exact: true, name: 'Contacts Management', component: ContactsManage},
+    {path: '/view/contact', exact: true, name: 'Contacts Management', component: ViewContact},
+    {path: '/view/company', exact: true, name: 'Contacts Management', component: ViewCompany}
 ,
 
 
