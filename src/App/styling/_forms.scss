@@ -29,6 +29,9 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         color: #04a9f5;
     }
 }
+.form-width{
+    width: 75% !important;
+}
 .form-add::before {
     content: "+";
     height: 20px;
@@ -57,6 +60,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     color: #004;
     font-family: Noto Sans,Tahoma,sans-serif;
     font-size: 19px;
+    font-weight: 600;
 }
 .form-header-container{
     border-bottom:  1px solid #c5c5c5;
@@ -115,4 +119,9 @@ select {
 	&:-ms-input-placeholder {
 		color: #777;
 	}
+}
+@media only screen and (max-width: 767px) {
+    .form-width{
+        width: 100% !important;
+    }
 }

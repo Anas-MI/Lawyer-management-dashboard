@@ -96,80 +96,85 @@ function AddEmployee (props){
     };
     return  (
     <>
-      <div className="card" style={{"padding" : "1rem"}}>
-      <Form className="form-details">   
-      <Upload {...imageHandler} onChange={handleImageChange}>
-          <antdButton className="form-upload-button">
-            <UploadOutlined /> Click to Upload
-          </antdButton>
-        </Upload><br></br>
-      <Form.Row>
-        <Col>
-          <Form.Group controlId="formGroupFirstName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control name='FirstName' type="text" placeholder="First Name" 
-            value={state['FirstName']} onChange={(e)=>handleChange(e)}/>
-          </Form.Group>
-        </Col>
-        <Col>
-          
-        </Col>
-        <Col>
-          
-        </Col>
-      </Form.Row>
+      <div className='form-width'>
+        <div className="card p-4">
+        <Form className="form-details">   
+        <div className="form-header-container mb-4">
+              <h3 className="form-header-text">Add New Employee</h3>
+        </div>
+        <Upload {...imageHandler} onChange={handleImageChange}>
+            <antdButton className="form-upload-button">
+              <UploadOutlined /> Click to Upload
+            </antdButton>
+          </Upload><br></br>
+        <Form.Row>
+          <Col>
+            <Form.Group controlId="formGroupFirstName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control name='FirstName' type="text" placeholder="First Name" 
+              value={state['FirstName']} onChange={(e)=>handleChange(e)}/>
+            </Form.Group>
+          </Col>
+          <Col>
+            
+          </Col>
+          <Col>
+            
+          </Col>
+        </Form.Row>
 
-      <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={(e)=>handleChange(e)}></DynamicFeilds>
-      <div className="form-add mb-4">
-        <span onClick={()=>addFeild("CompanyEmail")}>Add a Company Email</span>
+        <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={(e)=>handleChange(e)}></DynamicFeilds>
+        <div className="form-add mb-4">
+          <span onClick={()=>addFeild("CompanyEmail")}>Add a Company Email</span>
+        </div>
+
+        <DynamicFeilds type={"CompanyNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+        <div className="form-add mb-4">
+          <span onClick={()=>addFeild("CompanyNumber")}>Add a Company Number</span>
+        </div>
+
+        <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
+        <div className="form-add mb-4">
+          <span onClick={()=>addFeild("CompanyWebsite")}>Add a Company Website</span>
+        </div>
+
+        <p className='text-center' style={{"color" : "#4e4e91"}}><b>Address</b></p>
+        <Form.Group controlId="formGroupStreet">
+          <Form.Label>Street</Form.Label>
+          <Form.Control name='Street' type="text" placeholder="Street" 
+          value={state['Street']} onChange={handleChange}/>
+        </Form.Group>
+
+        <Form.Row>
+          <Col>
+            <Form.Group controlId="formGroupCity">
+              <Form.Label>City</Form.Label>
+              <Form.Control name='City' type="text" placeholder="City" 
+              value={state['City']} onChange={handleChange}/>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="formGroupState">
+              <Form.Label>State</Form.Label>
+              <Form.Control name='State' type="text" placeholder="State" 
+              value={state['State']} onChange={handleChange}/>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="formGroupZipCode">
+              <Form.Label>ZipCode</Form.Label>
+              <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
+              value={state['ZipCode']} onChange={handleChange}/>
+            </Form.Group>
+          </Col>
+        </Form.Row>
+        
+        <DynamicFeilds type={"CompanyAddress"} name={"Company Address"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
+        <div className="form-add mb-4">
+          <span onClick={()=>addFeild("CompanyAddress")}>Add a Company Address</span>
+        </div>
+        </Form>
       </div>
-
-      <DynamicFeilds type={"CompanyNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
-      <div className="form-add mb-4">
-        <span onClick={()=>addFeild("CompanyNumber")}>Add a Company Number</span>
-      </div>
-
-      <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
-      <div className="form-add mb-4">
-        <span onClick={()=>addFeild("CompanyWebsite")}>Add a Company Website</span>
-      </div>
-
-      <p className='text-center' style={{"color" : "#4e4e91"}}><b>Address</b></p>
-      <Form.Group controlId="formGroupStreet">
-        <Form.Label>Street</Form.Label>
-        <Form.Control name='Street' type="text" placeholder="Street" 
-        value={state['Street']} onChange={handleChange}/>
-      </Form.Group>
-
-      <Form.Row>
-        <Col>
-          <Form.Group controlId="formGroupCity">
-            <Form.Label>City</Form.Label>
-            <Form.Control name='City' type="text" placeholder="City" 
-            value={state['City']} onChange={handleChange}/>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="formGroupState">
-            <Form.Label>State</Form.Label>
-            <Form.Control name='State' type="text" placeholder="State" 
-            value={state['State']} onChange={handleChange}/>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="formGroupZipCode">
-            <Form.Label>ZipCode</Form.Label>
-            <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
-            value={state['ZipCode']} onChange={handleChange}/>
-          </Form.Group>
-        </Col>
-      </Form.Row>
-      
-      <DynamicFeilds type={"CompanyAddress"} name={"Company Address"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
-      <div className="form-add mb-4">
-        <span onClick={()=>addFeild("CompanyAddress")}>Add a Company Address</span>
-      </div>
-      </Form>
       </div>
     </>
     )

@@ -51,10 +51,7 @@ class AddEditContact extends React.Component {
 
     return (
       <>
-        <div className="form-header-container mb-4">
-          <h3 className="form-header-text">Add Company</h3>
-        </div>
-        <div className='w-75'>
+        <div>
           {Employee}          
           <Button onClick={HandleAddEmployee} className="btn btn-success">Add Employee</Button>
          {/* <Button onClick={handleSubmit}>{editMode?'Update':'Create'}</Button> */}

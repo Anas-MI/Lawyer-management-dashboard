@@ -64,7 +64,7 @@ class AdminLayout extends Component {
                     <Navigation />
                     <NavBar />
                     <div className="pcoded-main-container" onClick={() => this.mobileOutClickHandler}>
-                        <div className="pcoded-wrapper">
+                        <div className="pcoded-wrapper" style={{"background": "#FCFDFF"}}>
                             <div className="pcoded-content">
                                 <div className="pcoded-inner-content">
                                     <Breadcrumb />

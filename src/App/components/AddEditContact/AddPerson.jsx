@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateBlog, createBlog } from '../../../store/Actions'
-import { Form, Row , Col } from "react-bootstrap";
+import { Form, Row , Button, Col } from "react-bootstrap";
 //import Classes from './index.css'
-import { Upload, message, Button, Modal } from 'antd';
+import { Upload, message,  Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
@@ -151,14 +151,13 @@ const imageHandler = {
 
     return (
       <>
-        <div className="form-header-container mb-4">
-          <h3 className="form-header-text">Add New Person</h3>
-        </div>
-        <div className='w-75'>
-          <div className="card" style={{"padding" : "1rem"}}>
+        <div className='form-width'>
+          <div className="card p-4">
             <Form className="form-details">
+            <div className="form-header-container mb-4">
+              <h3 className="form-header-text">Add New Person</h3>
+            </div>
               <h4>Personal Details</h4>
-
               <Upload {...imageHandler} onChange={handleImageChange}>
                 <antdButton className="form-upload-button">
                   <UploadOutlined /> Click to Upload
@@ -269,7 +268,7 @@ const imageHandler = {
 
             <Button onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
-              <Modal
+          <Modal
           title="Vertically centered modal dialog"
           centered
           visible={modal}
