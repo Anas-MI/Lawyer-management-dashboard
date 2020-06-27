@@ -220,6 +220,18 @@ const ContactsManage = (props) => {
     setState({ searchText: '' });
   };
 
+const handleView = (e)=>{
+  
+      console.log(e)
+      /*
+      if(type==="Person"){
+        props.history.push('/manage/contacts/add/Person')
+      }else if(type==="Company"){
+        props.history.push('/manage/contacts/add/Company')
+      }
+      */
+     props.history.push('/view/company')
+  }
 
   return (
     <div>
@@ -231,7 +243,7 @@ const ContactsManage = (props) => {
       <Table dataSource={tableData} columns={columns}
         onRow={(record, rowIndex) => {
             return {
-              onDoubleClick: event => {}, // double click row
+              onDoubleClick: event => handleView(event), // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
               onMouseLeave: event => {}, // mouse leave row
