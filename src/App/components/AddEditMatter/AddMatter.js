@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useDispatch, useSelector} from 'react'
-import { Form, Row , Col,   } from "react-bootstrap";
-import { message, Button, Modal, Card } from 'antd';
+import { Form, Row , Col, Button} from "react-bootstrap";
+import { message,  Modal, Card } from 'antd';
 import api from '../../../resources/api'
 import AddPerson from '../AddEditContact/AddPerson'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
@@ -16,17 +16,11 @@ const AddEditMatter = props => {
     let list = InputList
     list.push({Relationship : "" , Contact : ""})
     setInputList(list)
-    
-  
-
-
   }
   
   const handleChange = (e) => {
     e.persist()
-   
     setState(st=>({...st,[e.target.name]:e.target.value}))
-  
   }
 
  /*
@@ -42,46 +36,36 @@ const AddEditMatter = props => {
     */
 
     return (
-        <div className='w-75 m-auto'>
-        <h3 className="text-center mb-4 form-header-text">Add New Matter</h3>
-        <Card title="Matter Information"  style={{ width: "100%" }}>
-        <Form className="form-details">
-          <Col>
-            <Row>
+      <div className='form-width'>
+        <div className="form-header-container mb-4">
+              <h3 className="form-header-text">Add New Matter</h3>
+        </div>
+        <Card title="Matter Information" className="mb-4">
+          <Form className="form-details">
             <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Label>Client</Form.Label>
-                  <Form.Control as="select">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Form.Control>
-                </Form.Group>
-            </Row>
-            <Button  onClick={() => setModal(true)}>
-            Add Contact
-            </Button>
-            <Form.Group controlId="formGroupMatter">
-                    <Form.Label>Matter</Form.Label>
-                    <Form.Control name='Matter' type="text" placeholder="Matter" 
+              <Form.Label>Client</Form.Label>
+                <Form.Control as="select">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Form.Control>
+              </Form.Group>
+              <div className="form-add mb-4">
+                <span onClick={() => setModal(true)}>Add Contact</span>
+              </div>
+              <Form.Group controlId="formGroupMatter">
+                <Form.Label>Matter Description</Form.Label>
+                  <Form.Control name='Matter' as="textarea" rows="3" type="text" placeholder="Matter description" 
                     value={state['Matter']} onChange={handleChange}/>
                 </Form.Group>
-            <Row>
-                
-            </Row>
-            <Row>
-                 <Form.Group controlId="formGroupClientRefenceNumber">
-                    <Form.Label>Client reference number</Form.Label>
-                    <Form.Control name='ClientRefenceNumber' type="text" placeholder="ClientRefenceNumber" 
+                <Form.Group controlId="formGroupClientRefenceNumber">
+                  <Form.Label>Client reference number</Form.Label>
+                  <Form.Control name='ClientRefenceNumber' type="text" placeholder="Client Refence Number" 
                     value={state['ClientRefenceNumber']} onChange={handleChange}/>
                 </Form.Group>
-            </Row>
-          </Col>
-         
-         <Col>
-            <Row>
-                  <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Group controlId="exampleForm.ControlSelect1">
                   <Form.Label>Practise Area</Form.Label>
                   <Form.Control as="select">
                     <option>1</option>
@@ -91,9 +75,7 @@ const AddEditMatter = props => {
                     <option>5</option>
                   </Form.Control>
                 </Form.Group>
-            </Row>
-            <Row>
-            <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Group controlId="exampleForm.ControlSelect1">
                   <Form.Label>Example select</Form.Label>
                   <Form.Control as="select">
                     <option>Open</option>
@@ -101,50 +83,48 @@ const AddEditMatter = props => {
                     <option>Pending</option>
                   </Form.Control>
                 </Form.Group>
-            </Row>
-            <Row>
-                <Col>
+                <Form.Row>
+                  <Col>
                     <Form.Group controlId="formGroupOpenDate">
                     <Form.Label>Open Date</Form.Label>
                     <Form.Control name='OpenDate' type="Date" placeholder="OpenDate" 
-                    value={state['OpenDate']} onChange={handleChange}/>
+                      value={state['OpenDate']} onChange={handleChange}/>
                     </Form.Group>
-                </Col>
-                <Col>
+                  </Col>
+                  <Col>  
                     <Form.Group controlId="formGroupClosing Date">
                     <Form.Label>Closing Date</Form.Label>
                     <Form.Control name='Closing Date' type="Date" placeholder="Closing Date" 
-                    value={state['Closing Date']} onChange={handleChange}/>
+                      value={state['Closing Date']} onChange={handleChange}/>
                     </Form.Group>
-                </Col>
-                <Col>
+                  </Col>  
+                  <Col>
                     <Form.Group controlId="formGroupPendingDate">
                     <Form.Label>Pending Date</Form.Label>
                     <Form.Control name='PendingDate' type="Date" placeholder="PendingDate" 
-                    value={state['PendingDate']} onChange={handleChange}/>
+                      value={state['PendingDate']} onChange={handleChange}/>
                     </Form.Group>
-                </Col>
-            </Row>
-          </Col>
+                  </Col> 
+                </Form.Row>
          </Form>
         </Card>
-        <br></br>
-        <Card title="Related Contacts"  style={{ width: "100%" }}>
-            <Form>
-            <DynamicFeild InputList={InputList} change={handleChange}></DynamicFeild>
 
-                <Form.Check 
-                  type="checkbox"
-                  id={`check`}
-                  label={`Bill this Contact`}
-                /><br></br>
-                <Button onClick={addFeild}>+ Add Related Contact</Button>
+        <Card title="Related Contacts" className="mb-4">
+            <Form className="form-details">
+              <DynamicFeild InputList={InputList} change={handleChange}></DynamicFeild>
+
+              <Form.Group controlId="formBasicCheckbox">
+                <Form.Check type="checkbox" label="Bill this contact" id={`check`}/>
+              </Form.Group>
+              <br/>
+              <div className="form-add mb-4">
+                <span onClick={addFeild}>Add Related Contact</span>
+              </div>
             </Form>
         </Card>
-        <br></br>
-        <Card title="Custom Feilds"  style={{ width: "100%" }}>
-        <Form>
-        <Form.Row>
+        <Card title="Custom Feilds"  className="mb-4">
+        <Form className="form-details">
+          <Form.Row>
             <Col>
               <Form.Group controlId="formGroupName">
                 <Form.Label>Name</Form.Label>
@@ -159,26 +139,25 @@ const AddEditMatter = props => {
                 value={state['Text']} onChange={handleChange}/>
               </Form.Group>
             </Col>
-            <Button>Save</Button>
-        </Form.Row>
+          </Form.Row>
+          <Button className="btn btn-success">Save</Button>
         </Form>
         </Card>
-        <br></br>
-        <Card title="Billing Preference"  style={{ width: "100%" }}>
-        <Form>
-        <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Label>Contact</Form.Label>
-                  <Form.Control as="select">
-                    <option>Flat</option>
-                    <option>hourly</option>
-                    <option>Contagious</option>
-                  </Form.Control>
-                </Form.Group>
+        <Card title="Billing Preference"  className="mb-4">
+          <Form className="form-details">
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Contact</Form.Label>
+              <Form.Control as="select">
+                <option>Flat</option>
+                <option>Hourly</option>
+                <option>Contagious</option>
+              </Form.Control>
+            </Form.Group>
         </Form>
         </Card>
-        <br></br>
-        <Card title="Task Automation"  style={{ width: "100%" }}>
-        <Form>
+
+        <Card title="Task Automation"  className="mb-4">
+        <Form className="form-details">
         <Form.Group controlId="exampleForm.ControlSelect1">
                   <Form.Label>Contact</Form.Label>
                   <Form.Control as="select">

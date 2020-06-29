@@ -67,6 +67,7 @@
     display: -ms-flexbox;
     display: flex;
     opacity: 1;
+    z-index: 9999;
     -webkit-transform: translate(-50%, 0px);
     -ms-transform: translate(-50%, 0px);
     transform: translate(-50%, 0px);

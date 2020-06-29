@@ -25,7 +25,6 @@ const Toaster = (props) => {
         style={{
           opacity: toaster.msg?1:0,
           backgroundColor: toaster.color,
-          zIndex:99999999
         }}
       >
         <div className='cms-toast-text'> {toaster.msg}</div>

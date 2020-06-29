@@ -63,8 +63,8 @@ class AdminLayout extends Component {
                 <Fullscreen enabled={this.props.isFullScreen}>
                     <Navigation />
                     <NavBar />
-                    <div className="pcoded-main-container" onClick={() => this.mobileOutClickHandler}>
-                        <div className="pcoded-wrapper" style={{"background": "#FCFDFF"}}>
+                    <div className="pcoded-main-container" style={{"background": "#FCFDFF"}} onClick={() => this.mobileOutClickHandler}>
+                        <div className="pcoded-wrapper" >
                             <div className="pcoded-content">
                                 <div className="pcoded-inner-content">
                                     <Breadcrumb />
