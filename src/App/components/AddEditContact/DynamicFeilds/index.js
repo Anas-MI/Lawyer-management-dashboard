@@ -15,10 +15,11 @@ class DynamicFeilds extends React.Component {
                   return (
                     <div key={idx}>
                       <Form.Group controlId={this.props.type}>
-                        <Form.Label>{this.props.name}</Form.Label>
-                         <Form.Control name={this.props.type} className={this.props.type} type="text" placeholder={this.props.name} 
+                        <Form.Label>{this.props.text}</Form.Label>
+                         <Form.Control name={this.props.type} className={this.props.type} type="text" placeholder={this.props.text} 
                          onChange={(e,idx)=>this.props.change(e,idx)}/>
                       </Form.Group>
+                      <p className="help-block text-danger">{this.props.error}</p>
                     </div>
                   )
                 })}

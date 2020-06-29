@@ -9,12 +9,37 @@ import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
 import AddCompany from './AddCompany/index'
 
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
+
+const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
+
+const validZipRegex = RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
+const validUrlRegex = RegExp(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
+const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
+
 const AddEditContact = props => {
 
     const [state,setState] = useState({})
     const [companyData,setcompanyData] = useState({})
     const [modal , setModal] = useState()
     const [editMode,setEditMode] = useState(false)
+    const [error, setError] = useState({
+      FirstName: "",
+      MiddleName: "",
+      LastName: "",
+      Prefix: "",
+      Title:"",
+      Email: "",
+      PhoneNumber: "",
+      Website:"",
+      Address:"",
+      Street:"",
+      City:"",
+      State:"",
+      ZipCode:"",
+    });
     const dispatch = useDispatch()
     let [options, setOptions] = useState() 
     let response = {}
@@ -64,7 +89,96 @@ const AddEditContact = props => {
     setState(st=>({...st,[e.target.name]:e.target.value}))
     }
     console.log(state)
-  
+    const { name, value } = e.target;
+    let errors = error;
+    switch (name) {
+      case "Prefix":
+          errors.Prefix = validPrefixRegex.test(value)
+            ? ""
+            : "Prefix is not valid!";
+          break;
+      case "FirstName":
+        errors.FirstName =
+            (value.length == 0) 
+            ? "" 
+            : (!validNameRegex.test(value))
+            ? "First Name must be in characters!"
+            : (value.length > 20) 
+            ? "First Name must be less than 20 characters long!" 
+            : "";
+       break;
+      case "MiddleName":
+        errors.MiddleName =
+          (value.length == 0) 
+          ? "" 
+          : (!validNameRegex.test(value))
+          ? "Middle Name must be in characters!"
+          : (value.length > 20) 
+          ? "Middle Name must be less than 20 characters long!" 
+          : "";
+      break;
+      case "LastName":
+        errors.LastName =
+          (value.length == 0) 
+          ? "" 
+          : (!validNameRegex.test(value))
+          ? "Last Name must be in characters!"
+          : (value.length > 20) 
+          ? "Last Name must be less than 20 characters long!" 
+          : "";
+        break;
+      case "lawFirmSize":
+        errors.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
+        break;
+      case "Email":
+        errors.Email = validEmailRegex.test(value)
+          ? ""
+          : "Email is not valid!";
+        break;
+      case "countryOfPractice":
+        errors.countryOfPractice =
+          value === "default" ? "Country is required!" : "";
+        break;
+      case "PhoneNumber":
+        errors.PhoneNumber =
+          value.length < 10 || value.length > 13
+            ? "phone number must be between 10 and 13 digits"
+            : "";
+        break;
+      case "Title":
+          errors.Title =
+            value.length == 0 ? "Title is Required" : "";
+        break;
+      case "Address":
+          errors.Address =
+            value.length == 0 ? "Address is Required" : "";
+        break;
+      case "Street":
+          errors.Street =
+            value.length == 0 ? "Street is Required" : "";
+        break;
+      case "City":
+          errors.City =
+            value.length == 0 ? "City is Required" : "";
+        break;
+      case "State":
+          errors.State =
+            value.length == 0 ? "State is Required" : "";
+        break;
+      case "ZipCode":
+          errors.ZipCode = validZipRegex.test(value)
+            ? ""
+            : "Zipcode is not valid!";
+          break;
+      case "Website":
+          errors.Website = validUrlRegex.test(value)
+            ? ""
+            : "Website is not valid!";
+          break;
+      default:
+        break;
+    }
+    setError({ ...errors });
   }
   const handleMultipleChange = (e, index) => {
       const { name, value } = e.target;
@@ -169,6 +283,7 @@ const imageHandler = {
               <Form.Control name='Prefix' type="text" placeholder="Prefix" 
               value={state['Prefix']} onChange={handleChange}/>
             </Form.Group>
+            <p className="help-block text-danger">{error.Prefix}</p>
           
             <Form.Row>
               <Col>
@@ -177,6 +292,7 @@ const imageHandler = {
                   <Form.Control name='FirstName' type="text" placeholder="First Name" 
                   value={state['FirstName']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.FirstName}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupMiddleName">
@@ -184,6 +300,7 @@ const imageHandler = {
                   <Form.Control name='MiddleName' type="text" placeholder="Middle Name" 
                   value={state['MiddleName']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.MiddleName}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupLastName">
@@ -191,6 +308,7 @@ const imageHandler = {
                   <Form.Control name='LastName' type="text" placeholder="Last Name" 
                   value={state['LastName']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.LastName}</p>
               </Col>
             </Form.Row>
             
@@ -208,7 +326,7 @@ const imageHandler = {
           Add Company
         </Button>
             
-            <DynamicFeilds type={"Email"} name={"Email"} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
+            <DynamicFeilds type={"Email"} name={"Email"} text={"Email"} error={error.Email} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
             </div>
@@ -219,11 +337,12 @@ const imageHandler = {
                   <Form.Control name='Title' type="text" placeholder="Title" 
                   value={state['Title']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.Title}</p>
               </Col>
             </Row>
 
             
-            <DynamicFeilds type={"PhoneNumber"} name={"Phone Number"} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
+            <DynamicFeilds type={"PhoneNumber"} name={"PhoneNumber"} text={"Phone Number"} error={error.PhoneNumber} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
             </div>
@@ -233,12 +352,15 @@ const imageHandler = {
               <Form.Control name='Website' type="text" placeholder="Website" 
               value={state['Website']} onChange={handleChange}/>
             </Form.Group>
+            <p className="help-block text-danger">{error.Website}</p>
+
             <p style={{"color" : "#4e4e91"}}><b>Address</b></p>
             <Form.Group controlId="formGroupStreet">
               <Form.Label>Street</Form.Label>
               <Form.Control name='Street' type="text" placeholder="Street" 
               value={state['Street']} onChange={handleChange}/>
             </Form.Group>
+            <p className="help-block text-danger">{error.Street}</p>
 
             <Form.Row>
               <Col>
@@ -247,6 +369,7 @@ const imageHandler = {
                   <Form.Control name='City' type="text" placeholder="City" 
                   value={state['City']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.City}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupState">
@@ -254,6 +377,7 @@ const imageHandler = {
                   <Form.Control name='State' type="text" placeholder="State" 
                   value={state['State']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.State}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupZipCode">
@@ -261,11 +385,12 @@ const imageHandler = {
                   <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
                   value={state['ZipCode']} onChange={handleChange}/>
                 </Form.Group>
+                <p className="help-block text-danger">{error.ZipCode}</p>
               </Col>
             </Form.Row>
         
             
-            <DynamicFeilds type={"Address"} name={"Address"} inputList={inputList.Address} change={handleChange}></DynamicFeilds>
+            <DynamicFeilds type={"Address"} name={"Address"} text={"Address"} inputList={inputList.Address} error={error.Address} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Address")}>Add an Address</span>
             </div>
