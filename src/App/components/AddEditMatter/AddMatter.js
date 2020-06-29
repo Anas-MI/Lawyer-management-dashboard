@@ -168,6 +168,7 @@ const AddEditMatter = props => {
                 </Form.Group>
         </Form>
         </Card>
+        <Button onClick={()=>props.history.goBack()}>ADD</Button>
        <br></br>
         <Modal
           title="Add Company"
