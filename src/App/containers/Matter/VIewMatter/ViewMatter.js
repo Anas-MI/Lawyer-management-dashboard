@@ -63,10 +63,22 @@ function CompanyView(props){
      <Tabs defaultActiveKey="1" onChange={callback}>
      <TabPane tab="Dashboard" key="1">
        <Card title="Financial" extra={<a href="#">Add Expense</a>} className="form-width mb-4">
-                <p> Work In progress Amount</p>
-                <p>Outstanding Amount</p>
-                <p>Trust Funds
-                </p>
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Work In progress Amount</span></td>
+                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                    </tr>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Outstanding Amount</span></td>
+                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                    </tr>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Trust Funds</span></td>
+                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                    </tr>
+                </tbody>
+            </table>
         </Card>
             <Card title="Contact" extra={<a href="#">Add Contact</a>}  className="form-width mb-4">
                 <table class="table table-borderless">
