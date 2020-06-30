@@ -1,28 +1,61 @@
 import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
 import {Card , Tabs} from 'antd'
+import { number } from 'prop-types';
 const { TabPane } = Tabs;
 
 function CompanyView(props){
     let response = {}
-/*
+    const [address, setAddress] = useState()
+    const [firstName, setfirstName] = useState()
+    const [ID, setID] = useState()
+    const [Website, setWebsite] = useState()
+    const [Email, setEmail] = useState()
+    const [Number, setNumber] = useState()
     useEffect(() => {
     
         async function fetchData() {
-           await api.get('/company/view/5ef5ca4a5080d35bcc38d416').then(res=>{
-              response = res
+           await api.get('/matter/view/5efb32a82d083261e7e21281').then(res=>{
+              response = res.data
               console.log(response)
               setValue()
            })
-
         }
         fetchData();
+        
       }, []);
-
       const setValue = () =>{
-   
-      }
-  */    
+          console.log("setValue")
+        const adrs = response.data.client.address.map((value, index)=>{
+ 
+            return <div  key ={index}>
+                <p>{value.street}</p>
+                <p>{value.city}</p>
+                <p>{value.state}</p>
+                <p>{value.zipCode}</p>
+                <p>{value.country}</p>
+                <p>{value.type}</p>
+            </div>
+            })
+            console.log(adrs)
+            const mail = response.data.client.emailAddress.map((value, index)=>{
+                return <div key={index}>
+                    <p>{value}</p>
+                </div>
+            })
+            const Num = response.data.client.phone.map((value, index)=>{
+                return <div key={index}>
+                    <p>{value.number}</p>
+                </div>
+            })
+            const fNAme = response.data.client.firstName
+            const IDx = response.data.client._id
+            setAddress(adrs)
+            setID(IDx)
+            setfirstName(fNAme)
+            setEmail(mail)
+            setNumber(Num)
+      }   
  function callback(key) {
     console.log(key);
   }
@@ -36,10 +69,10 @@ function CompanyView(props){
                 </p>
             </Card>
             <Card title="Contact" extra={<a href="#">Add Contact</a>}  style={{ width: "50%" }}>
-                <p>Client</p>
-                <p>Phone</p>
-                <p>Email</p>
-                <p>Address</p>
+                <p>Client</p> : {firstName}
+                <p>Phone</p>  : {number}
+                <p>Email</p>  : {Email}
+                <p>Address</p>: {address}
         </Card>
      </TabPane>
      <TabPane tab="Acitivites" key="2">       
@@ -85,7 +118,7 @@ function CompanyView(props){
             <Card title="Task" extra={<a href="#"></a>}  style={{ width: "50%" }}>
         </Card>
         </TabPane>
-        <TabPane tab="Bills" key="6">
+        <TabPane tab="Bills" key="9">
             <Card title="Bills" extra={<a href="#"></a>}  style={{ width: "50%" }}>
         </Card>
         </TabPane>
