@@ -50,6 +50,9 @@ const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/Vie
 const Matter= React.lazy(()=>import('./App/containers/Matter/Matter'))
 const AddMatter= React.lazy(()=>import('./App/components/AddEditMatter/AddMatter'))
 const ViewMatter = React.lazy(()=>import('./App/containers/Matter/VIewMatter/ViewMatter'))
+const Settings= React.lazy(()=>import('./App/containers/Settings/index'))
+const customFeilds = React.lazy(()=>import('./App/containers/Settings/CustomFeilds/CustomFeilds'))
+const accountNpayment = React.lazy(()=>import('./App/containers/Settings/account&payment/index'))
 
 
 export const adminRoutes = [
@@ -66,11 +69,9 @@ export const adminRoutes = [
     { path: '/manage/blogs/:manage', exact: true, name: 'Add Edit Blogs', component: AddEditBlogs},
     { path: '/manage/features/:manage', exact: true, name: 'Add Edit Features', component: AddEditFeatures},
     { path: '/manage/plans/:manage', exact: true, name: 'Add Edit Plans', component: AddEditPlans},
-    { path: '/manage/contacts/:manage/Person', exact: true, name: 'Add Edit Contact', component: AddPerson},
-    { path: '/manage/contacts/:manage/Company', exact: true, name: 'Add Edit Contact', component: AddCompany},
-    { path: '/manage/contacts', exact: true, name: 'Contacts Management', component: ContactsManage},
-    {path: '/view/contact', exact: true, name: 'Contacts Management', component: ViewContact},
-    {path: '/view/company', exact: true, name: 'Contacts Management', component: ViewCompany},
+  
+
+
   
 ,
 
@@ -108,9 +109,18 @@ const routes = [
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
     { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer},
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
-    { path: '/manage/matter', exact: true, name: 'Manage Blogs', component: Matter},
-    { path: '/manage/matter/:manage', exact: true, name: 'Add Edit Plans', component: AddMatter},
-    {path: '/view/matter', exact: true, name: 'Contacts Management', component: ViewMatter},
+    { path: '/manage/matter', exact: true, name: 'Manage Matter', component: Matter},
+    { path: '/manage/matter/:manage', exact: true, name: 'Add Edit Matter', component: AddMatter},
+    { path: '/view/matter', exact: true, name: 'Manage Matter', component: ViewMatter},
+    { path: '/settings', exact: true, name: 'Settings', component: Settings },
+    { path: '/settings/customFeilds', exact: true, name: 'Custom Feilds', component: customFeilds },
+    { path: '/settings/account&payment', exact: true, name: 'Account And Payment', component: accountNpayment },
+    { path: '/manage/contacts/:manage/Person', exact: true, name: 'Add Edit Contact', component: AddPerson},
+    { path: '/manage/contacts/:manage/Company', exact: true, name: 'Add Edit Contact', component: AddCompany},
+    { path: '/manage/contacts', exact: true, name: 'Contacts Management', component: ContactsManage },
+    { path: '/view/contact', exact: true, name: 'Contacts Management', component: ViewContact },
+    { path: '/view/company', exact: true, name: 'Contacts Management', component: ViewCompany },
+   
    
 
 
