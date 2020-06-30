@@ -16,6 +16,8 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     outline: none;
 }
 
+
+
 .form-add-button{
     height: 30px;
     font-size: 12px !important;
@@ -55,7 +57,14 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     border: 1px solid #4e4e91;
     margin: 0;
 }
-
+.table-span-dark {
+    color: #4e4e91;
+    font-weight: 600;
+}
+.table-span-light{
+    font-weight: 600;
+    opacity: 0.6;
+}
 .form-header-text{
     color: #004;
     font-family: Noto Sans,Tahoma,sans-serif;
