@@ -62,64 +62,127 @@ function CompanyView(props){
  return<div>
      <Tabs defaultActiveKey="1" onChange={callback}>
      <TabPane tab="Dashboard" key="1">
-       <Card title="Financial" extra={<a href="#">Add Expense</a>} style={{ width: "50%" }}>
+       <Card title="Financial" extra={<a href="#">Add Expense</a>} className="form-width mb-4">
                 <p> Work In progress Amount</p>
                 <p>Outstanding Amount</p>
                 <p>Trust Funds
                 </p>
-            </Card>
-            <Card title="Contact" extra={<a href="#">Add Contact</a>}  style={{ width: "50%" }}>
-                <p>Client</p> : {firstName}
-                <p>Phone</p>  : {number}
-                <p>Email</p>  : {Email}
-                <p>Address</p>: {address}
         </Card>
+            <Card title="Contact" extra={<a href="#">Add Contact</a>}  className="form-width mb-4">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Client</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{firstName}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Phone</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{number}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Email</span></td>
+                            <td className="border-0"><span className="table-span-light">{Email}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Address</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{address}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Card>
      </TabPane>
      <TabPane tab="Acitivites" key="2">       
-            <Card title="Activities" extra={<a href="#">Add Activity</a>}  style={{ width: "50%" }}>
-                <Card extra={<div><a href="#">Edit</a> <a href="#">Delete</a><a href="#">Dublicate</a></div>} >
-                <p>Action </p>
-                <p>Type</p>
-                <p>Qty</p>
-                <p>Discription</p>
-                <p>Rate</p>
-                <p>Non billable</p>
-                <p>Date</p>
-                <p>User</p>
-                <p>Invoice status</p>
+            <Card title="Activities" extra={<a href="#">Add Activity</a>}  className="form-width mb-4">
+                <Card extra={<div><a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a></div>}>
+                <table class="table table-borderless form-width">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Action</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Type</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Qty</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Discription</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Non Billable</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">User</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Invoice Status</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </Card>
             </Card>
         </TabPane>
         <TabPane tab="Calendar" key="3">
-            <Card title="Calender" extra={<a href="#"></a>}  style={{ width: "50%" }}>
-                <p>Start</p>
-                <p>End</p>
-                <p>title</p>
-                <p>Description</p>
+            <Card title="Calender" extra={<a href="#"></a>}  className="form-width mb-4">
+            <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Start</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">End</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Title</span></td>
+                            <td className="border-0"><span className="table-span-light"></span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </Card>
         </TabPane>
         <TabPane tab="Communication" key="4">
-            <Card title="Communication" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Communication" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
         <TabPane tab="Phone Log" key="5">
-            <Card title="Phone Log" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Phone Log" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
         <TabPane tab="Notes" key="6">
-            <Card title="Notes" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Notes" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
         <TabPane tab="Document" key="7">
-            <Card title="Document" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Document" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
         <TabPane tab="Task" key="8">
-            <Card title="Task" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Task" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
         <TabPane tab="Bills" key="9">
-            <Card title="Bills" extra={<a href="#"></a>}  style={{ width: "50%" }}>
+            <Card title="Bills" extra={<a href="#"></a>}  className="form-width mb-4">
         </Card>
         </TabPane>
           </Tabs>
