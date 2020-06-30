@@ -7,18 +7,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBlogs, deleteBlog,selectBlog } from "../../../store/Actions";
 import api from '../../../resources/api'
 
+let response={}
+let tableData=[]
 
 
 class matterManage extends React.Component{
    constructor(props){
        super(props)
-       this.state= {}
+       this.state= {tableData : []}
+   }
+
+   async componentDidMount(){
+    await api.get('/matter/showall').then(res=>response=res.data.data)
+ 
+   }
+   componentWillUpdate(){
+     response.map((value , index)=>{
+    let newData = {
+      key : index,
+      MatterName: value.MatterName,
+      Client: value.client,
+      MatterNotification : value.matterDescription,
+      PractiseArea : value.practiseArea,
+      OpenDate : value.openDate
+    }
+      tableData.push(newData)
+  })
    }
    render(){
 
 
  
-  let response = {}
   //Search Related 
 
  /*
@@ -31,10 +50,6 @@ class matterManage extends React.Component{
     fetchData();
   }, []);
  */
- 
-  const setTable=()=>{
-    
-  }
   
 
   const getColumnSearchProps = dataIndex => ({
@@ -111,19 +126,6 @@ class matterManage extends React.Component{
   
   const columns = [
     
-    {
-      title: "Action",
-      dataIndex: "Action",
-      key: "_id",
-      ...getColumnSearchProps('Action'),
-      sorter: (a, b ,c) => ( 
-        c==='ascend'
-        ?a.author<b.author
-        :a.author>b.author
-      )
-
-
-    },
 
     {
         title: "Matter Name",
@@ -235,11 +237,11 @@ const handleView = (e)=>{
   }
 
   return (
-    <div>{console.log("2nd")}
+    <div>
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew()}>Add Matter</Button>
       </div>
-      <Table columns={columns}
+      <Table dataSource={tableData} columns={columns}
         onRow={(record, rowIndex) => {
             return {
               onDoubleClick: event => handleView(event), // double click row
