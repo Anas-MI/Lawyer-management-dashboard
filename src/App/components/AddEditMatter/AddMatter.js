@@ -6,35 +6,45 @@ import AddPerson from '../AddEditContact/AddPerson'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
 const AddEditMatter = props => {
 
-    const [state,setState] = useState({})
+    const [state,setState] = useState({Relation : [{Relationship : "" , Contact : ""}]})
     const [InputList, setInputList] = useState([{Relationship : "" , Contact : ""}])
     const [modal , setModal] = useState()
-    let Count = 1
-    
+    const [editMode,setEditMode] = useState(false)
   const addFeild=() =>{
-    Count++
     let list = InputList
     list.push({Relationship : "" , Contact : ""})
     setInputList(list)
+    let newState= state
+    newState.Relation = InputList
+    setState(newState)
+    console.log(state)
   }
   
   const handleChange = (e) => {
     e.persist()
     setState(st=>({...st,[e.target.name]:e.target.value}))
   }
+  const HandleDynamicChange = (e)=>{
+    e.persist()
+    let list = state
+    const { id , value } = e.target
+    list.Relation[id].Relationship = value
+    setState(list)
+    console.log(state)
+  }
 
- /*
+ 
     const handleSubmit = e => {
         e.preventDefault()
         if(editMode){
            //  dispatch(updateBlog({id:state._id,body:state}))
         }else{
-           api.post('contact/create', state)
+           api.post('matter/create', state)
         }
         props.history.goBack()
     }
-    */
-
+  
+    
     return (
       <div className='form-width'>
         <div className="form-header-container mb-4">
@@ -111,7 +121,7 @@ const AddEditMatter = props => {
 
         <Card title="Related Contacts" className="mb-4">
             <Form className="form-details">
-              <DynamicFeild InputList={InputList} change={handleChange}></DynamicFeild>
+            <DynamicFeild InputList={InputList} change={HandleDynamicChange}></DynamicFeild>
 
               <Form.Group controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Bill this contact" id={`check`}/>
@@ -168,7 +178,7 @@ const AddEditMatter = props => {
                 </Form.Group>
         </Form>
         </Card>
-        <Button onClick={()=>props.history.goBack()}>ADD</Button>
+        <Button onClick={handleSubmit}>ADD</Button>
        <br></br>
         <Modal
           title="Add Company"
@@ -185,4 +195,3 @@ const AddEditMatter = props => {
 }
 
 export default AddEditMatter
-
