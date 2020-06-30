@@ -112,18 +112,25 @@ export default {
                     url: '/calendar'
                 },
                 {
+                    id: 'Task',
+                    title: 'Task',
+                    type: 'item',
+                    icon: 'feather icon-list',
+                    url: '/tasks'
+                },
+                {
                     id: 'matters',
                     title: 'Matters',
                     type: 'item',
                     icon: 'feather icon-target',
-                    url: '/'
+                    url: '/manage/matter'
                 },
                 {
                     id: 'contacts',
                     title: 'Contact',
                     type: 'item',
                     icon: 'feather icon-mail',
-                    url: '/'
+                    url: '/manage/contacts'
                 },
                 {
                     id: 'activities',
@@ -172,7 +179,8 @@ export default {
                     title: 'Settings',
                     type: 'item',
                     icon: 'feather icon-settings',
-                    url: '/'
+                    url : '/settings'
+
                 },
                 {
                     id: 'help',
