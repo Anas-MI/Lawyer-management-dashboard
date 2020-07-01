@@ -11,27 +11,8 @@ class DynamicFeilds extends React.Component {
       InputList : this.props.InputList
     }
   }
-
-  async componentWillMount(){
-   // if(prevProps.InputList !== this.props.InputList) {
-   //   this.setState({InputList: this.props.InputList});
-   // }
-   await api.get('/contact/showall').then(res=>{
-    response = res.data}
-    )
-
-  }
-   componentWillUpdate(){
-    optns = response.data.map((value, index)=>{
-      return <option>{value.firstName}</option>
-    })
-    
-   }
  
     render(){
-       
-
-
     return (
         <div >
             {
@@ -51,7 +32,7 @@ class DynamicFeilds extends React.Component {
                           <Form.Group controlId={idx}>
                           <Form.Label>Contact</Form.Label>
                           <Form.Control as="select">
-                            {optns}
+                            {this.props.option}
                          </Form.Control>
                          </Form.Group>
                     </Col>
