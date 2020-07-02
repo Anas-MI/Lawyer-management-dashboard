@@ -1,8 +1,10 @@
 import { Modal} from 'antd';
 import React from 'react'
-import Content from './Content/Content'
 import { Form,Button, Row , Col} from "react-bootstrap";
 class AddList extends React.Component {
+  constructor(props){
+    super(props)
+  }
   state = {
     ModalText: 'Content of the modal',
     visible: false,
@@ -36,6 +38,7 @@ class AddList extends React.Component {
   };
 
   render() {
+    const tableData = this.props.tableData 
     const { visible, confirmLoading } = this.state;
     return (
       <div>
@@ -67,7 +70,24 @@ class AddList extends React.Component {
               </Form.Group>
             </Form>
         </Modal>
-        <Content></Content>
+
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Discription</th>
+                <th scope="col">Task</th>
+                <th scope="col">Matter</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {tableData}
+            </tbody>
+        </table>  
+    
       </div>
     );
   }
