@@ -241,7 +241,7 @@ const handleView = (e)=>{
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew()}>Add Matter</Button>
       </div>
-      <Table dataSource={tableData} columns={columns}
+      <Table dataSource={tableData} columns={columns} className="overflow-auto"
         onRow={(record, rowIndex) => {
             return {
               onDoubleClick: event => handleView(event), // double click row
@@ -249,7 +249,7 @@ const handleView = (e)=>{
               onMouseEnter: event => {}, // mouse enter row
               onMouseLeave: event => {}, // mouse leave row
             };
-          }}>
+          }} >
 
       </Table>
     </div>

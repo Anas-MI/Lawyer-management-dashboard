@@ -28,7 +28,7 @@ function CompanyView(props){
           console.log("setValue")
         const adrs = response.data.client.address.map((value, index)=>{
  
-            return <div  key ={index}>
+            return <div className="table-span-light" key ={index}>
                 <p>{value.street}</p>
                 <p>{value.city}</p>
                 <p>{value.state}</p>
@@ -39,12 +39,12 @@ function CompanyView(props){
             })
             console.log(adrs)
             const mail = response.data.client.emailAddress.map((value, index)=>{
-                return <div key={index}>
+                return <div className="table-span-light" key={index}>
                     <p>{value}</p>
                 </div>
             })
             const Num = response.data.client.phone.map((value, index)=>{
-                return <div key={index}>
+                return <div className="table-span-light" key={index}>
                     <p>{value.number}</p>
                 </div>
             })
@@ -61,26 +61,24 @@ function CompanyView(props){
   }
  return<div>
      <Tabs defaultActiveKey="1" onChange={callback}>
-     <TabPane tab="Dashboard" key="1">
+     <TabPane tab="Dashboard" key="1" style={{"padding" : "0px"}}>
        <Card title="Financial" extra={<a href="#">Add Expense</a>} className="form-width mb-4">
-            <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Work In progress Amount</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                    </tr>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Outstanding Amount</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                    </tr>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Trust Funds</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                    </tr>
-                </tbody>
-            </table>
+           <div className="text-center pt-2" >
+                <div>Work In progress Amount</div>
+                <div class="d-flex py-2 mt-2 matter-amount">
+                    <div style={{"flex": 1,"border-right": "2px solid #B2E4D6"}}>
+                        <p><b>Outstanding Amount</b></p>
+                        <span>$347.00</span>
+                    </div>
+                    <div style={{"flex": 1}}>
+                        <p><b>Trust Funds</b></p>
+                        <span>$500.00</span>
+                    </div>
+                </div>
+           </div>
+            
         </Card>
-            <Card title="Contact" extra={<a href="#">Add Contact</a>}  className="form-width mb-4">
+            <Card title="Deails" extra={<a href="#">Add Contact</a>}  className="form-width mb-4">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>

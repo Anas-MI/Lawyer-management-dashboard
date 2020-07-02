@@ -165,17 +165,21 @@ const AddEditContact = props => {
         break;
       case "City":
           errors.City =
-          (value.length == 0) 
-          ? "" 
-          : (value.length < 2)
-          ? "City is Required" : "";
+            (value.length == 0) 
+              ? "" 
+              : (!validNameRegex.test(value))
+              ? "City Name must be in characters!"
+              : (value.length < 2) 
+              ? "City is Required" : "";
         break;
       case "State":
           errors.State =
           (value.length == 0) 
-          ? "" 
-          : (value.length < 2)
-          ? "State is Required" : "";
+              ? "" 
+              : (!validNameRegex.test(value))
+              ? "State Name must be in characters!"
+              : (value.length < 2) 
+              ? "State is Required" : "";
         break;
       case "ZipCode":
           errors.ZipCode = (value.length == 0) 

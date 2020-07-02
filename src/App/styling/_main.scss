@@ -103,7 +103,22 @@ hr {
 		}
 	}
 }
-
+.matter-amount {
+	border: 2px solid #B2E4D6;
+	background: #E8F8F2;
+	p{
+		margin-bottom: 0;
+	}
+	span {
+		font-size: 28px;
+    	font-weight: 500;
+	}
+}
+.ant-card-body{
+	p{
+		margin-bottom: 0.5px;
+	}
+}
 .section-title {
 	margin-bottom: 70px;
 	h2 {
