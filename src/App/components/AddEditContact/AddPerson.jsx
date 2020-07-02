@@ -4,6 +4,7 @@ import { updateBlog, createBlog } from '../../../store/Actions'
 import { Form, Row , Button, Col } from "react-bootstrap";
 //import Classes from './index.css'
 import { Upload, message,  Modal } from 'antd';
+import { notification } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
@@ -17,35 +18,31 @@ const validNameRegex = RegExp(/^[a-zA-Zàáâäãåąčćęèéêëėįìíîï�
 
 const validZipRegex = RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
 const validUrlRegex = RegExp(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
-const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
 
 const AddEditContact = props => {
 
-    const [state,setState] = useState({})
+    const [state,setState] = useState({
+      Prefix : "",
+      FirstName: "",
+      LastName: "",
+      Title: "",
+      Street: "",
+      City: "",
+      State: "",
+      ZipCode: "",
+    })
     const [companyData,setcompanyData] = useState({})
     const [modal , setModal] = useState()
     const [editMode,setEditMode] = useState(false)
-    const [error, setError] = useState({
-      FirstName: "",
-      MiddleName: "",
-      LastName: "",
-      Prefix: "",
-      Title:"",
-      Email: "",
-      PhoneNumber: "",
-      Website:"",
-      Address:"",
-      Street:"",
-      City:"",
-      State:"",
-      ZipCode:"",
-    });
+    const [error, setError] = useState({});
+    const [display, setDisplay] = useState(false);
+    
     const dispatch = useDispatch()
     let [options, setOptions] = useState() 
     let response = {}
     const selectedContact = useSelector(state=>state.Contact.selected)
+
     useEffect(() => {
-    
       async function fetchData() {
         response = await api.get('/company/showall')
         setOptionsList()
@@ -61,6 +58,7 @@ const AddEditContact = props => {
       })
       setOptions(temp)
     }
+
     useEffect(()=>{
         if(!selectedContact){
             setEditMode(false)
@@ -69,13 +67,15 @@ const AddEditContact = props => {
             setEditMode(true)
         }
     },[])
+
     const [inputList, setInputList] = useState({Address : [""], Email : [""], Number : [""],
     CompanyAddress : [""], CompanyEmail : [""], CompanyNumber : [""], CompanyWebsite: [""]
   });
 
   
-  const handleChange = (e) => {
+  const handleChange = (e, index) => {
     e.persist()
+    setDisplay(false)
     if(e.target.name == "Address" ){
 
     }else 
@@ -88,14 +88,11 @@ const AddEditContact = props => {
     {
     setState(st=>({...st,[e.target.name]:e.target.value}))
     }
-    console.log(state)
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
       case "Prefix":
-          errors.Prefix = validPrefixRegex.test(value)
-            ? ""
-            : "Prefix is not valid!";
+          errors.Prefix =  value === "default" ? "Prefix is required!" : "";
           break;
       case "FirstName":
         errors.FirstName =
@@ -147,26 +144,43 @@ const AddEditContact = props => {
         break;
       case "Title":
           errors.Title =
-            value.length == 0 ? "Title is Required" : "";
+            (value.length == 0) 
+            ? "" 
+            : (value.length < 4)
+            ? "Title is Required" : "";
         break;
       case "Address":
           errors.Address =
-            value.length == 0 ? "Address is Required" : "";
+            (value.length == 0) 
+            ? "" 
+            : (value.length < 2)
+            ? "Address is Required" : "";
         break;
       case "Street":
           errors.Street =
-            value.length == 0 ? "Street is Required" : "";
+          (value.length == 0) 
+          ? "" 
+          : (value.length < 2)
+          ? "Street is Required" : "";
         break;
       case "City":
           errors.City =
-            value.length == 0 ? "City is Required" : "";
+          (value.length == 0) 
+          ? "" 
+          : (value.length < 2)
+          ? "City is Required" : "";
         break;
       case "State":
           errors.State =
-            value.length == 0 ? "State is Required" : "";
+          (value.length == 0) 
+          ? "" 
+          : (value.length < 2)
+          ? "State is Required" : "";
         break;
       case "ZipCode":
-          errors.ZipCode = validZipRegex.test(value)
+          errors.ZipCode = (value.length == 0) 
+            ? "" 
+            : validZipRegex.test(value)
             ? ""
             : "Zipcode is not valid!";
           break;
@@ -189,7 +203,6 @@ const AddEditContact = props => {
   
 
   const handleImageChange = e => {
-    console.log(e)
     //setState(st=>({...st,[e.target.name]:e.target.value}))
     }
    const addFeild = (type) => {
@@ -231,7 +244,6 @@ const imageHandler = {
  const AddCompanyHandler = ()=>{
    api.post('/company/create', {companyData})
    setModal(false)
-
  }
 
  const companyDataHandler=(e)=>{
@@ -252,16 +264,41 @@ const imageHandler = {
   }
  }
 
-
-    
     const handleSubmit = e => {
         e.preventDefault()
-        if(editMode){
-           //  dispatch(updateBlog({id:state._id,body:state}))
-        }else{
-           api.post('contact/create', state)
+        if(!display){
+          const validateForm = (error) => {
+            let valid = true;
+            Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+            return valid;
+          };
+        if (validateForm(error)) {
+          checkValidity();
+        } else {
+          setDisplay(true)
+          return notification.warning({
+            message: "Failed to Add Person.",
+          });
         }
+      }
+
+        // if(editMode){
+        //     dispatch(updateBlog({id:state._id,body:state}))
+        // }else{
+        //   api.post('contact/create', state)
+        // }
+    }
+
+    function checkValidity() {
+      if (!Object.keys(state).every((k) => state[k] !== "")) {
+        setDisplay(true)
+        return notification.warning({
+          message: "Fields Should Not Be Empty",
+        });
+      } else {
+        api.post('contact/create', state)
         props.history.goBack()
+      }
     }
 
     return (
@@ -280,8 +317,21 @@ const imageHandler = {
               </Upload><br></br>
             <Form.Group controlId="formGroupPrefix">
               <Form.Label>Prefix</Form.Label>
-              <Form.Control name='Prefix' type="text" placeholder="Prefix" 
-              value={state['Prefix']} onChange={handleChange}/>
+              <select    
+                required
+                name='Prefix'
+                onChange={handleChange}
+                value={state['Prefix']}
+                style={{"border-radius": "5px"}}
+                >
+                <option value="default">Prefix</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Miss.">Miss.</option>
+                <option value="Ms.">Ms.</option>
+                <option value="Dr.">Dr.</option>
+                <option value="Gov.">Gov.</option>
+                <option value="Prof.">Prof.</option>
+              </select>
             </Form.Group>
             <p className="help-block text-danger">{error.Prefix}</p>
           
@@ -289,7 +339,7 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupFirstName">
                   <Form.Label>First Name</Form.Label>
-                  <Form.Control name='FirstName' type="text" placeholder="First Name" 
+                  <Form.Control required name='FirstName' type="text" placeholder="First Name" 
                   value={state['FirstName']} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
@@ -322,10 +372,9 @@ const imageHandler = {
               </Form.Group>
             </Col>
           </Row>
-          <Button type="primary" onClick={() => setModal(true)}>
-          Add Company
-        </Button>
-            
+          <div className="form-add mb-4">
+              <span onClick={() => setModal(true)}>Add Company</span>
+          </div>
             <DynamicFeilds type={"Email"} name={"Email"} text={"Email"} error={error.Email} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
@@ -334,7 +383,7 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
-                  <Form.Control name='Title' type="text" placeholder="Title" 
+                  <Form.Control required name='Title' type="text" placeholder="Title" 
                   value={state['Title']} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
@@ -342,14 +391,14 @@ const imageHandler = {
             </Row>
 
             
-            <DynamicFeilds type={"PhoneNumber"} name={"PhoneNumber"} text={"Phone Number"} error={error.PhoneNumber} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
+            <DynamicFeilds type={"number"} name={"PhoneNumber"} text={"Phone Number"} error={error.PhoneNumber} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
             </div>
 
             <Form.Group controlId="formGroupWebsite">
               <Form.Label>Website</Form.Label>
-              <Form.Control name='Website' type="text" placeholder="Website" 
+              <Form.Control required name='Website' type="text" placeholder="Website" 
               value={state['Website']} onChange={handleChange}/>
             </Form.Group>
             <p className="help-block text-danger">{error.Website}</p>
@@ -357,7 +406,7 @@ const imageHandler = {
             <p style={{"color" : "#4e4e91"}}><b>Address</b></p>
             <Form.Group controlId="formGroupStreet">
               <Form.Label>Street</Form.Label>
-              <Form.Control name='Street' type="text" placeholder="Street" 
+              <Form.Control required name='Street' type="text" placeholder="Street" 
               value={state['Street']} onChange={handleChange}/>
             </Form.Group>
             <p className="help-block text-danger">{error.Street}</p>
@@ -366,7 +415,7 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupCity">
                   <Form.Label>City</Form.Label>
-                  <Form.Control name='City' type="text" placeholder="City" 
+                  <Form.Control required name='City' type="text" placeholder="City" 
                   value={state['City']} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.City}</p>
@@ -374,7 +423,7 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupState">
                   <Form.Label>State</Form.Label>
-                  <Form.Control name='State' type="text" placeholder="State" 
+                  <Form.Control required name='State' type="text" placeholder="State" 
                   value={state['State']} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.State}</p>
@@ -382,7 +431,7 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupZipCode">
                   <Form.Label>ZipCode</Form.Label>
-                  <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
+                  <Form.Control required name='ZipCode' type="text" placeholder="ZipCode" 
                   value={state['ZipCode']} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.ZipCode}</p>
@@ -395,7 +444,7 @@ const imageHandler = {
               <span onClick={()=>addFeild("Address")}>Add an Address</span>
             </div>
 
-            <Button onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
+            <Button type="submit" onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
           <Modal
           title="Add Company"

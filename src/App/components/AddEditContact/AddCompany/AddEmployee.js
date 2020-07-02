@@ -124,17 +124,17 @@ function AddEmployee (props){
           </Col>
         </Form.Row>
 
-        <DynamicFeilds type={"CompanyEmail"} name={"Company Email"} inputList={inputList.CompanyEmail} change={(e)=>handleChange(e)}></DynamicFeilds>
+        <DynamicFeilds type={"CompanyEmail"} name={"Company Email"}  text={"Company Email"} inputList={inputList.CompanyEmail} change={(e)=>handleChange(e)}></DynamicFeilds>
         <div className="form-add mb-4">
           <span onClick={()=>addFeild("CompanyEmail")}>Add a Company Email</span>
         </div>
 
-        <DynamicFeilds type={"CompanyNumber"} name={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
+        <DynamicFeilds type={"CompanyNumber"} name={"Company Phone Number"} text={"Company Phone Number"} inputList={inputList.CompanyNumber} change={handleChange}></DynamicFeilds>
         <div className="form-add mb-4">
           <span onClick={()=>addFeild("CompanyNumber")}>Add a Company Number</span>
         </div>
 
-        <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
+        <DynamicFeilds type={"CompanyWebsite"} name={"Company Website"} text={"Company Website"} inputList={inputList.CompanyWebsite} change={handleChange}></DynamicFeilds>
         <div className="form-add mb-4">
           <span onClick={()=>addFeild("CompanyWebsite")}>Add a Company Website</span>
         </div>
@@ -170,7 +170,7 @@ function AddEmployee (props){
           </Col>
         </Form.Row>
         
-        <DynamicFeilds type={"CompanyAddress"} name={"Company Address"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
+        <DynamicFeilds type={"CompanyAddress"} name={"Company Address"}  text={"Company Address"} inputList={inputList.CompanyAddress} change={handleChange}></DynamicFeilds>
         <div className="form-add mb-4">
           <span onClick={()=>addFeild("CompanyAddress")}>Add a Company Address</span>
         </div>
