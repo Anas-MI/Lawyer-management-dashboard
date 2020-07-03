@@ -5,8 +5,10 @@ import Contact from './Contact/contact'
 import { Form } from 'react-bootstrap'
 import api from '../../../../resources/api'
 const { TabPane } = Tabs;
-
-
+let res = null
+let data = {
+  customFields : []
+}
 class customFeilds extends React.Component {
   constructor(props){
     super(props)
@@ -14,10 +16,18 @@ class customFeilds extends React.Component {
 
     }
   }
+
+  async componentDidMount(){
+    res = await api.get('/user/view/5eecb08eaec6f1001765f8d5')
+    data.customFields = res.data.data.customFields
+    console.log(data)
+  }
+   
   state = {
     modal1Visible: false,
     modal2Visible: false,
   };
+
 
   setModal1Visible(modal1Visible) {
     this.setState({ modal1Visible });
@@ -32,9 +42,28 @@ class customFeilds extends React.Component {
     const HandleChange=(e)=>{
       e.persist()
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      console.log(this.state)
     }
     const HandleOk=()=>{
-    api.post('http://localhost:3002/api/user/update/5eecb08eaec6f1001765f8d5',this.state)
+      if(this.state.required == "on"){
+        this.state.required = true
+      }
+      if(this.state.default == "on"){
+        this.state.default = true
+      }
+      const newdata = {
+        name : this.state.name,
+        type : this.state.type,
+        default : this.state.default,
+        required : this.state.required
+      }
+
+      console.log(res.data.data.customFields)
+      if(res!==null){
+        data.customFields.push(newdata)
+      }
+      console.log(data)
+       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(res=>console.log(res)).catch(console.log())
       this.setModal2Visible(false)
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
@@ -59,7 +88,7 @@ class customFeilds extends React.Component {
           <Form>
             <Form.Group controlId="Name">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="Name" placeholder="Name" name="name" onChange={HandleChange}/>
+                <Form.Control type="name" placeholder="Name" name="name" onChange={HandleChange}/>
             </Form.Group>
             <Form.Group controlId="Type">
                 <Form.Label>Select Custom Feild type</Form.Label>
