@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { updateBlog, createBlog } from '../../../store/Actions'
+import React from 'react'
 import { Form, Row , Button, Col } from "react-bootstrap";
-//import Classes from './index.css'
 import { Upload, message,  Modal } from 'antd';
-import { notification } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
@@ -16,299 +12,222 @@ const validEmailRegex = RegExp(
 
 const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
 
+const validZipRegex = RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
 const validUrlRegex = RegExp(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
+const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
 
-const AddEditContact = props => {
 
-    const [state,setState] = useState({
-      Prefix : "",
-      FirstName: "",
-      LastName: "",
-      Title: "",
-      Street: "",
-      City: "",
-      State: "",
-      ZipCode: "",
-    })
-    const [companyData,setcompanyData] = useState({})
-    const [modal , setModal] = useState()
-    const [editMode,setEditMode] = useState(false)
-    const [error, setError] = useState({});
-    const [display, setDisplay] = useState(false);
+let editMode = null
+let options = null
+let response = {}
+let res = ""
+let error = {
+  FirstName: "",
+  MiddleName: "",
+  LastName: "",
+  Prefix: "",
+  Title:"",
+}
+let errors ={
+  Email: [""],
+  PhoneNumber: [""],
+  Website:[""],
+  Address:[""],
+  Street:[""],
+  City:[""],
+  State:[""],
+  ZipCode:[""],
+}
+class newPerson extends React.Component{
+  constructor(props){
+    super(props)
+    this.state={
+      Address : [""], Email : [""], Number : [""], Website:[""], modal : false
+    }
+  }
+  async componentDidMount(){
+    response = await api.get('/company/showall')
     
-    const dispatch = useDispatch()
-    let [options, setOptions] = useState() 
-    let response = {}
-    const selectedContact = useSelector(state=>state.Contact.selected)
+     options = response.data.data.map((value,id)=>{
+    return <option key={id}>{value.name}</option>
+    })
+  }
+  componentWillUpdate(){
+    
+    if(this.props.location.pathname == "/manage/contacts/edit/person"){
+      editMode = true
+      res=this.props.location.state
 
-    useEffect(() => {
-      async function fetchData() {
-        response = await api.get('/company/showall')
-        setOptionsList()
-      }
-      fetchData();
-    }, []);
-   
-   
-    const setOptionsList=()=>{
-      let temp = response.data.data.map((value,id)=>{
-        let key=id
-      return <option>{value.name}</option>
-      })
-      setOptions(temp)
     }
-
-    useEffect(()=>{
-        if(!selectedContact){
-            setEditMode(false)
-        }else{
-            setState({...selectedContact})
-            setEditMode(true)
-        }
-    },[])
-
-    const [inputList, setInputList] = useState({Address : [""], Email : [""], Number : [""],
-    CompanyAddress : [""], CompanyEmail : [""], CompanyNumber : [""], CompanyWebsite: [""]
-  });
-
-  
-  const handleChange = (e, index) => {
-    e.persist()
-    setDisplay(false)
-    if(e.target.name == "Address" ){
-
-    }else 
-    if(e.target.name == "Email") {
-
-    }else
-    if(e.target.name == "Email") {
-
-    }else
-    {
-    setState(st=>({...st,[e.target.name]:e.target.value}))
-    }
-    const { name, value } = e.target;
-    let errors = error;
-    switch (name) {
-      case "Prefix":
-          errors.Prefix =  value === "default" ? "Prefix is required!" : "";
-          break;
-      case "FirstName":
-        errors.FirstName =
+  }
+  render(){
+    let address = null
+    const handleChange = (e) => {
+      e.persist()
+      this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      console.log(this.state)
+      const { name, value, id } = e.target;
+      switch (name) {
+        case "Prefix":
+            error.Prefix = validPrefixRegex.test(value)
+              ? ""
+              : "Prefix is not valid!";
+            break;
+        case "FirstName":
+          error.FirstName =
+              (value.length == 0) 
+              ? "" 
+              : (!validNameRegex.test(value))
+              ? "First Name must be in characters!"
+              : (value.length > 20) 
+              ? "First Name must be less than 20 characters long!" 
+              : "";
+         break;
+        case "MiddleName":
+          error.MiddleName =
             (value.length == 0) 
             ? "" 
             : (!validNameRegex.test(value))
-            ? "First Name must be in characters!"
+            ? "Middle Name must be in characters!"
             : (value.length > 20) 
-            ? "First Name must be less than 20 characters long!" 
-            : "";
-       break;
-      case "MiddleName":
-        errors.MiddleName =
-          (value.length == 0) 
-          ? "" 
-          : (!validNameRegex.test(value))
-          ? "Middle Name must be in characters!"
-          : (value.length > 20) 
-          ? "Middle Name must be less than 20 characters long!" 
-          : "";
-      break;
-      case "LastName":
-        errors.LastName =
-          (value.length == 0) 
-          ? "" 
-          : (!validNameRegex.test(value))
-          ? "Last Name must be in characters!"
-          : (value.length > 20) 
-          ? "Last Name must be less than 20 characters long!" 
-          : "";
-        break;
-      case "Email":
-        errors.Email = validEmailRegex.test(value)
-          ? ""
-          : "Email is not valid!";
-        break;
-      case "Type":
-        errors.Type =  value === "default" ? "Type is required!" : "";
-        break;
-      case "countryOfPractice":
-        errors.countryOfPractice =
-          value === "default" ? "Country is required!" : "";
-        break;
-      case "PhoneNumber":
-        errors.PhoneNumber =
-          value.length < 10 || value.length > 13
-            ? "phone number must be between 10 and 13 digits"
+            ? "Middle Name must be less than 20 characters long!" 
             : "";
         break;
-      case "Title":
-          errors.Title =
+        case "LastName":
+          error.LastName =
             (value.length == 0) 
             ? "" 
-            : (value.length < 4)
-            ? "Title is Required" : "";
-        break;
-      case "Address":
-          errors.Address =
-            (value.length == 0) 
-            ? "" 
-            : (value.length < 2)
-            ? "Address is Required" : "";
-        break;
-      case "Street":
-          errors.Street =
-          (value.length == 0) 
-          ? "" 
-          : (value.length < 2)
-          ? "Street is Required" : "";
-        break;
-      case "City":
-          errors.City =
-            (value.length == 0) 
-              ? "" 
-              : (!validNameRegex.test(value))
-              ? "City Name must be in characters!"
-              : (value.length < 2) 
-              ? "City is Required" : "";
-        break;
-      case "State":
-          errors.State =
-              (value.length == 0) 
-              ? "" 
-              : (!validNameRegex.test(value))
-              ? "State Name must be in characters!"
-              : (value.length < 2) 
-              ? "State is Required" : "";
-        break;
-      case "ZipCode":
-          errors.ZipCode = (value.length == 0) 
-            ? "" 
-            :  value.length > 4 && value.length < 10
-            ? ""
-            : "Zipcode is not valid!";
+            : (!validNameRegex.test(value))
+            ? "Last Name must be in characters!"
+            : (value.length > 20) 
+            ? "Last Name must be less than 20 characters long!" 
+            : "";
           break;
-      case "Website":
-          errors.Website = 
-              (value.length == 0) 
-              ? "" 
-              : validUrlRegex.test(value)
+        case "lawFirmSize":
+          error.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
+          break;
+
+        case "countryOfPractice":
+          error.countryOfPractice =
+            value === "default" ? "Country is required!" : "";
+          break;
+        
+        case "Title":
+            error.Title =
+              value.length == 0 ? "Title is Required" : "";
+          break;
+       
+        default:
+          break;
+      }
+      console.log(error)
+    }
+    const HandleAddressChange=(e)=>{
+      e.persist()
+      address = {...address, [e.target.name]:e.target.value}
+      let newState = this.state
+      newState.Address[e.target.id]=address
+    }
+    const handleMultipleChange = (e) => {
+      e.persist()
+      let list = this.state
+      const { id , value, name } = e.target  
+      list[name][id] = value
+      this.setState(list)
+      switch (name) {
+        
+        case "Email":
+          errors.Email[id] = validEmailRegex.test(value)
+            ? ""
+            : "Email is not valid!";
+          break;
+        
+        case "PhoneNumber":
+          errors.PhoneNumber[id] =
+            value.length < 10 || value.length > 13
+              ? "phone number must be between 10 and 13 digits"
+              : "";
+          break;
+
+        case "Website":
+            errors.Website[id] = validUrlRegex.test(value)
               ? ""
               : "Website is not valid!";
+            break;
+        default:
           break;
-      default:
-        break;
-    }
-    setError({ ...errors });
-  }
-  const handleMultipleChange = (e, index) => {
-      const { name, value } = e.target;
-      const list = [...inputList];
-      list[name][index] = value;
-      setInputList(list); 
-  }
-  
-
-  const handleImageChange = e => {
-    //setState(st=>({...st,[e.target.name]:e.target.value}))
-    }
-   const addFeild = (type) => {
-    let list = inputList
-      if(type==="Email"){
-        list.Email.push("")
-        setInputList(list)
-      }else
-      if(type==="Address"){
-        list.Address.push("")
-        setInputList(list)
-      }else if(type==="Number"){
-        list.Number.push("")
-        setInputList(list)
       }
-      let newState = state
-      newState= [state, inputList]
-      setState(newState)
-   
-  }
-const imageHandler = {
-  name: 'file',
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+      console.log(error)
     }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+    
   
- const AddCompanyHandler = ()=>{
-   api.post('/company/create', {companyData})
-   setModal(false)
- }
-
- const companyDataHandler=(e)=>{
-  e.persist()
-  /*
-  console.log(e.target.value)
-  if (["Address","Email", "Number"].includes(e.target.className) ) {
-    let list = inputList
-    const path = e.target.className
-    list.path[e.target.dataset.id] = e.target.value
-    console.log(list)
-    setInputList({list})
-    let newState = [...state]
-    newState.push(...inputList)
-    setState(newState)
-  } else */ {
-  setcompanyData(st=>({...st,[e.target.name]:e.target.value}))
-  }
- }
-
-    const handleSubmit = e => {
-        e.preventDefault()
-        if(!display){
-          const validateForm = (error) => {
-            let valid = true;
-            Object.values(error).forEach((val) => val.length > 0 && (valid = false));
-            return valid;
-          };
-        if (validateForm(error)) {
-          checkValidity();
-        } else {
-          setDisplay(true)
-          return notification.warning({
-            message: "Failed to Add Person.",
-          });
+    const handleImageChange = e => {
+      //this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      }
+     const addFeild = (type) => {
+      let list = this.state
+        if(type==="Email"){
+          list.Email.push("")
+          this.setState(list)
+        }else
+        if(type==="Address"){
+          list.Address.push("")
+          this.setState(list)
+        }else if(type==="Number"){
+          list.Number.push("")
+          this.setState(list)
+        }else if(type==="Website"){
+          list.Website.push("")
+          this.setState(list)
         }
-      }
-
-        // if(editMode){
-        //     dispatch(updateBlog({id:state._id,body:state}))
-        // }else{
-        //   api.post('contact/create', state)
-        // }
+        console.log(this.state[type])
+     
     }
-
-    function checkValidity() {
-      if (!Object.keys(state).every((k) => state[k] !== "")) {
-        setDisplay(true)
-        return notification.warning({
-          message: "Fields Should Not Be Empty",
-        });
-      } else {
-        api.post('contact/create', state)
-        props.history.goBack()
+  const imageHandler = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
       }
-    }
-
-    return (
-      <>
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+    
+   const AddCompanyHandler = ()=>{
+    // api.post('/company/create', {companyData})
+     this.setState({modal : false})
+  
+   }
+   const handleDelete = (e)=>{
+     e.persist()
+      const { name , id } = e.target
+      let newState = this.state
+      newState[name].splice(id, 1)
+      this.setState(newState)
+      console.log(this.state)
+   }
+  
+   
+      
+      const handleSubmit = e => {
+          e.preventDefault()
+          if(editMode){
+             //  dispatch(updateBlog({id:this.state._id,body:this.state}))
+          }else{
+             api.post('contact/create', this.state)
+          }
+          this.props.history.goBack()
+      }
+      return (
+        <>
         <div className='form-width'>
           <div className="card p-4">
             <Form className="form-details">
@@ -323,21 +242,8 @@ const imageHandler = {
               </Upload><br></br>
             <Form.Group controlId="formGroupPrefix">
               <Form.Label>Prefix</Form.Label>
-              <select    
-                required
-                name='Prefix'
-                onChange={handleChange}
-                value={state['Prefix']}
-                style={{"border-radius": "5px"}}
-                >
-                <option value="default">Prefix</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Miss.">Miss.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="Dr.">Dr.</option>
-                <option value="Gov.">Gov.</option>
-                <option value="Prof.">Prof.</option>
-              </select>
+              <Form.Control name='Prefix' type="text" placeholder="Prefix" 
+              value={res.prefix} onChange={handleChange}/>
             </Form.Group>
             <p className="help-block text-danger">{error.Prefix}</p>
           
@@ -345,8 +251,8 @@ const imageHandler = {
               <Col>
                 <Form.Group controlId="formGroupFirstName">
                   <Form.Label>First Name</Form.Label>
-                  <Form.Control required name='FirstName' type="text" placeholder="First Name" 
-                  value={state['FirstName']} onChange={handleChange}/>
+                  <Form.Control name='FirstName' type="text" placeholder="First Name" 
+                  value={res.firstName} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
               </Col>
@@ -354,7 +260,7 @@ const imageHandler = {
                 <Form.Group controlId="formGroupMiddleName">
                   <Form.Label>Middle Name</Form.Label>
                   <Form.Control name='MiddleName' type="text" placeholder="Middle Name" 
-                  value={state['MiddleName']} onChange={handleChange}/>
+                  value={res.middleName} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.MiddleName}</p>
               </Col>
@@ -362,7 +268,7 @@ const imageHandler = {
                 <Form.Group controlId="formGroupLastName">
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control name='LastName' type="text" placeholder="Last Name" 
-                  value={state['LastName']} onChange={handleChange}/>
+                  value={res.lastName} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.LastName}</p>
               </Col>
@@ -372,434 +278,117 @@ const imageHandler = {
             <Col>
               <Form.Group controlId="formGroupCompany">
                 <Form.Label>Company</Form.Label>
-                <Form.Control as="select">
+                <Form.Control as="select" onChange={handleChange}>
                   {options}
                 </Form.Control>
               </Form.Group>
             </Col>
           </Row>
-          <div className="form-add mb-4">
-              <span onClick={() => setModal(true)}>Add Company</span>
-          </div>
-            <DynamicFeilds type={"Email"} name={"Email"} text={"Email"} error={error.Email} inputList={inputList.Email} change={handleChange}></DynamicFeilds>
+          <Button onClick={() => this.setState({modal : true})}>Add Company</Button>
+            
+            <DynamicFeilds type={"Email"} name={"Email"} text={"Email"} error={errors.Email} inputList={this.state.Email} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
             </div>
-
-            <DynamicFeilds type={"number"} name={"PhoneNumber"} text={"Phone Number"} error={error.PhoneNumber} inputList={inputList.Number} change={handleChange}></DynamicFeilds>
-            <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
-            </div>
-
             <Row>
               <Col>
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
-                  <Form.Control required name='Title' type="text" placeholder="Title" 
-                  value={state['Title']} onChange={handleChange}/>
+                  <Form.Control name='Title' type="text" placeholder="Title" 
+                  value={res.title} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
               </Col>
-              <Col>
-              <Form.Group controlId="formGroupPrefix">
-                <Form.Label>Type</Form.Label>
-                <select    
-                  required
-                  name='Type'
-                  onChange={handleChange}
-                  value={state['Type']}
-                  style={{"border-radius": "5px"}}
-                  >
-                  <option value="default">Type</option>
-                  <option value="work">work</option>
-                </select>
-              </Form.Group>
-              <p className="help-block text-danger">{error.Type}</p>
-              </Col>
-            </Row>      
-
-            <Form.Group controlId="formGroupWebsite">
-              <Form.Label>Website</Form.Label>
-              <Form.Control required name='Website' type="text" placeholder="Website" 
-              value={state['Website']} onChange={handleChange}/>
-            </Form.Group>
-            <p className="help-block text-danger">{error.Website}</p>
-
+            </Row>
+  
+            
+            <DynamicFeilds type={"Number"} name={"PhoneNumber"} text={"Phone Number"} error={errors.PhoneNumber} inputList={this.state.Number} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <div className="form-add mb-4">
+              <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
+            </div>
+            <DynamicFeilds type={"Website"} name={"Website"} text={"Website"} error={errors.Website} inputList={this.state.Website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <div className="form-add mb-4">
+              <span onClick={()=>addFeild("Number")}>Add a Website</span>
+            </div>
+            <p className="help-block text-danger">{errors.Website}</p>
+  
             <p style={{"color" : "#4e4e91"}}><b>Address</b></p>
-            <Form.Group controlId="formGroupStreet">
-              <Form.Label>Street</Form.Label>
-              <Form.Control required name='Street' type="text" placeholder="Street" 
-              value={state['Street']} onChange={handleChange}/>
-            </Form.Group>
-            <p className="help-block text-danger">{error.Street}</p>
-
+            {
+              this.state.Address.map((value, index)=>{
+                return <div>
+                   <Form.Row>
+              <Col>
+              <Form.Group controlId="formGroupCompany">
+                <Form.Label>Type</Form.Label>
+                <Form.Control as="select" onChange={HandleAddressChange}>
+                  <option>Work</option>
+                  <option>Home</option>
+                </Form.Control>
+              </Form.Group>
+                
+              </Col>
+              <Col>
+              <Form.Group controlId="formGroupStreet">
+                  <Form.Label>Street</Form.Label>
+                  <Form.Control name='Street' type="text" placeholder="Street" 
+                  onChange={HandleAddressChange}/>
+                 </Form.Group>
+            <p className="help-block text-danger">{errors.Street[index]}</p>
+              </Col>
+              
+            </Form.Row>
             <Form.Row>
               <Col>
                 <Form.Group controlId="formGroupCity">
                   <Form.Label>City</Form.Label>
-                  <Form.Control required name='City' type="text" placeholder="City" 
-                  value={state['City']} onChange={handleChange}/>
+                  <Form.Control name='City' type="text" placeholder="City" 
+                  value={this.state['City']} onChange={HandleAddressChange}/>
                 </Form.Group>
-                <p className="help-block text-danger">{error.City}</p>
+                <p className="help-block text-danger">{errors.City[index]}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupState">
                   <Form.Label>State</Form.Label>
-                  <Form.Control required name='State' type="text" placeholder="State" 
-                  value={state['State']} onChange={handleChange}/>
+                  <Form.Control name='state' type="text" placeholder="State" 
+                   onChange={HandleAddressChange}/>
                 </Form.Group>
-                <p className="help-block text-danger">{error.State}</p>
+                <p className="help-block text-danger">{errors.state}</p>
               </Col>
               <Col>
                 <Form.Group controlId="formGroupZipCode">
                   <Form.Label>ZipCode</Form.Label>
-                  <Form.Control required name='ZipCode' type="number" placeholder="ZipCode" 
-                  value={state['ZipCode']} onChange={handleChange}/>
+                  <Form.Control name='ZipCode' type="text" placeholder="ZipCode" 
+                  value={this.state['ZipCode']} onChange={HandleAddressChange}/>
                 </Form.Group>
-                <p className="help-block text-danger">{error.ZipCode}</p>
+                <p className="help-block text-danger">{errors.ZipCode[index]}</p>
               </Col>
+              <Button id={index} name="Address" onClick={handleDelete}>-</Button>
             </Form.Row>
-              <Form.Label>Country</Form.Label>
-                <select
-                          id="country"
-                          name="countryOfPractice"
-                          required="required"
-                          onChange={handleChange}
-                          value={state["countryOfPractice"]}
-                          style={{"border-radius": "5px"}}
-                        >
-                          <option value="default">Country</option>
-                          <option value="Afganistan">Afghanistan</option>
-                          <option value="Albania">Albania</option>
-                          <option value="Algeria">Algeria</option>
-                          <option value="American Samoa">American Samoa</option>
-                          <option value="Andorra">Andorra</option>
-                          <option value="Angola">Angola</option>
-                          <option value="Anguilla">Anguilla</option>
-                          <option value="Antigua & Barbuda">
-                            Antigua & Barbuda
-                          </option>
-                          <option value="Argentina">Argentina</option>
-                          <option value="Armenia">Armenia</option>
-                          <option value="Aruba">Aruba</option>
-                          <option value="Australia">Australia</option>
-                          <option value="Austria">Austria</option>
-                          <option value="Azerbaijan">Azerbaijan</option>
-                          <option value="Bahamas">Bahamas</option>
-                          <option value="Bahrain">Bahrain</option>
-                          <option value="Bangladesh">Bangladesh</option>
-                          <option value="Barbados">Barbados</option>
-                          <option value="Belarus">Belarus</option>
-                          <option value="Belgium">Belgium</option>
-                          <option value="Belize">Belize</option>
-                          <option value="Benin">Benin</option>
-                          <option value="Bermuda">Bermuda</option>
-                          <option value="Bhutan">Bhutan</option>
-                          <option value="Bolivia">Bolivia</option>
-                          <option value="Bonaire">Bonaire</option>
-                          <option value="Bosnia & Herzegovina">
-                            Bosnia & Herzegovina
-                          </option>
-                          <option value="Botswana">Botswana</option>
-                          <option value="Brazil">Brazil</option>
-                          <option value="British Indian Ocean Ter">
-                            British Indian Ocean Ter
-                          </option>
-                          <option value="Brunei">Brunei</option>
-                          <option value="Bulgaria">Bulgaria</option>
-                          <option value="Burkina Faso">Burkina Faso</option>
-                          <option value="Burundi">Burundi</option>
-                          <option value="Cambodia">Cambodia</option>
-                          <option value="Cameroon">Cameroon</option>
-                          <option value="Canada">Canada</option>
-                          <option value="Canary Islands">Canary Islands</option>
-                          <option value="Cape Verde">Cape Verde</option>
-                          <option value="Cayman Islands">Cayman Islands</option>
-                          <option value="Central African Republic">
-                            Central African Republic
-                          </option>
-                          <option value="Chad">Chad</option>
-                          <option value="Channel Islands">
-                            Channel Islands
-                          </option>
-                          <option value="Chile">Chile</option>
-                          <option value="China">China</option>
-                          <option value="Christmas Island">
-                            Christmas Island
-                          </option>
-                          <option value="Cocos Island">Cocos Island</option>
-                          <option value="Colombia">Colombia</option>
-                          <option value="Comoros">Comoros</option>
-                          <option value="Congo">Congo</option>
-                          <option value="Cook Islands">Cook Islands</option>
-                          <option value="Costa Rica">Costa Rica</option>
-                          <option value="Cote DIvoire">Cote DIvoire</option>
-                          <option value="Croatia">Croatia</option>
-                          <option value="Cuba">Cuba</option>
-                          <option value="Curaco">Curacao</option>
-                          <option value="Cyprus">Cyprus</option>
-                          <option value="Czech Republic">Czech Republic</option>
-                          <option value="Denmark">Denmark</option>
-                          <option value="Djibouti">Djibouti</option>
-                          <option value="Dominica">Dominica</option>
-                          <option value="Dominican Republic">
-                            Dominican Republic
-                          </option>
-                          <option value="East Timor">East Timor</option>
-                          <option value="Ecuador">Ecuador</option>
-                          <option value="Egypt">Egypt</option>
-                          <option value="El Salvador">El Salvador</option>
-                          <option value="Equatorial Guinea">
-                            Equatorial Guinea
-                          </option>
-                          <option value="Eritrea">Eritrea</option>
-                          <option value="Estonia">Estonia</option>
-                          <option value="Ethiopia">Ethiopia</option>
-                          <option value="Falkland Islands">
-                            Falkland Islands
-                          </option>
-                          <option value="Faroe Islands">Faroe Islands</option>
-                          <option value="Fiji">Fiji</option>
-                          <option value="Finland">Finland</option>
-                          <option value="France">France</option>
-                          <option value="French Guiana">French Guiana</option>
-                          <option value="French Polynesia">
-                            French Polynesia
-                          </option>
-                          <option value="French Southern Ter">
-                            French Southern Ter
-                          </option>
-                          <option value="Gabon">Gabon</option>
-                          <option value="Gambia">Gambia</option>
-                          <option value="Georgia">Georgia</option>
-                          <option value="Germany">Germany</option>
-                          <option value="Ghana">Ghana</option>
-                          <option value="Gibraltar">Gibraltar</option>
-                          <option value="Great Britain">Great Britain</option>
-                          <option value="Greece">Greece</option>
-                          <option value="Greenland">Greenland</option>
-                          <option value="Grenada">Grenada</option>
-                          <option value="Guadeloupe">Guadeloupe</option>
-                          <option value="Guam">Guam</option>
-                          <option value="Guatemala">Guatemala</option>
-                          <option value="Guinea">Guinea</option>
-                          <option value="Guyana">Guyana</option>
-                          <option value="Haiti">Haiti</option>
-                          <option value="Hawaii">Hawaii</option>
-                          <option value="Honduras">Honduras</option>
-                          <option value="Hong Kong">Hong Kong</option>
-                          <option value="Hungary">Hungary</option>
-                          <option value="Iceland">Iceland</option>
-                          <option value="Indonesia">Indonesia</option>
-                          <option value="India">India</option>
-                          <option value="Iran">Iran</option>
-                          <option value="Iraq">Iraq</option>
-                          <option value="Ireland">Ireland</option>
-                          <option value="Isle of Man">Isle of Man</option>
-                          <option value="Israel">Israel</option>
-                          <option value="Italy">Italy</option>
-                          <option value="Jamaica">Jamaica</option>
-                          <option value="Japan">Japan</option>
-                          <option value="Jordan">Jordan</option>
-                          <option value="Kazakhstan">Kazakhstan</option>
-                          <option value="Kenya">Kenya</option>
-                          <option value="Kiribati">Kiribati</option>
-                          <option value="Korea North">Korea North</option>
-                          <option value="Korea Sout">Korea South</option>
-                          <option value="Kuwait">Kuwait</option>
-                          <option value="Kyrgyzstan">Kyrgyzstan</option>
-                          <option value="Laos">Laos</option>
-                          <option value="Latvia">Latvia</option>
-                          <option value="Lebanon">Lebanon</option>
-                          <option value="Lesotho">Lesotho</option>
-                          <option value="Liberia">Liberia</option>
-                          <option value="Libya">Libya</option>
-                          <option value="Liechtenstein">Liechtenstein</option>
-                          <option value="Lithuania">Lithuania</option>
-                          <option value="Luxembourg">Luxembourg</option>
-                          <option value="Macau">Macau</option>
-                          <option value="Macedonia">Macedonia</option>
-                          <option value="Madagascar">Madagascar</option>
-                          <option value="Malaysia">Malaysia</option>
-                          <option value="Malawi">Malawi</option>
-                          <option value="Maldives">Maldives</option>
-                          <option value="Mali">Mali</option>
-                          <option value="Malta">Malta</option>
-                          <option value="Marshall Islands">
-                            Marshall Islands
-                          </option>
-                          <option value="Martinique">Martinique</option>
-                          <option value="Mauritania">Mauritania</option>
-                          <option value="Mauritius">Mauritius</option>
-                          <option value="Mayotte">Mayotte</option>
-                          <option value="Mexico">Mexico</option>
-                          <option value="Midway Islands">Midway Islands</option>
-                          <option value="Moldova">Moldova</option>
-                          <option value="Monaco">Monaco</option>
-                          <option value="Mongolia">Mongolia</option>
-                          <option value="Montserrat">Montserrat</option>
-                          <option value="Morocco">Morocco</option>
-                          <option value="Mozambique">Mozambique</option>
-                          <option value="Myanmar">Myanmar</option>
-                          <option value="Nambia">Nambia</option>
-                          <option value="Nauru">Nauru</option>
-                          <option value="Nepal">Nepal</option>
-                          <option value="Netherland Antilles">
-                            Netherland Antilles
-                          </option>
-                          <option value="Netherlands">
-                            Netherlands (Holland, Europe)
-                          </option>
-                          <option value="Nevis">Nevis</option>
-                          <option value="New Caledonia">New Caledonia</option>
-                          <option value="New Zealand">New Zealand</option>
-                          <option value="Nicaragua">Nicaragua</option>
-                          <option value="Niger">Niger</option>
-                          <option value="Nigeria">Nigeria</option>
-                          <option value="Niue">Niue</option>
-                          <option value="Norfolk Island">Norfolk Island</option>
-                          <option value="Norway">Norway</option>
-                          <option value="Oman">Oman</option>
-                          <option value="Pakistan">Pakistan</option>
-                          <option value="Palau Island">Palau Island</option>
-                          <option value="Palestine">Palestine</option>
-                          <option value="Panama">Panama</option>
-                          <option value="Papua New Guinea">
-                            Papua New Guinea
-                          </option>
-                          <option value="Paraguay">Paraguay</option>
-                          <option value="Peru">Peru</option>
-                          <option value="Phillipines">Philippines</option>
-                          <option value="Pitcairn Island">
-                            Pitcairn Island
-                          </option>
-                          <option value="Poland">Poland</option>
-                          <option value="Portugal">Portugal</option>
-                          <option value="Puerto Rico">Puerto Rico</option>
-                          <option value="Qatar">Qatar</option>
-                          <option value="Republic of Montenegro">
-                            Republic of Montenegro
-                          </option>
-                          <option value="Republic of Serbia">
-                            Republic of Serbia
-                          </option>
-                          <option value="Reunion">Reunion</option>
-                          <option value="Romania">Romania</option>
-                          <option value="Russia">Russia</option>
-                          <option value="Rwanda">Rwanda</option>
-                          <option value="St Barthelemy">St Barthelemy</option>
-                          <option value="St Eustatius">St Eustatius</option>
-                          <option value="St Helena">St Helena</option>
-                          <option value="St Kitts-Nevis">St Kitts-Nevis</option>
-                          <option value="St Lucia">St Lucia</option>
-                          <option value="St Maarten">St Maarten</option>
-                          <option value="St Pierre & Miquelon">
-                            St Pierre & Miquelon
-                          </option>
-                          <option value="St Vincent & Grenadines">
-                            St Vincent & Grenadines
-                          </option>
-                          <option value="Saipan">Saipan</option>
-                          <option value="Samoa">Samoa</option>
-                          <option value="Samoa American">Samoa American</option>
-                          <option value="San Marino">San Marino</option>
-                          <option value="Sao Tome & Principe">
-                            Sao Tome & Principe
-                          </option>
-                          <option value="Saudi Arabia">Saudi Arabia</option>
-                          <option value="Senegal">Senegal</option>
-                          <option value="Seychelles">Seychelles</option>
-                          <option value="Sierra Leone">Sierra Leone</option>
-                          <option value="Singapore">Singapore</option>
-                          <option value="Slovakia">Slovakia</option>
-                          <option value="Slovenia">Slovenia</option>
-                          <option value="Solomon Islands">
-                            Solomon Islands
-                          </option>
-                          <option value="Somalia">Somalia</option>
-                          <option value="South Africa">South Africa</option>
-                          <option value="Spain">Spain</option>
-                          <option value="Sri Lanka">Sri Lanka</option>
-                          <option value="Sudan">Sudan</option>
-                          <option value="Suriname">Suriname</option>
-                          <option value="Swaziland">Swaziland</option>
-                          <option value="Sweden">Sweden</option>
-                          <option value="Switzerland">Switzerland</option>
-                          <option value="Syria">Syria</option>
-                          <option value="Tahiti">Tahiti</option>
-                          <option value="Taiwan">Taiwan</option>
-                          <option value="Tajikistan">Tajikistan</option>
-                          <option value="Tanzania">Tanzania</option>
-                          <option value="Thailand">Thailand</option>
-                          <option value="Togo">Togo</option>
-                          <option value="Tokelau">Tokelau</option>
-                          <option value="Tonga">Tonga</option>
-                          <option value="Trinidad & Tobago">
-                            Trinidad & Tobago
-                          </option>
-                          <option value="Tunisia">Tunisia</option>
-                          <option value="Turkey">Turkey</option>
-                          <option value="Turkmenistan">Turkmenistan</option>
-                          <option value="Turks & Caicos Is">
-                            Turks & Caicos Is
-                          </option>
-                          <option value="Tuvalu">Tuvalu</option>
-                          <option value="Uganda">Uganda</option>
-                          <option value="United Kingdom">United Kingdom</option>
-                          <option value="Ukraine">Ukraine</option>
-                          <option value="United Arab Erimates">
-                            United Arab Emirates
-                          </option>
-                          <option value="United States of America">
-                            United States of America
-                          </option>
-                          <option value="Uraguay">Uruguay</option>
-                          <option value="Uzbekistan">Uzbekistan</option>
-                          <option value="Vanuatu">Vanuatu</option>
-                          <option value="Vatican City State">
-                            Vatican City State
-                          </option>
-                          <option value="Venezuela">Venezuela</option>
-                          <option value="Vietnam">Vietnam</option>
-                          <option value="Virgin Islands (Brit)">
-                            Virgin Islands (Brit)
-                          </option>
-                          <option value="Virgin Islands (USA)">
-                            Virgin Islands (USA)
-                          </option>
-                          <option value="Wake Island">Wake Island</option>
-                          <option value="Wallis & Futana Is">
-                            Wallis & Futana Is
-                          </option>
-                          <option value="Yemen">Yemen</option>
-                          <option value="Zaire">Zaire</option>
-                          <option value="Zambia">Zambia</option>
-                          <option value="Zimbabwe">Zimbabwe</option>
-                        </select>
-              <p className="help-block text-danger">{error.countryOfPractice}</p>
+        
+                </div>
+              })
+            }
             
-            <DynamicFeilds type={"Address"} name={"Address"} text={"Address"} inputList={inputList.Address} error={error.Address} change={handleChange}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Address")}>Add an Address</span>
             </div>
-
-            <Button type="submit" onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
+  
+            <Button onClick={handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
           <Modal
-          title="Add Company"
           centered
-          visible={modal}
+          visible={this.state.modal}
           onOk={AddCompanyHandler}
-          onCancel={() => setModal(false)}
+          onCancel={() => this.setState({modal : false})}
         >
          <AddCompany></AddCompany>
-
+  
         </Modal>
           </div>
       </div>
     </>  
-    )
+  
+           )  
+  }
 }
-
-export default AddEditContact
-
+export default newPerson
