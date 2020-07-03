@@ -30,28 +30,29 @@ function CompanyView(props){
         const rte = response.data.data.billingCustomRate
         const adrs = response.data.data.address.map((value, index)=>{
  
-            return <div  key ={index}>
+            return <div className="table-span-light" key ={index}>
+                <p style={{"font-size": "15px"}}>{value.type}</p>
                 <p>{value.street}</p>
                 <p>{value.city}</p>
                 <p>{value.state}</p>
                 <p>{value.zipCode}</p>
                 <p>{value.country}</p>
-                <p>{value.type}</p>
+                
             </div>
             })
             const Web = response.data.data.website.map((value, index)=>{
     
-                return <div key={index}>
+                return <div className="table-span-light" key={index}>
                     <p>{value}</p>
                 </div>
             })
             const mail = response.data.data.emailAddress.map((value, index)=>{
-                return <div key={index}>
+                return <div className="table-span-light" key={index}>
                     <p>{value}</p>
                 </div>
             })
             const Num = response.data.data.phone.map((value, index)=>{
-                return <div key={index}>
+                return <div className="table-span-light" key={index}>
                     <p>{value.number}</p>
                 </div>
             })
@@ -64,19 +65,42 @@ function CompanyView(props){
         setWebsite(Web)
       }
       
- return<div>
-            <Card style={{ width: "100%" }}>{Title}</Card>
-            <Card title="Contact Details" style={{ width: "100%" }}>
-                <p>Email Address : </p> {Email}
-                <p>Phone Number : </p> {Number}
-                <p>Website : </p> {Website}
-                <p>Address : </p> {address}
-                
+ return<div> 
+            <Card title="Contact Details" className="form-width2 mb-4">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Email Address</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{Email}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Phone Number</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{Number}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Website</span></td>
+                            <td className="border-0"><span className="table-span-light">{Website}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Address</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{address}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </Card>
-            <Card title="Billing Information" style={{ width: 300 }}>
-                <p>ID : </p> {ID}
-                <p>Rate : </p> {Rate}
-                
+            <Card title="Billing Information" className="form-width2 mb-4">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">ID</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{ID}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{Rate}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </Card>
         </div>
 

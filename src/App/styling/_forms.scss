@@ -16,7 +16,14 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     outline: none;
 }
 
-
+.ant-card-head-title{
+    padding: 10px 0px !important;
+    font-weight: 700;
+}
+.ant-card-head {
+    min-height: 40px !important;
+    max-height: 40px;
+}
 
 .form-add-button{
     height: 30px;
@@ -33,6 +40,9 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 .form-width{
     width: 75% !important;
+}
+.form-width2{
+    width: 50% !important;
 }
 .form-add::before {
     content: "+";
@@ -63,7 +73,6 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 .table-span-light{
     font-weight: 600;
-    opacity: 0.6;
 }
 .form-header-text{
     color: #004;
@@ -74,7 +83,8 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 .form-header-container{
     border-bottom:  1px solid #c5c5c5;
 }
-    
+
+
 
 .form-details{
     label {
@@ -130,7 +140,7 @@ select {
 	}
 }
 @media only screen and (max-width: 767px) {
-    .form-width{
+    .form-width, .form-width2{
         width: 100% !important;
     }
 }

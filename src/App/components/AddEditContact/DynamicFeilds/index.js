@@ -6,11 +6,11 @@ import { Form,Button, Row , Col } from "react-bootstrap";
 class DynamicFeilds extends React.Component {
   
   onClick = (e) => {
-    console.log('from onclick')
     this.props.delete(e)
   }
+
     render(){
-    console.log("Dynamic Called")
+    console.log(this.props.error)
     return (
         <div >
             {
@@ -19,12 +19,17 @@ class DynamicFeilds extends React.Component {
                
                   return (
                     <div key={idx}>
-                      <Form.Group controlId={this.props.type}>
+                      <Form.Row>
+                      <Col>
+                      <Form.Group controlId={idx}>
                         <Form.Label>{this.props.text}</Form.Label>
-                         <Form.Control name={this.props.type} className={this.props.type} type="text" placeholder={this.props.text} 
+                         <Form.Control name={this.props.name} type={this.props.type} className={this.props.type} placeholder={this.props.text} 
                          onChange={this.props.change}/>
                       </Form.Group>
-                      <Button id={idx} name={this.props.type} onClick={this.onClick}>-</Button>
+                      </Col>
+                      <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.type} onClick={this.onClick}>-</Button>
+                      </Form.Row>
+                      
                       <p className="help-block text-danger">{this.props.error[idx]}</p>
                     </div>
                   )
