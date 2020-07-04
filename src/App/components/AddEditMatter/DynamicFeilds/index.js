@@ -45,6 +45,7 @@ class DynamicFeilds extends React.Component {
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact" id={idx} defaultValue={editRes[idx].relationship} onChange={this.props.change} />
           </Form.Group>
+ <br></br>
             </div>
           )
         })}
@@ -74,6 +75,7 @@ class DynamicFeilds extends React.Component {
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact"   onChange={this.props.change}  />
           </Form.Group>
+ <br></br>
             </div>
           )
         })}
