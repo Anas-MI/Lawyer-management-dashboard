@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Table,Button,Input, Space } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
-import { useDispatch, useSelector } from "react-redux";
-import { getBlogs, deleteBlog,selectBlog } from "../../../store/Actions";
 import api from '../../../resources/api'
 
 let response={}
 let tableData=[]
-
 
 class matterManage extends React.Component{
    constructor(props){
@@ -19,21 +16,24 @@ class matterManage extends React.Component{
 
    async componentDidMount(){
     await api.get('/matter/showall').then(res=>response=res.data.data)
+    response.map((value , index)=>{
+      let newData = {
+        key : index,
+        MatterName: value.MatterName,
+        Client: value.client,
+        MatterNotification : value.matterDescription,
+        PractiseArea : value.practiseArea,
+        OpenDate : value.openDate
+      }
+     
+        tableData.push(newData)
+    })
+    if(this.state.tableData!=[]){
+      this.setState({tableData : tableData})
+    }
  
    }
-   componentWillUpdate(){
-     response.map((value , index)=>{
-    let newData = {
-      key : index,
-      MatterName: value.MatterName,
-      Client: value.client,
-      MatterNotification : value.matterDescription,
-      PractiseArea : value.practiseArea,
-      OpenDate : value.openDate
-    }
-      tableData.push(newData)
-  })
-   }
+  
    render(){
 
 
@@ -117,7 +117,9 @@ class matterManage extends React.Component{
 
   const handleEdit = record => {
     //   dispatch(selectBlog(record))
-      this.props.history.push('/manage/Matter/edit')
+      const data = response[record.key]
+      console.log(data)
+      this.props.history.push('/manage/Matter/edit',data)
   }
   
   const handleDelete = record => {
@@ -131,17 +133,21 @@ class matterManage extends React.Component{
         title: "Matter Name",
         dataIndex: "MatterName",
         key: "_id",
-        ...getColumnSearchProps('MatterName'),
+        defaultSortOrder: 'descend',
+       ...getColumnSearchProps('MatterName'),
         sorter: (a, b ,c) => ( 
           c==='ascend'
           ?a.description<b.description
           :a.description>b.description
-        )
+        ),
+    
+        
     },
     {
       title: "Client",
       dataIndex: "Client",
       key: "_id",
+      defaultSortOrder: 'ascend',
       ...getColumnSearchProps('Client'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
@@ -188,9 +194,7 @@ class matterManage extends React.Component{
         key: "_id",
         render:(_,record)=>{
             return (
-                <Button color='warning' onClick={()=>handleEdit(record)}>
-                    Edit
-                </Button>
+                <Button color='warning' onClick={()=>handleEdit(record)}>Edit</Button>
             )
         }
     },
@@ -200,9 +204,7 @@ class matterManage extends React.Component{
         key: "_id",
         render:(_,record)=>{
             return (
-                <Button variant='danger' onClick={()=>handleDelete(record)}>
-                    Delete
-                </Button>
+                <Button variant='danger' onClick={()=>handleDelete(record)}>Delete</Button>
             )
         }
     },
@@ -223,9 +225,7 @@ class matterManage extends React.Component{
     this.setState({ searchText: '' });
   };
 
-const handleView = (e)=>{
-  
-      console.log(e)
+const handleView = (rec)=>{
       /*
       if(type==="Person"){
         props.history.push('/manage/contacts/add/Person')
@@ -237,19 +237,19 @@ const handleView = (e)=>{
   }
 
   return (
-    <div>
+    <div>{console.log(tableData)}
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew()}>Add Matter</Button>
       </div>
-      <Table dataSource={tableData} columns={columns} className="overflow-auto"
+      <Table dataSource={this.state.tableData} columns={columns} className="overflow-auto"
         onRow={(record, rowIndex) => {
             return {
-              onDoubleClick: event => handleView(event), // double click row
+              onDoubleClick: () => handleView(record), // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
               onMouseLeave: event => {}, // mouse leave row
             };
-          }} >
+          }}>
 
       </Table>
     </div>

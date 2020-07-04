@@ -51,6 +51,7 @@ const ContactsManage = (props) => {
       setTableData(newtableData)
       console.log(tableData)
     }) 
+    setState({tableData : tableData})
   }
   
 
@@ -229,7 +230,7 @@ const handleView = (i)=>{
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Person")}>Add Person</Button>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Company")}>Add Company</Button>
       </div>
-      <Table dataSource={tableData} columns={columns}
+      <Table dataSource={state.tableData} columns={columns}
         onRow={(record, rowIndex) => {
             return {
               onDoubleClick: () => handleView(rowIndex), // double click row
