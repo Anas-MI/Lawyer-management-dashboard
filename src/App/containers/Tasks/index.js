@@ -32,7 +32,7 @@ class Tasks extends React.Component{
   
    cancel(e) {
     console.log(e);
-    message.error('Click on No');
+    message.error('Canceled');
   }
   showModal = () => {
     this.setState({
