@@ -65,6 +65,7 @@ class customFeilds extends React.Component {
       console.log(data)
        api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(res=>console.log(res)).catch(console.log())
       this.setModal2Visible(false)
+      window.location.reload()
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
     return (
