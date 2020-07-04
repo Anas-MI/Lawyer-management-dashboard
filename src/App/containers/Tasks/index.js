@@ -54,7 +54,7 @@ class Tasks extends React.Component{
     this.setState({ loading: true });
     console.log(this.state.Data)
     if(this.state.editMode){
-      api.post('tasks/edit/'+ this.state.selected, this.state.Data)
+      api.post('tasks/edit/'+ this.state.selected, this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }else{
       api.post('/tasks/create', this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }
@@ -106,6 +106,7 @@ class Tasks extends React.Component{
     window.location.reload()
    }
   async componentDidMount(){
+    
     res = await api.get('/tasks/showall')
     ListData = res.data.data.map((value, index)=>{
       return  <tr>
@@ -152,7 +153,9 @@ class Tasks extends React.Component{
       await api.get('/matter/showall').then(res=>response=res.data.data)
        options = response.map((value , index)=>{
      return <option>{value.matterDescription}</option>
+    
     })
+    
   }
   
 
