@@ -226,14 +226,9 @@ class matterManage extends React.Component{
   };
 
 const handleView = (rec)=>{
-      /*
-      if(type==="Person"){
-        props.history.push('/manage/contacts/add/Person')
-      }else if(type==="Company"){
-        props.history.push('/manage/contacts/add/Company')
-      }
-      */
-     this.props.history.push('/view/company')
+     const id = response[rec.key]._id
+     console.log(id)
+     this.props.history.push('/view/matter', id)
   }
 
   return (
@@ -241,7 +236,7 @@ const handleView = (rec)=>{
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew()}>Add Matter</Button>
       </div>
-      <Table dataSource={this.state.tableData} columns={columns} className="overflow-auto"
+      <Table dataSource={this.state.tableData} columns={columns} 
         onRow={(record, rowIndex) => {
             return {
               onDoubleClick: () => handleView(record), // double click row
