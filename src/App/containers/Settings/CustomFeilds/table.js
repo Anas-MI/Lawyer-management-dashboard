@@ -1,4 +1,4 @@
-import { Table, Tag, Space, Button,Modal } from 'antd';
+import { Table, Tag, Space, Button,Modal, Popconfirm, message} from 'antd';
 import React from 'react'
 import {Form} from 'react-bootstrap'
 import api from '../../../../resources/api'
@@ -44,6 +44,10 @@ class tables extends React.Component{
     modal1Visible: false,
     modal2Visible: false,
   };
+  cancel(e) {
+    console.log(e);
+    message.error('Canceled');
+  }
 
 
   setModal1Visible(modal1Visible) {
@@ -82,6 +86,7 @@ class tables extends React.Component{
     console.log(newData)
        api.post('/user/update/5eecb08eaec6f1001765f8d5', newData).then(res=>console.log(res)).catch(console.log())
       this.setModal2Visible(false)
+      window.location.reload()
     }
     const HandleChange=(e)=>{
       e.persist()
@@ -100,6 +105,7 @@ class tables extends React.Component{
       newRes.customFields.splice(record.key, 1)
       console.log(newRes)
       api.post('/user/update/5eecb08eaec6f1001765f8d5', newRes)
+      window.location.reload()
     }
     const columns = [
       {
@@ -130,7 +136,16 @@ class tables extends React.Component{
         render: (text, record) => (
           <Space size="middle">
             <Button onClick={()=>handleEdit(record)} type="link">Edit</Button>
-            <Button onClick={()=>handleDelete(record)} type="link">Delete</Button>
+            <Popconfirm
+          title="Are you sure delete this task?"
+          onConfirm={()=>handleDelete(record)}
+          onCancel={this.cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="link">Delete</Button>
+        </Popconfirm>
+            
           </Space>
         ),
       },
