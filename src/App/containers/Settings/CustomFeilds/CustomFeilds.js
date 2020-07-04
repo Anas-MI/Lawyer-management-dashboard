@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs, Button,Modal , Card } from 'antd';
+import { Tabs, Button,Modal , Card, notification } from 'antd';
 import Matter from './Matter/matter'
 import Contact from './Contact/contact'
 import { Form } from 'react-bootstrap'
@@ -36,7 +36,16 @@ class customFeilds extends React.Component {
   setModal2Visible(modal2Visible) {
     this.setState({ modal2Visible });
   }
-  
+  openNotificationWithFailure = type => {
+    notification[type]({
+      message: 'Failure',
+        });
+  };
+   openNotificationWithSucces = type => {
+    notification[type]({
+      message: 'success',
+    });
+  };
 
   render() {
     const HandleChange=(e)=>{
@@ -63,8 +72,9 @@ class customFeilds extends React.Component {
         data.customFields.push(newdata)
       }
       console.log(data)
-       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(res=>console.log(res)).catch(console.log())
+       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
+      window.location.reload()
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
     return (
