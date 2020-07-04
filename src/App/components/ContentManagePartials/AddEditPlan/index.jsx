@@ -8,8 +8,14 @@ import { Form,Button } from "react-bootstrap";
 import { notification } from "antd";
 
 const AddEditPlan = (props) => {
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    planName : "",
+    list : "",
+    price: "",
+  });
   const [editMode, setEditMode] = useState(false);
+  const [display, setDisplay] = useState(false);
+  const [error, setError] = useState({});
 
   const dispatch = useDispatch();
   const selectedPlan = useSelector((state) => state.Plan.selected);
@@ -23,37 +29,100 @@ const AddEditPlan = (props) => {
     }
   }, []);
 
+  const splitChange = (e) => {
+    e.persist();
+    const {name, value} = e.target;
+    let errors = error;
+    switch (name) {
+       case "list":
+        errors.list =
+            (value.length == 0) 
+            ? "list is required"
+            : ""
+       break;
+      default:
+        break;
+    }
+    setError((st) => ({ ...st, ...errors }));
+    setState((st) => ({ ...st, [name]: value.split(',') }));
+  }
+
+
   const handleChange = (e) => {
     e.persist();
-    setState((st) => ({ ...st, [e.target.name]: e.target.value }));
+    const {name, value} = e.target;
+    let errors = error;
+    switch (name) {
+      case "planName":
+        errors.planName =
+            (value.length == 0) 
+            ? "Plan Name is Required"
+            : ""
+       break;
+       case "price":
+        errors.price =
+            (value.length == 0) 
+            ? "Price is required"
+            : ""
+       break;
+      default:
+        break;
+    }
+    setError((st) => ({ ...st, ...errors }));
+    setState((st) => ({ ...st, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (editMode) {
-      dispatch(updatePlan({id:state._id,body:state},(err,response)=>{
-        if(err){
-          notification.error(err)
-        }else{
-          notification.success(response)
-        }
-      }));
-    } else {
-      dispatch(createPlan(state,(err,response)=>{
-        if(err){
-          notification.error(err)
-        }else{
-          notification.success(response)
-        }
-      }));
+    if(!display){
+      const validateForm = (error) => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        return valid;
+      };
+      if (validateForm(error)) {
+        checkValidity();
+      } else {
+        setDisplay(true)
+        return notification.warning({
+          message: "Failed to Add New Plan",
+        });
+      }
     }
-    props.history.goBack()
   };
+
+  function checkValidity() {
+    if (!Object.keys(state).every((k) => state[k] !== "")) {
+      setDisplay(true)
+      return notification.warning({
+        message: "Fields Should Not Be Empty",
+      });
+    } else {
+      if (editMode) {
+        dispatch(updatePlan({id:state._id,body:state},(err,response)=>{
+          if(err){
+            notification.error(err)
+          }else{
+            notification.success(response)
+          }
+        }));
+      } else {
+        dispatch(createPlan(state,(err,response)=>{
+          if(err){
+            notification.error(err)
+          }else{
+            notification.success(response)
+          }
+        }));
+      }
+  props.history.goBack()
+  }
+}
 
   return (
     <div className='w-75 m-auto'>
         <h3 className='text-center' >Add New Plan</h3>
-    <Form>
+    <Form className="form-details">
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Plan Name</Form.Label>
           <Form.Control
@@ -63,6 +132,19 @@ const AddEditPlan = (props) => {
             value={state["planName"]}
             onChange={handleChange}
           />
+          <p className="help-block text-danger">{error.planName}</p>
+        </Form.Group>
+        <Form.Group controlId="formGroupEmail">
+          <Form.Label>List</Form.Label>
+          <Form.Control
+            name="list"
+            type="text"
+            placeholder="List"
+            value={state["list"]}
+            onChange={splitChange}
+          />
+          <Form.Text className="text-muted">separate list by , comma</Form.Text>
+          <p className="help-block text-danger">{error.list}</p>
         </Form.Group>
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Price</Form.Label>
@@ -73,7 +155,10 @@ const AddEditPlan = (props) => {
             value={state["price"]}
             onChange={handleChange}
           />
+          <Form.Text className="text-muted">add $ at last</Form.Text>
+          <p className="help-block text-danger">{error.price}</p>
         </Form.Group>
+        
         <Button onClick={handleSubmit}>{editMode ? "Update" : "Create"}</Button>
       </Form>
     </div>

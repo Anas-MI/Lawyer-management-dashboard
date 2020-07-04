@@ -55,7 +55,6 @@ const AddEditFeature = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if(!display){
       const validateForm = (error) => {
         let valid = true;
