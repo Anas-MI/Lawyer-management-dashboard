@@ -17,8 +17,6 @@ class DynamicFeilds extends React.Component {
       if(this.state.editMode){
         editRes=this.props.editRes.relatedContacts
       }
-      console.log("from dynamics" )
-      console.log(this.state.editRes)
     }
     render(){
     const JSX =  this.state.editMode ? <div >
@@ -32,20 +30,20 @@ class DynamicFeilds extends React.Component {
               <Col>
                     <Form.Group controlId={idx}>
                         <Form.Label>Relationship</Form.Label>
-                        <Form.Control name='Relationship' type="text" placeholder="Relationship"  onChange={this.props.change} value={editRes[idx].relationship}/>
+                        <Form.Control name="realationship"  type="text" placeholder="Relationship"  onChange={this.props.change} value={editRes[idx].relationship}/>
                     </Form.Group>
              </Col>
              <Col>
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
-                  <Form.Control as="select">
+                  <Form.Control as="select" name='contact' onChange={this.props.change}>
                     {this.props.option}
                  </Form.Control>
                  </Form.Group>
             </Col>
         </Row> 
-          <Form.Group controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Bill this contact" id={`check`} defaultValue={editRes[idx].relationship} />
+          <Form.Group controlId={idx}>
+            <Form.Check name="billThis" type="checkbox" label="Bill this contact" id={idx} defaultValue={editRes[idx].relationship} onChange={this.props.change} />
           </Form.Group>
             </div>
           )
@@ -61,20 +59,20 @@ class DynamicFeilds extends React.Component {
               <Col>
                     <Form.Group controlId={idx}>
                         <Form.Label>Relationship</Form.Label>
-                        <Form.Control name='Relationship' type="text" placeholder="Relationship"  onChange={this.props.change} />
+                        <Form.Control name='relationship' type="text" placeholder="Relationship"  onChange={this.props.change} />
                     </Form.Group>
              </Col>
              <Col>
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
-                  <Form.Control as="select">
+                  <Form.Control as="select" name="contact" onChange={this.props.change}  >
                     {this.props.option}
                  </Form.Control>
                  </Form.Group>
             </Col>
         </Row> 
-          <Form.Group controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Bill this contact" id={`check`}  />
+          <Form.Group controlId={idx}>
+            <Form.Check name="billThis" type="checkbox" label="Bill this contact"   onChange={this.props.change}  />
           </Form.Group>
             </div>
           )
