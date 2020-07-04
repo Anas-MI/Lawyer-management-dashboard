@@ -44,12 +44,17 @@ const openNotificationWithIcon=(type) =>{
     message: 'Contact Saved',
     });
 };
+const openNotificationWithfailure = type => {
+  notification[type]({
+    message: 'Failure'});
+};
+
 
 class newPerson extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], email : [], number : [], website:[], modal : false
+      address : [], emailAddress : [], phone : [], website:[], modal : false
     }
   }
   async componentDidMount(){
@@ -58,26 +63,33 @@ class newPerson extends React.Component{
      options = response.data.data.map((value,id)=>{
     return <option key={id}>{value.name}</option>
     })
-  }
-  componentWillUpdate(){
-    
+  
+{/*
     if(this.props.location.pathname == "/manage/contacts/edit/person"){
       editMode = true
-      res=this.props.location.state
-
+      res= await api.get('/contact/showall')
+      res = res.data.data[this.props.location.state]
+      console.log(res)
     }
+  */}
   }
+  componentWillUpdate(){
   
+  }
+
   handleSubmit = () => {
     console.log(this.state)
     if(editMode){
        //  dispatch(updateBlog({id:this.state._id,body:this.state}))
     }else{
-       api.post('contact/create', this.state).then(()=>openNotificationWithIcon('success')).catch(console.log)
+       api.post('contact/create', this.state).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+    }
+  
+    if(this.props.location!=undefined){
+      this.props.history.goBack()
     }
 
-
-   this.props.history.goBack()
+ 
 }
   
   render(){
@@ -233,14 +245,14 @@ class newPerson extends React.Component{
      const addFeild = (type) => {
       let list = this.state
         if(type==="Email"){
-          list.email.push("")
+          list.emailAddress.push("")
           this.setState(list)
         }else
         if(type==="Address"){
           list.address.push("")
           this.setState(list)
         }else if(type==="Number"){
-          list.number.push("")
+          list.phone.push("")
           this.setState(list)
         }else if(type==="Website"){
           list.website.push("")
@@ -358,7 +370,7 @@ class newPerson extends React.Component{
           <div className="form-add mb-4">
               <span onClick={() => this.setState({modal : true})}>Add Company</span>
           </div>            
-            <DynamicFeilds type={"email"} name={"Email"} text={"Email"} error={errors.Email} inputList={this.state.email} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"emailAddress"} name={"Email"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
             </div>
@@ -374,7 +386,7 @@ class newPerson extends React.Component{
             </Row>
   
             
-            <DynamicFeilds type={"number"} name={"phoneNumber"} text={"Phone Number"} error={errors.PhoneNumber} inputList={this.state.number} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.PhoneNumber} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
             </div>
@@ -778,7 +790,7 @@ class newPerson extends React.Component{
           onOk={AddCompanyHandler}
           onCancel={() => this.setState({modal : false})}
         >
-         <AddCompany></AddCompany>
+         <AddCompany modal={true}></AddCompany>
   
         </Modal>
           </div>
