@@ -2,9 +2,8 @@ import React from 'react'
 import { Form, Row , Button, Col } from "react-bootstrap";
 import { Upload, message,  Modal , notification, Space} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DynamicFeilds from './DynamicFeilds/index.js'
-import api from '../../../resources/api'
-import AddCompany from './AddCompany/indexModal.js'
+import DynamicFeilds from '../DynamicFeilds/index'
+import api from '../../../../resources/api'
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -22,10 +21,7 @@ let options = null
 let response = {}
 let res = ""
 let error = {
-  FirstName: "",
-  MiddleName: "",
-  LastName: "",
-  Prefix: "",
+  Name: "",
   Title:"",
 }
 let errors ={
@@ -41,7 +37,7 @@ let errors ={
 }
 const openNotificationWithIcon=(type) =>{
   notification[type]({
-    message: 'Contact Saved',
+    message: 'Company Saved',
     });
 };
 const openNotificationWithfailure = type => {
@@ -49,47 +45,38 @@ const openNotificationWithfailure = type => {
     message: 'Failure'});
 };
 
-
-class newPerson extends React.Component{
+class modalPerson extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[], modal : false
+      address : [], emailAddress : [], phone : [], website:[]
     }
   }
   async componentDidMount(){
-    response = await api.get('/company/showall')
-    
-     options = response.data.data.map((value,id)=>{
-    return <option key={id}>{value.name}</option>
-    })
   
-{/*
-    if(this.props.location.pathname == "/manage/contacts/edit/person"){
-      editMode = true
-      res= await api.get('/contact/showall')
-      res = res.data.data[this.props.location.state]
-      console.log(res)
-    }
-  */}
   }
   componentWillUpdate(){
-  
-  }
+    /*
+    if(this.props.location.pathname == "/manage/contacts/edit/person"){
+      editMode = true
+      res=this.props.location.state
 
+    }*/
+  }
+  
   handleSubmit = () => {
     console.log(this.state)
     if(editMode){
        //  dispatch(updateBlog({id:this.state._id,body:this.state}))
     }else{
-       api.post('contact/create', this.state).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+       api.post('company/create', this.state).then(()=>openNotificationWithIcon('success')).catch(err=>openNotificationWithfailure('error'))
     }
-  
     if(this.props.location!=undefined){
       this.props.history.goBack()
     }
+  
+    
 
- 
 }
   
   render(){
@@ -102,39 +89,7 @@ class newPerson extends React.Component{
 
       const { name, value, id } = e.target;
       switch (name) {
-        case "Prefix":
-          error.Prefix =  value === "default" ? "Prefix is required!" : "";
-          break;
-        case "FirstName":
-          error.FirstName =
-              (value.length == 0) 
-              ? "" 
-              : (!validNameRegex.test(value))
-              ? "First Name must be in characters!"
-              : (value.length > 20) 
-              ? "First Name must be less than 20 characters long!" 
-              : "";
-         break;
-        case "MiddleName":
-          error.MiddleName =
-            (value.length == 0) 
-            ? "" 
-            : (!validNameRegex.test(value))
-            ? "Middle Name must be in characters!"
-            : (value.length > 20) 
-            ? "Middle Name must be less than 20 characters long!" 
-            : "";
-        break;
-        case "LastName":
-          error.LastName =
-            (value.length == 0) 
-            ? "" 
-            : (!validNameRegex.test(value))
-            ? "Last Name must be in characters!"
-            : (value.length > 20) 
-            ? "Last Name must be less than 20 characters long!" 
-            : "";
-          break;
+         
         case "lawFirmSize":
           error.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
           break;
@@ -296,81 +251,35 @@ class newPerson extends React.Component{
      
       return (
         <>
-        <div className='form-width'>
+        <div className="mt-5">
           <div className="card p-4">
             <Form className="form-details">
             <div className="form-header-container mb-4">
-              <h3 className="form-header-text">Add New Person</h3>
+              <h3 className="form-header-text">Add company</h3>
             </div>
-              <h4>Personal Details</h4>
               <Upload {...imageHandler} onChange={handleImageChange}>
                 <antdButton className="form-upload-button">
                   <UploadOutlined /> Click to Upload
                 </antdButton>
               </Upload><br></br>
-              <Form.Group controlId="formGroupPrefix">
-              <Form.Label>Prefix</Form.Label>
-              <select    
-                required
-                name='Prefix'
-                onChange={handleChange}
-                value={res.Prefix}
-                style={{"border-radius": "5px"}}
-                >
-                <option value="default">Prefix</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Miss.">Miss.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="Dr.">Dr.</option>
-                <option value="Gov.">Gov.</option>
-                <option value="Prof.">Prof.</option>
-              </select>
-            </Form.Group>
-            <p className="help-block text-danger">{error.Prefix}</p>
-          
-            <p className="help-block text-danger">{error.Prefix}</p>
-          
+            
             <Form.Row>
               <Col>
                 <Form.Group controlId="formGroupFirstName">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control name='firstName' type="text" placeholder="First Name" 
-                  value={res.firstName} onChange={handleChange}/>
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control name='name' type="text" placeholder="Name" 
+                  value={res.name} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
               </Col>
               <Col>
-                <Form.Group controlId="formGroupMiddleName">
-                  <Form.Label>Middle Name</Form.Label>
-                  <Form.Control name='middleName' type="text" placeholder="Middle Name" 
-                  value={res.middleName} onChange={handleChange}/>
-                </Form.Group>
-                <p className="help-block text-danger">{error.MiddleName}</p>
+                
               </Col>
               <Col>
-                <Form.Group controlId="formGroupLastName">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control name='lastName' type="text" placeholder="Last Name" 
-                  value={res.lastName} onChange={handleChange}/>
-                </Form.Group>
-                <p className="help-block text-danger">{error.LastName}</p>
-              </Col>
+                           </Col>
             </Form.Row>
-            
-            <Row>
-            <Col>
-              <Form.Group controlId="formGroupCompany">
-                <Form.Label>Company</Form.Label>
-                <Form.Control as="select" onChange={handleChange}>
-                  {options}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-          </Row>
-          <div className="form-add mb-4">
-              <span onClick={() => this.setState({modal : true})}>Add Company</span>
-          </div>            
-            <DynamicFeilds type={"emailAddress"} name={"Email"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+                        
+            <DynamicFeilds type={"text"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
             </div>
@@ -390,7 +299,7 @@ class newPerson extends React.Component{
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
             </div>
-            <DynamicFeilds type={"website"} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"text"} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Website")}>Add a Website</span>
             </div>
@@ -440,7 +349,6 @@ class newPerson extends React.Component{
                 <p className="help-block text-danger">{errors.state}</p>
               </Col>
             
-              <Button id={index} name="Address" onClick={handleDelete}>-</Button>
             </Form.Row>
             <Row>
                 <Col>
@@ -773,6 +681,8 @@ class newPerson extends React.Component{
 
                 </Col>
               </Row>
+              <Button id={index} name="address" onClick={handleDelete}>-</Button>
+
                   
                 </div>
               })
@@ -784,15 +694,6 @@ class newPerson extends React.Component{
   
             <Button onClick={this.handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
-          <Modal
-          centered
-          visible={this.state.modal}
-          onOk={AddCompanyHandler}
-          onCancel={() => this.setState({modal : false})}
-        >
-         <AddCompany modal={true}></AddCompany>
-  
-        </Modal>
           </div>
       </div>
     </>  
@@ -800,4 +701,4 @@ class newPerson extends React.Component{
            )  
   }
 }
-export default newPerson
+export default modalPerson
