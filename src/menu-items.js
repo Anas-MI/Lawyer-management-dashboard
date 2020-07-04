@@ -38,13 +38,13 @@ export const navigation = {
                     id: 'content',
                     title: 'Manage Content',
                     type: 'collapse',
-                    icon: 'feather icon-mail',
+                    icon: 'feather icon-book',
                     children:[
                         {
                             id: 'blogs',
                             title: 'Blogs',
                             type: 'item',
-                            icon: 'feather icon-book',
+                            icon: 'feather icon-file',
                             url: '/manage/blogs'
                         },
                         {
