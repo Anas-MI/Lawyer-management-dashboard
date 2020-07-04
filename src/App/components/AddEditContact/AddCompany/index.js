@@ -69,11 +69,14 @@ class newPerson extends React.Component{
     if(editMode){
        //  dispatch(updateBlog({id:this.state._id,body:this.state}))
     }else{
-       api.post('company/create', this.state).then(()=>openNotificationWithIcon('success')).catch(openNotificationWithfailure('error'))
+       api.post('company/create', this.state).then(()=>openNotificationWithIcon('success')).catch(err=>openNotificationWithfailure('error'))
     }
+    if(this.props.location!=undefined){
+      this.props.history.goBack()
+    }
+  
+    
 
-
-   this.props.history.goBack()
 }
   
   render(){
