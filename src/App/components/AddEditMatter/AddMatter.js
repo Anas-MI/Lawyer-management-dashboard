@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useDispatch, useSelector} from 'react'
 import { Form, Row , Col , Button } from "react-bootstrap";
-import { message,  Modal, Card, Result } from 'antd';
+import { message,  Modal, Card, Result, notification } from 'antd';
 import api from '../../../resources/api'
 import AddPerson from '../AddEditContact/AddPerson'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
@@ -11,13 +11,28 @@ let contacts = {}
 let optns = null
 let editMode = false
 let editRes = ""
+let customData =  []
+let clientId = 1
+let relatedId = []
+let count = 1
 class AddEditMatter extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      InputList  : [{Relationship : "" , Contact : ""}],
+      relatedContacts  : [{relationship : "" , contact : "", billThis: ""}],
+      customFields : [{
+
+      }],
       modal : false,
     }
+
+  }
+  handleCustom(e){
+    e.persist()
+    let list = customData
+    const { id , value, name } = e.target
+
+    list[id]={[name] : value}
 
   }
   async componentDidMount(){
@@ -28,16 +43,16 @@ class AddEditMatter extends React.Component{
     res = await api.get('/user/view/5eecb08eaec6f1001765f8d5').then(
       contacts = await api.get('/contact/showall'))
     
-    console.log(this.state.editRes)
+   
     optns = contacts.data.data.map((value, index)=>{
-      return <option key={index}>{value.firstName}</option>
+      return <option id={index}>{value.firstName}</option>
      })
     
     customFields = res.data.data.customFields.map((value, index)=>{
     
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
-              <Form.Control name={value.name} type={value.type} placeholder={value.name} />
+              <Form.Control name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
              </Form.Group>
     })
   }
@@ -46,34 +61,60 @@ class AddEditMatter extends React.Component{
     
 
     const addFeild=() =>{
-      let list = this.state.InputList
-      list.push({Relationship : "", Contact : ""})
-      this.setState({InputList : list})
+      count++
+      let list = this.state.relatedContacts
+      list.push({relationship : "", Contact : "", billThis : ""})
+      this.setState({relatedContacts : list})
       let newState= this.state
-      newState.Relation = this.state.InputList
+      newState.Relation = this.state.relatedContacts
       this.setState(newState)
     }
   
   const handleChange = (e) => {
     e.persist()
     this.setState(st=>({...st,[e.target.name]:e.target.value}))
+    if(e.target.name==="client"){
+      clientId = e.target.selectedIndex
+    }
+    console.log(e)
   }
   const HandleDynamicChange = (e)=>{
     e.persist()
     let list = this.state
-    const { id , value } = e.target
-    list.Relation[id].Relationship = value
+    const { id , value, name , checked } = e.target
+    if(name==="billThis"){
+      list.relatedContacts[id][name] = checked
+    }else{
+    list.relatedContacts[id][name] = value
+    }
+    if(name=='contact'){
+      list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
+    }
     this.setState(list)
+    console.log(this.state)
   }
-
+  const openNotificationWithIcon = type => {
+    notification[type]({
+      message: 'Matter Saved'});
+  };
+  const openNotificationWithfailure = type => {
+    notification[type]({
+      message: 'Failure'});
+  };
  
    const handleSubmit = e => {
+     const data = this.state
+     data.customFields = customData
+     data.client = contacts.data.data[clientId]._id
+
+     console.log(data)
         e.preventDefault()
         if(this.state.editMode){
            //  dispatch(updateBlog({id:state._id,body:state}))
         }else{
-           api.post('matter/create', this.state)
+           api.post('matter/create', data).then(openNotificationWithIcon('success')).catch(openNotificationWithfailure('error'))
         }
+
         this.props.history.goBack()
     }
   
@@ -88,7 +129,7 @@ class AddEditMatter extends React.Component{
           
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
-              <Form.Control as="select">
+              <Form.Control as="select" name="client" onChange={handleChange}>
                 
                 {optns}
               </Form.Control>
@@ -98,17 +139,17 @@ class AddEditMatter extends React.Component{
             </div>
             <Form.Group controlId="formGroupMatter">
               <Form.Label>Matter Description</Form.Label>
-                <Form.Control name='Matter' as="textarea" rows="3" type="text" placeholder="Matter description" 
+                <Form.Control name='matterDescription' as="textarea" rows="3" type="text" placeholder="Matter description" 
                   value={editRes.matterDescription} onChange={handleChange}/>
               </Form.Group>
               <Form.Group controlId="formGroupClientRefenceNumber">
                 <Form.Label>Client reference number</Form.Label>
-                <Form.Control name='ClientRefenceNumber' type="text" placeholder="Client Refence Number" 
+                <Form.Control name='clientReferenceNumber' type="text" placeholder="Client Refence Number" 
                   value={editRes.clientReferenceNumber} onChange={handleChange}/>
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Practise Area</Form.Label>
-                <Form.Control as="select" onChange={handleChange} defaultValue={editRes.practiseArea}>
+                <Form.Control as="select" name="practiseArea" onChange={handleChange} defaultValue={editRes.practiseArea}>
                   <option>{editRes.practiseArea}</option>
                   <option>2</option>
                   <option>3</option>
@@ -118,7 +159,7 @@ class AddEditMatter extends React.Component{
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Status</Form.Label>
-                <Form.Control as="select" onChange={handleChange} defaultValue={editRes.status}>
+                <Form.Control as="select" name="status" onChange={handleChange} defaultValue={editRes.status}>
                   <option>Open</option>
                   <option>Closed</option>
                   <option>Pending</option>
@@ -128,21 +169,21 @@ class AddEditMatter extends React.Component{
                 <Col>
                   <Form.Group controlId="formGroupOpenDate">
                   <Form.Label>Open Date</Form.Label>
-                  <Form.Control name='OpenDate' type="Date" placeholder="OpenDate" 
+                  <Form.Control name='openDate' type="Date" placeholder="OpenDate" 
                     value={editRes.openDate} onChange={handleChange}/>
                   </Form.Group>
                 </Col>
                 <Col>  
                   <Form.Group controlId="formGroupClosing Date">
                   <Form.Label>Closing Date</Form.Label>
-                  <Form.Control name='Closing Date' type="Date" placeholder="Closing Date" 
+                  <Form.Control name='closing Date' type="Date" placeholder="Closing Date" 
                     value={editRes.closeDate} onChange={handleChange}/>
                   </Form.Group>
                 </Col>  
                 <Col>
                   <Form.Group controlId="formGroupPendingDate">
                   <Form.Label>Pending Date</Form.Label>
-                  <Form.Control name='PendingDate' type="Date" placeholder="PendingDate" 
+                  <Form.Control name='pendingDate' type="Date" placeholder="PendingDate" 
                     value={editRes.pendingDate} onChange={handleChange}/>
                   </Form.Group>
                 </Col> 
@@ -152,7 +193,7 @@ class AddEditMatter extends React.Component{
 
       <Card title="Related Contacts" className="mb-4">
           <Form className="form-details">
-          <DynamicFeild InputList={this.state.InputList} option={optns} change={HandleDynamicChange} editRes={editRes} editMode={editMode}></DynamicFeild> 
+          <DynamicFeild InputList={this.state.relatedContacts}  option={optns} change={HandleDynamicChange} editRes={editRes} editMode={editMode}></DynamicFeild> 
 
     
             <br/>
@@ -167,7 +208,6 @@ class AddEditMatter extends React.Component{
 
       {customFields}
       </Form>
-        <Button className="btn btn-success">Save</Button>
       </Card>
       <Card title="Billing Preference"  className="mb-4">
         <Form className="form-details">
@@ -186,7 +226,7 @@ class AddEditMatter extends React.Component{
       <Form className="form-details">
       <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Task</Form.Label>
-                <Form.Control as="select" onChange={HandleDynamicChange} defaultValue={editRes.task}>
+                <Form.Control as="select" onChange={handleChange} defaultValue={editRes.task}>
                   <option>Client Intake</option>
                   <option>Task List</option>
                   <option>New Task List</option>
@@ -194,7 +234,7 @@ class AddEditMatter extends React.Component{
               </Form.Group>
       </Form>
       </Card>
-      <Button onClick={handleSubmit}>ADD</Button>
+      <Button className="btn btn-success" onClick={handleSubmit}>ADD</Button>
      <br></br>
       <Modal
         title="Add Company"
