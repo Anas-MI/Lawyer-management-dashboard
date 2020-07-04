@@ -1,4 +1,4 @@
-import { Table, Tag, Space, Button,Modal, Popconfirm, message} from 'antd';
+import { Table, Tag, Space, Button,Modal, Popconfirm, message,notification} from 'antd';
 import React from 'react'
 import {Form} from 'react-bootstrap'
 import api from '../../../../resources/api'
@@ -57,6 +57,16 @@ class tables extends React.Component{
   setModal2Visible(modal2Visible) {
     this.setState({ modal2Visible });
   }
+  openNotificationWithFailure = type => {
+    notification[type]({
+      message: 'Failure',
+        });
+  };
+   openNotificationWithSucces = type => {
+    notification[type]({
+      message: 'success',
+    });
+  };
   render(){
     const HandleOk=()=>{
       if(this.state.required == "on"){
@@ -84,7 +94,7 @@ class tables extends React.Component{
       }
 
     console.log(newData)
-       api.post('/user/update/5eecb08eaec6f1001765f8d5', newData).then(res=>console.log(res)).catch(console.log())
+       api.post('/user/update/5eecb08eaec6f1001765f8d5', newData).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
       window.location.reload()
     }
