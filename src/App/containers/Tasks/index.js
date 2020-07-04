@@ -4,15 +4,16 @@ import UnpcomingTasks from './UpcomingTasks/upcomingTasks'
 import CompletedTask from './CompletedTasks/CompletedTasks'
 import List from './List/List'
 import api from "../../../resources/api"
-import {Button,Modal} from 'antd'
+import {Button,Modal, notification} from 'antd'
 import { Form, Row , Col} from "react-bootstrap";
 
 
 
 let res = {}
+let response = {}
 let tableData = null
 let ListData = null
-
+let options = null
 class Tasks extends React.Component{
   constructor(props){
     super(props)
@@ -32,14 +33,26 @@ class Tasks extends React.Component{
       visible: true,
     });
   };
-  
+ openNotificationWithFailure = type => {
+    notification[type]({
+      message: 'Succes',
+        });
+  };
+   openNotificationWithSucces = type => {
+    notification[type]({
+      message: 'Failure',
+      description:
+        'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+    });
+  };
 
   handleOk = () => {
     this.setState({ loading: true });
+    console.log(this.state.Data)
     if(this.state.editMode){
-      api.post('tasks/edit/'+ this.state.selected)
+      api.post('tasks/edit/'+ this.state.selected, this.state.Data)
     }else{
-      api.post('/tasks/create', this.state.Data)
+      api.post('/tasks/create', this.state.Data).then(()=>this.openNotificationWithSucces('succes')).catch(()=>{this.openNotificationWithFailure('error')})
     }
     this.setState({
       ModalText: 'The modal will be closed after two seconds',
@@ -51,7 +64,7 @@ class Tasks extends React.Component{
         visible: false,
         confirmLoading: false,
       });
-    }, 3000);
+    }, 2000);
   };
 
   handleCancel = () => {
@@ -65,7 +78,11 @@ class Tasks extends React.Component{
     e.persist()
     let newState = this.state
     console.log(e.target)
+    if(e.target.id==='matter'){
+      newState.Data[e.target.id]=response[e.target.selectedIndex]._id
+    }else{
     newState.Data[e.target.id] = e.target.value
+    }
     this.setState(newState)
     console.log(this.state)
   }
@@ -78,7 +95,11 @@ class Tasks extends React.Component{
    }
 
    deleteHandler(value,index){
-     api.get('tasks/delete/'+value._id)
+     console.log(value)
+    api.get('tasks/delete/'+value._id)
+    this.setState({
+      DeleteText: 'Success',
+    })
    }
   async componentDidMount(){
     res = await api.get('/tasks/showall')
@@ -99,9 +120,15 @@ class Tasks extends React.Component{
         <td>{value.description}</td>
         <td>{value.taskName}</td>
         <td>{value.matter.matterDescription}</td>
+        <td><Button onClick={()=>this.EditHandler(value, index)}>Edit</Button></td>
+            <td><Button onClick={()=>this.deleteHandler(value, index)} danger>Delete</Button></td>
       </tr>
       })
       console.log(res)
+      await api.get('/matter/showall').then(res=>response=res.data.data)
+       options = response.map((value , index)=>{
+     return <option>{value.matterDescription}</option>
+    })
   }
   
 
@@ -147,21 +174,21 @@ class Tasks extends React.Component{
         <Row>
             <Form.Group controlId="taskName">
                 <Form.Label>Task Name</Form.Label>
-                <Form.Control type="text" placeholder="Task Name" value={this.state.res.taskName}  onChange={this.handleChange}/>
+                <Form.Control type="text" placeholder="Task Name"  onChange={this.handleChange}/>
             </Form.Group>
         </Row>
         <Row>
-           <Form.Group controlId="DueDate">
+           <Form.Group controlId="dueDate">
                 <Form.Label>Due Date</Form.Label>
-                <Form.Control type="date" placeholder="Due Date" value={this.state.res.dueDate} onChange={this.handleChange}/>
+                <Form.Control type="date" placeholder="Due Date"  onChange={this.handleChange}/>
             </Form.Group>
         </Row>
       </Col>
-      <Form.Group controlId="Description">
+      <Form.Group controlId="description">
         <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows="3" value={this.state.res.description} onChange={this.handleChange} />
+        <Form.Control as="textarea" rows="3" onChange={this.handleChange} />
       </Form.Group>
-      <Form.Group controlId="Priority">
+      <Form.Group controlId="priority">
       <Form.Label>Priority</Form.Label>
       <Form.Control as="select" onChange={this.handleChange}>
         <option>Low</option>
@@ -169,10 +196,12 @@ class Tasks extends React.Component{
         <option>High</option>
       </Form.Control>
     </Form.Group>
-    <Form.Group controlId="Matter">
+            <Form.Group controlId="matter">
                 <Form.Label>Matter</Form.Label>
-                <Form.Control type="text" placeholder="Matter" onChange={this.handleChange} />
-            </Form.Group>
+                <Form.Control as="select" onChange={this.handleChange} name="matter">
+                  {options}
+                </Form.Control>
+              </Form.Group>
       </Form>
     </Modal>
     </div>
