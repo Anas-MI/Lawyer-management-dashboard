@@ -15,7 +15,7 @@ function CompanyView(props){
     useEffect(() => {
     
         async function fetchData() {
-           await api.get('/matter/view/5efb32a82d083261e7e21281').then(res=>{
+           await api.get('/matter/view/'+props.location.state).then(res=>{
               response = res.data
               console.log(response)
               setValue()
