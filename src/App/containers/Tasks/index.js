@@ -69,7 +69,7 @@ class Tasks extends React.Component{
         confirmLoading: false,
       });
     }, 2000);
-    window.location.reload()
+ 
   };
 
   handleCancel = () => {
@@ -128,7 +128,7 @@ class Tasks extends React.Component{
       </td>
     </tr>
     })
-
+    
     tableData = res.data.data.map((value, index)=>{
         return  <tr>
         <th scope="row">{value.dueDate}</th>
@@ -153,8 +153,11 @@ class Tasks extends React.Component{
       await api.get('/matter/showall').then(res=>response=res.data.data)
        options = response.map((value , index)=>{
      return <option>{value.matterDescription}</option>
+
     
+
     })
+    this.setState({ListData, tableData})
     
   }
   
@@ -171,13 +174,13 @@ class Tasks extends React.Component{
     return  <div>
       <Tabs defaultActiveKey="1" tabBarExtraContent={operations} onChange={callback} className="card p-4" className="overflow-auto">
         <TabPane tab="Upcoming Tasks" key="1">
-          <UnpcomingTasks tableData={tableData}></UnpcomingTasks>
+          <UnpcomingTasks tableData={this.state.tableData}></UnpcomingTasks>
         </TabPane>
         <TabPane tab="Completed Tasks" key="2">
-          <CompletedTask tableData={tableData}></CompletedTask>
+          <CompletedTask tableData={this.state.tableData}></CompletedTask>
         </TabPane>
         <TabPane tab="List" key="3">
-          <List tableData={ListData}></List>
+          <List tableData={this.state.ListData}></List>
         </TabPane>
        </Tabs>
     <Modal
