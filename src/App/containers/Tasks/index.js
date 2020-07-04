@@ -4,7 +4,7 @@ import UnpcomingTasks from './UpcomingTasks/upcomingTasks'
 import CompletedTask from './CompletedTasks/CompletedTasks'
 import List from './List/List'
 import api from "../../../resources/api"
-import {Button,Modal, notification} from 'antd'
+import {Button,Modal, notification, Popconfirm,message} from 'antd'
 import { Form, Row , Col} from "react-bootstrap";
 
 
@@ -28,6 +28,12 @@ class Tasks extends React.Component{
       selected : null
     };
   }
+
+  
+   cancel(e) {
+    console.log(e);
+    message.error('Click on No');
+  }
   showModal = () => {
     this.setState({
       visible: true,
@@ -35,14 +41,12 @@ class Tasks extends React.Component{
   };
  openNotificationWithFailure = type => {
     notification[type]({
-      message: 'Succes',
+      message: 'Failure',
         });
   };
    openNotificationWithSucces = type => {
     notification[type]({
-      message: 'Failure',
-      description:
-        'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+      message: 'success',
     });
   };
 
@@ -52,7 +56,7 @@ class Tasks extends React.Component{
     if(this.state.editMode){
       api.post('tasks/edit/'+ this.state.selected, this.state.Data)
     }else{
-      api.post('/tasks/create', this.state.Data).then(()=>this.openNotificationWithSucces('succes')).catch(()=>{this.openNotificationWithFailure('error')})
+      api.post('/tasks/create', this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }
     this.setState({
       ModalText: 'The modal will be closed after two seconds',
@@ -65,6 +69,7 @@ class Tasks extends React.Component{
         confirmLoading: false,
       });
     }, 2000);
+    window.location.reload()
   };
 
   handleCancel = () => {
@@ -97,9 +102,8 @@ class Tasks extends React.Component{
    deleteHandler(value,index){
      console.log(value)
     api.get('tasks/delete/'+value._id)
-    this.setState({
-      DeleteText: 'Success',
-    })
+    message.success('Deleted');
+    window.location.reload()
    }
   async componentDidMount(){
     res = await api.get('/tasks/showall')
@@ -110,7 +114,17 @@ class Tasks extends React.Component{
       <td>{value.taskName}</td>
       <td>{value.matter.matterDescription}</td>
       <td><Button onClick={()=>this.EditHandler(value, index)}>Edit</Button></td>
-            <td><Button onClick={()=>this.deleteHandler(value, index)} danger>Delete</Button></td>
+      <td>
+      <Popconfirm
+          title="Are you sure delete this task?"
+          onConfirm={()=>this.deleteHandler(value, index)}
+          onCancel={this.cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger>Delete</Button>
+        </Popconfirm>
+      </td>
     </tr>
     })
 
@@ -121,7 +135,17 @@ class Tasks extends React.Component{
         <td>{value.taskName}</td>
         <td>{value.matter.matterDescription}</td>
         <td><Button onClick={()=>this.EditHandler(value, index)}>Edit</Button></td>
-            <td><Button onClick={()=>this.deleteHandler(value, index)} danger>Delete</Button></td>
+        <td>
+      <Popconfirm
+          title="Are you sure delete this task?"
+          onConfirm={()=>this.deleteHandler(value, index)}
+          onCancel={this.cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger>Delete</Button>
+        </Popconfirm>
+      </td>
       </tr>
       })
       console.log(res)
