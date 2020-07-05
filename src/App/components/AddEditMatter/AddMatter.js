@@ -5,6 +5,8 @@ import api from '../../../resources/api'
 import AddPerson from '../AddEditContact/AddPerson'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
 
+const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
+
 let res = {}
 let customFields = null
 let contacts = {}
@@ -13,15 +15,16 @@ let editMode = false
 let editRes = ""
 let customData =  []
 let clientId = 1
-let relatedId = []
-let count = 1
+let error = {
+  relationship: [""]
+}
+
 class AddEditMatter extends React.Component{
   constructor(props){
     super(props)
     this.state = {
       relatedContacts  : [{relationship : "" , contact : "", billThis: ""}],
       customFields : [{
-
       }],
       modal : false,
     }
@@ -56,12 +59,28 @@ class AddEditMatter extends React.Component{
              </Form.Group>
     })
   }
+   
+  handleSubmit = (event) => {
+    event.preventDefault();
+   /* const data = this.state
+   data.customFields = customData
+      data.client = contacts.data.data[clientId]._id
+
+    console.log(data)
+       e.preventDefault()
+       if(this.state.editMode){
+          //  dispatch(updateBlog({id:state._id,body:state}))
+       }else{
+          api.post('matter/create', data).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+       }
+
+       this.props.history.goBack()*/
+   }
   
   render(){
     
 
     const addFeild=() =>{
-      count++
       let list = this.state.relatedContacts
       list.push({relationship : "", Contact : "", billThis : ""})
       this.setState({relatedContacts : list})
@@ -76,6 +95,7 @@ class AddEditMatter extends React.Component{
     if(e.target.name==="client"){
       clientId = e.target.selectedIndex
     }
+   
     console.log(e)
   }
   const HandleDynamicChange = (e)=>{
@@ -90,6 +110,20 @@ class AddEditMatter extends React.Component{
     if(name=='contact'){
       list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
     }
+    console.log(error.relationship)
+    switch (name) {
+      case "relationship":
+        error.relationship[id] =
+        (!validNameRegex.test(value))
+        ? "Realtionship must be in characters!"
+        : (value.length > 20) 
+        ? "Relationship must be less than 20 characters long!" 
+        : "";
+   break;
+     
+      default:
+        break;
+    }
     this.setState(list)
     console.log(this.state)
   }
@@ -102,30 +136,16 @@ class AddEditMatter extends React.Component{
       message: 'Failure'});
   };
  
-   const handleSubmit = e => {
-     const data = this.state
-     data.customFields = customData
-     data.client = contacts.data.data[clientId]._id
-
-     console.log(data)
-        e.preventDefault()
-        if(this.state.editMode){
-           //  dispatch(updateBlog({id:state._id,body:state}))
-        }else{
-           api.post('matter/create', data).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
-        }
-
-        this.props.history.goBack()
-    }
   
-    let returnx
-    if((editMode==true && this.state.editRes !=="" )|| editMode==false ){
-      returnx =   <div className='form-width'>
+  
+   
+    return (
+      <div className='form-width'>
       <div className="form-header-container mb-4">
             <h3 className="form-header-text">Add New Matter</h3>
       </div>
       <Card title="Matter Information" className="mb-4">
-        <Form className="form-details">
+        <Form className="form-details" onSubmit={this.handleSubmit}>
           
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
@@ -139,12 +159,12 @@ class AddEditMatter extends React.Component{
             </div>
             <Form.Group controlId="formGroupMatter">
               <Form.Label>Matter Description</Form.Label>
-                <Form.Control name='matterDescription' as="textarea" rows="3" type="text" placeholder="Matter description" 
+                <Form.Control required name='matterDescription' as="textarea" rows="3" type="text" placeholder="Matter description" 
                   value={editRes.matterDescription} onChange={handleChange}/>
               </Form.Group>
               <Form.Group controlId="formGroupClientRefenceNumber">
                 <Form.Label>Client reference number</Form.Label>
-                <Form.Control name='clientReferenceNumber' type="text" placeholder="Client Refence Number" 
+                <Form.Control name='clientReferenceNumber' type="number" placeholder="Client Refence Number" 
                   value={editRes.clientReferenceNumber} onChange={handleChange}/>
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">
@@ -193,7 +213,7 @@ class AddEditMatter extends React.Component{
 
       <Card title="Related Contacts" className="mb-4">
           <Form className="form-details">
-          <DynamicFeild InputList={this.state.relatedContacts}  option={optns} change={HandleDynamicChange} editRes={editRes} editMode={editMode}></DynamicFeild> 
+          <DynamicFeild InputList={this.state.relatedContacts}  option={optns} error={error.relationship} change={HandleDynamicChange} editRes={editRes} editMode={editMode}></DynamicFeild> 
 
     
             <br/>
@@ -232,9 +252,10 @@ class AddEditMatter extends React.Component{
                   <option>New Task List</option>
                 </Form.Control>
               </Form.Group>
+        <Button type="submit" className="btn btn-success" >ADD</Button>
       </Form>
       </Card>
-      <Button className="btn btn-success" onClick={handleSubmit}>ADD</Button>
+   
      <br></br>
       <Modal
         title="Add Company"
@@ -247,11 +268,7 @@ class AddEditMatter extends React.Component{
 
       </Modal>
       </div>
-    }else{
-      returnx = null
-    }
-    return (
-     returnx
+   
     )
   }
 }

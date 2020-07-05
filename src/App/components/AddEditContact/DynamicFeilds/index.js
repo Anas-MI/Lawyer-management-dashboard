@@ -10,7 +10,6 @@ class DynamicFeilds extends React.Component {
   }
 
     render(){
-    console.log(this.props.error)
     return (
         <div >
             {

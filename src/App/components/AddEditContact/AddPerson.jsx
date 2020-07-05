@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Row , Button, Col } from "react-bootstrap";
-import { Upload, message,  Modal , notification, Space} from 'antd';
+import { Upload, message,  Modal , notification, Space , Card} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
@@ -14,12 +14,14 @@ const validNameRegex = RegExp(/^[a-zA-Zàáâäãåąčćęèéêëėįìíîï�
 
 const validZipRegex = RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
 const validUrlRegex = RegExp(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
-const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
+
 
 
 let editMode = null
 let options = null
 let response = {}
+let feilds = {}
+let customFields = null
 let res = ""
 let error = {
   FirstName: "",
@@ -30,7 +32,7 @@ let error = {
 }
 let errors ={
   Email: [""],
-  PhoneNumber: [""],
+  phone: [""],
   Website:[""],
   Address:[""],
   Street:[""],
@@ -39,30 +41,42 @@ let errors ={
   State:[""],
   ZipCode:[""],
 }
-const openNotificationWithIcon=(type) =>{
-  notification[type]({
-    message: 'Contact Saved',
-    });
-};
-const openNotificationWithfailure = type => {
-  notification[type]({
-    message: 'Failure'});
-};
+
 
 
 class newPerson extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[], modal : false
+      address : [], emailAddress : [], phone : [], website:[],  customFields : [{
+      }],modal : false, valid : false
     }
   }
+
+  handleCustom(e){
+    e.persist()
+    let list = this.state.customFields
+    const { id , value, name } = e.target
+
+    list[id]={[name] : value}
+    this.setState({customFields : list})
+    console.log(this.state)
+  }
   async componentDidMount(){
-    response = await api.get('/company/showall')
+   response = await api.get('/company/showall')
     
      options = response.data.data.map((value,id)=>{
     return <option key={id}>{value.name}</option>
     })
+    feilds = await api.get('/user/view/5eecb08eaec6f1001765f8d5')
+    customFields = res.data.data.customFields.map((value, index)=>{
+    
+      return <Form.Group key={index} controlId={index}>
+              <Form.Label>{value.name}</Form.Label>
+              <Form.Control name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
+             </Form.Group>
+    })
+
   
 {/*
     if(this.props.location.pathname == "/manage/contacts/edit/person"){
@@ -73,49 +87,77 @@ class newPerson extends React.Component{
     }
   */}
   }
-  componentWillUpdate(){
-  
+  openNotificationWithIcon=(type) =>{
+    notification[type]({
+      message: 'Contact Saved',
+      });
+  };
+   openNotificationWithfailure = type => {
+    notification[type]({
+      message: 'Failure'});
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    notification.destroy()
+      const validateForm = () => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.Email).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.phone).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.State).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.Street).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.City).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.ZipCode).forEach((val) => val.length > 0 && (valid = false));
+        console.log(valid)
+        return valid;
+    
+      };
+      if (validateForm()) {
+        console.log("all good")
+       if(editMode){
+         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
+       }else{
+           api.post('contact/create', this.state).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
+       }
+     
+       if(this.props.location!=undefined){
+         this.props.history.goBack()
+     }
+      } else {
+        return notification.warning({
+          message: "Please enter valid details",
+        });
+      }
+    
   }
-
-  handleSubmit = () => {
-    console.log(this.state)
-    if(editMode){
-       //  dispatch(updateBlog({id:this.state._id,body:this.state}))
-    }else{
-       api.post('contact/create', this.state).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
-    }
-  
-    if(this.props.location!=undefined){
-      this.props.history.goBack()
-    }
-
- 
-}
+   
   
   render(){
+
     
     
     let address = null
     const handleChange = (e) => {
       e.persist()
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
-
+      console.log(this.state)
       const { name, value, id } = e.target;
       switch (name) {
-        case "Prefix":
+        case "prefix":
           error.Prefix =  value === "default" ? "Prefix is required!" : "";
           break;
-        case "FirstName":
+        case "firstName":
           error.FirstName =
               (value.length == 0) 
-              ? "" 
+              ? "First Name is required!" 
               : (!validNameRegex.test(value))
               ? "First Name must be in characters!"
               : (value.length > 20) 
               ? "First Name must be less than 20 characters long!" 
               : "";
          break;
-        case "MiddleName":
+        case "middleName":
           error.MiddleName =
             (value.length == 0) 
             ? "" 
@@ -125,7 +167,7 @@ class newPerson extends React.Component{
             ? "Middle Name must be less than 20 characters long!" 
             : "";
         break;
-        case "LastName":
+        case "lastName":
           error.LastName =
             (value.length == 0) 
             ? "" 
@@ -135,16 +177,8 @@ class newPerson extends React.Component{
             ? "Last Name must be less than 20 characters long!" 
             : "";
           break;
-        case "lawFirmSize":
-          error.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
-          break;
-
-        case "countryOfPractice":
-          error.countryOfPractice =
-            value === "default" ? "Country is required!" : "";
-          break;
         
-        case "Title":
+        case "title":
             error.Title =
               value.length == 0 ? "Title is Required" : "";
           break;
@@ -156,9 +190,59 @@ class newPerson extends React.Component{
     }
     const HandleAddressChange=(e)=>{
       e.persist()
-      address = {...address, [e.target.name]:e.target.value}
+      const { id, value, name} = e.target
+      address = {...address, [name]:value}
       let newState = this.state
-      newState.address[e.target.id]=address
+      newState.address[id]=address
+      this.setState(newState)
+      console.log(this.state)
+      switch (e.target.name) {
+        
+        
+        case "type":
+          errors.Type[id] =  value === "default" ? "Type is required!" : "";
+            break;  
+       
+        case "country":
+                errors.Country =
+                  value === "default" ? "Country is required!" : "";
+                break;
+
+            case "street":
+                errors.Street[id] =
+                (value.length == 0) 
+                ? "" 
+                : (value.length < 2)
+                ? "Street is Required" : "";
+              break;
+            case "city":
+                errors.City[id] =
+                  (value.length == 0) 
+                    ? "" 
+                    : (!validNameRegex.test(value))
+                    ? "City Name must be in characters!"
+                    : (value.length < 2) 
+                    ? "City is Required" : "";
+              break;
+            case "state":
+                errors.State[id] =
+                    (value.length == 0) 
+                    ? "" 
+                    : (!validNameRegex.test(value))
+                    ? "State Name must be in characters!"
+                    : (value.length < 2) 
+                    ? "State is Required" : "";
+              break;
+            case "zipCode":
+                errors.ZipCode[id] = (value.length == 0) 
+                  ? "" 
+                  :  value.length > 4 && value.length < 10
+                  ? ""
+                  : "Zipcode is not valid!";
+                break;      
+
+      }
+
     }
     const handleMultipleChange = (e) => {
       e.persist()
@@ -169,69 +253,18 @@ class newPerson extends React.Component{
       console.log(this.state)
       switch (name) {
         
-        case "Email":
+        case "emailAddress":
           errors.Email[id] = validEmailRegex.test(value)
             ? ""
             : "Email is not valid!";
           break;
-        case "Type":
-          errors.Type[id] =  value === "default" ? "Type is required!" : "";
-            break;  
-        case "Number":
-            errors.Number[id] =
+        case "phone":
+            errors.phone[id] =
             value.length < 10 || value.length > 13
                   ? "phone number must be between 10 and 13 digits"
                   : "";
               break;
-        case "Country":
-                errors.Country =
-                  value === "default" ? "Country is required!" : "";
-                break;
-            case "Address":
-                errors.Address[id] =
-                  (value.length == 0) 
-                  ? "" 
-                  : (value.length < 2)
-                  ? "Address is Required" : "";
-              break;
-            case "Street":
-                errors.Street[id] =
-                (value.length == 0) 
-                ? "" 
-                : (value.length < 2)
-                ? "Street is Required" : "";
-              break;
-            case "City":
-                errors.City[id] =
-                  (value.length == 0) 
-                    ? "" 
-                    : (!validNameRegex.test(value))
-                    ? "City Name must be in characters!"
-                    : (value.length < 2) 
-                    ? "City is Required" : "";
-              break;
-            case "State":
-                errors.State[id] =
-                    (value.length == 0) 
-                    ? "" 
-                    : (!validNameRegex.test(value))
-                    ? "State Name must be in characters!"
-                    : (value.length < 2) 
-                    ? "State is Required" : "";
-              break;
-            case "ZipCode":
-                errors.ZipCode[id] = (value.length == 0) 
-                  ? "" 
-                  :  value.length > 4 && value.length < 10
-                  ? ""
-                  : "Zipcode is not valid!";
-                break;      
-
-        case "Website":
-            errors.Website[id] = validUrlRegex.test(value)
-              ? ""
-              : "Website is not valid!";
-            break;
+        
         default:
           break;
       }
@@ -290,6 +323,8 @@ class newPerson extends React.Component{
       newState[name].splice(id, 1)
       this.setState(newState)
    }
+
+   
   
    
       
@@ -298,7 +333,7 @@ class newPerson extends React.Component{
         <>
         <div className='form-width'>
           <div className="card p-4">
-            <Form className="form-details">
+            <Form className="form-details"  onSubmit={this.handleSubmit}>
             <div className="form-header-container mb-4">
               <h3 className="form-header-text">Add New Person</h3>
             </div>
@@ -334,7 +369,7 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId="formGroupFirstName">
                   <Form.Label>First Name</Form.Label>
-                  <Form.Control name='firstName' type="text" placeholder="First Name" 
+                  <Form.Control  required name='firstName' type="text" placeholder="First Name" 
                   value={res.firstName} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
@@ -350,7 +385,7 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId="formGroupLastName">
                   <Form.Label>Last Name</Form.Label>
-                  <Form.Control name='lastName' type="text" placeholder="Last Name" 
+                  <Form.Control required name='lastName' type="text" placeholder="Last Name" 
                   value={res.lastName} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.LastName}</p>
@@ -370,7 +405,7 @@ class newPerson extends React.Component{
           <div className="form-add mb-4">
               <span onClick={() => this.setState({modal : true})}>Add Company</span>
           </div>            
-            <DynamicFeilds type={"emailAddress"} name={"Email"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"emailAddress"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Email")}>Add an Email</span>
             </div>
@@ -386,7 +421,7 @@ class newPerson extends React.Component{
             </Row>
   
             
-            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.PhoneNumber} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
             </div>
@@ -437,7 +472,7 @@ class newPerson extends React.Component{
                   <Form.Control name='state' type="text" placeholder="State" 
                    onChange={HandleAddressChange}/>
                 </Form.Group>
-                <p className="help-block text-danger">{errors.state}</p>
+                <p className="help-block text-danger">{errors.State}</p>
               </Col>
             
               <Button id={index} name="Address" onClick={handleDelete}>-</Button>
@@ -780,10 +815,14 @@ class newPerson extends React.Component{
             
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("Address")}>Add an Address</span>
-            </div>
+            </div><br></br>
+            <h4>Custom Feilds</h4>
+            <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feild</Button></p>
+            {customFields}
   
-            <Button onClick={this.handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
+            <Button  type="submit" className="btn btn-success">{editMode?'Update':'Create'}</Button>
           </Form>
+          
           <Modal
           centered
           visible={this.state.modal}

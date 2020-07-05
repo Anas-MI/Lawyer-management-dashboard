@@ -51,15 +51,21 @@ class customFeilds extends React.Component {
     const HandleChange=(e)=>{
       e.persist()
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      if(this.state.required === "on"){
+        this.state.required = true
+      }else{
+        this.state.required = false 
+      }
+      if(this.state.default === "on"){
+        this.state.default = true
+      }else{
+        this.state.default = false
+      }
       console.log(this.state)
     }
     const HandleOk=()=>{
-      if(this.state.required == "on"){
-        this.state.required = true
-      }
-      if(this.state.default == "on"){
-        this.state.default = true
-      }
+      notification.destroy()
+   
       const newdata = {
         name : this.state.name,
         type : this.state.type,
@@ -71,10 +77,15 @@ class customFeilds extends React.Component {
       if(res!==null){
         data.customFields.push(newdata)
       }
-      console.log(data)
-       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+      if ((newdata.name ==="" ||newdata.name ===undefined) || (newdata.type ==="" ||newdata.type ===undefined) || (newdata.required ===true && newdata.default ===true) || (newdata.required ===false && newdata.default ===false) ) {
+        return notification.warning({
+          message: "Fields Should Not Be Empty",
+        });
+      }else{/*
+       api.post('/user/update/5eecb08eaec6f1001765f8d5', newdata).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
-      window.location.reload()
+    */
+      }
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
     return (

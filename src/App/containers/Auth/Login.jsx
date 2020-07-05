@@ -95,6 +95,7 @@ const Login = (props) => {
             notification.error(err);
           } else {
             notification.success(response);
+            console.log(response)
           }
           setSpinner(false);
         })

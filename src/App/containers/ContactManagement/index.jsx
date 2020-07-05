@@ -8,12 +8,14 @@ import { getBlogs, deleteBlog,selectBlog } from "../../../store/Actions";
 import api from '../../../resources/api'
 
 
-
 const ContactsManage = (props) => {
-
+  const data = useSelector(state=>state.user.token.user._id)
+  console.log(data)
   const dispatch = useDispatch();
-  const [tableData , setTableData] = useState([])
+  const [companyData , setcompanyData] = useState([])
+  const [contactData , setcontactData] = useState([])
   let response = {}
+  let company= {}
   //Search Related 
   const [state,setState] = useState({})
   const contacts = useSelector((state) => {
@@ -31,6 +33,7 @@ const ContactsManage = (props) => {
     
     async function fetchData() {
       response = await api.get('/contact/showall')
+      company = await api.get('/company/showall')
       setTable()
     }
     fetchData();
@@ -41,17 +44,27 @@ const ContactsManage = (props) => {
     response.data.data.map((value,id)=>{
       let key=id
       const data={
-        firstName : value.firstName ,
-        lastName : value.lastName,
+        firstName : value.firstName + " " + value.lastName,
         billingCustomRate : value.billingCustomRate,
-        company : value.company.name
+        emailAddress : value.emailAddress.map((value)=>{return <div>{value}<br></br></div>})
       }
-      let newtableData = tableData
+      let newtableData = contactData
       newtableData.push(data)
-      setTableData(newtableData)
-      console.log(tableData)
+      setcontactData(newtableData)
     }) 
-    setState({tableData : tableData})
+    company.data.data.map((value,id)=>{
+      let key=id
+      const data={
+        firstName : value.name ,
+        billingCustomRate : value.billingCustomRate,
+        emailAddress : value.emailAddress.map((value)=>{return <div>{value}<br></br></div>})
+      }
+      let newtableData = companyData
+      newtableData.push(data)
+      setcompanyData(newtableData)
+    }) 
+    setState({tableData : contactData})
+
   }
   
 
@@ -121,6 +134,16 @@ const ContactsManage = (props) => {
     props.history.push('/manage/contacts/add/Company')
   }
   }
+  const setTableData = (type) => {
+    //  dispatch(selectBlog())
+    if(company != {} && response !={}){
+      if(type==="Person"){
+        setState({tableData : contactData})
+      }else if(type==="Company"){
+      setState({tableData : companyData})
+      }
+    }
+   }
 
   const handleEdit = record => {
     //   dispatch(selectBlog(record))
@@ -135,7 +158,7 @@ const ContactsManage = (props) => {
   const columns = [
     
     {
-      title: "First Name",
+      title: "Name",
       dataIndex: "firstName",
       key: "_id",
       ...getColumnSearchProps('firstName'),
@@ -148,17 +171,7 @@ const ContactsManage = (props) => {
 
     },
 
-    {
-        title: "Last Name",
-        dataIndex: "lastName",
-        key: "_id",
-        ...getColumnSearchProps('lastName'),
-        sorter: (a, b ,c) => ( 
-          c==='ascend'
-          ?a.description<b.description
-          :a.description>b.description
-        )
-    },
+    
     {
       title: "billingCustomRate",
       dataIndex: "billingCustomRate",
@@ -171,10 +184,10 @@ const ContactsManage = (props) => {
       )
     },
     {
-      title: "Company",
-      dataIndex: "company",
+      title: "Email",
+      dataIndex: "emailAddress",
       key: "_id",
-      ...getColumnSearchProps('company'),
+      ...getColumnSearchProps('emailAddress'),
       sorter: (a, b ,c) => ( 
         c==='ascend'
         ?a.shortDescription<b.shortDescription
@@ -227,6 +240,8 @@ const handleView = (i)=>{
     <div>
       <div className='p-2 '>
         <Button className='ml-auto' color='success' >Export</Button>
+        <Button className='ml-auto' color='success' onClick={()=>setTableData("Person")}>Person</Button>
+        <Button className='ml-auto' color='success' onClick={()=>setTableData("Company")}>Company</Button>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Person")}>Add Person</Button>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Company")}>Add Company</Button>
       </div>

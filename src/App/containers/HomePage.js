@@ -7,7 +7,8 @@ import Contact from '../components/HomePage/contact';
 import Footer from '../components/HomePage/footer'
 import Subscription from '../components/HomePage/subscription'
 
-function Home() {
+function Home(props) {
+  console.log(props)
   return (
     <div className="Home">
         <Navigation />

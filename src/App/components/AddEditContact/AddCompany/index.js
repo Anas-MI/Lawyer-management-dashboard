@@ -26,24 +26,16 @@ let error = {
 }
 let errors ={
   Email: [""],
-  PhoneNumber: [""],
+  phone: [""],
   Website:[""],
   Address:[""],
   Street:[""],
   City:[""],
   Country:[""],
-  State:[""],
+  state:[""],
   ZipCode:[""],
 }
-const openNotificationWithIcon=(type) =>{
-  notification[type]({
-    message: 'Company Saved',
-    });
-};
-const openNotificationWithfailure = type => {
-  notification[type]({
-    message: 'Failure'});
-};
+
 
 class newPerson extends React.Component{
   constructor(props){
@@ -63,20 +55,47 @@ class newPerson extends React.Component{
 
     }*/
   }
+ openNotificationWithIcon=(type) =>{
+    notification[type]({
+      message: 'Company Saved',
+      });
+  };
+   openNotificationWithfailure = type => {
+    notification[type]({
+      message: 'Failure'});
+  };
   
-  handleSubmit = () => {
-    console.log(this.state)
-    if(editMode){
-       //  dispatch(updateBlog({id:this.state._id,body:this.state}))
-    }else{
-       api.post('company/create', this.state).then(()=>openNotificationWithIcon('success')).catch(err=>openNotificationWithfailure('error'))
-    }
-    if(this.props.location!=undefined){
-      this.props.history.goBack()
-    }
-  
+  handleSubmit = (event) => {
+    event.preventDefault();
+    notification.destroy()
+      const validateForm = () => {
+        let valid = true;
+        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.Email).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.phone).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.state).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.Street).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.City).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.ZipCode).forEach((val) => val.length > 0 && (valid = false));
+        console.log(valid)
+        return valid;
     
-
+      };
+      if (validateForm()) {
+        if(editMode){
+          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
+       }else{
+          api.post('company/create', this.state).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
+       }
+       if(this.props.location!=undefined){
+         this.props.history.goBack()
+       }
+      } else {
+        return notification.warning({
+          message: "Please enter valid details",
+        })
+      }
+    
 }
   
   render(){
@@ -89,17 +108,18 @@ class newPerson extends React.Component{
 
       const { name, value, id } = e.target;
       switch (name) {
-         
-        case "lawFirmSize":
-          error.lawFirmSize = value === "nn" ? "Law Firm Size is required!" : "";
-          break;
-
-        case "countryOfPractice":
-          error.countryOfPractice =
-            value === "default" ? "Country is required!" : "";
-          break;
+      
+        case "name":
+          error.FirstName =
+              (value.length == 0) 
+              ? "Name is required!" 
+              : (!validNameRegex.test(value))
+              ? "Name must be in characters!"
+              : "";
+         break;
         
-        case "Title":
+        
+        case "title":
             error.Title =
               value.length == 0 ? "Title is Required" : "";
           break;
@@ -107,13 +127,61 @@ class newPerson extends React.Component{
         default:
           break;
       }
-  
     }
     const HandleAddressChange=(e)=>{
       e.persist()
-      address = {...address, [e.target.name]:e.target.value}
+      const { id, value, name} = e.target
+      address = {...address, [name]:value}
       let newState = this.state
-      newState.address[e.target.id]=address
+      newState.address[id]=address
+      this.setState(newState)
+      console.log(this.state)
+      switch (e.target.name) {
+        
+        
+        case "type":
+          errors.Type[id] =  value === "default" ? "Type is required!" : "";
+            break;  
+       
+        case "country":
+                errors.Country =
+                  value === "default" ? "Country is required!" : "";
+                break;
+
+            case "street":
+                errors.Street[id] =
+                (value.length == 0) 
+                ? "Street is Required" 
+                : (value.length < 2)
+                ? "Street is Required" : "";
+              break;
+            case "city":
+                errors.City[id] =
+                  (value.length == 0) 
+                    ? "" 
+                    : (!validNameRegex.test(value))
+                    ? "City Name must be in characters!"
+                    : (value.length < 2) 
+                    ? "City is Required" : "";
+              break;
+            case "state":
+                errors.state[id] =
+                    (value.length == 0) 
+                    ? "" 
+                    : (!validNameRegex.test(value))
+                    ? "State Name must be in characters!"
+                    : (value.length < 2) 
+                    ? "State is Required" : "";
+              break;
+            case "zipCode":
+                errors.ZipCode[id] = (value.length == 0) 
+                  ? "" 
+                  :  value.length > 4 && value.length < 10
+                  ? ""
+                  : "Zipcode is not valid!";
+                break;      
+
+      }
     }
     const handleMultipleChange = (e) => {
       e.persist()
@@ -124,69 +192,19 @@ class newPerson extends React.Component{
       console.log(this.state)
       switch (name) {
         
-        case "Email":
+        case "emailAddress":
           errors.Email[id] = validEmailRegex.test(value)
             ? ""
             : "Email is not valid!";
           break;
-        case "Type":
-          errors.Type[id] =  value === "default" ? "Type is required!" : "";
-            break;  
-        case "Number":
-            errors.Number[id] =
+    
+        case "phone":
+            errors.phone[id] =
             value.length < 10 || value.length > 13
                   ? "phone number must be between 10 and 13 digits"
                   : "";
               break;
-        case "Country":
-                errors.Country =
-                  value === "default" ? "Country is required!" : "";
-                break;
-            case "Address":
-                errors.Address[id] =
-                  (value.length == 0) 
-                  ? "" 
-                  : (value.length < 2)
-                  ? "Address is Required" : "";
-              break;
-            case "Street":
-                errors.Street[id] =
-                (value.length == 0) 
-                ? "" 
-                : (value.length < 2)
-                ? "Street is Required" : "";
-              break;
-            case "City":
-                errors.City[id] =
-                  (value.length == 0) 
-                    ? "" 
-                    : (!validNameRegex.test(value))
-                    ? "City Name must be in characters!"
-                    : (value.length < 2) 
-                    ? "City is Required" : "";
-              break;
-            case "State":
-                errors.State[id] =
-                    (value.length == 0) 
-                    ? "" 
-                    : (!validNameRegex.test(value))
-                    ? "State Name must be in characters!"
-                    : (value.length < 2) 
-                    ? "State is Required" : "";
-              break;
-            case "ZipCode":
-                errors.ZipCode[id] = (value.length == 0) 
-                  ? "" 
-                  :  value.length > 4 && value.length < 10
-                  ? ""
-                  : "Zipcode is not valid!";
-                break;      
-
-        case "Website":
-            errors.Website[id] = validUrlRegex.test(value)
-              ? ""
-              : "Website is not valid!";
-            break;
+        
         default:
           break;
       }
@@ -199,17 +217,17 @@ class newPerson extends React.Component{
       }
      const addFeild = (type) => {
       let list = this.state
-        if(type==="Email"){
+        if(type==="email"){
           list.emailAddress.push("")
           this.setState(list)
         }else
-        if(type==="Address"){
+        if(type==="address"){
           list.address.push("")
           this.setState(list)
-        }else if(type==="Number"){
+        }else if(type==="phone"){
           list.phone.push("")
           this.setState(list)
-        }else if(type==="Website"){
+        }else if(type==="website"){
           list.website.push("")
           this.setState(list)
         }
@@ -253,7 +271,7 @@ class newPerson extends React.Component{
         <>
         <div className='form-width'>
           <div className="card p-4">
-            <Form className="form-details">
+            <Form className="form-details" onSubmit={this.handleSubmit}>
             <div className="form-header-container mb-4">
               <h3 className="form-header-text">Add company</h3>
             </div>
@@ -267,7 +285,7 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId="formGroupFirstName">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control name='name' type="text" placeholder="Name" 
+                  <Form.Control required name='name' type="text" placeholder="Name" 
                   value={res.name} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
@@ -281,7 +299,7 @@ class newPerson extends React.Component{
                         
             <DynamicFeilds type={"text"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Email")}>Add an Email</span>
+              <span onClick={()=>addFeild("email")}>Add an Email</span>
             </div>
             <Row>
               <Col>
@@ -295,13 +313,13 @@ class newPerson extends React.Component{
             </Row>
   
             
-            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.PhoneNumber} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
+              <span onClick={()=>addFeild("phone")}>Add a Phone Number</span>
             </div>
             <DynamicFeilds type={"text"} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Website")}>Add a Website</span>
+              <span onClick={()=>addFeild("website")}>Add a Website</span>
             </div>
             <p className="help-block text-danger">{errors.Website}</p>
   
@@ -346,7 +364,7 @@ class newPerson extends React.Component{
                   <Form.Control name='state' type="text" placeholder="State" 
                    onChange={HandleAddressChange}/>
                 </Form.Group>
-                <p className="help-block text-danger">{errors.state}</p>
+                <p className="help-block text-danger">{errors.state[index]}</p>
               </Col>
             
             </Form.Row>
@@ -689,10 +707,11 @@ class newPerson extends React.Component{
             }
             
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Address")}>Add an Address</span>
+              <span onClick={()=>addFeild("address")}>Add an Address</span>
             </div>
   
-            <Button onClick={this.handleSubmit} className="btn btn-success">{editMode?'Update':'Create'}</Button>
+            <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create'}</Button>
+
           </Form>
           </div>
       </div>

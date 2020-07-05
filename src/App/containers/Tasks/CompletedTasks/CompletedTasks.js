@@ -11,6 +11,8 @@ function CompletedTask(props){
           <th scope="col">Discription</th>
           <th scope="col">Task</th>
           <th scope="col">Matter</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>

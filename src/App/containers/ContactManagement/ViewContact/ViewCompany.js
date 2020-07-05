@@ -1,35 +1,36 @@
 import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
 import {Card} from 'antd'
-import { set } from 'lodash'
+import { Button } from 'react-bootstrap'
+import { responsiveMap } from 'antd/lib/_util/responsiveObserve'
 
-function CompanyView(props){
-    let response = {}
-    const [address, setAddress] = useState()
-    const [Title, setTitle] = useState()
-    const [ID, setID] = useState()
-    const [Website, setWebsite] = useState()
-    const [Email, setEmail] = useState()
-    const [Number, setNumber] = useState()
-    const [Rate, setRate] = useState()
-    useEffect(() => {
-    
-        async function fetchData() {
-           await api.get('/company/view/5ef5ca4a5080d35bcc38d416').then(res=>{
-              response = res
-              console.log(response)
-              setValue()
-           })
-
+let address = null
+let title = null
+let ID = null
+let Website = null
+let Email = null
+let Number= null
+let Rate = null
+let data = null
+let response = {}
+class companyView extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
         }
-        fetchData();
-      }, []);
-
-      const setValue = () =>{
-        const ttl = response.data.data.name
-        const idx = response.data.data.billingClientId
-        const rte = response.data.data.billingCustomRate
-        const adrs = response.data.data.address.map((value, index)=>{
+    }
+    async componentDidMount(){
+        await api.get('/company/view/5ef5ca4a5080d35bcc38d416').then(res=>{
+            response = res
+         })
+    }
+    componentWillUpdate(){
+        console.log(response.data)
+        data = response.data.data
+        title = response.data.data.name
+        ID = response.data.data.billingClientId
+        Rate = response.data.data.billingCustomRate
+        address = response.data.data.address.map((value, index)=>{
  
             return <div  key ={index}>
                 <p>{value.street}</p>
@@ -40,34 +41,28 @@ function CompanyView(props){
                 <p>{value.type}</p>
             </div>
             })
-            const Web = response.data.data.website.map((value, index)=>{
+             Website = response.data.data.website.map((value, index)=>{
     
                 return <div key={index}>
                     <p>{value}</p>
                 </div>
             })
-            const mail = response.data.data.emailAddress.map((value, index)=>{
+            Email = response.data.data.emailAddress.map((value, index)=>{
                 return <div key={index}>
                     <p>{value}</p>
                 </div>
             })
-            const Num = response.data.data.phone.map((value, index)=>{
+            Number = response.data.data.phone.map((value, index)=>{
                 return <div key={index}>
                     <p>{value.number}</p>
                 </div>
             })
-        setAddress(adrs)
-        setID(idx)
-        setRate(rte)
-        setTitle(ttl)
-        setEmail(mail)
-        setNumber(Num)
-        setWebsite(Web)
-      }
-      
- return<div>
-            <Card style={{ width: "100%" }}>{Title}</Card>
-            <Card title="Contact Details" style={{ width: "100%" }}>
+    }
+    render(){
+        console.log(data)
+        return<div>
+            <Card  style={{ width: "100%" }}>{title}</Card>
+            <Card extra={<Button variant="link" onClick={()=>this.props.history.push('/manage/contacts/edit/person', data)}>Edit</Button>} title="Contact Details" style={{ width: "100%" }}>
                 <p>Email Address : </p> {Email}
                 <p>Phone Number : </p> {Number}
                 <p>Website : </p> {Website}
@@ -81,5 +76,7 @@ function CompanyView(props){
             </Card>
         </div>
 
+    }
 }
-export default CompanyView
+
+export default companyView

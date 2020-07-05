@@ -22,7 +22,7 @@ class Tasks extends React.Component{
       visible: false,
       confirmLoading: false,
       loading: false,
-      Data : {},
+      Data : {priority : "Normal"},
       editMode : false,
       res  : "",
       selected : null
@@ -46,13 +46,19 @@ class Tasks extends React.Component{
   };
    openNotificationWithSucces = type => {
     notification[type]({
-      message: 'success',
+      message: 'Task Saved',
     });
   };
 
   handleOk = () => {
-    this.setState({ loading: true });
-    console.log(this.state.Data)
+   /* this.setState({ loading: true }); */
+   notification.destroy()
+    if ((this.state.Data.taskName ==="" ||this.state.Data.taskName ===undefined) || (this.state.Data.description ==="" ||this.state.Data.taskName ===undefined) || (this.state.Data.dueDate ==="" ||this.state.Data.dueDate ===undefined) || (this.state.Data.matter ==="" ||this.state.Data.matter ===undefined) ) {
+      return notification.warning({
+        message: "Fields Should Not Be Empty",
+      });
+    }else{
+
     if(this.state.editMode){
       api.post('tasks/edit/'+ this.state.selected, this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }else{
@@ -69,7 +75,7 @@ class Tasks extends React.Component{
         confirmLoading: false,
       });
     }, 2000);
- 
+  }
   };
 
   handleCancel = () => {
@@ -103,7 +109,6 @@ class Tasks extends React.Component{
      console.log(value)
     api.get('tasks/delete/'+value._id)
     message.success('Deleted');
-    window.location.reload()
    }
   async componentDidMount(){
     
@@ -204,23 +209,23 @@ class Tasks extends React.Component{
         <Row>
             <Form.Group controlId="taskName">
                 <Form.Label>Task Name</Form.Label>
-                <Form.Control type="text" placeholder="Task Name"  onChange={this.handleChange}/>
+                <Form.Control required type="text" placeholder="Task Name"  onChange={this.handleChange}/>
             </Form.Group>
         </Row>
         <Row>
            <Form.Group controlId="dueDate">
                 <Form.Label>Due Date</Form.Label>
-                <Form.Control type="date" placeholder="Due Date"  onChange={this.handleChange}/>
+                <Form.Control required type="date" placeholder="Due Date"  onChange={this.handleChange}/>
             </Form.Group>
         </Row>
       </Col>
       <Form.Group controlId="description">
         <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows="3" onChange={this.handleChange} />
+        <Form.Control required as="textarea" rows="3" onChange={this.handleChange} />
       </Form.Group>
       <Form.Group controlId="priority">
       <Form.Label>Priority</Form.Label>
-      <Form.Control as="select" onChange={this.handleChange}>
+      <Form.Control as="select" defaultValue="Normal" required onChange={this.handleChange}>
         <option>Low</option>
         <option>Normal</option>
         <option>High</option>
@@ -228,7 +233,7 @@ class Tasks extends React.Component{
     </Form.Group>
             <Form.Group controlId="matter">
                 <Form.Label>Matter</Form.Label>
-                <Form.Control as="select" onChange={this.handleChange} name="matter">
+                <Form.Control required as="select" onChange={this.handleChange} name="matter">
                   {options}
                 </Form.Control>
               </Form.Group>
