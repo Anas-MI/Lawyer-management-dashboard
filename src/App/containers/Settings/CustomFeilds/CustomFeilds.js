@@ -81,10 +81,10 @@ class customFeilds extends React.Component {
         return notification.warning({
           message: "Fields Should Not Be Empty",
         });
-      }else{/*
-       api.post('/user/update/5eecb08eaec6f1001765f8d5', newdata).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+      }else{
+       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
-    */
+    
       }
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
@@ -115,12 +115,11 @@ class customFeilds extends React.Component {
                 <Form.Label>Select Custom Feild type</Form.Label>
                 <Form.Control as="select" name="type" onChange={HandleChange}>
                 <option>Checkbox</option>
-                <option>Contact Select</option>
                 <option>Date</option>
-                <option>Email Address</option>
+                <option>password</option>
                 <option>Integer</option>
                 <option>Matter</option>
-                <option>Money</option>
+                <option>number</option>
                 <option>Picklist</option>
                 <option>Text</option>
                 </Form.Control>

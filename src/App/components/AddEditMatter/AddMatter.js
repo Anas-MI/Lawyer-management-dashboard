@@ -55,7 +55,7 @@ class AddEditMatter extends React.Component{
     
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
-              <Form.Control name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
+              <Form.Control required={value.required} name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
              </Form.Group>
     })
   }
