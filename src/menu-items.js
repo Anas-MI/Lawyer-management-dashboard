@@ -38,27 +38,27 @@ export const navigation = {
                     id: 'content',
                     title: 'Manage Content',
                     type: 'collapse',
-                    icon: 'feather icon-mail',
+                    icon: 'feather icon-book',
                     children:[
                         {
                             id: 'blogs',
                             title: 'Blogs',
                             type: 'item',
-                            icon: 'feather icon-help-circle',
+                            icon: 'feather icon-file',
                             url: '/manage/blogs'
                         },
                         {
                             id: 'features',
                             title: 'Features',
                             type: 'item',
-                            icon: 'feather icon-help-circle',
+                            icon: 'feather icon-file-plus',
                             url: '/manage/features'
                         },
                         {
                             id: 'plans',
                             title: 'Plans',
                             type: 'item',
-                            icon: 'feather icon-help-circle',
+                            icon: 'feather icon-codepen',
                             url: '/manage/plans'
                         },
                     ],
@@ -67,7 +67,7 @@ export const navigation = {
                     id: 'contactmanage',
                     title: 'Manage Contacts',
                     type: 'item',
-                    icon: 'feather icon-help-circle',
+                    icon: 'feather icon-mail',
                     url: '/manage/contacts'
                 },
 
