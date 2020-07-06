@@ -9,9 +9,9 @@ import api from '../../../resources/api'
 
 
 const ContactsManage = (props) => {
-  const data = useSelector(state=>state.user.token.user._id)
+  const userId = useSelector(state=>state.user.token.user._id)
   const [type , setType] = useState("contact")
-  console.log(data)
+  console.log(userId)
   const dispatch = useDispatch();
   const [companyData , setcompanyData] = useState([])
   const [searchData , setsearchData] = useState([])
@@ -34,8 +34,8 @@ const ContactsManage = (props) => {
   useEffect(() => {
     
     async function fetchData() {
-      response = await api.get('/contact/showall')
-      company = await api.get('/company/showall')
+      response = await api.get('/contact/viewforuser/'+ userId)
+      company = await api.get('/company/viewforuser/'+ userId)
       console.log(response)
       console.log(company)
       setTable()

@@ -4,6 +4,7 @@ import { Upload, message,  Modal , notification, Space} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from '../DynamicFeilds/index'
 import api from '../../../../resources/api'
+import {connect} from "react-redux"
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -82,10 +83,15 @@ class newPerson extends React.Component{
     
       };
       if (validateForm()) {
+        console.log("all good")
+        const data = this.state
+        data.userId = this.props.userId
+        console.log(data)
         if(editMode){
           //  dispatch(updateBlog({id:this.state._id,body:this.state}))
        }else{
-          api.post('company/create', this.state).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
+
+          api.post('company/create', data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
        }
        if(this.props.location!=undefined){
          this.props.history.goBack()
@@ -720,4 +726,7 @@ class newPerson extends React.Component{
            )  
   }
 }
-export default newPerson
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect( mapStateToProps)(newPerson)

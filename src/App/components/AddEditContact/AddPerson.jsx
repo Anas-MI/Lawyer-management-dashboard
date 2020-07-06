@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from './DynamicFeilds/index.js'
 import api from '../../../resources/api'
 import AddCompany from './AddCompany/indexModal.js'
+import { connect } from 'react-redux';
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -21,6 +22,8 @@ let editMode = null
 let options = null
 let response = {}
 let feilds = {}
+let editRes = ""
+let customData =  []
 let customFields = null
 let res = ""
 let error = {
@@ -55,27 +58,26 @@ class newPerson extends React.Component{
 
   handleCustom(e){
     e.persist()
-    let list = this.state.customFields
     const { id , value, name } = e.target
-
-    list[id]={[name] : value}
-    this.setState({customFields : list})
-    console.log(this.state)
+    customData[id]={[name] : value}
   }
   async componentDidMount(){
-   response = await api.get('/company/showall')
+   response = await api.get('/company/viewforuser/'+this.props.userId)
     
      options = response.data.data.map((value,id)=>{
     return <option key={id}>{value.name}</option>
     })
     feilds = await api.get('/user/view/5eecb08eaec6f1001765f8d5')
-    customFields = res.data.data.customFields.map((value, index)=>{
+
+    customFields = feilds.data.data.customFields.map((value, index)=>{
     
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
               <Form.Control name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
              </Form.Group>
     })
+
+    this.setState({customFields , options})
 
   
 {/*
@@ -100,6 +102,7 @@ class newPerson extends React.Component{
   handleSubmit = (event) => {
     event.preventDefault();
     notification.destroy()
+     console.log(this.props)
       const validateForm = () => {
         let valid = true;
         Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -115,10 +118,14 @@ class newPerson extends React.Component{
       };
       if (validateForm()) {
         console.log("all good")
+        const data = this.state
+        data.userId = this.props.userId
+        data.customFields = customData
+        console.log(data)
        if(editMode){
          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
        }else{
-           api.post('contact/create', this.state).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
+          api.post('contact/create', data).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
        }
      
        if(this.props.location!=undefined){
@@ -839,4 +846,7 @@ class newPerson extends React.Component{
            )  
   }
 }
-export default newPerson
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect( mapStateToProps)(newPerson)
