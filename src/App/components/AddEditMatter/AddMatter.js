@@ -4,6 +4,7 @@ import { message,  Modal, Card, Result, notification } from 'antd';
 import api from '../../../resources/api'
 import AddPerson from '../AddEditContact/AddPerson'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
+import { connect } from 'react-redux'
 
 const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
 
@@ -23,7 +24,10 @@ class AddEditMatter extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      relatedContacts  : [{relationship : "" , contact : "", billThis: ""}],
+      rate : "Flat",
+      status :"Open",
+      client : "",
+      relatedContacts  : [],
       customFields : [{
       }],
       modal : false,
@@ -32,10 +36,9 @@ class AddEditMatter extends React.Component{
   }
   handleCustom(e){
     e.persist()
-    let list = customData
     const { id , value, name } = e.target
-
-    list[id]={[name] : value}
+    customData[id]={[name] : value}
+    console.log(customData)
 
   }
   async componentDidMount(){
@@ -43,21 +46,30 @@ class AddEditMatter extends React.Component{
       editMode= true;
       editRes= this.props.location.state
     }
-    res = await api.get('/user/view/5eecb08eaec6f1001765f8d5').then(
-      contacts = await api.get('/contact/showall'))
+    res = await api.get('/user/view/'+this.props.userId).then(
+      contacts = await api.get('contact/viewforuser/'+this.props.userId))
     
    
     optns = contacts.data.data.map((value, index)=>{
+      if(index == 0){
+        const temp = this.state
+        temp.relatedContacts.contact = value._id
+        temp.client = value._id
+
+        this.setState(temp)
+
+      }
       return <option id={index}>{value.firstName}</option>
      })
+   
     
     customFields = res.data.data.customFields.map((value, index)=>{
-    
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
               <Form.Control required={value.required} name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
              </Form.Group>
     })
+    this.setState({optns : optns, customFields : customFields})
   }
    openNotificationWithIcon = type => {
     notification[type]({
@@ -82,14 +94,17 @@ class AddEditMatter extends React.Component{
         message: "Please add a matter description",
       });
     }else{
-      
+      console.log("all good")
        const data = this.state
         data.customFields = customData
         data.client = contacts.data.data[clientId]._id
+        data.userId = this.props.userId
+        console.log(data)
        if(this.state.editMode){
           //  dispatch(updateBlog({id:state._id,body:state}))
        }else{
-          api.post('matter/create', data).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
+         api.post('matter/create', data).then(res=>console.log(res)).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
+         
        }
 
        if(this.props.location!=undefined){
@@ -117,8 +132,16 @@ class AddEditMatter extends React.Component{
       clientId = e.target.selectedIndex
     }
    
-    console.log(e)
+    console.log(this.state)
   }
+  const handleDelete = (e)=>{
+    e.persist()
+     const { name , id } = e.target
+     let newState = this.state
+     newState.relatedContacts.splice(id, 1)
+     this.setState(newState)
+  }
+
   const HandleDynamicChange = (e)=>{
     e.persist()
     let list = this.state
@@ -227,7 +250,7 @@ class AddEditMatter extends React.Component{
 
       <Card title="Related Contacts" className="mb-4">
           <Form className="form-details">
-          <DynamicFeild InputList={this.state.relatedContacts}  option={optns} error={error.relationship} change={HandleDynamicChange} editRes={editRes} editMode={editMode}></DynamicFeild> 
+          <DynamicFeild name="realtedContacts" InputList={this.state.relatedContacts}  option={optns} error={error.relationship} change={HandleDynamicChange} editRes={editRes} delete={handleDelete} editMode={editMode}></DynamicFeild> 
 
     
             <br/>
@@ -287,5 +310,9 @@ class AddEditMatter extends React.Component{
   }
 }
 
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect(mapStateToProps)(AddEditMatter)
 
-export default AddEditMatter
+

@@ -26,7 +26,7 @@ class DynamicFeilds extends React.Component {
                          onChange={this.props.change}/>
                       </Form.Group>
                       </Col>
-                      <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.type} onClick={this.onClick}>-</Button>
+                      <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.onClick}>-</Button>
                       </Form.Row>
                       
                       <p className="help-block text-danger">{this.props.error[idx]}</p>

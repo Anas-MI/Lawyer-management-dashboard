@@ -284,17 +284,17 @@ class newPerson extends React.Component{
       }
      const addFeild = (type) => {
       let list = this.state
-        if(type==="Email"){
+        if(type==="emailAddress"){
           list.emailAddress.push("")
           this.setState(list)
         }else
-        if(type==="Address"){
+        if(type==="address"){
           list.address.push("")
           this.setState(list)
-        }else if(type==="Number"){
+        }else if(type==="phone"){
           list.phone.push("")
           this.setState(list)
-        }else if(type==="Website"){
+        }else if(type==="website"){
           list.website.push("")
           this.setState(list)
         }
@@ -414,7 +414,7 @@ class newPerson extends React.Component{
           </div>            
             <DynamicFeilds type={"emailAddress"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Email")}>Add an Email</span>
+              <span onClick={()=>addFeild("emailAddress")}>Add an Email</span>
             </div>
             <Row>
               <Col>
@@ -430,11 +430,11 @@ class newPerson extends React.Component{
             
             <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Number")}>Add a Phone Number</span>
+              <span onClick={()=>addFeild("phone")}>Add a Phone Number</span>
             </div>
-            <DynamicFeilds type={"website"} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"website"} name={"website"} text={"website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Website")}>Add a Website</span>
+              <span onClick={()=>addFeild("website")}>Add a Website</span>
             </div>
             <p className="help-block text-danger">{errors.Website}</p>
   
@@ -482,7 +482,7 @@ class newPerson extends React.Component{
                 <p className="help-block text-danger">{errors.State}</p>
               </Col>
             
-              <Button id={index} name="Address" onClick={handleDelete}>-</Button>
+              <Button id={index} name="address" onClick={handleDelete}>-</Button>
             </Form.Row>
             <Row>
                 <Col>
@@ -821,7 +821,7 @@ class newPerson extends React.Component{
             }
             
             <div className="form-add mb-4">
-              <span onClick={()=>addFeild("Address")}>Add an Address</span>
+              <span onClick={()=>addFeild("address")}>Add an Address</span>
             </div><br></br>
             <h4>Custom Feilds</h4>
             <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feild</Button></p>
