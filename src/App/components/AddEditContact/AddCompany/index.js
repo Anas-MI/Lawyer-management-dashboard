@@ -149,7 +149,7 @@ class newPerson extends React.Component{
           errors.Type[id] =  value === "default" ? "Type is required!" : "";
             break;  
        
-        case "country":
+        case "Country":
                 errors.Country =
                   value === "default" ? "Country is required!" : "";
                 break;
@@ -701,7 +701,7 @@ class newPerson extends React.Component{
                           <option value="Zimbabwe">Zimbabwe</option>
                         </select>
               </Form.Group>
-              <p className="help-block text-danger">{error.countryOfPractice}</p>
+              <p className="help-block text-danger">{error.Country}</p>
 
                 </Col>
               </Row>

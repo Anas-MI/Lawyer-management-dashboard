@@ -260,8 +260,8 @@ const handleView = (i)=>{
         <Button className='ml-auto' color='success' >Export</Button>
         <Button className='ml-auto' color='success' onClick={()=>setTableData("Person")}>Person</Button>
         <Button className='ml-auto' color='success' onClick={()=>setTableData("Company")}>Company</Button>
-        <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Person")}>Add Person</Button>
-        <Button className='ml-auto' color='success' onClick={()=>handleAddNew("Company")}>Add Company</Button>
+        <Button className='ml-auto' color='success' style={{float : "right"}} onClick={()=>handleAddNew("Person")}>Add Person</Button>
+        <Button className='ml-auto' color='success' style={{float : "right"}} onClick={()=>handleAddNew("Company")}>Add Company</Button>
       </div>
       <Table dataSource={state.tableData} columns={columns}
         onRow={(record, rowIndex) => {

@@ -42,14 +42,13 @@ class DynamicFeilds extends React.Component {
                  </Form.Control>
                  </Form.Group>
             </Col>
+            
+            <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
         </Row> 
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact" id={idx} defaultValue={editRes[idx].relationship} onChange={this.props.change} />
           </Form.Group>
-          <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
-
- <br></br>
-            </div>
+        </div>
           )
         })}
 </div> : <div >
@@ -75,13 +74,11 @@ class DynamicFeilds extends React.Component {
                  </Form.Control>
                  </Form.Group>
             </Col>
+            <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
         </Row> 
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact"   onChange={this.props.change}  />
           </Form.Group>
-          <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
-
- <br></br>
             </div>
           )
         })}

@@ -190,7 +190,7 @@ const FeaturesManage = (props) => {
           Add New
         </Button>
       </div>
-      <Table
+      <Table className="overflow-auto"
         dataSource={tableData}
         columns={columns}
         onRow={(record, rowIndex) => {

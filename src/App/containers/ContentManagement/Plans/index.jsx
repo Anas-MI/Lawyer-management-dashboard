@@ -186,7 +186,7 @@ const PlansManage = (props) => {
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
       </div>
-      <Table
+      <Table className="overflow-auto"
         dataSource={tableData}
         columns={columns}
         onRow={(record, rowIndex) => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useDispatch, useSelector} from 'react'
 import { Form, Row , Col , Button } from "react-bootstrap";
 import { message,  Modal, Card, Result, notification } from 'antd';
 import api from '../../../resources/api'
-import AddPerson from '../AddEditContact/AddPerson'
+import AddPerson from '../AddEditContact/AddPersonModal'
 import DynamicFeild from '../AddEditMatter/DynamicFeilds/index'
 import { connect } from 'react-redux'
 

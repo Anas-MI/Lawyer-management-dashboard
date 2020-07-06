@@ -112,6 +112,7 @@ class newPerson extends React.Component{
         Object.values(errors.Street).forEach((val) => val.length > 0 && (valid = false));
         Object.values(errors.City).forEach((val) => val.length > 0 && (valid = false));
         Object.values(errors.ZipCode).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(errors.Country).forEach((val) => val.length > 0 && (valid = false));
         console.log(valid)
         return valid;
     
@@ -211,7 +212,7 @@ class newPerson extends React.Component{
             break;  
        
         case "country":
-                errors.Country =
+                errors.Country[id] =
                   value === "default" ? "Country is required!" : "";
                 break;
 
@@ -481,14 +482,12 @@ class newPerson extends React.Component{
                 </Form.Group>
                 <p className="help-block text-danger">{errors.State}</p>
               </Col>
-            
-              <Button id={index} name="address" onClick={handleDelete}>-</Button>
             </Form.Row>
             <Row>
                 <Col>
                   <Form.Group controlId={index}>
                     <Form.Label>ZipCode</Form.Label>
-                    <Form.Control name='zipCode' type="text" placeholder="ZipCode" 
+                    <Form.Control name='zipCode' type="number" placeholder="ZipCode" 
                     onChange={HandleAddressChange}/>
                   </Form.Group>
                   <p className="help-block text-danger">{errors.ZipCode[index]}</p>
@@ -811,9 +810,11 @@ class newPerson extends React.Component{
                           <option value="Zimbabwe">Zimbabwe</option>
                         </select>
               </Form.Group>
-              <p className="help-block text-danger">{error.countryOfPractice}</p>
+              <p className="help-block text-danger">{error.Country}</p>
 
                 </Col>
+              <Button id={index} name="address" style={{ "height": "45px", "margin-top": "25px"}} onClick={handleDelete}>-</Button>
+
               </Row>
                   
                 </div>
