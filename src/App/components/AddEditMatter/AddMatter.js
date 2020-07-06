@@ -15,7 +15,7 @@ let optns = null
 let editMode = false
 let editRes = ""
 let customData =  []
-let clientId = 1
+let clientId = 0
 let error = {
   relationship: [""]
 }
@@ -131,6 +131,7 @@ class AddEditMatter extends React.Component{
     if(e.target.name==="client"){
       clientId = e.target.selectedIndex
     }
+    console.log(clientId)
    
     console.log(this.state)
   }
