@@ -10,6 +10,7 @@ import api from '../../../resources/api'
 
 const ContactsManage = (props) => {
   const data = useSelector(state=>state.user.token.user._id)
+  const [type , setType] = useState("contact")
   console.log(data)
   const dispatch = useDispatch();
   const [companyData , setcompanyData] = useState([])
@@ -34,6 +35,8 @@ const ContactsManage = (props) => {
     async function fetchData() {
       response = await api.get('/contact/showall')
       company = await api.get('/company/showall')
+      console.log(response)
+      console.log(company)
       setTable()
     }
     fetchData();
@@ -139,8 +142,10 @@ const ContactsManage = (props) => {
     if(company != {} && response !={}){
       if(type==="Person"){
         setState({tableData : contactData})
+        setType("contact")
       }else if(type==="Company"){
       setState({tableData : companyData})
+        setType("company")
       }
     }
    }
@@ -224,16 +229,14 @@ const ContactsManage = (props) => {
   };
 
 const handleView = (i)=>{
-  
+    console.log(type)
       console.log(i)
-      /*
-      if(type==="Person"){
-        props.history.push('/manage/contacts/add/Person')
-      }else if(type==="Company"){
-        props.history.push('/manage/contacts/add/Company')
+      if(type==="contact"){
+        props.history.push('/view/contact',i)
       }
-      */
-     props.history.push('/view/company',i)
+      if(type==="company"){
+        props.history.push('/view/company',i)
+      }
   }
  
   return (
