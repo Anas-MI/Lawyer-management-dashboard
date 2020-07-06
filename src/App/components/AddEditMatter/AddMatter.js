@@ -238,7 +238,7 @@ class AddEditMatter extends React.Component{
       </Card>
       <Card title="Custom Feilds"  className="mb-4">
       <Form className="form-details">
-      <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feild</Button></p>
+      <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feilds</Button></p>
 
       {customFields}
       </Form>
