@@ -14,6 +14,7 @@ const ContactsManage = (props) => {
   console.log(data)
   const dispatch = useDispatch();
   const [companyData , setcompanyData] = useState([])
+  const [searchData , setsearchData] = useState([])
   const [contactData , setcontactData] = useState([])
   let response = {}
   let company= {}
@@ -216,16 +217,30 @@ const ContactsManage = (props) => {
 
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
+    state.tableData.map((value,id)=>{
+      let key=id
+     
+      if(value[dataIndex] == selectedKeys){
+        const data={
+          firstName : value.firstName,
+          billingCustomRate : value.billingCustomRate,
+          emailAddress : value.emailAddress.map((value)=>{return <div>{value}<br></br></div>})
+        }
+    
+        let newtableData = searchData
+        newtableData.push(data)
+        setsearchData(newtableData)
+      }    
+    })
+    setState({tableData : searchData})
+    
   };
 
   const handleReset = clearFilters => {
     clearFilters();
     setState({ searchText: '' });
+    setState({tableData : contactData})
+    setsearchData([])
   };
 
 const handleView = (i)=>{
