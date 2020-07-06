@@ -6,8 +6,8 @@ import List from './List/List'
 import api from "../../../resources/api"
 import {Button,Modal, notification, Popconfirm,message} from 'antd'
 import { Form, Row , Col} from "react-bootstrap";
-
-
+import {connect} from 'react-redux'
+ 
 
 let res = {}
 let response = {}
@@ -59,11 +59,12 @@ class Tasks extends React.Component{
         message: "Fields Should Not Be Empty",
       });
     }else{
-
+    const data = this.state.Data
+    data.userId = this.props.userId
     if(this.state.editMode){
-      api.post('tasks/edit/'+ this.state.selected, this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+      api.post('tasks/edit/'+ this.state.selected, data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }else{
-      api.post('/tasks/create', this.state.Data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+      api.post('/tasks/create', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
     }
     this.setState({
       ModalText: 'The modal will be closed after two seconds',
@@ -114,12 +115,12 @@ class Tasks extends React.Component{
     message.success('Deleted');
     setTimeout(() => {
       window.location.reload()
-    }, 1000);
+    }, 1500);
    
    }
   async componentDidMount(){
     
-    res = await api.get('/tasks/showall')
+    res = await api.get('/tasks/viewforuser/'+ this.props.userId)
     ListData = res.data.data.map((value, index)=>{
       return  <tr>
       <th scope="row">{value.dueDate}</th>
@@ -162,18 +163,18 @@ class Tasks extends React.Component{
       </tr>
       })
       console.log(res)
-      await api.get('/matter/showall').then(res=>response=res.data.data)
+      await api.get('/matter/viewforuser/'+ this.props.userId).then(res=>response=res.data.data)
+      console.log(response)
        options = response.map((value , index)=>{
          if(index == 0){
            let newdata = this.state
            newdata.Data.matter = value._id
            this.setState(newdata)
          }
-        
      return <option>{value.matterDescription}</option>
 
     })
-    this.setState({ListData, tableData})
+    this.setState({ListData, tableData, options})
     
   }
   
@@ -245,7 +246,7 @@ class Tasks extends React.Component{
             <Form.Group controlId="matter">
                 <Form.Label>Matter</Form.Label>
                 <Form.Control required as="select" onChange={this.handleChange} name="matter">
-                  {options}
+                  {this.state.options}
                 </Form.Control>
               </Form.Group>
       </Form>
@@ -254,6 +255,7 @@ class Tasks extends React.Component{
   }
 }
 
-
-
-export default Tasks
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect(mapStateToProps)(Tasks)

@@ -2,6 +2,7 @@ import { Table, Tag, Space, Button,Modal, Popconfirm, message,notification} from
 import React from 'react'
 import {Form} from 'react-bootstrap'
 import api from '../../../../resources/api'
+import {connect} from 'react-redux'
 
 let res = {}
 let newRes = {}
@@ -16,7 +17,7 @@ class tables extends React.Component{
     }
   }
   async componentDidMount(){ 
-    res = await api.get('/user/view/5eecb08eaec6f1001765f8d5')
+    res = await api.get('/user/view/'+this.props.userId)
 
     data= res.data.data.customFields.map((value,index)=>{
       return {
@@ -99,7 +100,7 @@ class tables extends React.Component{
           message: "Fields Should Not Be Empty",
         });
       }else{
-        api.post('/user/update/5eecb08eaec6f1001765f8d5', newData).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+        api.post('/user/update/'+ this.props.userId, newData).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
         this.setModal2Visible(false)
         setTimeout(() => {
           window.location.reload()
@@ -123,7 +124,7 @@ class tables extends React.Component{
       newRes = res.data.data
       newRes.customFields.splice(record.key, 1)
       console.log(newRes)
-      api.post('/user/update/5eecb08eaec6f1001765f8d5', newRes)
+      api.post('/user/update/'+this.props.userId, newRes)
       setTimeout(() => {
         window.location.reload()
       }, 1000);
@@ -223,4 +224,7 @@ class tables extends React.Component{
 }
 
 
-export default tables
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect(mapStateToProps)(tables)

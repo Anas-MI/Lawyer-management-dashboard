@@ -1,10 +1,13 @@
 import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
 import {Card, Button} from 'antd'
+import { useDispatch, useSelector } from "react-redux";
+
 
 function CompanyView(props){
     let response = {}
     let data = null
+    const userId = useSelector(state=>state.user.token.user._id)
     const [address, setAddress] = useState()
     const [Title, setTitle] = useState()
     const [ID, setID] = useState()
@@ -13,9 +16,9 @@ function CompanyView(props){
     const [Number, setNumber] = useState()
     const [Rate, setRate] = useState()
     useEffect(() => {
-    
+   
         async function fetchData() {
-           await api.get('/contact/showall').then(res=>{
+           await api.get('/contact/viewforuser/'+ userId).then(res=>{
               response = res.data.data[props.location.state]
               console.log(response)
               setValue()

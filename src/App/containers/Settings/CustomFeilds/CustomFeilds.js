@@ -4,6 +4,7 @@ import Matter from './Matter/matter'
 import Contact from './Contact/contact'
 import { Form } from 'react-bootstrap'
 import api from '../../../../resources/api'
+import {connect} from 'react-redux'
 const { TabPane } = Tabs;
 let res = null
 let data = {
@@ -18,7 +19,7 @@ class customFeilds extends React.Component {
   }
 
   async componentDidMount(){
-    res = await api.get('/user/view/5eecb08eaec6f1001765f8d5')
+    res = await api.get('/user/view/'+this.props.userId)
     data.customFields = res.data.data.customFields
     console.log(data)
   }
@@ -82,7 +83,7 @@ class customFeilds extends React.Component {
           message: "Fields Should Not Be Empty",
         });
       }else{
-       api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
+       api.post('/user/update/'+this.props.userId, data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
       setTimeout(() => {
         window.location.reload()
@@ -150,5 +151,7 @@ class customFeilds extends React.Component {
   }
 }
 
-
-export default customFeilds
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect(mapStateToProps)(customFeilds)

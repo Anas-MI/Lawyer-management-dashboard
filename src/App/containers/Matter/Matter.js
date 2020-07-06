@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import api from '../../../resources/api'
+import {connect} from 'react-redux'
 
 let response={}
 let tableData=[]
@@ -19,7 +20,7 @@ class matterManage extends React.Component{
    }
 
    async componentDidMount(){
-    await api.get('/matter/showall').then(res=>response=res.data.data)
+    await api.get('/matter/viewforuser/'+ this.props.userId).then(res=>response=res.data.data)
     response.map((value , index)=>{
       let newData = {
         key : index,
@@ -255,4 +256,7 @@ const handleView = (rec)=>{
   );}
 };
 
-export default matterManage;
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+export default connect(mapStateToProps)(matterManage)
