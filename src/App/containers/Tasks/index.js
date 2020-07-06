@@ -22,7 +22,7 @@ class Tasks extends React.Component{
       visible: false,
       confirmLoading: false,
       loading: false,
-      Data : {priority : "Normal"},
+      Data : {priority : "Normal" , matter : ""},
       editMode : false,
       res  : "",
       selected : null
@@ -50,8 +50,9 @@ class Tasks extends React.Component{
     });
   };
 
-  handleOk = () => {
+  handleOk = (e) => {
    /* this.setState({ loading: true }); */
+   e.preventDefault()
    notification.destroy()
     if ((this.state.Data.taskName ==="" ||this.state.Data.taskName ===undefined) || (this.state.Data.description ==="" ||this.state.Data.taskName ===undefined) || (this.state.Data.dueDate ==="" ||this.state.Data.dueDate ===undefined) || (this.state.Data.matter ==="" ||this.state.Data.matter ===undefined) ) {
       return notification.warning({
@@ -72,9 +73,11 @@ class Tasks extends React.Component{
       this.setState({
         loading:false,
         visible: false,
-        confirmLoading: false,
+        confirmLoading: false,  
       });
-    }, 2000);
+      window.location.reload()
+    }, 1000);
+   
   }
   };
 
@@ -109,6 +112,10 @@ class Tasks extends React.Component{
      console.log(value)
     api.get('tasks/delete/'+value._id)
     message.success('Deleted');
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000);
+   
    }
   async componentDidMount(){
     
@@ -157,9 +164,13 @@ class Tasks extends React.Component{
       console.log(res)
       await api.get('/matter/showall').then(res=>response=res.data.data)
        options = response.map((value , index)=>{
+         if(index == 0){
+           let newdata = this.state
+           newdata.Data.matter = value._id
+           this.setState(newdata)
+         }
+        
      return <option>{value.matterDescription}</option>
-
-    
 
     })
     this.setState({ListData, tableData})

@@ -37,7 +37,8 @@ class tables extends React.Component{
               />
       }
     })
-    console.log(data)
+    this.setState({data : data})
+    console.log(this.state.data)
     
   }
   state = {
@@ -100,6 +101,9 @@ class tables extends React.Component{
       }else{
         api.post('/user/update/5eecb08eaec6f1001765f8d5', newData).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
         this.setModal2Visible(false)
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
       }
     
     }
@@ -120,7 +124,9 @@ class tables extends React.Component{
       newRes.customFields.splice(record.key, 1)
       console.log(newRes)
       api.post('/user/update/5eecb08eaec6f1001765f8d5', newRes)
-      window.location.reload()
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000);
     }
     const columns = [
       {
@@ -167,7 +173,7 @@ class tables extends React.Component{
     ];
     
     return <div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={this.state.data} />
     <Modal
     title="Add Custom Feild"
     centered

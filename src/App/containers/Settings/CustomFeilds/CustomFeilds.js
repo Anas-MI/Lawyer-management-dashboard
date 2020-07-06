@@ -84,8 +84,11 @@ class customFeilds extends React.Component {
       }else{
        api.post('/user/update/5eecb08eaec6f1001765f8d5', data).then(()=>this.openNotificationWithSucces('success')).catch(()=>{this.openNotificationWithFailure('error')})
       this.setModal2Visible(false)
-    
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000);
       }
+
     }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
     return (
