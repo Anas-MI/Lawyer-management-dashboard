@@ -59,23 +59,44 @@ class AddEditMatter extends React.Component{
              </Form.Group>
     })
   }
+   openNotificationWithIcon = type => {
+    notification[type]({
+      message: 'Matter Saved'});
+  };
+    openNotificationWithfailure = type => {
+    notification[type]({
+      message: 'Failure'});
+  };
    
   handleSubmit = (event) => {
     event.preventDefault();
-   /* const data = this.state
-   data.customFields = customData
-      data.client = contacts.data.data[clientId]._id
+    notification.destroy()
+   
 
-    console.log(data)
-       e.preventDefault()
+    if ((this.state.matterDescription ==="" ||this.state.matterDescription ===undefined) ) {
+      return notification.warning({
+        message: "Please add a matter description",
+      });
+    }else  if ((this.state.client ==="" ||this.state.client ===undefined) ) {
+      return notification.warning({
+        message: "Please add a matter description",
+      });
+    }else{
+      
+       const data = this.state
+        data.customFields = customData
+        data.client = contacts.data.data[clientId]._id
        if(this.state.editMode){
           //  dispatch(updateBlog({id:state._id,body:state}))
        }else{
-          api.post('matter/create', data).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+          api.post('matter/create', data).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
        }
 
-       this.props.history.goBack()*/
-   }
+       if(this.props.location!=undefined){
+        this.props.history.goBack()
+       }
+    }
+  }
   
   render(){
     
@@ -127,14 +148,7 @@ class AddEditMatter extends React.Component{
     this.setState(list)
     console.log(this.state)
   }
-  const openNotificationWithIcon = type => {
-    notification[type]({
-      message: 'Matter Saved'});
-  };
-  const openNotificationWithfailure = type => {
-    notification[type]({
-      message: 'Failure'});
-  };
+
  
   
   
@@ -145,7 +159,7 @@ class AddEditMatter extends React.Component{
             <h3 className="form-header-text">Add New Matter</h3>
       </div>
       <Card title="Matter Information" className="mb-4">
-        <Form className="form-details" onSubmit={this.handleSubmit}>
+        <Form className="form-details" >
           
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
@@ -252,10 +266,10 @@ class AddEditMatter extends React.Component{
                   <option>New Task List</option>
                 </Form.Control>
               </Form.Group>
-        <Button type="submit" className="btn btn-success" >ADD</Button>
+       
       </Form>
       </Card>
-   
+      <Button onClick={this.handleSubmit} lassName="btn btn-success" >ADD</Button>
      <br></br>
       <Modal
         title="Add Company"
