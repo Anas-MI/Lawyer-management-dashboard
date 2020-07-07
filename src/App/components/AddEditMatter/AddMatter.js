@@ -295,7 +295,6 @@ class AddEditMatter extends React.Component{
       <Button onClick={this.handleSubmit} lassName="btn btn-success" >ADD</Button>
      <br></br>
       <Modal
-        title="Add Company"
         centered
         visible={this.state.modal}
         onOk={() => this.setState({modal :false})}
