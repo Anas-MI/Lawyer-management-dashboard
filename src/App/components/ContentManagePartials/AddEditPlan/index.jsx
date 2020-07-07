@@ -4,18 +4,19 @@ import {
 createPlan,
   updatePlan,
 } from "../../../../store/Actions";
-import { Form,Button } from "react-bootstrap";
+import { Form,Button, Col } from "react-bootstrap";
 import { notification } from "antd";
 
 const AddEditPlan = (props) => {
   const [state, setState] = useState({
     planName : "",
-    list : "",
+    list : [""],
     price: "",
   });
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
+  const [dynamic, setDynamic]= useState({ list : [""]})
 
   const dispatch = useDispatch();
   const selectedPlan = useSelector((state) => state.Plan.selected);
@@ -29,23 +30,23 @@ const AddEditPlan = (props) => {
     }
   }, []);
 
-  const splitChange = (e) => {
-    e.persist();
-    const {name, value} = e.target;
-    let errors = error;
-    switch (name) {
-       case "list":
-        errors.list =
-            (value.length == 0) 
-            ? "list is required"
-            : ""
-       break;
-      default:
-        break;
-    }
-    setError((st) => ({ ...st, ...errors }));
-    setState((st) => ({ ...st, [name]: value.split(',') }));
-  }
+  // const splitChange = (e) => {
+  //   e.persist();
+  //   const {name, value} = e.target;
+  //   let errors = error;
+  //   switch (name) {
+  //      case "list":
+  //       errors.list =
+  //           (value.length == 0) 
+  //           ? "list is required"
+  //           : ""
+  //      break;
+  //     default:
+  //       break;
+  //   }
+  //   setError((st) => ({ ...st, ...errors }));
+  //   setState((st) => ({ ...st, [name]: value.split(',') }));
+  // }
 
 
   const handleChange = (e) => {
@@ -92,7 +93,7 @@ const AddEditPlan = (props) => {
   };
 
   function checkValidity() {
-    if (!Object.keys(state).every((k) => state[k] !== "")) {
+    if (!Object.keys(state).every((k) => state[k] !== ("" && [""]))) {
       setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
@@ -118,6 +119,30 @@ const AddEditPlan = (props) => {
   props.history.goBack()
   }
 }
+const addFeild = () => {
+  let listx = dynamic.list
+  listx.push("")
+  setDynamic((st) =>({...st, ...listx}))
+}
+
+const handleDelete = (e)=>{
+    e.persist()
+   const { id } = e.target
+   let newState = dynamic.list
+   newState.splice(id, 1)
+   setDynamic((st) =>({...st, ...newState}))
+   setState({...state, ...newState});
+}
+
+const handleDynamicData = (e)=> {
+  e.persist();
+  const { value , id} = e.target;
+  let newData = state.list
+  newData[id] = value
+  setState({...state, ...newData});
+}
+
+
 
   return (
     <div className='w-75 m-auto'>
@@ -134,18 +159,36 @@ const AddEditPlan = (props) => {
           />
           <p className="help-block text-danger">{error.planName}</p>
         </Form.Group>
-        <Form.Group controlId="formGroupEmail">
-          <Form.Label>List</Form.Label>
-          <Form.Control
-            name="list"
-            type="text"
-            placeholder="List"
-            value={state["list"]}
-            onChange={splitChange}
-          />
-          <Form.Text className="text-muted">separate list by , comma</Form.Text>
-          <p className="help-block text-danger">{error.list}</p>
-        </Form.Group>
+        {
+          dynamic.list.map((value, index) => {
+            return (
+              <>
+              <Form.Row>
+                <Col>
+                  <Form.Group controlId={index}>
+                  <Form.Label>List {index+1}</Form.Label>
+                  <Form.Control
+                    name="list"
+                    type="text"
+                    placeholder="List"
+                    // value={state["list"]}
+                    onChange={handleDynamicData}
+                  />
+                  </Form.Group>
+                </Col>
+                <Button id={index} name="list" style={{ "height": "45px", "margin-top": "25px"}} onClick={handleDelete}>-</Button>
+              </Form.Row>
+            <p className="help-block text-danger">{error.list}</p>
+            </>
+          )
+          })
+        }
+        <div className="form-add mb-4">
+              <span onClick={()=>addFeild()}>Add a List</span>
+        </div>
+
+
+        
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Price</Form.Label>
           <Form.Control

@@ -371,8 +371,6 @@ class newPerson extends React.Component{
             </Form.Group>
             <p className="help-block text-danger">{error.Prefix}</p>
           
-            <p className="help-block text-danger">{error.Prefix}</p>
-          
             <Form.Row>
               <Col>
                 <Form.Group controlId="formGroupFirstName">
