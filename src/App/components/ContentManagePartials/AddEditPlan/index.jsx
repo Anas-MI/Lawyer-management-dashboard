@@ -16,7 +16,6 @@ const AddEditPlan = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
-  const [dynamic, setDynamic]= useState({ list : [""]})
 
   const dispatch = useDispatch();
   const selectedPlan = useSelector((state) => state.Plan.selected);
@@ -73,6 +72,28 @@ const AddEditPlan = (props) => {
     setState((st) => ({ ...st, [name]: value }));
   };
 
+  const addFeild = () => {
+    let listx = state.list
+    listx.push("")
+    setState((st) =>({...st, ...listx}))
+  };
+  
+  const handleDelete = (e)=>{
+      e.persist()
+     const { id } = e.target
+     let newState = state.list
+     newState.splice(id, 1)
+     setState({...state, ...newState});
+  };
+  
+  const handleDynamicData = (e)=> {
+    e.persist();
+    const { value , id} = e.target;
+    let newData = state.list
+    newData[id] = value
+    setState({...state, ...newData});
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!display){
@@ -98,12 +119,12 @@ const AddEditPlan = (props) => {
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
-    } else if (!Object.keys(state.list).every((k) => state.list[k] !== "" )) {
+    } else if ((state.list === "" || state.list === undefined )) {
       setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
-    }else {
+    } else {
       if (editMode) {
         dispatch(updatePlan({id:state._id,body:state},(err,response)=>{
           if(err){
@@ -121,32 +142,9 @@ const AddEditPlan = (props) => {
           }
         }));
       }
-  props.history.goBack()
+      props.history.goBack()
   }
-}
-const addFeild = () => {
-  let listx = state.list
-  listx.push("")
-  setState((st) =>({...st, ...listx}))
-}
-
-const handleDelete = (e)=>{
-    e.persist()
-   const { id } = e.target
-   let newState = state.list
-   newState.splice(id, 1)
-   setState({...state, ...newState});
-}
-
-const handleDynamicData = (e)=> {
-  e.persist();
-  const { value , id} = e.target;
-  let newData = state.list
-  newData[id] = value
-  setState({...state, ...newData});
-}
-
-
+};
 
   return (
     <div className='w-75 m-auto'>

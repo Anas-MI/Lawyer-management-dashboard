@@ -2,6 +2,7 @@ import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
 import {Card, Button} from 'antd'
 import { useDispatch, useSelector } from "react-redux";
+import { values } from 'lodash';
 
 function CompanyView(props){
     let response = {}
@@ -35,7 +36,7 @@ function CompanyView(props){
         const idx = response.billingClientId
         const rte = response.billingCustomRate
         const adrs = response.address.map((value, index)=>{
- 
+
             return <div className="table-span-light" key ={index}>
                 <p style={{"font-size": "15px"}}>{value.type}</p>
                 <p>{value.street}</p>
@@ -59,7 +60,7 @@ function CompanyView(props){
             })
             const Num = response.phone.map((value, index)=>{
                 return <div className="table-span-light" key={index}>
-                    <p>{value.number}</p>
+                    <p>{value}</p>
                 </div>
             })
         setAddress(adrs)
@@ -71,8 +72,18 @@ function CompanyView(props){
         setWebsite(Web)
       }
       
- return<div> 
-            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/company', props.location.state)}>Edit</Button>} title="Contact Details" className="form-width2 mb-4">
+ return (
+     <>
+        <div className="d-flex flex-wrap mb-3">
+            <div>
+                <h3>{Title}</h3>
+            </div>
+            <div className="red-span">
+                <p>Company</p>  
+            </div>
+        </div>
+        <div className="d-flex flex-wrap"> 
+            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/company', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                        <tr>
@@ -89,7 +100,7 @@ function CompanyView(props){
                         </tr>
                         <tr>
                             <td className="border-0 py-2"><span className="table-span-dark">Website</span></td>
-                            <td className="border-0"><span className="table-span-light">{Website}</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{Website}</span></td>
                         </tr>
                         <tr>
                             <td className="border-0 py-2"><span className="table-span-dark">Address</span></td>
@@ -98,7 +109,7 @@ function CompanyView(props){
                     </tbody>
                 </table>
             </Card>
-            <Card title="Billing Information" className="form-width2 mb-4">
+            <Card title="Billing Information" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -113,6 +124,7 @@ function CompanyView(props){
                 </table>
             </Card>
         </div>
-
+    </>
+    )
 }
 export default CompanyView
