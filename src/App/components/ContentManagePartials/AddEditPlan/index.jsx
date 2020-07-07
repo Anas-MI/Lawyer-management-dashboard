@@ -93,12 +93,17 @@ const AddEditPlan = (props) => {
   };
 
   function checkValidity() {
-    if (!Object.keys(state).every((k) => state[k] !== ("" && [""]))) {
+    if (!Object.keys(state).every((k) => state[k] !== "" )) {
       setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
-    } else {
+    } else if (!Object.keys(state.list).every((k) => state.list[k] !== "" )) {
+      setDisplay(true)
+      return notification.warning({
+        message: "Fields Should Not Be Empty",
+      });
+    }else {
       if (editMode) {
         dispatch(updatePlan({id:state._id,body:state},(err,response)=>{
           if(err){
@@ -120,17 +125,16 @@ const AddEditPlan = (props) => {
   }
 }
 const addFeild = () => {
-  let listx = dynamic.list
+  let listx = state.list
   listx.push("")
-  setDynamic((st) =>({...st, ...listx}))
+  setState((st) =>({...st, ...listx}))
 }
 
 const handleDelete = (e)=>{
     e.persist()
    const { id } = e.target
-   let newState = dynamic.list
+   let newState = state.list
    newState.splice(id, 1)
-   setDynamic((st) =>({...st, ...newState}))
    setState({...state, ...newState});
 }
 
@@ -160,7 +164,7 @@ const handleDynamicData = (e)=> {
           <p className="help-block text-danger">{error.planName}</p>
         </Form.Group>
         {
-          dynamic.list.map((value, index) => {
+          state.list.map((value, index) => {
             return (
               <>
               <Form.Row>
@@ -171,7 +175,7 @@ const handleDynamicData = (e)=> {
                     name="list"
                     type="text"
                     placeholder="List"
-                    // value={state["list"]}
+                    value={state.list[index]}
                     onChange={handleDynamicData}
                   />
                   </Form.Group>

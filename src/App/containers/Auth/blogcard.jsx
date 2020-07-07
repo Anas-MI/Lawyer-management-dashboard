@@ -38,14 +38,14 @@ class Blogcard extends Component{
                 </div>
                 <div className="row" >
                     {this.state.blogs.map( blog => (
-                        <div className="col-md-4" key={blog._id}>
+                        <div className="col-md-4 overflow-hidden" key={blog._id}>
                             <div className="border-0 card mb-3 shadow-sm blogcard">
                             <img className="card-img-top" src="img/portfolio/01-small.jpg" alt="blog" />
                                 <div className="card-body">
                                     <a href={`/blogpage/${blog._id}`}>
-                                    <h5 className="card-title">{blog.title}</h5>
+                                    <h5 className="card-title overflow-hidden">{blog.title}</h5>
                                     </a>
-                                    <p className="card-text">{blog.shortDescription}</p>
+                                    <p className="card-text overflow-hidden">{blog.shortDescription}</p>
                                 </div>
                             </div>
                             </div> 
