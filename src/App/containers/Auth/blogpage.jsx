@@ -32,19 +32,19 @@ class blogpage extends Component{
                         (splitUrl[1] == blog._id) ? (
                         <>
                             <div className="heading">
-                                <h1 className="title pb-3" itemprop="mainEntityOfPage name">
+                                <h1 className="title pb-3 text-break" itemprop="mainEntityOfPage name">
                                     {blog.title}
                                 </h1>
                                 <p className="entry-meta py-1 mb-5">
                                     <span className="entry-author "> written by
-                                        <a href="/" className="entry-author-link" rel="author">
-                                            <span className="entry-author-name ml-2">{blog.author}</span>
+                                        <a href="/" className="entry-author-link " rel="author">
+                                            <span className="entry-author-name ml-2 text-break" >{blog.author}</span>
                                         </a>
                                     </span> 
                                 </p>
                             </div>
-                            <div className="content">
-                                <p>{blog.description}</p>
+                            <div className="content overflow-hidden">
+                                <p style={{ "word-break": "break-all"}}>{blog.description}</p>
                             </div>
                         </>
                         ) : ('')

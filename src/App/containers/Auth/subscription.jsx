@@ -39,10 +39,10 @@ export class subscription extends Component {
                         <div className="row py-3">
                             {this.state.qdata.map((repodata) => 
                                 <div className="col-lg-3 col-md-6" key={repodata.id}>        
-                                    <div className="sub_card">
-                                        <p className="card-text font-weight-bold">{repodata.planName}</p>
-                                        <h3 className="card-title" style={{"font-size": "36px"}}>{repodata.price}</h3>
-                                        <ul className="sub-list">
+                                    <div className="sub_card overflow-hidden">
+                                        <p className="card-text font-weight-bold text-break">{repodata.planName}</p>
+                                        <h3 className="card-title text-break" style={{"font-size": "36px"}}>{repodata.price}</h3>
+                                        <ul className="sub-list text-break">
                                             {repodata.list.map((lists)=> <li><i className="fa fa-check"></i>{lists}</li>)}
                                         </ul>
                                         <div className="text-center">

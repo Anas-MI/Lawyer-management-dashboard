@@ -822,8 +822,8 @@ class newPerson extends React.Component{
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("address")}>Add an Address</span>
             </div><br></br>
-            <h4>Custom Feilds</h4>
-            <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feild</Button></p>
+            <h4>Custom Fields</h4>
+            <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Field</Button></p>
             {customFields}
   
             <Button  type="submit" className="btn btn-success">{editMode?'Update':'Create'}</Button>

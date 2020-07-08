@@ -59,7 +59,7 @@ function CompanyView(props){
             })
             const Num = response.phone.map((value, index)=>{
                 return <div className="table-span-light" key={index}>
-                    <p>{value.number}</p>
+                    <p>{value}</p>
                 </div>
             })
         setAddress(adrs)
@@ -71,48 +71,60 @@ function CompanyView(props){
         setWebsite(Web)
       }
       
- return<div> 
-            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/person', props.location.state)}>Edit</Button>} title="Contact Details" className="form-width2 mb-4">
+ return(
+    <>
+        <div className="d-flex flex-wrap mb-3">
+            <div>
+                <h3>{Title}</h3>
+            </div>
+            <div className="green-span">
+                <p>Client</p>  
+            </div>
+        </div>
+        <div className="d-flex flex-wrap"> 
+            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/person', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Name</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Title}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Name</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Title}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Email Address</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Email}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Email Address</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Email}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Phone Number</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Number}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Phone Number</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Number}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Website</span></td>
-                            <td className="border-0"><span className="table-span-light">{Website}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Website</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Website}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Address</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{address}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Address</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{address}</span></td>
                         </tr>
                     </tbody>
                 </table>
             </Card>
-            <Card title="Billing Information" className="form-width2 mb-4">
+            <Card title="Billing Information" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">ID</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{ID}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">ID</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{ID}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Rate}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Rate</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Rate}</span></td>
                         </tr>
                     </tbody>
                 </table>
             </Card>
         </div>
+    </>
+ )
 
 }
 export default CompanyView

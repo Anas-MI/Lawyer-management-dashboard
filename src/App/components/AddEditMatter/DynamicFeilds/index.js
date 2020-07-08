@@ -57,6 +57,7 @@ class DynamicFeilds extends React.Component {
           let inputId = `input-${idx}`
     
           return (
+            <>
             <div key={idx}>
             <Row>
               <Col>
@@ -80,6 +81,8 @@ class DynamicFeilds extends React.Component {
             <Form.Check name="billThis" type="checkbox" label="Bill this contact"   onChange={this.props.change}  />
           </Form.Group>
             </div>
+            <br />
+           </> 
           )
         })}
 </div>

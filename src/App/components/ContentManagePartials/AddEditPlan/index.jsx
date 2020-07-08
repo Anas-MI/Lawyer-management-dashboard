@@ -16,7 +16,6 @@ const AddEditPlan = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
-  const [dynamic, setDynamic]= useState({ list : [""]})
 
   const dispatch = useDispatch();
   const selectedPlan = useSelector((state) => state.Plan.selected);
@@ -73,6 +72,28 @@ const AddEditPlan = (props) => {
     setState((st) => ({ ...st, [name]: value }));
   };
 
+  const addFeild = () => {
+    let listx = state.list
+    listx.push("")
+    setState((st) =>({...st, ...listx}))
+  };
+  
+  const handleDelete = (e)=>{
+      e.persist()
+     const { id } = e.target
+     let newState = state.list
+     newState.splice(id, 1)
+     setState({...state, ...newState});
+  };
+  
+  const handleDynamicData = (e)=> {
+    e.persist();
+    const { value , id} = e.target;
+    let newData = state.list
+    newData[id] = value
+    setState({...state, ...newData});
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!display){
@@ -93,7 +114,12 @@ const AddEditPlan = (props) => {
   };
 
   function checkValidity() {
-    if (!Object.keys(state).every((k) => state[k] !== ("" && [""]))) {
+    if (!Object.keys(state).every((k) => state[k] !== "" )) {
+      setDisplay(true)
+      return notification.warning({
+        message: "Fields Should Not Be Empty",
+      });
+    } else if ((state.list === "" || state.list === undefined )) {
       setDisplay(true)
       return notification.warning({
         message: "Fields Should Not Be Empty",
@@ -116,33 +142,9 @@ const AddEditPlan = (props) => {
           }
         }));
       }
-  props.history.goBack()
+      props.history.goBack()
   }
-}
-const addFeild = () => {
-  let listx = dynamic.list
-  listx.push("")
-  setDynamic((st) =>({...st, ...listx}))
-}
-
-const handleDelete = (e)=>{
-    e.persist()
-   const { id } = e.target
-   let newState = dynamic.list
-   newState.splice(id, 1)
-   setDynamic((st) =>({...st, ...newState}))
-   setState({...state, ...newState});
-}
-
-const handleDynamicData = (e)=> {
-  e.persist();
-  const { value , id} = e.target;
-  let newData = state.list
-  newData[id] = value
-  setState({...state, ...newData});
-}
-
-
+};
 
   return (
     <div className='w-75 m-auto'>
@@ -160,7 +162,7 @@ const handleDynamicData = (e)=> {
           <p className="help-block text-danger">{error.planName}</p>
         </Form.Group>
         {
-          dynamic.list.map((value, index) => {
+          state.list.map((value, index) => {
             return (
               <>
               <Form.Row>
@@ -171,7 +173,7 @@ const handleDynamicData = (e)=> {
                     name="list"
                     type="text"
                     placeholder="List"
-                    // value={state["list"]}
+                    value={state.list[index]}
                     onChange={handleDynamicData}
                   />
                   </Form.Group>

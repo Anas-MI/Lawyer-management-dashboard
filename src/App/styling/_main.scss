@@ -466,7 +466,7 @@ header {
 	height: auto;
     border-radius: 0;
     color: $white;
-    background: transparent;
+    background: transparent !important;
     cursor: pointer;
 	outline: none;
 	font-size: 14px;
@@ -478,7 +478,35 @@ header {
 		}
 	}
 }
-
+.red-span{
+	background-color: #FDEAED;
+    color: #E1233D;
+	border: 1px #FDEAED solid;
+}
+.green-span{
+	background-color: #DAF2EB;
+    color: #43BC9C;
+    border: 1px #D4EFE7 solid;
+}
+.green-span, .red-span{
+	text-align: center;
+	padding: 4px 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    height: 30px;
+	p{
+		margin-bottom: 0;
+	}
+}
+.ant-card-extra{
+	padding: 5px 0 !important;
+}
+.card-box {
+	flex: 1;
+    height: fit-content;
+}
 @media only screen and (max-width: 700px) {
 	.f-menu-items {
 		line-height: 2;
