@@ -20,6 +20,7 @@ class matterManage extends React.Component{
    }
 
    async componentDidMount(){
+    const data = []
     await api.get('/matter/viewforuser/'+ this.props.userId).then(res=>response=res.data.data)
     response.map((value , index)=>{
       let newData = {
@@ -29,11 +30,10 @@ class matterManage extends React.Component{
         PractiseArea : value.practiseArea,
         OpenDate : value.openDate
       }
-     
-        tableData.push(newData)
+      data.push(newData)
     })
     if(this.state.tableData!=[]){
-      this.setState({tableData : tableData})
+      this.setState({tableData : data})
     }
  
    }
@@ -231,13 +231,14 @@ class matterManage extends React.Component{
   };
 
 const handleView = (rec)=>{
-     const id = response[rec.key]._id
-     console.log(id)
-     this.props.history.push('/view/matter', id)
+     let data = {}
+     data.id = response[rec.key]._id
+     data.userId =this.props.userId
+     this.props.history.push('/view/matter', data)
   }
 
   return (
-    <div>{console.log(tableData)}
+    <div>
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={()=>handleAddNew()}>Add Matter</Button>
       </div>
