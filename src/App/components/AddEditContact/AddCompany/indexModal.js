@@ -275,8 +275,8 @@ class newPerson extends React.Component{
      
       return (
         <>
-        <div className='mt-4'>
-          <div className="card p-4">
+        <div>
+          <div>
             <Form className="form-details" onSubmit={this.handleSubmit}>
             <div className="form-header-container mb-4">
               <h3 className="form-header-text">Add company</h3>

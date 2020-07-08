@@ -86,24 +86,24 @@ function CompanyView(props){
                 <table class="table table-borderless">
                     <tbody>
                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Name</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Title}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Name</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Title}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Email Address</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Email}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Email Address</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Email}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Phone Number</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Number}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Phone Number</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Number}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Website</span></td>
-                            <td className="border-0"><span className="table-span-light">{Website}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Website</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Website}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Address</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{address}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Address</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{address}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -112,12 +112,12 @@ function CompanyView(props){
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">ID</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{ID}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">ID</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{ID}</span></td>
                         </tr>
                         <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{Rate}</span></td>
+                            <td className="border-0 py-1"><span className="table-span-dark">Rate</span></td>
+                            <td className="border-0 py-1"><span className="table-span-light">{Rate}</span></td>
                         </tr>
                     </tbody>
                 </table>
