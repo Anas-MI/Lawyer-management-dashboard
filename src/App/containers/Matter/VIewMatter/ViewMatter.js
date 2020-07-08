@@ -1,31 +1,140 @@
 import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
-import {Card , Tabs} from 'antd'
+import {Card , Tabs, Button, Modal} from 'antd'
 import { number } from 'prop-types';
+import { Form, Row, Col } from 'react-bootstrap'
 const { TabPane } = Tabs;
 
 function CompanyView(props){
     let response = {}
+    let calendar= {}
+    let task = {}
+    const [state, setState] = useState({visible : false})
+    const [contact, setContact] = useState([])
+    const [Calendar, setCalendar] = useState([])
+    const [Task, setTask] = useState([])
     const [address, setAddress] = useState()
+    const [events, setEvents] = useState()
     const [firstName, setfirstName] = useState()
     const [ID, setID] = useState()
     const [Website, setWebsite] = useState()
     const [Email, setEmail] = useState()
     const [Number, setNumber] = useState()
+    console.log(props.location.state.id)
     useEffect(() => {
     
         async function fetchData() {
-           await api.get('/matter/view/'+props.location.state).then(res=>{
+           await api.get('/matter/view/'+props.location.state.id).then(res=>{
               response = res.data
               console.log(response)
-              setValue()
-           })
+             
+           })  
+           calendar = await api.get('/calendar/viewforuser/'+props.location.state.id)
+           .then(
+            task = await api.get('/tasks/fetchformatter/'+props.location.state.id)
+           ) 
+           console.log(calendar)
+           setValue()
         }
         fetchData();
         
       }, []);
-      const setValue = () =>{
-          console.log("setValue")
+
+
+      const setValue=()=>{
+        let data = []
+         //  setRealatedContacts(rcntct)
+         response.data.relatedContacts.map(async(value, index)=>{
+            console.log(value.contact)
+           const cntct = await api.get('/contact/view/'+value.contact)
+           console.log(cntct.data)
+           const mail = response.data.client.emailAddress.map((value, index)=>{
+            return <div className="table-span-light" key={index}>
+                <p>{value}</p>
+            </div>
+        })
+        const Num = response.data.client.phone.map((value, index)=>{
+            return <div className="table-span-light" key={index}>
+                <p>{value.number}</p>
+            </div>
+        })
+           data.push(<Card  title="Related Contact"  className="form-width mb-4">
+            <table class="table table-borderless">
+            <tbody>
+            <tr>
+                <td className="border-0 py-2"><span className="table-span-dark">Client</span></td>
+                <td className="border-0 py-2"><span className="table-span-light">{cntct.data.data.firstName + cntct.data.data.lastName}</span></td>
+            </tr>
+            <tr>
+                <td className="border-0 py-2"><span className="table-span-dark">Phone</span></td>
+                <td className="border-0 py-2"><span className="table-span-light">{Num}</span></td>
+            </tr>
+            <tr>
+                <td className="border-0 py-2"><span className="table-span-dark">Email</span></td>
+                <td className="border-0"><span className="table-span-light">{mail}</span></td>
+            </tr>
+        </tbody>
+    </table>
+        </Card>)
+             setContact(data)
+       }
+)
+       
+       let cal = []
+       calendar.data.data.map((value,index)=>{
+        cal.push(  <Card title="Calendar"  className="form-width mb-4">
+        <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Start</span></td>
+    <td className="border-0 py-2"><span className="table-span-light">{value.startTime}</span></td>
+                    </tr>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">End</span></td>
+                        <td className="border-0 py-2"><span className="table-span-light">{value.endTime}</span></td>
+                    </tr>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Title</span></td>
+                        <td className="border-0"><span className="table-span-light">{value.title}</span></td>
+                    </tr>
+                    <tr>
+                        <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
+                        <td className="border-0 py-2"><span className="table-span-light">{value.description}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </Card>)
+        setCalendar(cal)
+    })
+  
+        let tsk = []
+        task.data.data.map((value,index)=>{
+            tsk.push(  <Card title="Task"  className="form-width mb-4">
+            <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
+        <td className="border-0 py-2"><span className="table-span-light">{value.dueDate}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Task</span></td>
+                            <td className="border-0 py-2"><span className="table-span-light">{value.taskName}</span></td>
+                        </tr>
+                        <tr>
+                            <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
+                            <td className="border-0"><span className="table-span-light">{value.description}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Card>)
+            setTask(tsk)
+        })
+
+    /*   
+        
+       */
+       // setEvents(evnt)
+
         const adrs = response.data.client.address.map((value, index)=>{
  
             return <div className="table-span-light" key ={index}>
@@ -37,7 +146,6 @@ function CompanyView(props){
                 <p>{value.type}</p>
             </div>
             })
-            console.log(adrs)
             const mail = response.data.client.emailAddress.map((value, index)=>{
                 return <div className="table-span-light" key={index}>
                     <p>{value}</p>
@@ -59,6 +167,26 @@ function CompanyView(props){
  function callback(key) {
     console.log(key);
   }
+
+  const showModal = () => {
+    setState({
+      visible: true,
+    });
+  };
+
+  const handleOk = e => {
+    console.log(e);
+    setState({
+      visible: false,
+    });
+  };
+
+  const handleCancel = e => {
+    console.log(e);
+    setState({
+      visible: false,
+    });
+  };
  return<div>
      <Tabs defaultActiveKey="1" onChange={callback}>
      <TabPane tab="Dashboard" key="1" style={{"padding" : "0px"}}>
@@ -78,7 +206,7 @@ function CompanyView(props){
            </div>
             
         </Card>
-            <Card title="Deails" extra={<a href="#">Add Contact</a>}  className="form-width mb-4">
+            <Card title="Details" extra={<Button type="link" onClick={showModal}>Add Contact</Button>}  className="form-width mb-4">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -100,6 +228,42 @@ function CompanyView(props){
                     </tbody>
                 </table>
             </Card>
+     
+            {
+                contact.map((value,index)=>{
+                    return value
+                })
+            }
+              <Modal
+                title="Add Contact"
+                visible={state.visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                >
+                <Form>
+                    <Row>
+                    <Col>
+                            <Form.Group controlId="relationship">
+                                <Form.Label>Relationship</Form.Label>
+                                <Form.Control name='relationship' type="text" placeholder="Relationship"  />
+                            </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="rcontact">
+                        <Form.Label>Contact</Form.Label>
+                        <Form.Control as="select" name="contact"   >
+                            <option>1</option>
+                            <option>2</option>
+                        </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row> 
+                <Form.Group controlId="billThis">
+                    <Form.Check name="billThis" type="checkbox" label="Bill this contact"     />
+                </Form.Group>
+                </Form>
+                </Modal>
+        
      </TabPane>
      <TabPane tab="Acitivites" key="2">       
             <Card title="Activities" extra={<a href="#">Add Activity</a>}  className="form-width mb-4">
@@ -148,28 +312,10 @@ function CompanyView(props){
             </Card>
         </TabPane>
         <TabPane tab="Calendar" key="3">
-            <Card title="Calender" extra={<a href="#"></a>}  className="form-width mb-4">
-            <table class="table table-borderless">
-                    <tbody>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Start</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">End</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Title</span></td>
-                            <td className="border-0"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </Card>
+            {console.log(Calendar)}
+        {
+            Calendar
+        }
         </TabPane>
         <TabPane tab="Communication" key="4">
             <Card title="Communication" extra={<a href="#"></a>}  className="form-width mb-4">
@@ -188,8 +334,9 @@ function CompanyView(props){
         </Card>
         </TabPane>
         <TabPane tab="Task" key="8">
-            <Card title="Task" extra={<a href="#"></a>}  className="form-width mb-4">
-        </Card>
+           {
+               Task
+           }
         </TabPane>
         <TabPane tab="Bills" key="9">
             <Card title="Bills" extra={<a href="#"></a>}  className="form-width mb-4">

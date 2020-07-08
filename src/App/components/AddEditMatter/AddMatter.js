@@ -118,7 +118,7 @@ class AddEditMatter extends React.Component{
 
     const addFeild=() =>{
       let list = this.state.relatedContacts
-      list.push({relationship : "", Contact : "", billThis : ""})
+      list.push({relationship : "", Contact : "", billThis : "", id: ""})
       this.setState({relatedContacts : list})
       let newState= this.state
       newState.Relation = this.state.relatedContacts
@@ -146,7 +146,7 @@ class AddEditMatter extends React.Component{
   const HandleDynamicChange = (e)=>{
     e.persist()
     let list = this.state
-    const { id , value, name , checked } = e.target
+    const { id , value, name , checked ,selectedIndex } = e.target
     if(name==="billThis"){
       list.relatedContacts[id][name] = checked
     }else{
@@ -154,6 +154,7 @@ class AddEditMatter extends React.Component{
     }
     if(name=='contact'){
       list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
+      list.relatedContacts[id].id = selectedIndex
     }
     console.log(error.relationship)
     switch (name) {
