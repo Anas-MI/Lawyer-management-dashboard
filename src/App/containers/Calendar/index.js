@@ -2,7 +2,7 @@ import React , {useEffect,useRef,forwardRef, useState} from 'react'
 import { 
     ScheduleComponent, 
     Day, Week, WorkWeek, 
-    Month, Agenda, Inject 
+    Month, Agenda, Inject , ViewDirective,ViewsDirective
 } from '@syncfusion/ej2-react-schedule';
 
 import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
@@ -24,8 +24,9 @@ import EditorTemplate from '../../components/EventEditor/v2';
 import { extend } from '@syncfusion/ej2-base';
 import { useDispatch, useSelector, connectAdvanced } from 'react-redux';
 import { getEvents } from '../../../store/Actions';
-import {  L10n } from '@syncfusion/ej2-base';
+import {  L10n, Internationalization } from '@syncfusion/ej2-base';
 
+const Add = <Button type="link">Add</Button>
 L10n.load({
     'en-US': {
         'schedule': {
@@ -53,27 +54,24 @@ const CalendarContainer = props => {
     const SchedulerRef = useRef()
     const recurrenceRef = useRef()
     let res = {}
+    let response = {}
+    const [options, setOptions] = useState([])
     //State
     const dispatch = useDispatch()
     const userId = useSelector(state=>state.user.token.user._id)
-    console.log(userId)
-    const Events = useSelector(state=>state.Calendar.Events)
-    console.log(Events)
-    const [ state, setState ] = useState({tableData : []})
-    const [ data, setData ] = useState({})
 
-    useEffect(()=>{
-        dispatch(getEvents())
-    },[])
+    const [ state, setState ] = useState({tableData : []})
+    const [ data, setData ] = useState({email : false, notification : false})
+    let instance = new Internationalization();
     useEffect(()=>{
       async function fetchData(){
-        res =  await api.get('calendar/viewforuser/'+userId)
-        console.log(res)
+        res =  await api.get('/calendar/viewforuser/'+userId)
+        response =  await api.get('matter/viewforuser/'+userId)
+        setOptions(response.data.data)
         setdata()
       }
       fetchData()
     },[])
-    
     const setdata = () =>{
         let newTableData = []
         res.data.data.map((value, index)=>{
@@ -87,7 +85,9 @@ const CalendarContainer = props => {
             newTableData.push(tableData)
         })
         setState({tableData : newTableData })
+
     }
+
     function onPopupOpen(args) {
         if (args.type === 'Editor') {
             SchedulerRef.current.eventWindow.recurrenceEditor = recurrenceRef.current;
@@ -102,59 +102,69 @@ const CalendarContainer = props => {
                 newdata.type = id
             }
         }else if(id === "email" || id==="notification"){
-            if(value==="on"){
-                newdata[id] = "true"
-            }
+            newdata[id]= !newdata[id]
         }
         else{
         newdata[id] = value
         setData(newdata)
         }
-        console.log(data)
     }
 
-    const change = (e) =>{
-        console.log(e)
-        const { value, id } = e.element
+    const DateTimeChange = (e) =>{
+        const { value, id} = e.element
         let newData  = data
+        if(id==="matter" && e.itemData!=null){
+            newData[id]=options[e.itemData.value]._id
+        }else{
         newData[id] = value
         setData(newData)
+        }
         console.log(data)
-
     }
     const openNotificationWithIcon=(type) =>{
         notification[type]({
-          message: 'Event Saved',
+          message: 'Success',
           });
       };
     const openNotificationWithfailure = type => {
         notification[type]({
           message: 'Failure'});
       };
-    const handleSubmit = () =>{
-        let newdata = data
-        newdata.userId = userId
-        api.post('/calendar/create', newdata).then(res=>console.log(res)).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+    const handleSubmit = (e) =>{
+        if(e.requestType==="eventRemoved"){
+            const id = e.data[0].id
+            api.get('/calendar/delete/'+id).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+
+        }
+        if(e.requestType==="eventChanged"){
+            console.log(e)
+            const id = e.data.id 
+            let eventdata = e.data
+            eventdata.userId = userId 
+            console.log(eventdata)
+            api.post('/calendar/update/'+id, eventdata ).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+            setData({})
+            
+        }
+        if(e.requestType==="eventCreated"){
+            let eventdata = data
+            eventdata.userId = userId
+        api.post('/calendar/create', eventdata).then(res=>console.log(res)).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+        setData({})
+        }
     }
-    console.log(state.tableData)
-    const footer=(props)=>{
-        return (<div>
-      {props.elementType === 'cell' ?
-            <div className="e-cell-footer">
-            <button className="e-event-details" title="Extra Details">Extra Details</button>
-            <button className="e-event-create" title="Add">Add</button>
-          </div>
-            :
-                <div className="e-event-footer">
-            <button className="e-event-edit" title="Edit">Edit</button>
-            <button className="e-event-delete" title="Delete">Delete</button>
-          </div>}
-    </div>);
-    }
-    return <ScheduleComponent height='550px'  ref={cal=>SchedulerRef.current=cal }
+   
+   
+    return <ScheduleComponent height='550px'   actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
           showQuickInfo={false} popupOpen={onPopupOpen}
           eventSettings={{dataSource : state.tableData}}
-            editorTemplate={pr=><EditorTemplate {...pr}  handleChange={handleChange} change={change} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+            editorTemplate={pr=><EditorTemplate {...pr} userId={userId}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+                <ViewsDirective>
+                   <ViewDirective option='Day'/>
+                    <ViewDirective option='Week'/>
+                    <ViewDirective option='WorkWeek'/>
+                    <ViewDirective option='Month'/>
+                </ViewsDirective>
             <Inject services={[Day, Week, WorkWeek, Month, Agenda]} currentView={"Month"}/>
          </ScheduleComponent>
     

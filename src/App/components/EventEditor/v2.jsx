@@ -4,8 +4,24 @@ import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { RecurrenceEditorComponent } from "@syncfusion/ej2-react-schedule";
 import { notification, Button } from "antd";
-
+import api from '../../../resources/api'
 const EditorTemplate = props => {
+
+  let options = []
+  let res = {}
+  useEffect(()=>{
+    async function fetchData(){
+      res =  await api.get('matter/viewforuser/'+props.userId)
+      console.log(res)
+      setdata()
+    }
+    fetchData()
+  },[])
+  const setdata = ()=>{
+    res.data.data.map((value,item)=>{
+      options.push({text :value.matterDescription, value : item})
+    })
+  }
   function onChange(args){
     console.log("date")
     console.log(args.itemData.value)
@@ -38,7 +54,7 @@ const EditorTemplate = props => {
           <td className="e-textlabel">Title</td>
           <td colSpan={4}>
             <input
-              id="subject"
+              id="title"
               className="e-field e-input"
               type="text"
               name="Subject"
@@ -51,11 +67,11 @@ const EditorTemplate = props => {
           <td className="e-textlabel">StartTime :</td>
           <td colSpan={4}>
             <DateTimePickerComponent
-              format="dd/MM/yy hh:mm a"
+              format="MM/dd/yy hh:mm a"
               id="startTime"
               data-name="StartTime"
-              change = {props.change}
-              value={new Date(props.startTime || props.StartTime)}
+              change = {props.DateTimeChange}
+              value={props.startTime || props.StartTime}
               className="e-field"
             ></DateTimePickerComponent>
           </td>
@@ -64,11 +80,11 @@ const EditorTemplate = props => {
           <td className="e-textlabel">EndTime : </td>
           <td colSpan={4}>
             <DateTimePickerComponent
-              format="dd/MM/yy hh:mm a"
+              format="MM/dd/yy hh:mm a"
               id="endTime"
               data-name="EndTime"
-              change={props.change}
-              value={new Date(props.endTime || props.EndTime)}
+              change={props.DateTimeChange}
+              value={props.endTime || props.EndTime}
               className="e-field"
             ></DateTimePickerComponent>
           </td>
@@ -115,11 +131,11 @@ const EditorTemplate = props => {
               id="matter"
               placeholder="Choose status"
               data-name="Matter"
-              change={props.change}
+              change={props.DateTimeChange}
               className="e-field"
               data-name="Matter"
               style={{ width: "100%" }}
-              dataSource={["New", "Requested", "Confirmed"]}
+              dataSource={options}
               value={props.EventType || null}
             ></DropDownListComponent>
           </td>
@@ -169,7 +185,7 @@ const EditorTemplate = props => {
           <td colSpan={4}>
           <TimePickerComponent 
           id="timeForReminder" 
-          change={props.change}
+          change={props.DateTimeChange}
           data-name="TimeForReminder"
           value={new Date(props.timeForReminder || props.timeForReminder)}
           placeholder="Select a Time"
