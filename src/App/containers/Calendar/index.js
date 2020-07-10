@@ -9,7 +9,7 @@ import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { EventSettingsModel } from "@syncfusion/ej2-react-schedule";
 import api from '../../../resources/api'
-import {notification, Button} from 'antd'
+import {notification, Button, Descriptions} from 'antd'
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
 import "@syncfusion/ej2-calendars/styles/material.css";
@@ -74,12 +74,33 @@ const CalendarContainer = props => {
     },[])
     const setdata = () =>{
         let newTableData = []
-        res.data.data.map((value, index)=>{
+        res.data.data.map(async(value, index)=>{
+            let matter = ""
+            if(value.matter != undefined){
+                matter = value.matter.matterDescription
+            }
+            let allday = false
+            if(value.type === "allday"){
+                allday= true
+            }
+            let repeat = false
+            if(value.type === "repeat"){
+                repeat= true
+            }
             const tableData={
                 id: value._id,
                 Subject : value.title,
                 StartTime : value.startTime,
                 EndTime : value.endTime,
+                Location : value.location,
+                Description : value.description,
+                TimeForReminder : value.timeForReminder,
+                Matter : matter,
+                Email : value.email,
+                Notification : value.notification,
+                Allday : allday,
+                Repeat : repeat
+
             }
  
             newTableData.push(tableData)
@@ -108,6 +129,7 @@ const CalendarContainer = props => {
         newdata[id] = value
         setData(newdata)
         }
+        console.log(data)
     }
 
     const DateTimeChange = (e) =>{
@@ -134,31 +156,51 @@ const CalendarContainer = props => {
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
             api.get('/calendar/delete/'+id).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
-
+            setTimeout(()=>{
+                window.location.reload()
+            },1500)
         }
         if(e.requestType==="eventChanged"){
-            console.log(e)
+            console.log(data)
             const id = e.data.id 
-            let eventdata = e.data
+            let eventdata = data
             eventdata.userId = userId 
-            console.log(eventdata)
-            api.post('/calendar/update/'+id, eventdata ).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+            api.post('/calendar/update/'+id, eventdata ).then(res=>console.log(res)).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
             setData({})
+            setTimeout(()=>{
+                window.location.reload()
+            },1500)
             
         }
         if(e.requestType==="eventCreated"){
             let eventdata = data
             eventdata.userId = userId
-        api.post('/calendar/create', eventdata).then(res=>console.log(res)).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+        api.post('/calendar/create', eventdata).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
         setData({})
+        setTimeout(()=>{
+            window.location.reload()
+        },1500)
         }
+       
+    }
+    
+    
+    const setInitails = (args) =>{
+        var strDateTime = args.StartTime
+        var myDate = new Date(strDateTime);
+        const startTime = myDate.toLocaleString()
+        var strDateTime = args.EndTime
+        var myDate = new Date(strDateTime);
+        const endTime = myDate.toLocaleString()
+        setData({startTime : startTime, endTime: endTime})
+        
     }
    
    
     return <ScheduleComponent height='550px'   actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
           showQuickInfo={false} popupOpen={onPopupOpen}
           eventSettings={{dataSource : state.tableData}}
-            editorTemplate={pr=><EditorTemplate {...pr} userId={userId}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+            editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInitails={setInitails}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
                 <ViewsDirective>
                    <ViewDirective option='Day'/>
                     <ViewDirective option='Week'/>
