@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 function CompanyView(props){
     let response = {}
     let data = null
+    const [url ,setUrl] = useState("")
     const userId = useSelector(state=>state.user.token.user._id)
     const [address, setAddress] = useState()
     const [Title, setTitle] = useState()
@@ -31,6 +32,7 @@ function CompanyView(props){
 
       const setValue = () =>{
         const ttl = response.firstName +" "+ response.lastName
+        const URL = response.image
         data = response
         const idx = response.billingClientId
         const rte = response.billingCustomRate
@@ -62,6 +64,7 @@ function CompanyView(props){
                     <p>{value}</p>
                 </div>
             })
+            setUrl(URL)
         setAddress(adrs)
         setID(idx)
         setRate(rte)
@@ -85,6 +88,9 @@ function CompanyView(props){
             <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/person', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
+                        <tr>
+                            <td><img height="200" width="200" src={url}></img></td>
+                        </tr>
                        <tr>
                             <td className="border-0 py-1"><span className="table-span-dark">Name</span></td>
                             <td className="border-0 py-1"><span className="table-span-light">{Title}</span></td>
