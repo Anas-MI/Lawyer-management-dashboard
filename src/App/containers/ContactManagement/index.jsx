@@ -51,6 +51,7 @@ const ContactsManage = (props) => {
       const data={
         firstName : value.firstName + " " + value.lastName,
         billingCustomRate : value.billingCustomRate,
+        _id: value._id,
         emailAddress : value.emailAddress.map((value)=>{return value + " , "})
       }
       let newtableData = contactData
@@ -61,6 +62,7 @@ const ContactsManage = (props) => {
       let key=id
       const data={
         firstName : value.name ,
+        _id: value._id,
         billingCustomRate : value.billingCustomRate,
         emailAddress : value.emailAddress.map((value)=>{return <div>{value}<br></br></div>})
       }
@@ -155,10 +157,17 @@ const ContactsManage = (props) => {
   const handleEdit = record => {
     //   dispatch(selectBlog(record))
     console.log(record)
-      props.history.push('/manage/contacts/edit/person', record.key)
+    if(type==="contact"){
+      props.history.push('/edit/contact', record)
+    }
+    else if(type==="company"){
+      props.history.push('/edit/contact', record)
+    }
+      
   }
   
   const handleDelete = record => {
+    console.log(record)
     //   dispatch(deleteBlog({id:record._id}))
   }
   
@@ -201,6 +210,19 @@ const ContactsManage = (props) => {
         :a.shortDescription>b.shortDescription
       )
     },
+    {
+      title:'Edit',
+      dataIndex: "edit",
+      key: "_id",
+      render:(_,record)=>{
+          return (
+              <Button variant='danger' onClick={()=>handleEdit(record)}>
+                  Edit
+              </Button>
+          )
+      }
+  },
+    
     {
         title:'Delete',
         dataIndex: "delete",
@@ -247,12 +269,12 @@ const ContactsManage = (props) => {
 
 const handleView = (i)=>{
     console.log(type)
-      console.log(i)
+      console.log({i})
       if(type==="contact"){
-        props.history.push('/view/contact',i)
+        props.history.push('/view/contact',i._id)
       }
       if(type==="company"){
-        props.history.push('/view/company',i)
+        props.history.push('/view/company',i._id)
       }
   }
   
@@ -299,7 +321,7 @@ const handleView = (i)=>{
       <Table dataSource={state.tableData} columns={columns}
         onRow={(record, rowIndex) => {
             return {
-              onDoubleClick: () => handleView(rowIndex), // double click row
+              onDoubleClick: () => handleView(record), // double click row
               onContextMenu: event => {}, // right button click row
               onMouseEnter: event => {}, // mouse enter row
               onMouseLeave: event => {}, // mouse leave row

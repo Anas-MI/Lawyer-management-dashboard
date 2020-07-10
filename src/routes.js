@@ -45,6 +45,8 @@ const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 const ContactsManage = React.lazy(()=> import('./App/containers/ContactManagement'))
 const AddPerson = React.lazy(()=>import('./App/components/AddEditContact/AddPerson'))
 const AddCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCompany/index'))
+const EditPerson = React.lazy(()=>import('./App/components/AddEditContact/EditPerson'))
+const EditCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCompany/EditCompany'))
 const ViewContact = React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewContact'))
 const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
 const Matter= React.lazy(()=>import('./App/containers/Matter/Matter'))
@@ -53,6 +55,7 @@ const ViewMatter = React.lazy(()=>import('./App/containers/Matter/VIewMatter/Vie
 const Settings= React.lazy(()=>import('./App/containers/Settings/index'))
 const customFeilds = React.lazy(()=>import('./App/containers/Settings/CustomFeilds/CustomFeilds'))
 const accountNpayment = React.lazy(()=>import('./App/containers/Settings/account&payment/index'))
+
 
 
 export const adminRoutes = [
@@ -117,6 +120,8 @@ const routes = [
     { path: '/settings/account&payment', exact: true, name: 'Account And Payment', component: accountNpayment },
     { path: '/manage/contacts/:manage/Person', exact: true, name: 'Add Edit Contact', component: AddPerson},
     { path: '/manage/contacts/:manage/Company', exact: true, name: 'Add Edit Contact', component: AddCompany},
+    { path: '/edit/contact', exact: true, name: 'Add Edit Contact', component: EditPerson},
+    { path: '/edit/company', exact: true, name: 'Add Edit Contact', component: EditCompany},
     { path: '/manage/contacts', exact: true, name: 'Contacts Management', component: ContactsManage },
     { path: '/view/contact', exact: true, name: 'Contacts Management', component: ViewContact },
     { path: '/view/company', exact: true, name: 'Contacts Management', component: ViewCompany },
