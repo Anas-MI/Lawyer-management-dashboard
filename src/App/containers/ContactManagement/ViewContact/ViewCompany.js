@@ -18,14 +18,14 @@ function CompanyView(props){
     useEffect(() => {
     
         async function fetchData() {
-           await api.get('/company/viewforuser/'+ userId).then(res=>{
-              response = res.data.data[props.location.state]
+            await api.get('/company/view/'+ props.location.state).then(res=>{
+                response = res.data.data
               console.log(response)
               setValue()
            })
 
         }
-        console.log(props.location.state)
+        console.log(props)
         fetchData();
       }, []);
 
@@ -60,7 +60,7 @@ function CompanyView(props){
             })
             const Num = response.phone.map((value, index)=>{
                 return <div className="table-span-light" key={index}>
-                    <p>{value}</p>
+                    <p>{value.number || value}</p>
                 </div>
             })
         setAddress(adrs)

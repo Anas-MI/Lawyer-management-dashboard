@@ -18,8 +18,8 @@ function CompanyView(props){
     useEffect(() => {
    
         async function fetchData() {
-           await api.get('/contact/viewforuser/'+ userId).then(res=>{
-              response = res.data.data[props.location.state]
+           await api.get('/contact/view/'+ props.location.state).then(res=>{
+              response = res.data.data
               console.log(response)
               setValue()
            })
@@ -30,7 +30,7 @@ function CompanyView(props){
       }, []);
 
       const setValue = () =>{
-        const ttl = response.firstName
+        const ttl = response.firstName +" "+ response.lastName
         data = response
         const idx = response.billingClientId
         const rte = response.billingCustomRate
