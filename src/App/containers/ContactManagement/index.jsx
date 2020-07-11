@@ -64,7 +64,7 @@ const ContactsManage = (props) => {
         firstName : value.name ,
         _id: value._id,
         billingCustomRate : value.billingCustomRate,
-        emailAddress : value.emailAddress.map((value)=>{return <div>{value}<br></br></div>})
+        emailAddress : value.emailAddress.map((value)=>{return value + " , "})
       }
       let newtableData = companyData
       newtableData.push(data)
@@ -161,7 +161,7 @@ const ContactsManage = (props) => {
       props.history.push('/edit/contact', record)
     }
     else if(type==="company"){
-      props.history.push('/edit/contact', record)
+      props.history.push('/edit/company', record)
     }
       
   }

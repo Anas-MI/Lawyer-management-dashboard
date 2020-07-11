@@ -51,6 +51,7 @@ const ViewContact = React.lazy(()=>import('./App/containers/ContactManagement/Vi
 const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
 const Matter= React.lazy(()=>import('./App/containers/Matter/Matter'))
 const AddMatter= React.lazy(()=>import('./App/components/AddEditMatter/AddMatter'))
+const EditMatter= React.lazy(()=>import('./App/components/AddEditMatter/EditMatter'))
 const ViewMatter = React.lazy(()=>import('./App/containers/Matter/VIewMatter/ViewMatter'))
 const Settings= React.lazy(()=>import('./App/containers/Settings/index'))
 const customFeilds = React.lazy(()=>import('./App/containers/Settings/CustomFeilds/CustomFeilds'))
@@ -114,6 +115,7 @@ const routes = [
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
     { path: '/manage/matter', exact: true, name: 'Manage Matter', component: Matter},
     { path: '/manage/matter/:manage', exact: true, name: 'Add Edit Matter', component: AddMatter},
+    { path: '/edit/matter', exact: true, name: 'Edit Matter', component: EditMatter},
     { path: '/view/matter', exact: true, name: 'Manage Matter', component: ViewMatter},
     { path: '/settings', exact: true, name: 'Settings', component: Settings },
     { path: '/settings/customFeilds', exact: true, name: 'Custom Feilds', component: customFeilds },

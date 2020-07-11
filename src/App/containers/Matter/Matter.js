@@ -121,10 +121,7 @@ class matterManage extends React.Component{
   }
 
   const handleEdit = record => {
-    //   dispatch(selectBlog(record))
-      const data = response[record.key]
-      console.log(data)
-      this.props.history.push('/manage/Matter/edit',data)
+      this.props.history.push('/edit/matter',record.id)
   }
   
   const handleDelete = record => {

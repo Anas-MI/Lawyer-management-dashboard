@@ -201,11 +201,10 @@ class newPerson extends React.Component {
             });
         });
       }
-      /*
+      
        if(this.props.location!=undefined){
-         this.props.history.goBack()
-        
-     }*/
+         this.props.history.goBack()    
+     }
     } else {
       return notification.warning({
         message: "Please enter valid details",

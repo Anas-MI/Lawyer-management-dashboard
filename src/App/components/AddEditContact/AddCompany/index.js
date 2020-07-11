@@ -93,10 +93,11 @@ class newPerson extends React.Component{
        }else{
 
           api.post('company/create', data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
+          if(this.props.location!=undefined){
+            this.props.history.goBack()
+          }
        }
-       if(this.props.location!=undefined){
-         this.props.history.goBack()
-       }
+      
       } else {
         return notification.warning({
           message: "Please enter valid details",
@@ -112,6 +113,7 @@ class newPerson extends React.Component{
     const handleChange = (e) => {
       e.persist()
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      console.log(this.state)
 
       const { name, value, id } = e.target;
       switch (name) {
@@ -155,7 +157,7 @@ class newPerson extends React.Component{
                   value === "default" ? "Country is required!" : "";
                 break;
 
-            case "street":
+          case "street":
                 errors.Street[id] =
                 (value.length == 0) 
                 ? "Street is Required" 
@@ -313,7 +315,7 @@ class newPerson extends React.Component{
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
                   <Form.Control name='title' type="text" placeholder="Title" 
-                  value={res.title} onChange={handleChange}/>
+                  onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
               </Col>

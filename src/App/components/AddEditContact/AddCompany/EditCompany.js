@@ -17,15 +17,14 @@ const validUrlRegex = RegExp(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+
 const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
 
 
-let editMode = null
-let options = null
-let response = {}
+let editMode = true
 let res = ""
 let error = {
   Name: "",
   Title:"",
 }
 let errors ={
+  Type :[""],
   Email: [""],
   phone: [""],
   Website:[""],
@@ -42,11 +41,15 @@ class newPerson extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[]
+      address : [], emailAddress : [], phone : [], website:[],editData:""
     }
   }
   async componentDidMount(){
-  
+    const editData = await api.get('/company/view/'+this.props.location.state._id)
+    this.setState({editData : editData.data.data})
+    console.log(this.state)
+    this.setState({phone : editData.data.data.phone , emailAddress : editData.data.data.emailAddress,  address : editData.data.data.address, website : editData.data.data.website})
+   
   }
   componentWillUpdate(){
     /*
@@ -88,8 +91,11 @@ class newPerson extends React.Component{
         data.userId = this.props.userId
         console.log(data)
         if(editMode){
-          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
-       }else{
+          api.post("/company/edit/"+ this.props.location.state._id, data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
+          if(this.props.location!=undefined){
+            this.props.history.goBack()    
+          }
+        }else{
 
           api.post('company/create', data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
        }
@@ -136,12 +142,12 @@ class newPerson extends React.Component{
     }
     const HandleAddressChange=(e)=>{
       e.persist()
-      const { id, value, name} = e.target
-      address = {...address, [name]:value}
-      let newState = this.state
-      newState.address[id]=address
-      this.setState(newState)
-      console.log(this.state)
+      const { id, value, name } = e.target;
+      console.log(id + value + name)
+      let newState = this.state;
+      newState.address[id][name] = value;
+      this.setState(newState);
+      console.log(this.state);
       switch (e.target.name) {
         
         
@@ -228,7 +234,7 @@ class newPerson extends React.Component{
           this.setState(list)
         }else
         if(type==="address"){
-          list.address.push("")
+          list.address.push({})
           this.setState(list)
         }else if(type==="phone"){
           list.phone.push("")
@@ -291,8 +297,8 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId="formGroupFirstName">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control required name='name' type="text" placeholder="Name" 
-                  value={res.name} onChange={handleChange}/>
+                  <Form.Control required name='name' type="text"
+                       defaultValue={this.state.editData.name}  onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
               </Col>
@@ -303,27 +309,30 @@ class newPerson extends React.Component{
                            </Col>
             </Form.Row>
                         
-            <DynamicFeilds type={"text"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds record={this.state.editData.emailAddress} editMode={editMode} type={"text"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("email")}>Add an Email</span>
             </div>
             <Row>
-              <Col>
+           
+              {/*
+                 <Col> 
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
-                  <Form.Control name='title' type="text" placeholder="Title" 
-                  value={res.title} onChange={handleChange}/>
+                  <Form.Control name='title' type="text" 
+                  defaultValue={this.state.editData.title} onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
               </Col>
+              */}
             </Row>
   
             
-            <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds record={this.state.editData.phone} editMode={editMode} type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("phone")}>Add a Phone Number</span>
             </div>
-            <DynamicFeilds type={"text"} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
+            <DynamicFeilds type={"text"} editMode={editMode} record={this.state.editData.website} name={"website"} text={"Website"} error={errors.Website} inputList={this.state.website} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("website")}>Add a Website</span>
             </div>
@@ -337,7 +346,7 @@ class newPerson extends React.Component{
               <Col>
               <Form.Group controlId={index}>
                 <Form.Label>Type</Form.Label>
-                <Form.Control as="select" onChange={HandleAddressChange}>
+                <Form.Control as="select" name="type"   defaultValue={this.state.editData.address[index].type} onChange={HandleAddressChange}>
                   <option>Work</option>
                   <option>Home</option>
                 </Form.Control>
@@ -348,7 +357,7 @@ class newPerson extends React.Component{
               <Col>
               <Form.Group controlId={index}>
                   <Form.Label>Street</Form.Label>
-                  <Form.Control name='street' type="text" placeholder="Street" 
+                  <Form.Control name='street' type="text" defaultValue={this.state.editData.address[index].street}
                   onChange={HandleAddressChange}/>
                  </Form.Group>
             <p className="help-block text-danger">{errors.Street[index]}</p>
@@ -359,7 +368,7 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId={index}>
                   <Form.Label>City</Form.Label>
-                  <Form.Control name='city' type="text" placeholder="City" 
+                  <Form.Control name='city' type="text" defaultValue={this.state.editData.address[index].city}
                   onChange={HandleAddressChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{errors.City[index]}</p>
@@ -367,7 +376,7 @@ class newPerson extends React.Component{
               <Col>
                 <Form.Group controlId={index}>
                   <Form.Label>State</Form.Label>
-                  <Form.Control name='state' type="text" placeholder="State" 
+                  <Form.Control name='state' type="text" defaultValue={this.state.editData.address[index].state}
                    onChange={HandleAddressChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{errors.state[index]}</p>
@@ -378,7 +387,7 @@ class newPerson extends React.Component{
                 <Col>
                   <Form.Group controlId={index}>
                     <Form.Label>ZipCode</Form.Label>
-                    <Form.Control name='zipCode' type="text" placeholder="ZipCode" 
+                    <Form.Control name='zipCode' type="text" defaultValue={this.state.editData.address[index].zipCode}
                     onChange={HandleAddressChange}/>
                   </Form.Group>
                   <p className="help-block text-danger">{errors.ZipCode[index]}</p>
@@ -387,9 +396,11 @@ class newPerson extends React.Component{
                 <Form.Group controlId={index}>
               <Form.Label>Country</Form.Label>
                 <select
-                          name="Country"
+                          name="country"
+                          defaultValue={this.state.editData.address[index].country}
+                          id={index}
                           onChange={HandleAddressChange}
-                          value={res.Country}
+                
                           style={{"border-radius": "5px"}}
                         >
                           <option value="default">Country</option>
