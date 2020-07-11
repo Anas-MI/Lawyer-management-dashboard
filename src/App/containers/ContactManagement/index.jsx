@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space } from "antd";
+import { Table,Button,Input, Space, notification } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
@@ -168,7 +168,16 @@ const ContactsManage = (props) => {
   
   const handleDelete = record => {
     console.log(record)
-    //   dispatch(deleteBlog({id:record._id}))
+    if(type==="contact"){
+      api.get('/contact/delete/'+ record._id).then(()=>notification.success({message: "Contact deleted."})).catch(()=>notification.error({message: "Failed to delete"}))
+    }
+    else if(type==="company"){
+      api.get('/company/delete/'+ record._id).then(()=>notification.success({message: "Company deleted."})).catch(()=>notification.error({message: "Failed to delete"}))
+    }
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000);
+    
   }
   
   const columns = [
@@ -187,18 +196,6 @@ const ContactsManage = (props) => {
 
     },
 
-    
-    {
-      title: "billingCustomRate",
-      dataIndex: "billingCustomRate",
-      key: "_id",
-      ...getColumnSearchProps('billingCustomRate'),
-      sorter: (a, b ,c) => ( 
-        c==='ascend'
-        ?a.shortDescription<b.shortDescription
-        :a.shortDescription>b.shortDescription
-      )
-    },
     {
       title: "Email",
       dataIndex: "emailAddress",

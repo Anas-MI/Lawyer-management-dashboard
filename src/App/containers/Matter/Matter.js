@@ -1,5 +1,5 @@
 import React from "react";
-import { Table,Button,Input, Space } from "antd";
+import { Table,Button,Input, Space, notification } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
@@ -25,6 +25,7 @@ class matterManage extends React.Component{
     response.map((value , index)=>{
       let newData = {
         key : index,
+        id : value._id,
         matterDescription : value.matterDescription,
         Client: value.client,
         PractiseArea : value.practiseArea,
@@ -127,7 +128,10 @@ class matterManage extends React.Component{
   }
   
   const handleDelete = record => {
-    //   dispatch(deleteBlog({id:record._id}))
+    api.get('/matter/delete/'+ record.id).then(()=>notification.success({message: "Matter deleted."})).catch(()=>notification.error({message: "Failed to delete"}))
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000);
   }
   
   const columns = [

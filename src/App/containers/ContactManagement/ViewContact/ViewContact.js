@@ -89,7 +89,7 @@ function CompanyView(props){
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td><img height="200" width="200" src={url}></img></td>
+                            <td><img height="200" width="200" src={url} alt="No image"></img></td>
                         </tr>
                        <tr>
                             <td className="border-0 py-1"><span className="table-span-dark">Name</span></td>
