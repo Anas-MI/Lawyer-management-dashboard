@@ -519,15 +519,24 @@ class newPerson extends React.Component {
         });
       },
     };
-
+    const imageUpload= this.state.editData.image 
+                        ?
+                       <div>
+                           <img height="100" width="100" src={this.state.editData.image}></img>
+                            <Upload {...props}>
+                                    <AntdButton>Select File</AntdButton>
+                             </Upload>
+                       </div>
+                       :
+                       <Upload {...props}>
+                            <AntdButton>Select File</AntdButton>
+                        </Upload>
     return (
       <>
         <div className="form-width">
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
-              <Upload {...props}>
-                <AntdButton>Select File</AntdButton>
-              </Upload>
+              {imageUpload}
               <br />
               {/* <AntdButton  onClick={this.handleUpload}>
         Upload
@@ -536,7 +545,7 @@ class newPerson extends React.Component {
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
               <h4>Personal Details</h4>
-
+           
               <Form.Group controlId="formGroupPrefix">
                 <Form.Label>Prefix</Form.Label>
                 <select
