@@ -37,6 +37,7 @@ let error = {
   Title: "",
 };
 let errors = {
+  Type : [""],
   Email: [""],
   phone: [""],
   Website: [""],
@@ -166,8 +167,7 @@ class newPerson extends React.Component {
       if (editMode) {
         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
       } else {
-        api.post("contact/create", data).then((data) => {
-          finalres = data.data._id;
+        api.post("contact/create", data).then((result) => {
           this.setState({ visible: true });
           const key = "updatingDetails";
 
@@ -179,10 +179,11 @@ class newPerson extends React.Component {
           dataList.fileList.forEach((file) => {
             formData.append("image", file);
           });
-          console.log({ data });
+          console.log({ result });
           api
-            .post("/contact/upload/" + data.data.data._id, formData)
+            .post("/contact/upload/"+result.data.data._id, formData)
             .then((res) => {
+              console.log(res)
               if (res.status === 200) {
                 setTimeout(() => {
                   message.success({
@@ -312,9 +313,9 @@ class newPerson extends React.Component {
     const HandleAddressChange = (e) => {
       e.persist();
       const { id, value, name } = e.target;
-      address = { ...address, [name]: value };
+      console.log(id + value + name)
       let newState = this.state;
-      newState.address[id] = address;
+      newState.address[id][name] = value;
       this.setState(newState);
       console.log(this.state);
       switch (e.target.name) {
@@ -396,7 +397,7 @@ class newPerson extends React.Component {
         list.emailAddress.push("");
         this.setState(list);
       } else if (type === "address") {
-        list.address.push("");
+        list.address.push({});
         this.setState(list);
       } else if (type === "phone") {
         list.phone.push("");
@@ -681,6 +682,7 @@ class newPerson extends React.Component {
                           <Form.Label>Type</Form.Label>
                           <Form.Control
                             as="select"
+                            name="type"
                             onChange={HandleAddressChange}
                           >
                             <option>Work</option>
@@ -751,9 +753,9 @@ class newPerson extends React.Component {
                         <Form.Group controlId={index}>
                           <Form.Label>Country</Form.Label>
                           <select
-                            name="Country"
+                            name="country"
+                            id={index}
                             onChange={HandleAddressChange}
-                            value={res.Country}
                             style={{ "border-radius": "5px" }}
                           >
                             <option value="default">Country</option>

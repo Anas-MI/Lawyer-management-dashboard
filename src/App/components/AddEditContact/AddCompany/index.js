@@ -26,6 +26,7 @@ let error = {
   Title:"",
 }
 let errors ={
+  Type : [""],
   Email: [""],
   phone: [""],
   Website:[""],
@@ -136,12 +137,12 @@ class newPerson extends React.Component{
     }
     const HandleAddressChange=(e)=>{
       e.persist()
-      const { id, value, name} = e.target
-      address = {...address, [name]:value}
-      let newState = this.state
-      newState.address[id]=address
-      this.setState(newState)
-      console.log(this.state)
+      const { id, value, name } = e.target;
+      console.log(id + value + name)
+      let newState = this.state;
+      newState.address[id][name] = value;
+      this.setState(newState);
+      console.log(this.state);
       switch (e.target.name) {
         
         
@@ -228,7 +229,7 @@ class newPerson extends React.Component{
           this.setState(list)
         }else
         if(type==="address"){
-          list.address.push("")
+          list.address.push({})
           this.setState(list)
         }else if(type==="phone"){
           list.phone.push("")
@@ -337,7 +338,7 @@ class newPerson extends React.Component{
               <Col>
               <Form.Group controlId={index}>
                 <Form.Label>Type</Form.Label>
-                <Form.Control as="select" onChange={HandleAddressChange}>
+                <Form.Control as="select" name="type" onChange={HandleAddressChange}>
                   <option>Work</option>
                   <option>Home</option>
                 </Form.Control>
@@ -387,9 +388,10 @@ class newPerson extends React.Component{
                 <Form.Group controlId={index}>
               <Form.Label>Country</Form.Label>
                 <select
-                          name="Country"
+                          name="country"
                           onChange={HandleAddressChange}
                           value={res.Country}
+                          id = {index}
                           style={{"border-radius": "5px"}}
                         >
                           <option value="default">Country</option>
