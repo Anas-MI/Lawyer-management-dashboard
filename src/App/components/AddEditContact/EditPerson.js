@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Row, Button, Col } from "react-bootstrap";
+import { Form, Row, Button, Col, ToggleButtonGroup } from "react-bootstrap";
 import { Upload, message, Modal, notification, Space, Card } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import DynamicFeilds from "./DynamicFeilds/index.js";
@@ -58,6 +58,7 @@ class newPerson extends React.Component {
       emailAddress: [],
       phone: [],
       website: [],
+      client : "",
       customFields: [{}],
       modal: false,
       valid: false,
@@ -97,7 +98,7 @@ class newPerson extends React.Component {
           <Form.Control
             name={value.name}
             type={value.type}
-            defaultValue={this.state.editData.customFields[index]}
+            defaultValue={this.state.editData.customFields[index][value.name]}
             onChange={this.handleCustom}
           />
         </Form.Group>
@@ -268,7 +269,12 @@ class newPerson extends React.Component {
      
     const handleChange = (e) => {
       e.persist();
+      if(e.target.name==="company" && e.target.selectedIndex!=0){
+        console.log(e.target.selectedIndex)
+        this.setState((st) => ({ ...st, [e.target.name]: response.data.data[e.target.selectedIndex-1] }));
+      }else {
       this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
+      }
       console.log(this.state);
       const { name, value, id } = e.target;
       switch (name) {
@@ -522,7 +528,7 @@ class newPerson extends React.Component {
     const imageUpload= this.state.editData.image 
                         ?
                        <div>
-                           <img height="100" width="100" src={this.state.editData.image}></img>
+                           <img height="100" width="100" src={this.state.editData.image}></img><br /><br></br>
                             <Upload {...props}>
                                     <AntdButton>Select File</AntdButton>
                              </Upload>
@@ -536,8 +542,7 @@ class newPerson extends React.Component {
         <div className="form-width">
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
-              {imageUpload}
-              <br />
+              
               {/* <AntdButton  onClick={this.handleUpload}>
         Upload
     </AntdButton> */}
@@ -545,41 +550,51 @@ class newPerson extends React.Component {
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
               <h4>Personal Details</h4>
-           
-              <Form.Group controlId="formGroupPrefix">
-                <Form.Label>Prefix</Form.Label>
-                <select
-                  required
-                  name="prefix"
-                  defaultValue = {this.state.editData.prefix}
-                  onChange={handleChange}
-                  style={{ "border-radius": "5px" }}
-                >
-                  <option value="default">Prefix</option>
-                  <option value="Mr.">Mr.</option>
-                  <option value="Miss.">Miss.</option>
-                  <option value="Ms.">Ms.</option>
-                  <option value="Dr.">Dr.</option>
-                  <option value="Gov.">Gov.</option>
-                  <option value="Prof.">Prof.</option>
-                </select>
-              </Form.Group>
-              <p className="help-block text-danger">{error.Prefix}</p>
+              <Row>
+                  <Col xs={7} md="6" >
+        
+                      <Form.Group controlId="formGroupPrefix">
+                        <Form.Label>Prefix</Form.Label>
+                        <select
+                          required
+                          name="prefix"
+                          defaultValue = {this.state.editData.prefix}
+                          onChange={handleChange}
+                          style={{ "border-radius": "5px" }}
+                        >
+                          <option value="default">Prefix</option>
+                          <option value="Mr.">Mr.</option>
+                          <option value="Miss.">Miss.</option>
+                          <option value="Ms.">Ms.</option>
+                          <option value="Dr.">Dr.</option>
+                          <option value="Gov.">Gov.</option>
+                          <option value="Prof.">Prof.</option>
+                        </select>
+                      </Form.Group>
+                      <p className="help-block text-danger">{error.Prefix}</p>
+          
+            
+                        <Form.Group controlId="formGroupFirstName">
+                          <Form.Label>First Name</Form.Label>
+                          <Form.Control
+                            required
+                            name="firstName"
+                            type="text"
+                            defaultValue = {this.state.editData.firstName} 
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                        <p className="help-block text-danger">{error.FirstName}</p>
+                   
+                  </Col>
+                  <Col>
+                    {imageUpload}
+                  </Col>
+              </Row>
+        
 
               <Form.Row>
-                <Col>
-                  <Form.Group controlId="formGroupFirstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                      required
-                      name="firstName"
-                      type="text"
-                      defaultValue = {this.state.editData.firstName} 
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <p className="help-block text-danger">{error.FirstName}</p>
-                </Col>
+
                 <Col>
                   <Form.Group controlId="formGroupMiddleName">
                     <Form.Label>Middle Name</Form.Label>
@@ -611,7 +626,8 @@ class newPerson extends React.Component {
                 <Col>
                   <Form.Group controlId="formGroupCompany">
                     <Form.Label>Company</Form.Label>
-                    <Form.Control as="select"  defaultValue = {this.state.editData.company} onChange={handleChange}>
+                    <Form.Control as="select" name="company"  defaultValue = {this.state.editData.company} onChange={handleChange}>
+                      <option key={0}>Select a company</option>
                       {options}
                     </Form.Control>
                   </Form.Group>

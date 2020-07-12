@@ -312,12 +312,14 @@ class newPerson extends React.Component{
             </div>
             <Row>
               <Col>
+              {/*
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
                   <Form.Control name='title' type="text" placeholder="Title" 
                   onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
+              */}
               </Col>
             </Row>
   

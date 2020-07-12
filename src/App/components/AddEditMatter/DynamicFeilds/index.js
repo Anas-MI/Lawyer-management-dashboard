@@ -32,6 +32,7 @@ class DynamicFeilds extends React.Component {
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
                   <Form.Control as="select" name='contact' onChange={this.props.change}>
+                    <option>Select a contact</option>
                     {this.props.option}
                  </Form.Control>
                  </Form.Group>
@@ -64,6 +65,7 @@ class DynamicFeilds extends React.Component {
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
                   <Form.Control as="select" name="contact" onChange={this.props.change}  >
+                  <option>Select a contact</option>
                     {this.props.option}
                  </Form.Control>
                  </Form.Group>

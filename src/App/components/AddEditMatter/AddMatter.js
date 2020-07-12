@@ -51,14 +51,7 @@ class AddEditMatter extends React.Component{
     
    
     optns = contacts.data.data.map((value, index)=>{
-      if(index == 0){
-        const temp = this.state
-        temp.relatedContacts.contact = value._id
-        temp.client = value._id
 
-        this.setState(temp)
-
-      }
       return <option id={index}>{value.firstName}</option>
      })
    
@@ -66,7 +59,9 @@ class AddEditMatter extends React.Component{
     customFields = res.data.data.customFields.map((value, index)=>{
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
-              <Form.Control required={value.required} name={value.name} type={value.type} placeholder={value.name} onChange={this.handleCustom}/>
+              <Form.Control required={value.required} 
+              name={value.name} type={value.type}  
+              onChange={this.handleCustom} />
              </Form.Group>
     })
     this.setState({optns : optns, customFields : customFields})
@@ -91,13 +86,13 @@ class AddEditMatter extends React.Component{
       });
     }else  if ((this.state.client ==="" ||this.state.client ===undefined) ) {
       return notification.warning({
-        message: "Please add a matter description",
+        message: "Please add a Contact",
       });
     }else{
       console.log("all good")
        const data = this.state
         data.customFields = customData
-        data.client = contacts.data.data[clientId]._id
+        data.client = contacts.data.data[clientId]
         data.userId = this.props.userId
         console.log(data)
        if(this.state.editMode){
@@ -118,7 +113,7 @@ class AddEditMatter extends React.Component{
 
     const addFeild=() =>{
       let list = this.state.relatedContacts
-      list.push({relationship : "", Contact : "", billThis : "", id: ""})
+      list.push({relationship : "", contact : "", billThis : "", id: ""})
       this.setState({relatedContacts : list})
       let newState= this.state
       newState.Relation = this.state.relatedContacts
@@ -129,7 +124,7 @@ class AddEditMatter extends React.Component{
     e.persist()
     this.setState(st=>({...st,[e.target.name]:e.target.value}))
     if(e.target.name==="client"){
-      clientId = e.target.selectedIndex
+      clientId = [e.target.selectedIndex]-1
     }
     console.log(clientId)
    
@@ -189,7 +184,7 @@ class AddEditMatter extends React.Component{
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
               <Form.Control as="select" name="client" onChange={handleChange}>
-                
+                <option>Select a contact</option>
                 {optns}
               </Form.Control>
             </Form.Group>

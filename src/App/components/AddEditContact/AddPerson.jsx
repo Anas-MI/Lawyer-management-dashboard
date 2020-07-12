@@ -263,7 +263,12 @@ class newPerson extends React.Component {
     let address = null;
     const handleChange = (e) => {
       e.persist();
+      if(e.target.name==="company" && e.target.selectedIndex!=0){
+        console.log(e.target.selectedIndex)
+        this.setState((st) => ({ ...st, [e.target.name]: response.data.data[e.target.selectedIndex-1] }));
+      }else {
       this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
+      }
       console.log(this.state);
       const { name, value, id } = e.target;
       switch (name) {
@@ -536,7 +541,7 @@ class newPerson extends React.Component {
                 <Form.Label>Prefix</Form.Label>
                 <select
                   required
-                  name="Prefix"
+                  name="prefix"
                   onChange={handleChange}
                   value={res.Prefix}
                   style={{ "border-radius": "5px" }}
@@ -600,7 +605,8 @@ class newPerson extends React.Component {
                 <Col>
                   <Form.Group controlId="formGroupCompany">
                     <Form.Label>Company</Form.Label>
-                    <Form.Control as="select" onChange={handleChange}>
+                    <Form.Control as="select" name="company" onChange={handleChange}>
+                      <option>Select a company</option>
                       {options}
                     </Form.Control>
                   </Form.Group>
