@@ -192,15 +192,15 @@ class Activity extends React.Component{
             console.log(this.state.data)
         }
         return <div className='p-2 '>
-            <span style={{float : "right"}}>
-                <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
-                <Button onClick={()=>this.showModal("time")}>New Time Entry</Button>
-                <Button onClick={()=>this.showModal("expense")}>New Expense</Button>
-            </span>
+            
             <br></br>
             <br></br>
             
-            <Card>
+            <Card title="Activities" extra={<span style={{float : "right"}}>
+                <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
+                <Button onClick={()=>this.showModal("time")}>New Time Entry</Button>
+                <Button onClick={()=>this.showModal("expense")}>New Expense</Button>
+                </span>}>
                 <Form>
                     <Row>
                     <Col md="2">
