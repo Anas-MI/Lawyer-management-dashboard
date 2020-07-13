@@ -144,7 +144,7 @@ export default {
                     title: 'Billings',
                     type: 'item',
                     icon: 'feather icon-book',
-                    url: '/'
+                    url: '/manage/billing'
                 },
                 {
                     id: 'accounts',

@@ -48,11 +48,13 @@ const AddCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCom
 const EditPerson = React.lazy(()=>import('./App/components/AddEditContact/EditPerson'))
 const EditCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCompany/EditCompany'))
 const ViewContact = React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewContact'))
-const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
-const Matter= React.lazy(()=>import('./App/containers/Matter/Matter'))
-const Activity= React.lazy(()=>import('./App/containers/Activities/Activity'))
-const AddMatter= React.lazy(()=>import('./App/components/AddEditMatter/AddMatter'))
-const EditMatter= React.lazy(()=>import('./App/components/AddEditMatter/EditMatter'))
+const ViewCompany = React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
+const Matter = React.lazy(()=>import('./App/containers/Matter/Matter'))
+const Billing = React.lazy(()=>import('./App/containers/Billings/billing'))
+const Activity = React.lazy(()=>import('./App/containers/Activities/Activity'))
+const AddMatter = React.lazy(()=>import('./App/components/AddEditMatter/AddMatter'))
+const EditMatter = React.lazy(()=>import('./App/components/AddEditMatter/EditMatter'))
+const RecordPayment = React.lazy(()=>import('./App/components/Recordpayment/recordPayment'))
 const ViewMatter = React.lazy(()=>import('./App/containers/Matter/VIewMatter/ViewMatter'))
 const Settings= React.lazy(()=>import('./App/containers/Settings/index'))
 const customFeilds = React.lazy(()=>import('./App/containers/Settings/CustomFeilds/CustomFeilds'))
@@ -116,6 +118,8 @@ const routes = [
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
     { path: '/manage/matter', exact: true, name: 'Manage Matter', component: Matter},
     { path: '/manage/activity', exact: true, name: 'Manage Matter', component: Activity},
+    { path: '/manage/billing', exact: true, name: 'Manage Matter', component: Billing},
+    { path: '/manage/billing/record', exact: true, name: 'Record Payment', component: RecordPayment},
     { path: '/manage/matter/:manage', exact: true, name: 'Add Edit Matter', component: AddMatter},
     { path: '/edit/matter', exact: true, name: 'Edit Matter', component: EditMatter},
     { path: '/view/matter', exact: true, name: 'Manage Matter', component: ViewMatter},
