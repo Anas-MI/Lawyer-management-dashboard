@@ -191,12 +191,14 @@ class Activity extends React.Component{
             }
             console.log(this.state.data)
         }
-        return <div>
-            <span>
+        return <div className='p-2 '>
+            <span style={{float : "right"}}>
                 <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
                 <Button onClick={()=>this.showModal("time")}>New Time Entry</Button>
                 <Button onClick={()=>this.showModal("expense")}>New Expense</Button>
             </span>
+            <br></br>
+            <br></br>
             
             <Card>
                 <Form>
@@ -223,8 +225,9 @@ class Activity extends React.Component{
                     <Col md="2">
                    
                     <Form.Group controlId="sorting">
+                    <Form.Label >Sort</Form.Label>
                         <Form.Control 
-                            siz= "sm"
+                            size="sm"
                             as="select"
                             name="sorting"
                             onChange= { handleSorting }  >
