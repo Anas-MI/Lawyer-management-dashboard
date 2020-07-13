@@ -89,16 +89,20 @@ class newPerson extends React.Component {
     options = response.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
-    feilds = await api.get("/user/view/5eecb08eaec6f1001765f8d5");
+    feilds = await api.get("/user/view/"+this.props.userId);
 
     customFields = feilds.data.data.customFields.map((value, index) => {
+      let val = ""
+      if(this.state.editData.customFields[index] != undefined){
+        val = this.state.editData.customFields[index][value.name]
+      }
       return (
         <Form.Group key={index} controlId={index}>
           <Form.Label>{value.name}</Form.Label>
           <Form.Control
             name={value.name}
             type={value.type}
-            defaultValue={this.state.editData.customFields[index][value.name]}
+            defaultValue={ val }
             onChange={this.handleCustom}
           />
         </Form.Group>
