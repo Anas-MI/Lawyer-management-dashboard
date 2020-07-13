@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateBlog, createBlog } from "../../../../store/Actions";
 import { Form, Button } from "react-bootstrap";
 import { notification } from "antd";
+import api from "../../../../resources/api"
+import { result } from "lodash";
 
 const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
 
@@ -13,10 +15,14 @@ const AddEditBlog = (props) => {
     author: "",
     shortDescription: "",
     description:"",
+    imageFile: "",
   });
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
+
+  //image url
+  const [image, setImage] = useState("");
 
   const dispatch = useDispatch();
   const selectedBlog = useSelector((state) => state.Blog.selected);
@@ -110,24 +116,56 @@ const AddEditBlog = (props) => {
           })
         );
       } else {
-        dispatch(
-          createBlog(state, (err, response) => {
-            if (err) {
-              notification.error(err);
-            } else {
-              notification.success(response);
-            }
-          })
-        );
+        api
+        .post("/blogs/create" , state).then( (result) => {
+
+          // image upload to the server 
+          const files = state.imageFile
+          const uploadData = new FormData();
+          uploadData.append('image', files[0])
+          api
+            .post("/blogs/upload/"+result.data.data._id, uploadData, {
+              headers: {
+              'content-type': 'multipart/form-data'
+              }}
+            ).then(
+              (newresult) => {
+                console.log(newresult)
+              })
+
+        }).catch((err) => {
+          console.log({ err });
+        });
+        
+        // dispatch(
+        //   createBlog(state, (err, response) => {
+        //     if (err) {
+        //       notification.error(err);
+        //     } else {
+        //       notification.success(response);
+        //     }
+        //   })
+        // );
+
       }
     }
     props.history.goBack();
+  }
+
+  // handel Image Upload 
+  const uploadImage = (e) => {
+    setState({...state, imageFile : e.target.files})
   }
 
   return (
     <div className="w-75 m-auto">
       <h3 className="text-center">Add New Blog</h3>
       <Form className="form-details">
+        
+      <Form.Group controlId="formGroupEmail">
+        <input type="file" name="file"  onChange={uploadImage} placeholder="Upload Image"/>
+      </Form.Group>
+
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Title</Form.Label>
           <Form.Control
