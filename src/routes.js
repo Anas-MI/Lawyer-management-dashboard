@@ -50,6 +50,7 @@ const EditCompany = React.lazy(()=>import('./App/components/AddEditContact/AddCo
 const ViewContact = React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewContact'))
 const ViewCompany= React.lazy(()=>import('./App/containers/ContactManagement/ViewContact/ViewCompany'))
 const Matter= React.lazy(()=>import('./App/containers/Matter/Matter'))
+const Activity= React.lazy(()=>import('./App/containers/Activities/Activity'))
 const AddMatter= React.lazy(()=>import('./App/components/AddEditMatter/AddMatter'))
 const EditMatter= React.lazy(()=>import('./App/components/AddEditMatter/EditMatter'))
 const ViewMatter = React.lazy(()=>import('./App/containers/Matter/VIewMatter/ViewMatter'))
@@ -114,6 +115,7 @@ const routes = [
     { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer},
     { path: '/logout', exact: true, name: 'Logout', component: Logout},
     { path: '/manage/matter', exact: true, name: 'Manage Matter', component: Matter},
+    { path: '/manage/activity', exact: true, name: 'Manage Matter', component: Activity},
     { path: '/manage/matter/:manage', exact: true, name: 'Add Edit Matter', component: AddMatter},
     { path: '/edit/matter', exact: true, name: 'Edit Matter', component: EditMatter},
     { path: '/view/matter', exact: true, name: 'Manage Matter', component: ViewMatter},

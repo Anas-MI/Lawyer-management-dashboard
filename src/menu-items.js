@@ -137,7 +137,7 @@ export default {
                     title: 'Activities',
                     type: 'item',
                     icon: 'feather icon-users',
-                    url: '/'
+                    url: '/manage/activity'
                 },
                 {
                     id: 'billings',
