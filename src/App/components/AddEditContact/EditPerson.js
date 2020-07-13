@@ -183,7 +183,7 @@ class newPerson extends React.Component {
             const key = "updatingDetails";
   
             const openMessage = () => {
-              message.loading({ content: "Uploading Files...", key });
+              message.loading({ content: "Uploading Files...", key, duration: 5 });
             };
             openMessage();
             const formData = new FormData();
@@ -199,21 +199,21 @@ class newPerson extends React.Component {
                     message.success({
                       content: "Uploaded!",
                       key,
-                      duration: 3,
+                      duration: 3
                     });
                   }, 1000);
                 } else {
                   console.log({ res });
                 }
+                if(this.props.location!=undefined){
+                  this.props.history.goBack()
+                
+            }
               })
               .catch((err) => {
                 console.log({ err });
               });
           });
-          if(this.props.location!=undefined){
-            this.props.history.goBack()
-          
-      }
      }
     } else {
       return notification.warning({
