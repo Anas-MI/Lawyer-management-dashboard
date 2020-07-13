@@ -1,10 +1,14 @@
 import React from 'react'
-import { Table , Button, Modal , Card, notification } from 'antd'
+import { Table , Button, Modal , Card, notification, Space } from 'antd'
+import { useSelector , connect} from 'react-redux'
 import ExpenseForm from './Form/expenseForm'
+import TimeForm from './Form/timeForm'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Form, Col,Row } from 'react-bootstrap'
+import api from '../../../resources/api'
 
+let matters = {}
 class Activity extends React.Component{
     constructor(props){
         super(props)
@@ -12,12 +16,48 @@ class Activity extends React.Component{
             expenseModal : false,
             timeModal : false,
             data : { 
-             //   billable : false,
+                billable : false,
                 nonBillable : false,
                 date : "",
-                rate : ""
-            }
+                rate : "",
+                invoice : "Unbilled"
+            },
+            timeData : [],
+            expenseData : [],
+            completeData : [],
+            tableData : []
+
         }
+    }
+    componentDidMount(){
+      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{matters = res })
+      api.get('/activity/viewforuser/'+this.props.userId).then((res)=>{
+        let timedata = []
+        let expenseData = []
+        let completeData =[]
+        res.data.data.map((val, index)=>{
+       
+            const temp = {
+              id : val._id,
+              qty : val.qty,
+              description : val.description,
+              rate : val.rate, 
+              nonBillable : val.nonBillable ? "Yes" : "No",
+              billable : val.billable ? "Yes" : "No",
+              date :val.date,
+              invoiceStatus : val.invoiceStatus,
+            }
+            if(val.type ==="time"){
+              timedata.push(temp)
+            }else
+            if(val.type ==="expense"){
+              expenseData.push(temp)
+            }
+            completeData.push(temp)
+
+        })
+        this.setState({completeData : completeData, expenseData : expenseData , timeData : timedata, tableData: completeData  })
+      })
     }
     showModal = (type) => {
         if(type==="time"){
@@ -40,14 +80,42 @@ class Activity extends React.Component{
             notification.error({message : "Please provide rate"})
         }else{
             if(type==="time"){
+              let data = this.state.data
+              data.type = "time"
+              data.userId = this.props.userId
+              api.post('/activity/create', data).then((res)=>{
+                console.log(res);
+                notification.success({message : "Expense Added !"})
+              }).catch((err)=>{
+                console.log(err)
+                notification.error({message : "Failed"})
+              }).then(()=>{
                 this.setState({
-                    timeModal : false,
-                  });
+                  timeModal : false,
+                });
+                setTimeout(()=>{
+                    window.location.reload()
+                },1500)
+              })
             }else
             if(type==="expense"){
-                this.setState({
+                let data = this.state.data
+                data.type = "expense"
+                data.userId = this.props.userId
+                api.post('/activity/create', data).then((res)=>{
+                  console.log(res);
+                  notification.success({message : "Expense Added !"})
+                }).catch((err)=>{
+                  console.log(err)
+                  notification.error({message : "Failed"})
+                }).then(()=>{
+                  this.setState({
                     expenseModal : false,
                   });
+                  setTimeout(()=>{
+                      window.location.reload()
+                  },1500)
+                })
             }
           
         }
@@ -69,20 +137,26 @@ class Activity extends React.Component{
       };
 
     render(){
+      console.log(this.props.userId)
         const handleEdit = record => {
  
               
           }
           
           const handleDelete = record => {
-
+            api.get('/activity/delete/'+record.id).then((res)=>{
+              console.log(res)
+              notification.success({message : "Activity Deleted !"})
+              setTimeout(()=>{
+                window.location.reload()
+              },1500)
+            }).catch((err)=>{
+              console.log(err)
+              notification.error({message : "Failed to delete"})
+            })
             
           }
-         
-        const data = [
 
-          ];
-          
           const columns = [
             {
               title: 'Qty',
@@ -181,15 +255,42 @@ class Activity extends React.Component{
         }
         const handleChange=(e)=>{
             e.persist()
-            const { name, id, value} = e.target
+            const { name, id, value , selectedIndex} = e.target
+            console.log(e)
             let newData = this.state.data
+            if(name==="matter"){
+              if(selectedIndex >= 1){
+                newData[name] = matters.data.data[selectedIndex-1]
+              }else{
+                newData[name] = ""
+              }
+              
+            }else
             if(name==="nonBillable" || name==="billable"){
                     newData[name] = ! newData[name]
+                    newData.billable = ! newData.nonBillable
             }else{
                 newData[name] = value
-                this.setState({data : newData})   
+                this.setState({data : newData })   
             }
             console.log(this.state.data)
+        }
+        const setTableData = (type)=>{
+          if(type==="time"){
+            this.setState({
+              tableData : this.state.timeData
+              });
+         }else
+         if(type==="expense"){
+            this.setState({
+              tableData : this.state.expenseData
+              });
+          }else
+          if(type==="all"){
+            this.setState({
+                tableData : this.state.completeData
+              });
+          }
         }
         return <div className='p-2 '>
             
@@ -201,6 +302,10 @@ class Activity extends React.Component{
                 <Button onClick={()=>this.showModal("time")}>New Time Entry</Button>
                 <Button onClick={()=>this.showModal("expense")}>New Expense</Button>
                 </span>}>
+                <Space>
+                <Button onClick={()=>setTableData("all")}>All</Button>
+                <Button onClick={()=>setTableData("time")}>Time</Button>
+                <Button onClick={()=>setTableData("expense")}>Expense</Button>
                 <Form>
                     <Row>
                     <Col md="2">
@@ -240,7 +345,10 @@ class Activity extends React.Component{
                     </Col>
                     </Row>
                 </Form>
-              <Table columns={columns} dataSource={data}  />
+                </Space>
+            </Card>
+            <Card>                
+              <Table columns={columns} dataSource={this.state.tableData}  />
             </Card>
            
             <Modal
@@ -249,7 +357,7 @@ class Activity extends React.Component{
                 onOk={()=>this.handleOk("time")}
                 onCancel={()=>this.handleCancel("time")}
                 >
-                <ExpenseForm handleChange={handleChange}></ExpenseForm>
+                <TimeForm handleChange={handleChange}></TimeForm>
             </Modal>
             <Modal
                 title="New Expense"
@@ -263,4 +371,8 @@ class Activity extends React.Component{
     }
 }
 
-export default Activity
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+
+export default connect(mapStateToProps)(Activity)

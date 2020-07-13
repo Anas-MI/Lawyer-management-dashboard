@@ -185,7 +185,7 @@ const CalendarContainer = props => {
     }
     
     
-    const setInitails = (args) =>{
+    const setInit = (args) =>{
         var strDateTime = args.StartTime
         var myDate = new Date(strDateTime);
         const startTime = myDate.toLocaleString()
@@ -200,7 +200,7 @@ const CalendarContainer = props => {
     return <ScheduleComponent height='550px'   actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
           showQuickInfo={false} popupOpen={onPopupOpen}
           eventSettings={{dataSource : state.tableData}}
-            editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInitails={setInitails}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+            editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
                 <ViewsDirective>
                    <ViewDirective option='Day'/>
                     <ViewDirective option='Week'/>

@@ -26,6 +26,16 @@ class ExpenseForm extends React.Component{
     render(){
         return<Form >
         <Col>
+        <Form.Group controlId="duration">
+                <Form.Label>Duration</Form.Label>
+                <Form.Control 
+                type="text" 
+                name="time" 
+                placeholder="1 h 12 min" 
+                onChange={this.props.handleChange}/>
+            </Form.Group>
+        </Col>
+        <Col>
             <Form.Group controlId="quantity">
                 <Form.Label>Quantity</Form.Label>
                 <Form.Control 
