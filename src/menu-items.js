@@ -151,7 +151,7 @@ export default {
                     title: 'Accounts',
                     type: 'item',
                     icon: 'feather icon-server',
-                    url: '/'
+                    url: '/accounts'
                 },
                 {
                     id: 'documents',
