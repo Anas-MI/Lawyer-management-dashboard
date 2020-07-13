@@ -286,11 +286,11 @@ const handleView = (i)=>{
     doc.setFontSize(15);
 
     const title = "Contacts";
-    const headers = [["Name", "billingCustoRate", "Email"]];
+    const headers = [["Name", "Email"]];
    
     let data = []
     state.tableData.map((val, index)=>{
-      const td= [val.firstName, val.billingCustomRate , val.emailAddress]
+      const td= [val.firstName , val.emailAddress]
       data.push(td)
     })
    

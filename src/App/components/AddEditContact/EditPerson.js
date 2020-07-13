@@ -89,16 +89,20 @@ class newPerson extends React.Component {
     options = response.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
-    feilds = await api.get("/user/view/5eecb08eaec6f1001765f8d5");
+    feilds = await api.get("/user/view/"+this.props.userId);
 
     customFields = feilds.data.data.customFields.map((value, index) => {
+      let val = ""
+      if(this.state.editData.customFields[index] != undefined){
+        val = this.state.editData.customFields[index][value.name]
+      }
       return (
         <Form.Group key={index} controlId={index}>
           <Form.Label>{value.name}</Form.Label>
           <Form.Control
             name={value.name}
             type={value.type}
-            defaultValue={this.state.editData.customFields[index][value.name]}
+            defaultValue={ val }
             onChange={this.handleCustom}
           />
         </Form.Group>
@@ -179,7 +183,7 @@ class newPerson extends React.Component {
             const key = "updatingDetails";
   
             const openMessage = () => {
-              message.loading({ content: "Uploading Files...", key });
+              message.loading({ content: "Uploading Files...", key, duration: 5 });
             };
             openMessage();
             const formData = new FormData();
@@ -195,21 +199,21 @@ class newPerson extends React.Component {
                     message.success({
                       content: "Uploaded!",
                       key,
-                      duration: 3,
+                      duration: 3
                     });
                   }, 1000);
                 } else {
                   console.log({ res });
                 }
+                if(this.props.location!=undefined){
+                  this.props.history.goBack()
+                
+            }
               })
               .catch((err) => {
                 console.log({ err });
               });
           });
-          if(this.props.location!=undefined){
-            this.props.history.goBack()
-          
-      }
      }
     } else {
       return notification.warning({
