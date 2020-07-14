@@ -297,57 +297,50 @@ class Activity extends React.Component{
             <br></br>
             <br></br>
             
-            <Card title="Activities" extra={<span style={{float : "right"}}>
+            <Card title="Activities" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
                 <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
                 <Button onClick={()=>this.showModal("time")}>New Time Entry</Button>
                 <Button onClick={()=>this.showModal("expense")}>New Expense</Button>
                 </span>}>
-                <Space>
-                <Button onClick={()=>setTableData("all")}>All</Button>
-                <Button onClick={()=>setTableData("time")}>Time</Button>
-                <Button onClick={()=>setTableData("expense")}>Expense</Button>
-                <Form>
-                    <Row>
-                    <Col md="2">
-                    <Form.Group controlId="From">
-                        <Form.Label>From</Form.Label>
-                        <Form.Control 
-                        size="sm"
-                        type="date" 
-                        name="from"
-                        onChange= { handleSorting }  />
-                    </Form.Group>
-                    </Col>
-                    <Col md="2" >
-                    <Form.Group controlId="To">
-                        <Form.Label>To</Form.Label>
-                        <Form.Control 
-                        size="sm"
-                        type="date" 
-                        name="To"  />
-                    </Form.Group>
-                    </Col>
-                    <Col md="2">
-                   
-                    <Form.Group controlId="sorting">
-                    <Form.Label >Sort</Form.Label>
-                        <Form.Control 
-                            size="sm"
-                            as="select"
-                            name="sorting"
-                            onChange= { handleSorting }  >
-                        <option>Custom</option>
-                        <option>This Week</option>
-                        <option>This month</option>
-                        <option>This year</option>
-                        </Form.Control>
-                    </Form.Group>
-                    </Col>
-                    </Row>
-                </Form>
-                </Space>
+                <div style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
+                  <div className="mb-2">
+                  <Button onClick={()=>setTableData("all")}>All</Button>
+                  <Button onClick={()=>setTableData("time")}>Time</Button>
+                  <Button onClick={()=>setTableData("expense")}>Expense</Button>
+                  </div>
+                  <Form className="pt-0">
+                    <Form.Row className="ml-1">
+                      <Form.Group controlId="From" className="mr-2">
+                          <Form.Control 
+                          size="sm"
+                          type="date" 
+                          name="from"
+                          onChange= { handleSorting } style={{"width" : "175px"}} />
+                      </Form.Group> -
+                      <Form.Group controlId="To" className="mx-2">
+                          <Form.Control 
+                          size="sm"
+                          type="date" 
+                          name="To"  style={{"width" : "175px"}}/>
+                      </Form.Group>
+              
+                      <Form.Group controlId="sorting">
+                          <Form.Control 
+                              size="sm"
+                              as="select"
+                              name="sorting"
+                              onChange= { handleSorting } style={{"height": "fit-content", "padding": "4px"}} >
+                          <option>Sort</option>
+                          <option>This Week</option>
+                          <option>This month</option>
+                          <option>This year</option>
+                          </Form.Control>
+                      </Form.Group>
+                      </Form.Row>
+                  </Form>
+                </div>
             </Card>
-            <Card>                
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
               <Table columns={columns} dataSource={this.state.tableData}  />
             </Card>
            
