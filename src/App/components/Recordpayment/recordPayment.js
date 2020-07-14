@@ -113,17 +113,17 @@ class Record extends React.Component{
           ];
       
 
-        const title = <Space size="large">
-                        <div style={{float: "left"}}>
-                            <p style={{fontWeight : "bold", marginBottom:"-15%"}}>Total open balance</p><br/>
-                            <p style={{fontWeight : "bold"}}>₹0.00</p>
+        const title = <div style={{"display": "flex", "flex-wrap": "wrap" }}>
+                        <div className="mr-4">
+                            <p style={{fontWeight : "bold"}}>Total open balance</p>
+                            <p style={{fontWeight : "bold", "float": "right", "font-size": "17px"}}>₹0.00</p>
                         </div>
-                        <div style={{float: "right"}}>
-                            <Form>
+                        <div>
+                            <Form className="pt-0">
                                 <Row>
                                     <Col md="8">
                                     <Form.Group controlId="paymentAmount">
-                                    <Form.Label style={{fontWeight : "bold"}}>Payment amount</Form.Label>
+                                    <Form.Label style={{fontWeight : "bold"}}>Payment Amount</Form.Label>
                                     <Form.Control
                                     style={{height : "38px"}}
                                     required
@@ -138,44 +138,47 @@ class Record extends React.Component{
                                 </Row>
                             </Form>
                         </div>
+                      </div>
 
-                      </Space>
         const invoiceTitle =  this.state.data.client===""?  <h4 style={{textAlign:"center", fontWeight:"bold"}}>Select a client to record a payment.</h4> : title
+       
         const invoiceBody = this.state.data.client===""?
                             null 
                             : 
-                            <div >
-                                <Card>
-                                    <Table dataSource={dataSource} columns={columns} />;
+                            <div>
+
+                                <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">
+                                    <Table dataSource={dataSource} columns={columns} />
                                 </Card> 
-                                <div style={{display :"inline"}}>
-                                    <Form style={{float: "left"}}>
-                                        <Row>
-                                            <Col md="7">
-                                                <Form.Group controlId="formGroupMatter">
-                                                <Form.Label style={{fontWeight : "bold"}}>Description</Form.Label>
-                                                    <Form.Control 
-                                                    style = {{width : "300%"}}
-                                                    required name='description' 
-                                                    as="textarea" 
-                                                    rows="3" 
-                                                    type="text"
-                                                    placeholder="Description"
-                                                    onChange={handleChange} />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                    </Form>
-                                    <Card style={{width : "50%" , float: "right"}}>
-                                        <p>Summary</p>
-                                        <p>Payment : </p>
-                                    </Card>
+
+
+                                <div className="mt-3" style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
+                                    <div style={{"flex" : "1"}} className="mr-3">
+                                        <Form className="pt-0">
+                                            <Form.Group controlId="formGroupMatter">
+                                            <Form.Label style={{fontWeight : "bold"}}>Description</Form.Label>
+                                            <Form.Control 
+                                                required name='description' 
+                                                as="textarea" 
+                                                rows="3" 
+                                                type="text"
+                                                placeholder="Description"
+                                                onChange={handleChange} />
+                                            </Form.Group>
+                                        </Form>
+                                    </div>
+                                    <div style={{"flex" : "1"}} className="pt-4">
+                                        <Card bodyStyle={{"padding": "10px 20px"}}>
+                                            <p style={{"font-size" : "17px"}}><b>Summary</b></p>
+                                            <p><b>Payment :</b></p>
+                                        </Card>
+                                    </div>
                                 </div>
                             </div>
 
         return <div>
-            <Card title="Record Payment">
-             <Form>
+            <Card title="Record Payment" bodyStyle={{"padding": "0px 24px 0px"}} className="mb-4">
+             <Form className="form-details">
                  <Row>
                      <Col md="3">
                         <Form.Group controlId="formGroupCompany">
@@ -204,7 +207,7 @@ class Record extends React.Component{
 
                  </Row>
                  <Row>
-                       <Col md="3">
+                    <Col md="3">
                        <Form.Group controlId="date">
                             <Form.Label>Payment Date</Form.Label>
                             <Form.Control 
@@ -212,9 +215,8 @@ class Record extends React.Component{
                             name="paymentDate"
                             onChange = { handleChange } />
                         </Form.Group>
-                       
-                       </Col>
-                       <Col md="3">
+                    </Col>
+                    <Col md="3">
                        <Form.Group controlId="destinaation">
                             <Form.Label>Destination</Form.Label>
                             <Form.Control 
@@ -225,39 +227,36 @@ class Record extends React.Component{
                                 <option>Destination</option>
                             </Form.Control>
                         </Form.Group>
-
-                       </Col>
-                   
+                    </Col>
                  </Row>
                  <Row>
                     <Col md="4">
-                    <Form.Group controlId="formGroupLastName">
-                        <Form.Label>Reference</Form.Label>
-                        <Form.Control
-                        required
-                        name="reference"
-                        type="text"
-                        placeholder="Enter a checking or reference # here"
-                        onChange={handleChange}
-                        />
-                  </Form.Group>
+                        <Form.Group controlId="formGroupLastName">
+                            <Form.Label>Reference</Form.Label>
+                            <Form.Control
+                            required
+                            name="reference"
+                            type="text"
+                            placeholder="Enter a checking or reference # here"
+                            onChange={handleChange}
+                            />
+                        </Form.Group>
                     </Col>
                  </Row>
              </Form>
-          </Card>
-          <br></br><br></br>
+            </Card>
 
-          <Card >
-            {invoiceTitle}
-          </Card>
-          {invoiceBody}
-       
-        <div style={{position : "absolute", bottom : "0px"}}>
-            <Button type="primary" onClick={handleSubmit}>Record</Button>
-            <Button onClick={()=>{this.props.history.goBack()}}>Cancel</Button>
-        </div>
+            <Card>
+                {invoiceTitle}
+            </Card>
 
-        </div>
+            {invoiceBody}
+
+            <div className="pt-3">
+                <Button type="primary" onClick={handleSubmit}>Record</Button>
+                <Button onClick={()=>{this.props.history.goBack()}}>Cancel</Button>
+            </div>
+    </div>
     }
 }
 

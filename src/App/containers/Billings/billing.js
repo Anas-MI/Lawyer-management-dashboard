@@ -112,7 +112,7 @@ export default class billing extends React.Component{
           }
 
         return <div className='p-2 '>
-             <Card title="Billing" extra={<span style={{float : "right"}}>
+             <Card title="Billing"  extra={<span style={{float : "right"}}>
                 <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
                 <Button onClick={()=>this.handelBills("record")}>Record Payment</Button>
               {/*  <Button onClick={()=>this.showModal("expense")}>New Expense</Button>*/}
