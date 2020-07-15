@@ -165,7 +165,7 @@ export default {
                     title: 'Communication ',
                     type: 'item',
                     icon: 'feather icon-phone-call',
-                    url: '/'
+                    url: '/manage/communication'
                 },
                 {
                     id: 'reports',
