@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/charts": "^0.9.4",
+    "@ant-design/icons": "^4.2.1",
     "@syncfusion/ej2-base": "^18.1.53",
     "@syncfusion/ej2-react-calendars": "^18.1.53",
     "@syncfusion/ej2-react-dropdowns": "^18.1.55",
