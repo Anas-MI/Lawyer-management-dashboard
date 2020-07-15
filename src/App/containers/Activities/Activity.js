@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table , Button, Modal , Card, notification, Space } from 'antd'
+import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
 import { useSelector , connect} from 'react-redux'
 import ExpenseForm from './Form/expenseForm'
 import TimeForm from './Form/timeForm'
@@ -9,6 +9,8 @@ import { Form, Col,Row } from 'react-bootstrap'
 import api from '../../../resources/api'
 
 let matters = {}
+let activity = {}
+let timeError = ""
 class Activity extends React.Component{
     constructor(props){
         super(props)
@@ -17,46 +19,92 @@ class Activity extends React.Component{
             timeModal : false,
             data : { 
                 billable : false,
-                nonBillable : false,
+                qty : "1.0",
                 date : "",
                 rate : "",
-                invoice : "Unbilled"
+                invoice : "Unbilled",
             },
             timeData : [],
             expenseData : [],
             completeData : [],
-            tableData : []
+            tableData : [],
+            editmode : false,
+            record : ""
 
         }
+    }
+    convertTime=(serverdate)=>{
+      var date = new Date(serverdate);
+      // convert to utc time
+      var toutc = date.toUTCString();
+      //convert to local time
+      var locdat = new Date(toutc + " UTC");
+      return locdat;
     }
     componentDidMount(){
       api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{matters = res })
       api.get('/activity/viewforuser/'+this.props.userId).then((res)=>{
+        activity = res.data.data
+        var now = new Date()
+        now.setHours(12)
+        now.setMinutes(0)
+        now.setSeconds(0)
+        now.setMilliseconds(0)
+        
+        var end_of_week = new Date(now.getTime() + (6 - now.getDay()) * 24*60*60*1000 )
+        end_of_week.setHours(23)
+        end_of_week.setMinutes(59)
+        end_of_week.setSeconds(59) 
+    
         let timedata = []
         let expenseData = []
         let completeData =[]
+        let thisWeek = []
+        let thisMonth = []
+        let thisYear = []
         res.data.data.map((val, index)=>{
-       
+          const date = this.convertTime(val.date)
+          console.log(val.billable)
             const temp = {
+              type : val.type,
               id : val._id,
               qty : val.qty,
-              description : val.description,
+              time : val.time ? val.time : "",
+              matter : val.matter ? val.matter : "-",
+              description : val.description? val.description : "-",
               rate : val.rate, 
-              nonBillable : val.nonBillable ? "Yes" : "No",
-              billable : val.billable ? "Yes" : "No",
-              date :val.date,
-              invoiceStatus : val.invoiceStatus,
+              billable : val.billable ? "Yes" : "No" ,
+              date : val.date.substring(0,10),
+              invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
             }
             if(val.type ==="time"){
               timedata.push(temp)
-            }else
+            }
             if(val.type ==="expense"){
               expenseData.push(temp)
             }
+            if ( date >=now && date <= end_of_week) {
+              console.log(date + " " + now + "  " + end_of_week)
+              // between now and end of week
+              thisWeek.push(temp)
+            }
+            if (
+              (date.getFullYear() == now.getFullYear()) &&
+              (date.getMonth() == now.getMonth()) &&
+              (date.getDate() >= now.getDate())
+           ) {
+              thisMonth.push(temp)
+           }
+           if (
+            (date.getFullYear() == now.getFullYear()) &&
+            (date.getDate() >= now.getDate())
+         ) {
+            thisYear.push(temp)
+         }
             completeData.push(temp)
 
         })
-        this.setState({completeData : completeData, expenseData : expenseData , timeData : timedata, tableData: completeData  })
+        this.setState({completeData : completeData, expenseData : expenseData , timeData : timedata, tableData: completeData, thisWeek : thisWeek, thisMonth : thisMonth, thisYear :thisYear })
       })
     }
     showModal = (type) => {
@@ -74,24 +122,99 @@ class Activity extends React.Component{
       };
     
       handleOk = type => {
+        console.log(timeError)
+        notification.destroy()
+        if(timeError !== ""){
+          notification.error({message : "Invalid time"})
+        }else
         if(this.state.data.date === ""){
             notification.error({message : "Please select a Date"})
         }else if(this.state.data.rate === ""){
             notification.error({message : "Please provide rate"})
-        }else{
+        }else
+        {
+          if(this.state.editmode){
+            if(type==="time"){
+              let data = this.state.data
+              data.type = "time"
+              data.userId = this.props.userId
+              api.post('/activity/edit/'+this.state.data.id, data).then((res)=>{
+  
+                notification.success({message : "Time entry Edited !"})
+              }).catch((err)=>{
+  
+                notification.error({message : "Failed"})
+              }).then(()=>{
+                this.setState({
+                  timeModal : false,
+                  editmode : false,
+                  data :  { 
+                    billable : true,
+                    nonBillable : false,
+                    date : "",
+                    qty : "1.0",
+                    rate : "",
+                    invoice : "Unbilled",
+                },
+               
+                });
+                setTimeout(()=>{
+                    window.location.reload()
+                },1500)
+              })
+            }else
+            if(type==="expense"){
+                let data = this.state.data
+                data.type = "expense"
+                data.userId = this.props.userId
+                api.post('/activity/edit/'+this.state.data.id, data).then((res)=>{
+         
+                  notification.success({message : "Expense Edited!"})
+                }).catch((err)=>{
+  
+                  notification.error({message : "Failed"})
+                }).then(()=>{
+                  this.setState({
+                    expenseModal : false,
+                    editmode : false,
+                    data : { 
+                      billable : true,
+                      nonBillable : false,
+                      date : "",
+                      rate : "",
+                      qty : "1.0",
+                      invoice : "Unbilled",
+                  },
+                 
+                  });
+                  setTimeout(()=>{
+                      window.location.reload()
+                  },1500)
+                })     
+        }
+          }else{
             if(type==="time"){
               let data = this.state.data
               data.type = "time"
               data.userId = this.props.userId
               api.post('/activity/create', data).then((res)=>{
-                console.log(res);
-                notification.success({message : "Expense Added !"})
+           
+                notification.success({message : "Time entry Added !"})
               }).catch((err)=>{
-                console.log(err)
+  
                 notification.error({message : "Failed"})
               }).then(()=>{
                 this.setState({
                   timeModal : false,
+                  editmode : false,
+                  data :  { 
+                    billable : true,
+                    nonBillable : false,
+                    date : "",
+                    qty : "1.0",
+                    rate : "",
+                    invoice : "Unbilled",
+                },
                 });
                 setTimeout(()=>{
                     window.location.reload()
@@ -103,22 +226,36 @@ class Activity extends React.Component{
                 data.type = "expense"
                 data.userId = this.props.userId
                 api.post('/activity/create', data).then((res)=>{
-                  console.log(res);
+  
                   notification.success({message : "Expense Added !"})
                 }).catch((err)=>{
-                  console.log(err)
+   
                   notification.error({message : "Failed"})
                 }).then(()=>{
                   this.setState({
                     expenseModal : false,
+                    editmode : false,
+                    data :  { 
+                      billable : true,
+                      nonBillable : false,
+                      date : "",
+                      qty : "1.0",
+                      rate : "",
+                      invoice : "Unbilled",
+                  },
+               
                   });
                   setTimeout(()=>{
                       window.location.reload()
                   },1500)
                 })
             }
-          
+          }
+   
+
         }
+             
+        
       
       };
     
@@ -126,38 +263,78 @@ class Activity extends React.Component{
         if(type==="time"){
             this.setState({
                 timeModal : false,
+                editmode : false,
+                data :  { 
+                  billable : true,
+                  nonBillable : false,
+                  date : "",
+                  qty : "1.0",
+                  rate : "",
+                  invoice : "Unbilled",
+              },
               });
+              console.log(this.state)
         }else
         if(type==="expense"){
             this.setState({
                 expenseModal : false,
+                editmode : false,
+                data :  { 
+                  billable : true,
+                  nonBillable : false,
+                  date : "",
+                  qty : "1.0",
+                  rate : "",
+                  invoice : "Unbilled",
+              },
+  
               });
+              console.log(this.state)
+             
         }
+       
       
       };
 
     render(){
-      console.log(this.props.userId)
         const handleEdit = record => {
- 
+          if(record.type==="time"){
+            this.setState({
+              editmode : true,
+                timeModal : true,
+                data : record ,
+              });
+        }else
+        if(record.type==="expense"){
+            this.setState({
+              editmode : true,
+                expenseModal : true,
+                data : record  
+              });
+        }
               
           }
           
           const handleDelete = record => {
             api.get('/activity/delete/'+record.id).then((res)=>{
-              console.log(res)
+
               notification.success({message : "Activity Deleted !"})
               setTimeout(()=>{
                 window.location.reload()
               },1500)
             }).catch((err)=>{
-              console.log(err)
+  
               notification.error({message : "Failed to delete"})
             })
             
           }
 
           const columns = [
+            {
+              title: 'Type',
+              dataIndex: 'type',
+              key: 'type',
+            },
             {
               title: 'Qty',
               dataIndex: 'qty',
@@ -173,11 +350,6 @@ class Activity extends React.Component{
               dataIndex: 'rate',
               key: 'rate',
             },
-            {
-                title: 'Non Billable',
-                dataIndex: 'nonBillable',
-                key: 'nonBillable',
-              },
               {
                 title: 'Billable',
                 dataIndex: 'billable',
@@ -212,9 +384,17 @@ class Activity extends React.Component{
                   key: "_id",
                   render:(_,record)=>{
                       return (
-                          <Button variant='danger' onClick={()=>handleDelete(record)}>
+                        <Popconfirm
+                          title="Are you sure delete this task?"
+                          onConfirm={()=>handleDelete(record)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button danger>
                               Delete
                           </Button>
+                        </Popconfirm>
+                          
                       )
                   }
               },
@@ -230,15 +410,15 @@ class Activity extends React.Component{
             doc.setFontSize(15);
         
             const title = "Activity";
-            const headers = [["Qty","Description","Non Billable","Billable", "Rate", "Date", "Invoice Status"]];
+            const headers = [["type","Qty","Description","Billable", "Rate", "Date", "Invoice Status"]];
            
             let data = []
-            /*
-            state.tableData.map((val, index)=>{
-              const td= [val.firstName, val.billingCustomRate , val.emailAddress]
+            
+            this.state.tableData.map((val, index)=>{
+              const td= [val.type , val.qty, val.description , val.billable, val.rate, val.date, val.invoiceStatus]
               data.push(td)
             })
-           */
+          
         
             let content = {
               startY: 50,
@@ -248,15 +428,59 @@ class Activity extends React.Component{
         
             doc.text(title, marginLeft, 40);
             doc.autoTable(content);
-            doc.save("contact.pdf")
+            doc.save("Activity.pdf")
           }
         const handleSorting = (e) => {
             e.persist()
+            const { value } = e.target
+            
+            if(value==="This Week"){
+              this.setState({tableData : this.state.thisWeek})
+            }
+            if(value==="This month"){
+              this.setState({tableData : this.state.thisMonth})
+            }
+            if(value==="This year"){
+              this.setState({tableData : this.state.thisYear})
+            } 
+            
+             
         }
+        const handleCustomSorting = (e) => {
+          e.persist()
+          const { value, name } = e.target
+            let data = this.state
+            data[name] = value
+            this.setState(data)
+            console.log(this.state)
+            if(this.state.From != undefined && this.state.To != undefined) {
+              console.log("will sort now")
+              let customSort = []
+              activity.map((val, index)=>{
+                console.log(val.date)
+                  const temp = {
+                    type : val.type,
+                    id : val._id,
+                    qty : val.qty,
+                    time : val.time ? val.time : "",
+                    matter : val.matter ? val.matter : "-",
+                    description : val.description? val.description : "-",
+                    rate : val.rate, 
+                    billable : val.billable ? "Yes" : "No" ,
+                    date : val.date,
+                    invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
+                  }
+                  if(val.date >= this.state.From && val.date <= this.state.To )
+                  customSort.push(temp)
+              })
+              this.setState({  tableData : customSort})
+            
+            }
+          
+      }
         const handleChange=(e)=>{
             e.persist()
             const { name, id, value , selectedIndex} = e.target
-            console.log(e)
             let newData = this.state.data
             if(name==="matter"){
               if(selectedIndex >= 1){
@@ -265,15 +489,55 @@ class Activity extends React.Component{
                 newData[name] = ""
               }
               
-            }else
+            }else if(name==="time"){
+              timeError = ""
+              var timeValue = value;
+              if(timeValue == "" || timeValue.indexOf(":")<0)
+              {
+                timeError = "Inavlid Time"
+                console.log(timeError)
+              }
+              else
+              {
+                  var sHours = timeValue.split(':')[0];
+                  var sMinutes = timeValue.split(':')[1];
+          
+                  if(sHours == "" || isNaN(sHours) /*|| parseInt(sHours)>23 */)
+                  {
+                    timeError = "Inavlid Time"
+                    console.log(timeError)
+                  }
+                  else if(parseInt(sHours) == 0)
+                      sHours = "00";
+                  else if (sHours <10)
+                      sHours = "0"+sHours;
+          
+                  if(sMinutes == "" || isNaN(sMinutes) || parseInt(sMinutes)>59)
+                  {
+                    timeError = "Inavlid Time"
+                    console.log(timeError)
+                  }
+                  else if(parseInt(sMinutes) == 0)
+                      sMinutes = "00";
+                  else if (sMinutes <10)
+                      sMinutes = "0"+sMinutes;    
+                  
+                 timeValue = sHours + ":" + sMinutes;   
+                    
+              }
+              newData[name] = timeValue
+              this.setState({data : newData})
+            }
+            else
             if(name==="nonBillable" || name==="billable"){
-                    newData[name] = ! newData[name]
-                    newData.billable = ! newData.nonBillable
+                    newData.billable = ! newData.billable
+                    console.log(newData.billable)
             }else{
                 newData[name] = value
                 this.setState({data : newData })   
             }
-            console.log(this.state.data)
+
+            console.log(this.state)
         }
         const setTableData = (type)=>{
           if(type==="time"){
@@ -314,14 +578,17 @@ class Activity extends React.Component{
                           <Form.Control 
                           size="sm"
                           type="date" 
-                          name="from"
-                          onChange= { handleSorting } style={{"width" : "175px"}} />
+                          name="From"
+                          onChange= { handleCustomSorting } 
+                          style={{"width" : "175px"}} />
                       </Form.Group> -
                       <Form.Group controlId="To" className="mx-2">
                           <Form.Control 
                           size="sm"
                           type="date" 
-                          name="To"  style={{"width" : "175px"}}/>
+                          name="To" 
+                          onChange= { handleCustomSorting } 
+                           style={{"width" : "175px"}}/>
                       </Form.Group>
               
                       <Form.Group controlId="sorting">
@@ -349,16 +616,18 @@ class Activity extends React.Component{
                 visible={this.state.timeModal}
                 onOk={()=>this.handleOk("time")}
                 onCancel={()=>this.handleCancel("time")}
+                afterClose = {()=>this.handleCancel("time")}
                 >
-                <TimeForm handleChange={handleChange}></TimeForm>
+                <TimeForm record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
             </Modal>
             <Modal
                 title="New Expense"
                 visible={this.state.expenseModal}
                 onOk={()=>this.handleOk("expense")}
                 onCancel={()=>this.handleCancel("expense")}
+                afterClose = {()=>this.handleCancel("expense")}
                 >
-                <ExpenseForm handleChange={handleChange}></ExpenseForm>
+                <ExpenseForm record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></ExpenseForm>
             </Modal>
         </div>
     }
