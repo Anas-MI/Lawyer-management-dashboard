@@ -94,7 +94,7 @@ class Tasks extends React.Component{
     let newState = this.state
     console.log(e.target)
     if(e.target.id==='matter'){
-      newState.Data[e.target.id]=response[e.target.selectedIndex]._id
+      newState.Data[e.target.id]=response[e.target.selectedIndex]
     }else{
     newState.Data[e.target.id] = e.target.value
     }
