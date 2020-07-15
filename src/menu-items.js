@@ -158,7 +158,7 @@ export default {
                     title: 'Documents',
                     type: 'item',
                     icon: 'feather icon-file',
-                    url: '/'
+                    url: '/documents'
                 },
                 {
                     id: 'communication',

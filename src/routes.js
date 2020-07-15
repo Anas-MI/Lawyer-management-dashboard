@@ -12,6 +12,7 @@ import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
 import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
 import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
 import Accounts from './App/containers/Accounts';
+import Documents from './App/containers/Documents'
 // import Profile from './App/containers/Profile';
 
 window.jQuery = $;
@@ -61,6 +62,7 @@ const Settings= React.lazy(()=>import('./App/containers/Settings/index'))
 const customFeilds = React.lazy(()=>import('./App/containers/Settings/CustomFeilds/CustomFeilds'))
 const accountNpayment = React.lazy(()=>import('./App/containers/Settings/account&payment/index'))
 const AddAccount = React.lazy(()=>import('./App/components/AddEditAccount/AddAccount'))
+const profile = React.lazy(()=>import('./App/containers/Settings/profile/index'))
 
 
 
@@ -137,6 +139,8 @@ const routes = [
     { path: '/view/company', exact: true, name: 'Contacts Management', component: ViewCompany },
     { path: '/accounts', exact: true, name: 'Accounts', component: Accounts},
     { path: '/accounts/add', exact: true, name: 'Add Accounts', component: AddAccount},
+    { path: '/documents', exact: true, name: 'Documents', component: Documents},
+    { path: '/settings/profile', exact: true, name: 'Profile', component: profile },
    
    
 ];
