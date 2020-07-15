@@ -92,7 +92,6 @@ class AddEditMatter extends React.Component{
       console.log("all good")
        const data = this.state
         data.customFields = customData
-        data.client = contacts.data.data[clientId]
         data.userId = this.props.userId
         console.log(data)
        if(this.state.editMode){
@@ -122,11 +121,13 @@ class AddEditMatter extends React.Component{
   
   const handleChange = (e) => {
     e.persist()
-    this.setState(st=>({...st,[e.target.name]:e.target.value}))
+ 
     if(e.target.name==="client"){
-      clientId = [e.target.selectedIndex]-1
+       this.setState(st=>({...st,[e.target.name]: contacts.data.data[e.target.selectedIndex]}))
+    }else{
+      this.setState(st=>({...st,[e.target.name]:e.target.value}))
     }
-    console.log(clientId)
+
    
     console.log(this.state)
   }
@@ -205,10 +206,12 @@ class AddEditMatter extends React.Component{
                 <Form.Label>Practise Area</Form.Label>
                 <Form.Control as="select" name="practiseArea" onChange={handleChange} defaultValue={editRes.practiseArea}>
                   <option>{editRes.practiseArea}</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option>Attorney</option>
+                  <option>Administrative</option>
+                  <option>Business</option>
+                  <option>Family</option>
+                  <option>Imployment</option>
+                  <option>Tax</option>
                 </Form.Control>
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">

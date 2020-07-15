@@ -5,7 +5,10 @@ import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { RecurrenceEditorComponent } from "@syncfusion/ej2-react-schedule";
 import { notification, Button } from "antd";
 import api from '../../../resources/api'
+
+
 const EditorTemplate = props => {
+
   let options = []
   let res = {}
   useEffect(()=>{
@@ -13,7 +16,7 @@ const EditorTemplate = props => {
       res =  await api.get('matter/viewforuser/'+props.userId)
       setdata()
     }
-   // props.setInitails(props)
+  
     fetchData()
   },[])
   const setdata = ()=>{
@@ -40,7 +43,6 @@ const EditorTemplate = props => {
     } */}
     
   }
-  console.log(props)
   return props !== undefined ? (
     <table
       className="custom-event-editor"

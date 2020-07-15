@@ -216,10 +216,12 @@ class AddEditMatter extends React.Component{
                 <Form.Label>Practise Area</Form.Label>
                 <Form.Control as="select" name="practiseArea" onChange={handleChange} defaultValue={this.state.editData.practiseArea}>
                   <option>{editRes.practiseArea}</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option>Attorney</option>
+                  <option>Administrative</option>
+                  <option>Business</option>
+                  <option>Family</option>
+                  <option>Imployment</option>
+                  <option>Tax</option>
                 </Form.Control>
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">
