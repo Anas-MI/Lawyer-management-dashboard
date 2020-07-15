@@ -8,11 +8,12 @@ const { TabPane } = Tabs;
 function CompanyView(props){
     let response = {}
     let calendar= {}
-    let task = {}
+
     const [state, setState] = useState({visible : false})
     const [contact, setContact] = useState([])
     const [Calendar, setCalendar] = useState([])
     const [Task, setTask] = useState([])
+    const [act, setAct] = useState([])
     const [address, setAddress] = useState()
     const [events, setEvents] = useState()
     const [firstName, setfirstName] = useState()
@@ -20,7 +21,7 @@ function CompanyView(props){
     const [Website, setWebsite] = useState()
     const [Email, setEmail] = useState()
     const [Number, setNumber] = useState()
-    console.log(props.location.state.id)
+    console.log(props.location.state)
     useEffect(() => {
     
         async function fetchData() {
@@ -28,11 +29,14 @@ function CompanyView(props){
               response = res.data
               console.log(response)
              
-           })  
-           calendar = await api.get('/calendar/viewforuser/'+props.location.state.id)
-           .then(
-            task = await api.get('/tasks/fetchformatter/'+props.location.state.id)
-           ) 
+           })
+           {
+               /*
+                calendar = await api.get('/calendar/viewforuser/'+props.location.state.id)
+               .then(()=>{
+               api.get('/activity/viewformatter/'+props.location.state.userId+props.location.state.id).then((res)=>{console.log(res)})
+           })*/ 
+           }
            console.log(calendar)
            setValue()
         }
@@ -40,8 +44,82 @@ function CompanyView(props){
         
       }, []);
 
-
+      useEffect(()=>{
+         api.get('/tasks/fetchformatter/'+props.location.state.id).then((res)=>{
+             console.log(res.data)
+                let tsk = []
+                res.data.data.map((value,index)=>{
+                    tsk.push(  <Card title="Task"  className="form-width mb-4">
+                    <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
+                                     <td className="border-0 py-2"><span className="table-span-light">{value.dueDate.substring(0,10)}</span></td>
+                                </tr>
+                                <tr>
+                                    <td className="border-0 py-2"><span className="table-span-dark">Task</span></td>
+                                    <td className="border-0 py-2"><span className="table-span-light">{value.taskName}</span></td>
+                                </tr>
+                                <tr>
+                                    <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
+                                    <td className="border-0"><span className="table-span-light">{value.description}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </Card>)
+                
+                })
+                setTask(tsk)
+            })
+      
+      },[])
+      useEffect(()=>{
+            api.get('/activity/viewformatter/'+props.location.state.userId+"/"+props.location.state.id).then((res)=>{
+               let activity = []
+               res.data.data.map((val,index)=>{
+                   activity.push(<Card title={ val.description} style={{width : "40%"}} extra={<div><a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a></div>}>
+                   <table class="table table-borderless form-width">
+                       <tbody>
+                         
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Type</span></td>
+                               <td className="border-0 py-2"><span className="table-span-light">{val.type}</span></td>
+                           </tr>
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Qty</span></td>
+                               <td className="border-0 py-2"><span className="table-span-light">{val.qty}</span></td>
+                           </tr>
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Discription</span></td>
+                                <td className="border-0 py-2"><span className="table-span-light">{val.description}</span></td>
+                           </tr>
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
+                                <td className="border-0 py-2"><span className="table-span-light">{val.rate}</span></td>
+                           </tr>
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Billable</span></td>
+                                <td className="border-0 py-2"><span className="table-span-light">{val.billable ? "Yes" : "NO"}</span></td>
+                           </tr>
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
+                               <td className="border-0 py-2"><span className="table-span-light">{val.date.substring(0,10)}</span></td>
+                           </tr>
+                           
+            
+                           <tr>
+                               <td className="border-0 py-2"><span className="table-span-dark">Invoice Status</span></td>
+                                 <td className="border-0 py-2"><span className="table-span-light">{val.invoiceStatus}</span></td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </Card>)
+               })   
+               setAct(activity)
+            })
+      },[])
       const setValue=()=>{
+        
         let data = []
          //  setRealatedContacts(rcntct)
          response.data.relatedContacts.map(async(value, index)=>{
@@ -79,7 +157,7 @@ function CompanyView(props){
              setContact(data)
        }
 )
-       
+       /*
        let cal = []
        calendar.data.data.map((value,index)=>{
         cal.push(  <Card title="Calendar"  className="form-width mb-4">
@@ -105,36 +183,10 @@ function CompanyView(props){
             </table>
         </Card>)
         setCalendar(cal)
-    })
-  
-        let tsk = []
-        task.data.data.map((value,index)=>{
-            tsk.push(  <Card title="Task"  className="form-width mb-4">
-            <table class="table table-borderless">
-                    <tbody>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
-        <td className="border-0 py-2"><span className="table-span-light">{value.dueDate}</span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Task</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light">{value.taskName}</span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
-                            <td className="border-0"><span className="table-span-light">{value.description}</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </Card>)
-            setTask(tsk)
-        })
-
-    /*   
+    })  
         
        */
        // setEvents(evnt)
-
         const adrs = response.data.client.address.map((value, index)=>{
  
             return <div className="table-span-light" key ={index}>
@@ -266,50 +318,8 @@ function CompanyView(props){
         
      </TabPane>
      <TabPane tab="Acitivites" key="2">       
-            <Card title="Activities" extra={<a href="#">Add Activity</a>}  className="form-width mb-4">
-                <Card extra={<div><a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a></div>}>
-                <table class="table table-borderless form-width">
-                    <tbody>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Action</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Type</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Qty</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Discription</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Rate</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Non Billable</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Date</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">User</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                        <tr>
-                            <td className="border-0 py-2"><span className="table-span-dark">Invoice Status</span></td>
-                            <td className="border-0 py-2"><span className="table-span-light"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </Card>
-            </Card>
+            <Card  className="form-width mb-4"><p style={{fontWeight :"bold"}}>Activity</p> </Card>
+            {act}
         </TabPane>
         <TabPane tab="Calendar" key="3">
             {console.log(Calendar)}
