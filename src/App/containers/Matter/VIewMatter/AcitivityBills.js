@@ -1,0 +1,432 @@
+import React from 'react'
+import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
+import { useSelector , connect} from 'react-redux'
+import ExpenseForm from '../../Activities/Form/expenseForm'
+import TimeForm from '../../Activities/Form/timeForm'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { Form, Col,Row } from 'react-bootstrap'
+import api from '../../../../resources/api'
+
+let matters = {}
+let activity = {}
+let timeError = ""
+class Activity extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            expenseModal : false,
+            timeModal : false,
+            data : { 
+                billable : false,
+                qty : "1.0",
+                date : "",
+                rate : "",
+                invoice : "Unbilled",
+            },
+            timeData : [],
+            expenseData : [],
+            completeData : [],
+            tableData : [],
+            editmode : false,
+            record : ""
+
+        }
+    }
+    convertTime=(serverdate)=>{
+      var date = new Date(serverdate);
+      // convert to utc time
+      var toutc = date.toUTCString();
+      //convert to local time
+      var locdat = new Date(toutc + " UTC");
+      return locdat;
+    }
+    componentDidMount(){
+        console.log(this.props.location.state)
+      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{matters = res })
+      api.get('/activity/viewformatter/'+this.props.userId+'/'+ this.props.location.state).then((res)=>{
+        activity = res.data.data
+   
+        
+     
+        let timedata = []
+        let expenseData = []
+  
+        let total = 0;
+        res.data.data.map((val, index)=>{
+     
+            let rate = val.rate
+            if(rate.includes("$")){
+              rate = rate.substring(0, rate.length - 1)
+            }
+           if(val.type === "time" && val.time !=undefined ){
+           
+            const sHours = val.time.split(':')[0];
+            const sMinutes = val.time.split(':')[1];
+            console.log(val.time)
+            console.log(sHours + " " + sMinutes)
+            const subTotal =  rate * sHours + rate * ((rate/60)*sMinutes)
+            const time = {
+                id : val._id,
+                time : val.time ? val.time : "",
+                matter : val.matter ? val.matter : "-",
+                description : val.description? val.description : "-",
+                rate : rate, 
+                billable : val.billable ? "Yes" : "No" ,
+                date : val.date.substring(0,10),
+                invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
+                subTotal : subTotal
+           }
+       //    total = total + subTotal
+           timedata.push(time)
+        }
+           
+            if(val.type ==="expense"){
+                const expense = {
+                    id : val._id,
+                    qty : val.qty,
+                    matter : val.matter ? val.matter : "-",
+                    description : val.description? val.description : "-",
+                    rate : val.rate, 
+                    billable : val.billable ? "Yes" : "No" ,
+                    date : val.date.substring(0,10),
+                    invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
+                    subTotal : rate * val.qty
+                  }
+            //  total = total + subTotal
+              expenseData.push(expense)
+            }
+ 
+
+        })
+        this.setState({ expenseData : expenseData , timeData : timedata, total : total  })
+      })
+    }
+    showModal = (type) => {
+        if(type==="time"){
+            this.setState({
+                timeModal : true,
+              });
+        }else
+        if(type==="expense"){
+            this.setState({
+                expenseModal : true,
+              });
+        }
+      
+      };
+    
+   
+    
+      handleCancel = type => {
+        if(type==="time"){
+            this.setState({
+                timeModal : false,
+                editmode : false,
+                data :  { 
+                  billable : true,
+                  nonBillable : false,
+                  date : "",
+                  qty : "1.0",
+                  rate : "",
+                  invoice : "Unbilled",
+              },
+              });
+              console.log(this.state)
+        }else
+        if(type==="expense"){
+            this.setState({
+                expenseModal : false,
+                editmode : false,
+                data :  { 
+                  billable : true,
+                  nonBillable : false,
+                  date : "",
+                  qty : "1.0",
+                  rate : "",
+                  invoice : "Unbilled",
+              },
+  
+              });
+              console.log(this.state)
+             
+        }
+       
+      
+      };
+
+    render(){
+       
+          
+          const handleDelete = record => {
+            api.get('/activity/delete/'+record.id).then((res)=>{
+
+              notification.success({message : "Activity Deleted !"})
+              setTimeout(()=>{
+                window.location.reload()
+              },1500)
+            }).catch((err)=>{
+  
+              notification.error({message : "Failed to delete"})
+            })
+            
+          }
+
+          const columnsForTime = [
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+              },
+            {
+              title: 'Duration',
+              dataIndex: 'time',
+              key: 'time',
+            },
+            {
+              title: 'Description',
+              dataIndex: 'description',
+              key: 'description',
+            },
+            {
+              title: 'Rate',
+              dataIndex: 'rate',
+              key: 'rate',
+            },
+            {
+                title: 'Sub total',
+                dataIndex: 'subTotal',
+                key: 'subTotal',
+              },
+            
+            
+             
+              
+              {
+                  title:'Delete',
+                  dataIndex: "delete",
+                  key: "_id",
+                  render:(_,record)=>{
+                      return (
+                        <Popconfirm
+                          title="Are you sure delete this task?"
+                          onConfirm={()=>handleDelete(record)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button danger>
+                              Delete
+                          </Button>
+                        </Popconfirm>
+                          
+                      )
+                  }
+              },
+          ]
+          const columnsForExpense = [
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+              },
+            
+            {
+              title: 'Qty',
+              dataIndex: 'qty',
+              key: 'qty',
+            },
+            {
+              title: 'Description',
+              dataIndex: 'description',
+              key: 'description',
+            },
+            {
+              title: 'Rate',
+              dataIndex: 'rate',
+              key: 'rate',
+            },
+            {
+                title: 'Sub total',
+                dataIndex: 'subTotal',
+                key: 'subTotal',
+              },
+           
+             
+              
+              {
+                  title:'Delete',
+                  dataIndex: "delete",
+                  key: "_id",
+                  render:(_,record)=>{
+                      return (
+                        <Popconfirm
+                          title="Are you sure delete this task?"
+                          onConfirm={()=>handleDelete(record)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button danger>
+                              Delete
+                          </Button>
+                        </Popconfirm>
+                          
+                      )
+                  }
+              },
+          ];;
+          const exportPDF = () => {
+            const unit = "pt";
+            const size = "A4"; // Use A1, A2, A3 or A4
+            const orientation = "portrait"; // portrait or landscape
+        
+            const marginLeft = 40;
+            const doc = new jsPDF(orientation, unit, size);
+        
+            doc.setFontSize(15);
+        
+            const title = "Activity";
+            const headers = [["type","Qty","Description","Billable", "Rate", "Date", "Invoice Status"]];
+           
+            let data = []
+            
+            this.state.tableData.map((val, index)=>{
+              const td= [val.type , val.qty, val.description , val.billable, val.rate, val.date, val.invoiceStatus]
+              data.push(td)
+            })
+          
+        
+            let content = {
+              startY: 50,
+              head: headers,
+              body: data
+            };
+        
+            doc.text(title, marginLeft, 40);
+            doc.autoTable(content);
+            doc.save("Activity.pdf")
+          }
+   
+     
+        const handleChange=(e)=>{
+            e.persist()
+            const { name, id, value , selectedIndex} = e.target
+            let newData = this.state.data
+            if(name==="matter"){
+              if(selectedIndex >= 1){
+                newData[name] = matters.data.data[selectedIndex-1]
+              }else{
+                newData[name] = ""
+              }
+              
+            }else if(name==="time"){
+              timeError = ""
+              var timeValue = value;
+              if(timeValue == "" || timeValue.indexOf(":")<0)
+              {
+                timeError = "Inavlid Time"
+                console.log(timeError)
+              }
+              else
+              {
+                  var sHours = timeValue.split(':')[0];
+                  var sMinutes = timeValue.split(':')[1];
+          
+                  if(sHours == "" || isNaN(sHours) /*|| parseInt(sHours)>23 */)
+                  {
+                    timeError = "Inavlid Time"
+                    console.log(timeError)
+                  }
+                  else if(parseInt(sHours) == 0)
+                      sHours = "00";
+                  else if (sHours <10)
+                      sHours = "0"+sHours;
+          
+                  if(sMinutes == "" || isNaN(sMinutes) || parseInt(sMinutes)>59)
+                  {
+                    timeError = "Inavlid Time"
+                    console.log(timeError)
+                  }
+                  else if(parseInt(sMinutes) == 0)
+                      sMinutes = "00";
+                  else if (sMinutes <10)
+                      sMinutes = "0"+sMinutes;    
+                  
+                 timeValue = sHours + ":" + sMinutes;   
+                    
+              }
+              newData[name] = timeValue
+              this.setState({data : newData})
+            }
+            else
+            if(name==="nonBillable" || name==="billable"){
+                    newData.billable = ! newData.billable
+                    console.log(newData.billable)
+            }else{
+                newData[name] = value
+                this.setState({data : newData })   
+            }
+
+            console.log(this.state)
+        }
+        
+        return <div className='p-2 '>
+            
+            <Card title="New Quick Bill">
+                <p style={{fontWeight : "bold"}}>FROM</p><br/>
+                <p style={{fontWeight : "bold"}}>Jayesh</p><br/>
+                <p>Shivampuri Colony,Bhawarkua Square</p>
+                <p>Indore 452001</p>
+            </Card>
+            
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
+              <Table columns={columnsForTime} dataSource={this.state.timeData}  />
+            </Card><br></br>
+            <div className="form-add mb-4">
+                <span onClick={() => this.setState({ expenseModal: true })}>
+                  Add Time Entry
+                </span>
+              </div>
+
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
+              <Table columns={columnsForExpense} dataSource={this.state.expenseData}  />
+             </Card><br></br>
+             <div className="form-add mb-4">
+                <span onClick={() => this.setState({ expenseModal: true })}>
+                  Add Expense Entry
+                </span>
+              </div>
+
+            <Card>
+                <div style={{display: "inline"}}>
+                <h4>Bill Total : </h4>    <h4 style={{float : "right"}}>{this.state.total}</h4>
+
+                </div>
+            </Card>
+           
+            <Modal
+                title="New Time Entry"
+                visible={this.state.timeModal}
+                onOk={()=>this.handleOk("time")}
+                onCancel={()=>this.handleCancel("time")}
+                afterClose = {()=>this.handleCancel("time")}
+                >
+                <TimeForm record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
+            </Modal>
+            <Modal
+                title="New Expense"
+                visible={this.state.expenseModal}
+                onOk={()=>this.handleOk("expense")}
+                onCancel={()=>this.handleCancel("expense")}
+                afterClose = {()=>this.handleCancel("expense")}
+                >
+                <ExpenseForm record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></ExpenseForm>
+            </Modal>
+        </div>
+    }
+}
+
+const mapStateToProps = state => ({
+  userId: state.user.token.user._id
+});
+
+export default connect(mapStateToProps)(Activity)

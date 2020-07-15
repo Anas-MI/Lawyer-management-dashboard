@@ -101,6 +101,9 @@ const RecordPayment = React.lazy(() =>
 const ViewMatter = React.lazy(() =>
   import('./App/containers/Matter/VIewMatter/ViewMatter')
 );
+const Bills = React.lazy(() =>
+  import('./App/containers/Matter/VIewMatter/AcitivityBills')
+);
 const Settings = React.lazy(() => import('./App/containers/Settings/index'));
 const customFeilds = React.lazy(() =>
   import('./App/containers/Settings/CustomFeilds/CustomFeilds')
@@ -325,6 +328,12 @@ const routes = [
     exact: true,
     name: 'Manage Matter',
     component: ViewMatter,
+  },
+  {
+    path: '/view/matter/bills',
+    exact: true,
+    name: 'Bills for a Matter',
+    component: Bills,
   },
   { path: '/settings', exact: true, name: 'Settings', component: Settings },
   {

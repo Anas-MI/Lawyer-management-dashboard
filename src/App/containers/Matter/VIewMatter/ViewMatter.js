@@ -379,14 +379,17 @@ function CompanyView(props) {
   //Export pdf bills
 
   //columns for bills section
-
+  const handleBills=()=>{
+    console.log( props.location.state.id)
+    props.history.push('/view/matter/bills', props.location.state.id)
+  }
   return (
     <div>
       <Tabs defaultActiveKey="1" onChange={callback}>
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
             title="Financial"
-            extra={<a href="#">Add Expense</a>}
+            extra={<Button type="link" onClick={handleBills} >Quick Bills</Button>}
             className="form-width mb-4"
           >
             <div className="text-center pt-2">
