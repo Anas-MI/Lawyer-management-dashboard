@@ -1,6 +1,6 @@
 import React from 'react';
 import jsPDF from 'jspdf';
-import { Button } from 'antd';
+import {Card, Button } from 'antd';
 import 'jspdf-autotable';
 import ReactDOMServer from 'react-dom/server';
 
@@ -32,8 +32,12 @@ const Invoice = (props) => {
     );
   };
 
+  
+
   const invoiceForm = () => (
-    <div id="canvas" className="container px-5 col text-center">
+    
+    <Card  bodyStyle={{"padding": "30px"}} className="mb-3">
+    <div id="canvas" className="text-center P-3">
       <h6 className="text-right pb-3">
         Invoice #{props.location.state.invoiceData.id} - {props.location.state.invoiceData.date}
       </h6>
@@ -113,13 +117,14 @@ const Invoice = (props) => {
             <h4>Total Amount : {props.location.state.Total.toFixed(2)}</h4>
       </div>
     </div>
+    </Card>
   );
 
   return (
     <div>
       {invoiceForm()}
       <Button className="ml-auto " type="primary" onClick={exportPDF}>
-        Print
+        Download PDF
       </Button>
     </div>
   );
