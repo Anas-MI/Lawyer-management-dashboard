@@ -23,13 +23,15 @@ class Activity extends React.Component{
                 date : "",
                 rate : "",
                 invoice : "Unbilled",
+                time : ""
             },
             timeData : [],
             expenseData : [],
             completeData : [],
             tableData : [],
             editmode : false,
-            record : ""
+            record : "",
+            touched : false
 
         }
     }
@@ -258,6 +260,7 @@ class Activity extends React.Component{
         
       
       };
+      
     
       handleCancel = type => {
         if(type==="time"){
@@ -292,11 +295,24 @@ class Activity extends React.Component{
               console.log(this.state)
              
         }
+        setTimeout(()=>{
+          window.location.reload()
+        },1000)
        
       
       };
 
     render(){
+      const setTime = () => {
+        const time = window.localStorage.getItem('timer')
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor(time / 60);
+     //   const Seconds = time % 60;
+        const data = this.state.data
+        data.time = hours +":"+minutes
+        this.setState({data:data, touched : true})
+        console.log(this.state)
+   }
         const handleEdit = record => {
           if(record.type==="time"){
             this.setState({
@@ -480,6 +496,7 @@ class Activity extends React.Component{
       }
         const handleChange=(e)=>{
             e.persist()
+            this.setState({touched : false})
             const { name, id, value , selectedIndex} = e.target
             let newData = this.state.data
             if(name==="matter"){
@@ -618,7 +635,7 @@ class Activity extends React.Component{
                 onCancel={()=>this.handleCancel("time")}
                 afterClose = {()=>this.handleCancel("time")}
                 >
-                <TimeForm record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
+                <TimeForm setTime={setTime} touched={this.state.touched} time={this.state.data.time} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
             </Modal>
             <Modal
                 title="New Expense"
