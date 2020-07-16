@@ -14,6 +14,7 @@ function CompanyView(props) {
   let calendar = {};
 
   const [state, setState] = useState({ visible: false });
+  const [client , setClient ] = useState({})
   const [contact, setContact] = useState([]);
   const [Calendar, setCalendar] = useState([]);
   const [Task, setTask] = useState([]);
@@ -300,7 +301,7 @@ function CompanyView(props) {
         </div>
       );
     });
-    const fNAme = response.data.client.firstName;
+    const fNAme = response.data.client.firstName +" "+ response.data.client.lastName ;
     const IDx = response.data.client._id;
     setAddress(adrs);
     setID(IDx);

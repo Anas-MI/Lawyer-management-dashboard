@@ -92,6 +92,9 @@ const Activity = React.lazy(() =>
 const AddMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/AddMatter')
 );
+const Invoice = React.lazy(() =>
+  import('./App/components/Invoice/Invoice')
+);
 const EditMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/EditMatter')
 );
@@ -335,7 +338,16 @@ const routes = [
     name: 'Bills for a Matter',
     component: Bills,
   },
-  { path: '/settings', exact: true, name: 'Settings', component: Settings },
+  {
+    path: '/view/matter/invoice',
+    exact: true,
+    name: 'Invoice',
+    component: Invoice,
+  },
+  { path: '/settings', 
+    exact: true, 
+    name: 'Settings', 
+    component: Settings },
   {
     path: '/settings/customFeilds',
     exact: true,
