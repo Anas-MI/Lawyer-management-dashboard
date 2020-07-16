@@ -5,6 +5,7 @@ import 'jspdf-autotable';
 import ReactDOMServer from 'react-dom/server';
 
 import html2pdf from 'simple-html2pdf';
+
 //let invoiceData = { id , date , status}
 // companyData ={ name, address , phone , email}
 //userData = { name,address}
@@ -22,7 +23,6 @@ const Invoice = (props) => {
     //   },
     // });
     // pdf.save('test.pdf');
-
     pdf.addHTML(
       canvas,
 
@@ -126,43 +126,3 @@ const Invoice = (props) => {
 };
 export default Invoice;
 //Example use case
-// {/* <Invoice
-//               invoiceData={{ id: '644', status: 'due', date: '24/6/20' }}
-//               companyData={{
-//                 logo: 'https://uilogos.co/img/logotype/hexa.png',
-//                 name: 'ABC Company',
-//                 address: '4354  Settlers Lane, New York',
-//                 phone: '917-821-3450',
-//                 email: 'w9lk6p927j@temporary-mail.net',
-//               }}
-//               clientData={{
-//                 name: 'M Salamanca',
-//                 address: '4354  Settlers Lane, New York',
-//               }}
-//               billData={[
-//                 {
-//                   date: '12/12/12',
-//                   attorney: 'AB',
-//                   notes: 'dumpy data 1',
-//                   rate: '21',
-//                   hours: '1.4',
-//                   total: '16',
-//                 },
-//                 {
-//                   date: '12/12/12',
-//                   attorney: 'AB',
-//                   notes: 'dumpy data 2',
-//                   rate: '120',
-//                   hours: '1',
-//                   total: '17',
-//                 },
-//                 {
-//                   date: '12/12/20',
-//                   attorney: 'AB',
-//                   notes: 'dumpy data 3',
-//                   rate: '120',
-//                   hours: '1',
-//                   total: '12',
-//                 },
-//               ]}
-//             /> */}

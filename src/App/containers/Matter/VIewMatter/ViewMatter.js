@@ -358,39 +358,22 @@ function CompanyView(props) {
       Balance: '800',
     },
   ];
-  const dataForDocuments = [
-    {
-      key: '1',
-      name: 'Detailed doc',
-      matter: 'xyz Matter',
-      category: 'dummy Category',
-      receivedDate: '12/2/20',
-      lastEdit: '5m ago',
-    },
-    {
-      key: '2',
-      name: 'Imp doc',
-      matter: 'xyz Matter',
-      category: 'dummy Category',
-      receivedDate: '2/3/20',
-      lastEdit: '15m ago',
-    },
-  ];
 
-  //Export pdf bills
-
-  //columns for bills section
-  const handleBills=()=>{
-    console.log( props.location.state.id)
-    props.history.push('/view/matter/bills', props.location.state.id)
-  }
+  const handleBills = () => {
+    console.log(props.location.state.id);
+    props.history.push('/view/matter/bills', props.location.state.id);
+  };
   return (
     <div>
       <Tabs defaultActiveKey="1" onChange={callback}>
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
             title="Financial"
-            extra={<Button type="link" onClick={handleBills} >Quick Bills</Button>}
+            extra={
+              <Button type="link" onClick={handleBills}>
+                Quick Bills
+              </Button>
+            }
             className="form-width mb-4"
           >
             <div className="text-center pt-2">
@@ -531,7 +514,11 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Document" key="7">
-          <Documents dataSource={dataForDocuments} />
+          <Documents
+            matters={props.location.state.matters}
+            userId={props.location.state.userId}
+            matterId={props.location.state.id}
+          />
         </TabPane>
         <TabPane tab="Task" key="8">
           {Task}

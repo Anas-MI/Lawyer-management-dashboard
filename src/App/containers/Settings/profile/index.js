@@ -1,9 +1,14 @@
-import React, { useState } from  'react'
+import React, { useState, useEffect } from  'react'
 import { Form, Col, Button} from 'react-bootstrap'
 import { Card, message, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 
 const Profile = ()=>{
+
+    const [state, setState] = useState(() => {
+            const stickyValue = window.localStorage.getItem('Case.user');
+            const localValue = JSON.parse(stickyValue)
+            return localValue.token.user})
 return (
     <>
         <div className='form-width'>
@@ -22,20 +27,39 @@ return (
                         <Col>
                             <Form.Group controlId="FirstName">
                                 <Form.Label>First Name</Form.Label>
-                                <Form.Control type="text" name="FirstName" placeholder="First Name" />
+                                <Form.Control type="text" name="FirstName" value={state["firstName"]} placeholder="First Name"/>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group controlId="LastName">
                                 <Form.Label>Last Name</Form.Label>
-                                <Form.Control type="text" name="LastName" placeholder="Last Name" />
+                                <Form.Control type="text" name="LastName" value={state["lastName"]} placeholder="Last Name" />
                             </Form.Group>
                         </Col>
                     </Form.Row>
 
                     <Form.Group controlId="Email">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" name="Email" placeholder="Email" />
+                        <Form.Control type="email" name="Email" value={state["emailAddress"]} placeholder="Email" />
+                    </Form.Group>
+
+                    <Form.Group controlId="Phone">
+                        <Form.Label>Primary Phone</Form.Label>
+                        <Form.Control type="number" name="Phone" value={state["phoneNumber"]} placeholder="Primary Phone"/>
+                    </Form.Group>
+
+                    <Form.Group controlId="lawFirmSize">
+                        <Form.Label>law Firm Size</Form.Label>
+                        <Form.Control
+                            as="select"
+                            name="lawFirmSize"
+                            value={state["lawFirmSize"]}
+                        >
+                             <option value="nn">Law Firm Size</option>
+                            <option value="1">1</option>
+                            <option value="2-5">2-5</option>
+                            <option value="over 5+">over 5+</option>
+                        </Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="Address">
@@ -62,7 +86,7 @@ return (
                         <Col>
                             <Form.Group controlId="Country">
                                 <Form.Label>Country</Form.Label>
-                                <Form.Control type="text" name="Country" placeholder="Country"/>
+                                <Form.Control type="text" name="Country" value={state["countryOfPractice"]} placeholder="Country"/>
                             </Form.Group>
                         </Col>
                         <Col>
@@ -72,11 +96,6 @@ return (
                             </Form.Group>
                         </Col>
                     </Form.Row>
-
-                    <Form.Group controlId="Phone">
-                        <Form.Label>Primary Phone</Form.Label>
-                        <Form.Control type="number" name="Phone" placeholder="Primary Phone"/>
-                    </Form.Group>
 
                     <Form.Group controlId="TimeZone">
                         <Form.Label>Time Zone</Form.Label>
