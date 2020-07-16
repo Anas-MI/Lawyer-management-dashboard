@@ -1,4 +1,4 @@
-import React, { useState } from  'react'
+import React, { useState, useEffect } from  'react'
 import { Form, Col, Button} from 'react-bootstrap'
 import { Card, message, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +8,7 @@ const validNameRegex = RegExp(
     /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
   );
 
-const AddAccount = () =>{
+const EditAccount = (props) =>{
 
     const history = useHistory()
     const [state, setState] = useState({
@@ -25,6 +25,19 @@ const AddAccount = () =>{
     })
     const [error, setError] = useState({})
     const [display, setDisplay] = useState(false)
+
+    // get Account Data
+    useEffect(() => {
+        api
+        .get("/account/view/"+props.location.state)
+        .then((res) => {
+            setState({...state, ...res.data.data})
+        })
+        .catch((err) => {
+          console.log(err); 
+        });
+      }, []);
+
 
     // handel the change of form & set the error msg
     const handelChange = e =>{
@@ -130,12 +143,10 @@ const AddAccount = () =>{
           });
         } else {
             // if form is valid then do something
-            api
-      .post("/account/create", state)
-      .then((res) => {
-          console.log(res)
-       })
-          
+            api.post("/account/edit/"+props.location.state, state)
+                .then((res) => {
+                    console.log(res)
+                })
         }
         history.goBack();
       }
@@ -144,7 +155,7 @@ const AddAccount = () =>{
         <>
         <div className='form-width'>
             <div className="form-header-container mb-4">
-                <h3 className="form-header-text">Add New Account</h3>
+                <h3 className="form-header-text">Edit Account</h3>
             </div>
             <Card className="mb-4">
                 <Form className="form-details">
@@ -154,6 +165,7 @@ const AddAccount = () =>{
                             as="select"
                             name="type"
                             onChange={handelChange}
+                            value={state["type"]}
                         >
                             <option value="default">Select Account Type</option>
                             <option value="Operating Account">Operating Account</option>
@@ -165,44 +177,44 @@ const AddAccount = () =>{
 
                     <Form.Group controlId="accountName">
                         <Form.Label>Account Name</Form.Label>
-                        <Form.Control type="text" name="accountName" placeholder="Account name"  onChange={handelChange} />
+                        <Form.Control type="text" name="accountName" placeholder="Account name" value={state["accountName"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.accountName}</p>
                     </Form.Group>
 
                     <Form.Group controlId="accountHolder">
                         <Form.Label>Account Holder</Form.Label>
-                        <Form.Control type="text" name="accountHolder" placeholder="Account Holder" onChange={handelChange} />
+                        <Form.Control type="text" name="accountHolder" placeholder="Account Holder" value={state["accountHolder"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.accountHolder}</p>
                     </Form.Group>
 
                     <Form.Group controlId="accountNumber">
                         <Form.Label>Account Number</Form.Label>
-                        <Form.Control type="number" name="accountNumber" placeholder="Account Number" onChange={handelChange} />
+                        <Form.Control type="number" name="accountNumber" placeholder="Account Number" value={state["accountNumber"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.accountNumber}</p>
                     </Form.Group>
 
                     <Form.Group controlId="institution">
                         <Form.Label>Institution</Form.Label>
-                        <Form.Control type="text" name="institution" placeholder="Institution" onChange={handelChange} />
+                        <Form.Control type="text" name="institution" placeholder="Institution" value={state["institution"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.institution}</p>
                     </Form.Group>
 
                     <Form.Group controlId="domicileBranch">
                         <Form.Label>Domicile Branch</Form.Label>
-                        <Form.Control type="text" name="domicileBranch" placeholder="Domicile Branch" onChange={handelChange} />
+                        <Form.Control type="text" name="domicileBranch" placeholder="Domicile Branch" value={state["domicileBranch"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.domicileBranch}</p>
                     </Form.Group>
 
                     <Form.Group controlId="swiftCode">
                         <Form.Label>Swift Code</Form.Label>
-                        <Form.Control type="text" name="swiftCode" placeholder="Swift Code" onChange={handelChange} />
+                        <Form.Control type="text" name="swiftCode" placeholder="Swift Code" value={state["swiftCode"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.swiftCode}</p>
                     </Form.Group>
                     <Form.Row>
                         <Col>
                             <Form.Group controlId="transitNumber">
                                 <Form.Label>Transit Number</Form.Label>
-                                <Form.Control type="text" name="transitNumber" placeholder="Transit Number"  onChange={handelChange}/>
+                                <Form.Control type="text" name="transitNumber" placeholder="Transit Number" value={state["transitNumber"]} onChange={handelChange}/>
                                 <p className="help-block text-danger">{error.transitNumber}</p>
                             </Form.Group>
                         </Col>
@@ -213,6 +225,7 @@ const AddAccount = () =>{
                                     as="select"
                                     name="currency"
                                     onChange={handelChange}
+                                    value={state["currency"]}
                                 >
                                     <option value="default">Select Currency</option>
                                     <option value="USD $">USD $</option>
@@ -225,7 +238,7 @@ const AddAccount = () =>{
 
                     <Form.Group controlId="openingBalance">
                         <Form.Label>Opening Balance</Form.Label>
-                        <Form.Control type="number" name="openingBalance" placeholder="Opening Balance" onChange={handelChange} />
+                        <Form.Control type="number" name="openingBalance" placeholder="Opening Balance" value={state["openingBalance"]} onChange={handelChange} />
                         <p className="help-block text-danger">{error.openingBalance}</p>
                     </Form.Group>
 
@@ -233,7 +246,7 @@ const AddAccount = () =>{
                         <Form.Check type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
                     </Form.Group>
                     <br /><br />
-                    <Button onClick={handelSubmit}>Create New Bank Account</Button>
+                    <Button onClick={handelSubmit}>Edit Bank Account</Button>
                 </Form>
             </Card>
         </div>          
@@ -241,4 +254,4 @@ const AddAccount = () =>{
     )
 }
 
-export default AddAccount
+export default EditAccount
