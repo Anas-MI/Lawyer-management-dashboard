@@ -357,28 +357,6 @@ function CompanyView(props) {
       Balance: '800',
     },
   ];
-  const dataForDocuments = [
-    {
-      key: '1',
-      name: 'Detailed doc',
-      matter: 'xyz Matter',
-      category: 'dummy Category',
-      receivedDate: '12/2/20',
-      lastEdit: '5m ago',
-    },
-    {
-      key: '2',
-      name: 'Imp doc',
-      matter: 'xyz Matter',
-      category: 'dummy Category',
-      receivedDate: '2/3/20',
-      lastEdit: '15m ago',
-    },
-  ];
-
-  //Export pdf bills
-
-  //columns for bills section
 
   return (
     <div>
@@ -527,7 +505,11 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Document" key="7">
-          <Documents dataSource={dataForDocuments} />
+          <Documents
+            matters={props.location.state.matters}
+            userId={props.location.state.userId}
+            matterId={props.location.state.id}
+          />
         </TabPane>
         <TabPane tab="Task" key="8">
           {Task}
