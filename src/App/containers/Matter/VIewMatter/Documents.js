@@ -9,6 +9,7 @@ import {
   Form,
   Select,
 } from 'antd';
+import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 
 import api from '../../../../resources/api';
 const { Option } = Select;
@@ -18,10 +19,12 @@ const Documents = (props) => {
   const [viewUpload, setViewUpload] = useState(false);
   const [uploadData, setUploadData] = useState({
     document: '',
+    _id: '',
     name: '',
     matter: '',
     category: '',
   });
+  const [modalFor, setModalFor] = useState('Upload');
 
   const columnsForDocuments = [
     {
@@ -49,16 +52,53 @@ const Documents = (props) => {
       dataIndex: 'lastEdit',
       key: '5',
     },
+
     {
-      title: 'Action',
-      dataIndex: 'download',
+      title: 'Edit',
+      dataIndex: 'edit',
       key: '6',
       render: (_, record) => {
         return (
           <Button
+            className="btn-outline-info "
+            onClick={() => {
+              editHandler(record._id);
+            }}
+          >
+            Edit
+          </Button>
+        );
+      },
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Button
+            className=" btn-outline-danger "
+            onClick={() => {
+              deleteHandler(record._id);
+            }}
+          >
+            Delete
+          </Button>
+        );
+      },
+    },
+    {
+      title: 'Download',
+      dataIndex: 'download',
+      key: '8',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-primary "
             onClick={() => {
               downloadHandler(record.id);
             }}
+            icon={<DownloadOutlined />}
           >
             Download
           </Button>
@@ -85,33 +125,23 @@ const Documents = (props) => {
   };
 
   const getDocuments = async () => {
-    console.log('user matter', props.userId, props.matterId);
+    let tempDocs = [];
     await api
       .get(`/document/viewformatter/${props.userId}/${props.matterId}`)
-      .then((res) =>
-        res.data.data.map((item, index) =>
-          setDocs([
-            ...docs,
+      .then((res) => {
+        // setDocs(res.data.data);
+        res.data.data.map((item, index) => {
+          tempDocs = [
+            ...tempDocs,
             {
-              key: index,
-              id: item._id,
-              name: item.name,
-              matterDetail: item.matter,
+              ...item,
+              key: item._id,
               matter: item.matter.matterDescription,
-              category: item.category,
-              receivedDate: `${item.receivedDate.substring(
-                0,
-                10
-              )}  ${item.receivedDate.substring(12, 19)}`,
-              lastEdit: `${item.lastEdit.substring(
-                0,
-                10
-              )}  ${item.lastEdit.substring(12, 19)}`,
-              document: item.document,
             },
-          ])
-        )
-      );
+          ];
+        });
+      });
+    setDocs(tempDocs);
   };
 
   const handleSubmit = async () => {
@@ -120,21 +150,17 @@ const Documents = (props) => {
     docFormData.set('name', uploadData.name);
     docFormData.set('matter', uploadData.matter);
     docFormData.set('category', uploadData.category);
+    docFormData.set('userId', props.userId);
     await api
       .post('/document/upload/934894383948u43', docFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
-        setUploadData({
-          document: '',
-          name: '',
-          matter: '',
-          category: '',
-        });
         notification.success({ message: 'Document Uploaded.' });
+        getDocuments();
       })
       .catch(function (response) {
-        notification.warning({ message: 'Document Upload Failed.' });
+        notification.error({ message: 'Document Upload Failed.' });
       });
     setTimeout(() => {
       setViewUpload(false);
@@ -145,122 +171,184 @@ const Documents = (props) => {
     window.open(docs.filter((item) => item.id === docId)[0].document);
   };
 
+  const deleteHandler = async (docId) => {
+    await api
+      .get(`/document/delete/${docId}`)
+      .then((res) => {
+        notification.success({ message: 'Document Deleted SuccessFully.' });
+        getDocuments();
+      })
+      .catch((res) => {
+        notification.error({ message: 'Document Deletion Failed.' });
+      });
+  };
+  const editHandler = async (docId) => {
+    setModalFor('Edit');
+    setViewUpload(true);
+    await api.get(`/document/view/${docId}`, uploadData).then((response) => {
+      setUploadData(response.data.data);
+    });
+  };
+
+  const handleEdit = async () => {
+    await api
+      .post(`/document/edit/${uploadData._id}`, uploadData)
+      .then(function (response) {
+        notification.success({ message: 'Document Uploaded.' });
+        getDocuments();
+      })
+      .catch(function (response) {
+        notification.error({ message: 'Document Upload Failed.' });
+      });
+    setTimeout(() => {
+      setViewUpload(false);
+    }, 600);
+  };
+
   useEffect(() => {
     getDocuments();
   }, []);
+
+  const uploadForm = () => (
+    <Modal
+      title={` ${modalFor} Document`}
+      visible={viewUpload}
+      onCancel={() => setViewUpload(false)}
+      footer={[
+        <Button key="back" onClick={() => setViewUpload(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          onClick={modalFor === 'Upload' ? handleSubmit : handleEdit}
+        >
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        {...layout}
+        name="basic"
+        fields={[
+          {
+            name: ['name'],
+            value: uploadData.name,
+          },
+          {
+            name: ['category'],
+            value: uploadData.category,
+          },
+          {
+            name: ['matter'],
+            value:
+              modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
+          }, //todo
+        ]}
+      >
+        <Form.Item
+          key="name"
+          label="Name"
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: 'Please input name!',
+            },
+          ]}
+        >
+          <Input onChange={handleInput('name')} value={uploadData.name} />
+        </Form.Item>
+
+        <Form.Item
+          key="matter"
+          label="Matter"
+          name="matter"
+          rules={[
+            {
+              required: true,
+              message: 'Please input matter',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Matter"
+            optionFilterProp="children"
+            onChange={handleInput('matter')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {props.matters.map((item, index) => (
+              <Option key={index} value={item.id}>
+                {item.matterDescription}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          key="category"
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: 'Please input category',
+            },
+          ]}
+        >
+          <Input onChange={handleInput('category')} />
+        </Form.Item>
+        {modalFor === 'Upload' && (
+          <Form.Item
+            key="document"
+            label="Document"
+            name="document"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your File!',
+              },
+            ]}
+          >
+            <Input
+              type="file"
+              onChange={handleInput('document')}
+              value={uploadData.document}
+            />
+          </Form.Item>
+        )}
+      </Form>
+    </Modal>
+  );
   return (
     <Card
       title="Document"
       extra={
         <span style={{ float: 'right' }} className="">
-          <Button onClick={() => setViewUpload(true)}>Upload</Button>
-          <Modal
-            title="Upload Document"
-            visible={viewUpload}
-            onCancel={() => setViewUpload(false)}
-            footer={[
-              <Button key="back" onClick={() => setViewUpload(false)}>
-                Cancel
-              </Button>,
-              <Button
-                key="submit"
-                type="primary"
-                htmlType="submit"
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>,
-            ]}
-          >
-            <Form
-              {...layout}
-              name="basic"
-              initialValues={{
-                remember: true,
-              }}
-            >
-              <Form.Item
-                key="name"
-                label="Name"
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input name!',
-                  },
-                ]}
-              >
-                <Input onChange={handleInput('name')} value={uploadData.name} />
-              </Form.Item>
+          <Button
+            onClick={() => {
+              setUploadData({
+                document: '',
+                _id: '',
+                name: '',
+                matter: '',
+                category: '',
+              }); //todo
 
-              <Form.Item
-                key="matter"
-                label="Matter"
-                name="matter"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input matter',
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  style={{ width: 200 }}
-                  placeholder="Select a Matter"
-                  optionFilterProp="children"
-                  onChange={handleInput('matter')}
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {props.matters.map((item, index) => (
-                    <Option key={index} value={item.id}>
-                      {item.matterDescription}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                key="category"
-                label="Category"
-                name="category"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input category',
-                  },
-                ]}
-              >
-                <Input
-                  onChange={handleInput('category')}
-                  value={uploadData.category}
-                />
-              </Form.Item>
-              <Form.Item
-                key="document"
-                label="Document"
-                name="document"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your File!',
-                  },
-                ]}
-              >
-                <Input
-                  type="file"
-                  onChange={handleInput('document')}
-                  value={uploadData.document}
-                />
-              </Form.Item>
-            </Form>
-          </Modal>
+              setViewUpload(true);
+              setModalFor('Upload');
+            }}
+          >
+            Upload
+          </Button>
         </span>
       }
     >
+      {uploadForm()}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
   );

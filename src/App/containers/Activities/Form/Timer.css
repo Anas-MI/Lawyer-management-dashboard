@@ -1,0 +1,197 @@
+.cdh-fv {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+  
+  .cdh-fv.cdh-auto {
+    width: auto;
+  }
+  
+  .cdh-fv.cdh-auto.uni-height {
+    /* height: 100%;
+    min-height: 300px; */
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+
+  .chd-trayico {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 200px;
+    height: 35px;
+    padding: 10px;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 3px;
+    background-color: #fff;
+  }
+  
+  .chd-trayico.cdh-trayico-small {
+    width: 140px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 5px;
+  }
+  
+  .chd-trayico.cdh-trayico-small.cdh-tray-active {
+    width: 150px;
+    height: 35px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-radius: 3px;
+    background-color: #5993df;
+  }
+
+  .cdh-tray-primary {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .cdh-tray-xs-font {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+  }
+  
+  .cdh-tray-xs-font.cdh-tray-small-xs {
+    font-size: 1.5rem;
+    line-height: 1.9rem;
+  }
+  
+  .cdh-tray-xs-font.cdh-tray-small-xs.cdh-color-green {
+    color: #fff;
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+  }
+  .cdh-tray-secondary {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  .cdh-tray-secondary.cdh-tray-ico-xs {
+    font-size: 0.9rem;
+  }    
+
+  .cdh-timeaction--btn {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 5px;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #fff;
+    text-decoration: none;
+  }
+  .w-inline-block {
+    max-width: 100%;
+    display: inline-block;
+  }
+  .cdh-ico {
+    font-family: 'La solid 900', sans-serif;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  
+  .cdh-ico.cdh-tray-pauseico {
+    font-size: 1rem;
+    line-height: 1rem;
+  }  
+
+  .cdh-ico.cdh-tray-playico {
+    font-size: 1rem;
+    line-height: 1rem;
+  }
+  
+  .cdh-ico.cdh-tray-pauseico.cdh-trayico-small {
+    color: #000;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+  }
+  .cdh-ico.cdh-tray-playico.cdh-trayico-small {
+    color: #000;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+  }
+  
+
+
+
+@font-face {
+    font-family: 'La 400';
+    src: url('../../../../assets/fonts/la-regular-400.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Fa solid 900';
+    src: url('../../../../assets/fonts/fa-solid-900.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Fa brands 400';
+    src: url('../../../../assets/fonts/fa-brands-400.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'La solid 900';
+    src: url('../../../../assets/fonts/la-solid-900.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
