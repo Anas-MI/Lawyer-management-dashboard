@@ -242,7 +242,8 @@ const Documents = (props) => {
           },
           {
             name: ['matter'],
-            value: uploadData.matter._id,
+            value:
+              modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
           }, //todo
         ]}
       >
