@@ -482,36 +482,34 @@ class Activity extends React.Component{
         
         return <div className='p-2 '>
             
-            <Card title="New Quick Bill">
-              <Space size='large'>
-              <div>
-                    <p style={{fontWeight : "bold"}}>FROM</p><br/>
+            <Card title="New Quick Bill" className="overflow-auto mb-3">
+              <div className="d-flex justify-content-between">
+                  <div>
+                    <p><b>FROM</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.LName}</p>
-                    
                  </div>
                  <div>
-                    <p style={{fontWeight : "bold"}}>TO</p><br/>
+                    <p><b>TO</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.name}</p><br/>
                     <p>{this.state.address}</p>
                  </div>
                  <div>
-                    <p style={{fontWeight : "bold"}}>Matter</p><br/>
+                    <p><b>Matter</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.matter}</p><br/>
                  </div>
-              </Space>
-
+              </div>
             </Card>
             
-            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto  mb-3" title="Time Entries"> 
               <Table columns={columnsForTime} dataSource={this.state.timeData}  />
-            </Card><br></br>
+            </Card>
             <div className="form-add mb-4">
                 <span onClick={() => this.setState({ timeModal: true })}>
                   Add Time Entry
                 </span>
               </div>
 
-            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto" title="Expense Entries">                
               <Table columns={columnsForExpense} dataSource={this.state.expenseData}  />
              </Card><br></br>
              <div className="form-add mb-4">
@@ -520,14 +518,15 @@ class Activity extends React.Component{
                 </span>
               </div>
 
-            <Card>
-                <div style={{display: "inline"}}>
-                <h4>Bill Total : </h4>    <h4 style={{float : "right"}}>{this.state.total ? this.state.total.toFixed(2) : "0"}</h4>
-
+            <Card className="mb-3" >
+                <div className="d-flex justify-content-between">
+                  <h4><b>Bill Total : </b></h4>    
+                  <h4><b>{this.state.total ? this.state.total.toFixed(2) : "0"}</b></h4>
                 </div>
             </Card>
-            <Button onClick={()=>{this.props.history.push('/view/matter/invoice', invoiceProps)}} type="primary">Generate</Button>
-            <Button onClick={()=>{this.props.history.goBack()}} >Cancel</Button>
+            <Button onClick={()=>{this.props.history.push('/view/matter/invoice', invoiceProps)}} type="primary" className="mr-2">Generate Bill</Button>
+            <span>or</span>
+            <Button onClick={()=>{this.props.history.goBack()}} className="ml-2">Cancel</Button>
             
             <Modal
                 title="New Time Entry"
