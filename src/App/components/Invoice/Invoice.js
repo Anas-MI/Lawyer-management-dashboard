@@ -11,6 +11,7 @@ import html2pdf from 'simple-html2pdf';
 //billData =[]
 
 const Invoice = (props) => {
+  console.log(props)
   const exportPDF = () => {
     var canvas = document.getElementById('canvas');
     var pdf = new jsPDF('p', 'mm', 'a4');
@@ -34,58 +35,82 @@ const Invoice = (props) => {
   const invoiceForm = () => (
     <div id="canvas" className="container px-5 col text-center">
       <h6 className="text-right pb-3">
-        Invoice #{props.invoiceData.id} - {props.invoiceData.date}
+        Invoice #{props.location.state.invoiceData.id} - {props.location.state.invoiceData.date}
       </h6>
 
       <div>
         <img
-          src={props.companyData.logo}
+          src={props.location.state.companyData.logo}
           alt="companyLogo"
           style={{ width: '200px' }}
         />
-        <h3 className="font-weight-bold">{props.companyData.name}</h3>
-        <div>{props.companyData.address}</div>
-        <div>Phone : {props.companyData.phone}</div>
-        <div>Email : {props.companyData.email}</div>
+        <h3 className="font-weight-bold">{props.location.state.companyData.name}</h3>
+        <div>{props.location.state.companyData.address}</div>
+        <div>Phone : {props.location.state.companyData.phone}</div>
+        <div>Email : {props.location.state.companyData.email}</div>
       </div>
 
       <div className="text-right">
         <h5 className="font-weight-bold">INVOICE</h5>
         <div>
-          <div>Invoice #{props.invoiceData.id}</div>
-          <div>Date : {props.invoiceData.date}</div>
-          <div>{props.invoiceData.status}</div>
+          <div>Invoice #{props.location.state.invoiceData.id}</div>
+          <div>Date : {props.location.state.invoiceData.date}</div>
+          <div>{props.location.state.invoiceData.status}</div>
         </div>
       </div>
       <div className="float-left text-left">
-        <div>{props.clientData.name}</div>
-        <div>{props.clientData.address}</div>
+        <div>{props.location.state.clientData.name}</div>
+        <div>{props.location.state.clientData.address}</div>
       </div>
       <div className="my-5 py-5">
         <table class="table">
           <thead class="thead-light">
             <tr>
               <th scope="col">Date</th>
-              <th scope="col">Attorney</th>
-              <th scope="col">Notes</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Description</th>
               <th scope="col">Rate</th>
-              <th scope="col">Hours</th>
-              <th scope="col">Total</th>
+              <th scope="col">Sub total</th>
             </tr>
           </thead>
           <tbody>
-            {props.billData.map((item, index) => (
+            {props.location.state.timeData.map((item, index) => (
               <tr key={index}>
                 <th scope="row">{item.date}</th>
-                <td>{item.attorney}</td>
-                <td>{item.notes}</td>
+                <td>{item.qty}</td>
+                <td>{item.description}</td>
                 <td>&#8377;{item.rate}</td>
-                <td>{item.hours}</td>
-                <td>{item.total}</td>
+                <td>{item.subTotal}</td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="my-5 py-5">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Description</th>
+              <th scope="col">Rate</th>
+              <th scope="col">Sub total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.location.state.expenseData.map((item, index) => (
+              <tr key={index}>
+                <th scope="row">{item.date}</th>
+                <td>{item.time}</td>
+                <td>{item.description}</td>
+                <td>&#8377;{item.rate}</td>
+                <td>{item.subTotal}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <br></br><br></br>
+            <h4>Total Amount : {props.location.state.Total.toFixed(2)}</h4>
       </div>
     </div>
   );

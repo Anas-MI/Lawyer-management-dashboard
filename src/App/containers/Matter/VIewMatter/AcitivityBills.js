@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Form, Col,Row } from 'react-bootstrap'
 import api from '../../../../resources/api'
+import { add } from 'lodash'
 
 let matters = {}
 let activity = {}
@@ -29,7 +30,11 @@ class Activity extends React.Component{
             completeData : [],
             tableData : [],
             editmode : false,
-            record : ""
+            record : "",
+            name : "",
+            address : "",
+            Matter : "",
+            LName : ""
 
         }
     }
@@ -43,11 +48,21 @@ class Activity extends React.Component{
     }
     componentDidMount(){
         console.log(this.props.location.state)
-      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{matters = res })
+      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
+        matters = res 
+      
+      })
       api.get('/activity/viewformatter/'+this.props.userId+'/'+ this.props.location.state).then((res)=>{
         activity = res.data.data
-   
         
+        api.get('/matter/view/' + this.props.location.state).then((res) => {
+          const name = res.data.data.client.firstName + " " + res.data.data.client.lastName
+          const address = res.data.data.client.address[0] ? res.data.data.client.address : ""
+          const matter = res.data.data.matterDescription
+          this.setState({name  : name , address : address, matter : matter})
+          
+        });
+      
      
         let timedata = []
         let expenseData = []
@@ -65,7 +80,7 @@ class Activity extends React.Component{
             const sMinutes = val.time.split(':')[1];
             console.log(val.time)
             console.log(sHours + " " + sMinutes)
-            const subTotal =  rate * sHours + rate * ((rate/60)*sMinutes)
+
             const time = {
                 id : val._id,
                 time : val.time ? val.time : "",
@@ -75,9 +90,9 @@ class Activity extends React.Component{
                 billable : val.billable ? "Yes" : "No" ,
                 date : val.date.substring(0,10),
                 invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
-                subTotal : subTotal
+                subTotal : (rate * sHours + rate * ((rate/60)*sMinutes)).toFixed(2)
            }
-       //    total = total + subTotal
+           total = total + rate * sHours + rate * ((rate/60)*sMinutes)
            timedata.push(time)
         }
            
@@ -91,15 +106,17 @@ class Activity extends React.Component{
                     billable : val.billable ? "Yes" : "No" ,
                     date : val.date.substring(0,10),
                     invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
-                    subTotal : rate * val.qty
+                    subTotal : (rate * val.qty).toFixed(2)
                   }
-            //  total = total + subTotal
+              total = total + rate * val.qty
               expenseData.push(expense)
             }
  
 
         })
-        this.setState({ expenseData : expenseData , timeData : timedata, total : total  })
+        const localData = JSON.parse(window.localStorage.getItem("Case.user"))
+        const Lname = localData.token.user.firstName + " " +localData.token.user.firstName
+        this.setState({ expenseData : expenseData , timeData : timedata, total : total , LName : Lname })
       })
     }
     showModal = (type) => {
@@ -116,7 +133,84 @@ class Activity extends React.Component{
       
       };
     
+      handleOk = type => {
+        console.log(timeError)
+        notification.destroy()
+        if(timeError !== ""){
+          notification.error({message : "Invalid time"})
+        }else
+        if(this.state.data.date === ""){
+            notification.error({message : "Please select a Date"})
+        }else if(this.state.data.rate === ""){
+            notification.error({message : "Please provide rate"})
+        }else
+        {
+         
+            if(type==="time"){
+              let data = this.state.data
+              data.type = "time"
+              data.userId = this.props.userId
+              api.post('/activity/create', data).then((res)=>{
+           
+                notification.success({message : "Time entry Added !"})
+              }).catch((err)=>{
+  
+                notification.error({message : "Failed"})
+              }).then(()=>{
+                this.setState({
+                  timeModal : false,
+                  editmode : false,
+                  data :  { 
+                    billable : true,
+                    nonBillable : false,
+                    date : "",
+                    qty : "1.0",
+                    rate : "",
+                    invoice : "Unbilled",
+                },
+                });
+                setTimeout(()=>{
+                    window.location.reload()
+                },1500)
+              })
+            }else
+            if(type==="expense"){
+                let data = this.state.data
+                data.type = "expense"
+                data.userId = this.props.userId
+                api.post('/activity/create', data).then((res)=>{
+  
+                  notification.success({message : "Expense Added !"})
+                }).catch((err)=>{
    
+                  notification.error({message : "Failed"})
+                }).then(()=>{
+                  this.setState({
+                    expenseModal : false,
+                    editmode : false,
+                    data :  { 
+                      billable : true,
+                      nonBillable : false,
+                      date : "",
+                      qty : "1.0",
+                      rate : "",
+                      invoice : "Unbilled",
+                  },
+               
+                  });
+                  setTimeout(()=>{
+                      window.location.reload()
+                  },1500)
+                })
+            
+          }
+   
+
+        }
+             
+        
+      
+      };
     
       handleCancel = type => {
         if(type==="time"){
@@ -157,7 +251,7 @@ class Activity extends React.Component{
 
     render(){
        
-          
+          console.log(this.props)
           const handleDelete = record => {
             api.get('/activity/delete/'+record.id).then((res)=>{
 
@@ -368,21 +462,51 @@ class Activity extends React.Component{
 
             console.log(this.state)
         }
+        const invoiceProps = {
+          invoiceData : { id: '644', status: 'due', date: '24/6/20' },
+          companyData: {
+            logo: 'https://uilogos.co/img/logotype/hexa.png',
+            name: 'ABC Company',
+            address: '4354  Settlers Lane, New York',
+            phone: '917-821-3450',
+            email: 'w9lk6p927j@temporary-mail.net',
+          },
+          clientData : {
+            name: this.state.name,
+            address: this.state.address,
+          },
+          timeData: this.state.timeData,
+          expenseData : this.state.expenseData,
+          Total : this.state.total
+        }
         
         return <div className='p-2 '>
             
             <Card title="New Quick Bill">
-                <p style={{fontWeight : "bold"}}>FROM</p><br/>
-                <p style={{fontWeight : "bold"}}>Jayesh</p><br/>
-                <p>Shivampuri Colony,Bhawarkua Square</p>
-                <p>Indore 452001</p>
+              <Space size='large'>
+              <div>
+                    <p style={{fontWeight : "bold"}}>FROM</p><br/>
+                    <p style={{fontWeight : '600'}}>{this.state.LName}</p>
+                    
+                 </div>
+                 <div>
+                    <p style={{fontWeight : "bold"}}>TO</p><br/>
+                    <p style={{fontWeight : '600'}}>{this.state.name}</p><br/>
+                    <p>{this.state.address}</p>
+                 </div>
+                 <div>
+                    <p style={{fontWeight : "bold"}}>Matter</p><br/>
+                    <p style={{fontWeight : '600'}}>{this.state.matter}</p><br/>
+                 </div>
+              </Space>
+
             </Card>
             
             <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
               <Table columns={columnsForTime} dataSource={this.state.timeData}  />
             </Card><br></br>
             <div className="form-add mb-4">
-                <span onClick={() => this.setState({ expenseModal: true })}>
+                <span onClick={() => this.setState({ timeModal: true })}>
                   Add Time Entry
                 </span>
               </div>
@@ -398,11 +522,13 @@ class Activity extends React.Component{
 
             <Card>
                 <div style={{display: "inline"}}>
-                <h4>Bill Total : </h4>    <h4 style={{float : "right"}}>{this.state.total}</h4>
+                <h4>Bill Total : </h4>    <h4 style={{float : "right"}}>{this.state.total ? this.state.total.toFixed(2) : "0"}</h4>
 
                 </div>
             </Card>
-           
+            <Button onClick={()=>{this.props.history.push('/view/matter/invoice', invoiceProps)}} type="primary">Generate</Button>
+            <Button onClick={()=>{this.props.history.goBack()}} >Cancel</Button>
+            
             <Modal
                 title="New Time Entry"
                 visible={this.state.timeModal}

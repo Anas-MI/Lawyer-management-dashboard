@@ -42,14 +42,7 @@ class ExpenseForm extends React.Component{
            </Form.Group>
        </Col>
        <Col>
-           <Form.Group controlId="quantity">
-               <Form.Label>Quantity</Form.Label>
-               <Form.Control 
-               type="text" 
-               name="qty" 
-               defaultValue = {this.props.record.qty}
-               onChange={this.props.handleChange}/>
-           </Form.Group>
+          
            <Form.Group controlId="matter">
                <Form.Label>Matter</Form.Label>
                <Form.Control 
@@ -141,14 +134,7 @@ class ExpenseForm extends React.Component{
             </Form.Group>
         </Col>
         <Col>
-            <Form.Group controlId="quantity">
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control 
-                type="text" 
-                name="qty" 
-                defaultValue="1.00" 
-                onChange={this.props.handleChange}/>
-            </Form.Group>
+            
             <Form.Group controlId="matter">
                 <Form.Label>Matter</Form.Label>
                 <Form.Control 
