@@ -42,6 +42,7 @@ const EditAccount = (props) =>{
     // handel the change of form & set the error msg
     const handelChange = e =>{
         e.persist();
+        setDisplay(false)
         const {name, value} = e.target;
         let errors = error
         switch (name) {

@@ -29,6 +29,7 @@ const AddAccount = () =>{
     // handel the change of form & set the error msg
     const handelChange = e =>{
         e.persist();
+        setDisplay(false)
         const {name, value} = e.target;
         let errors = error
         switch (name) {
@@ -131,11 +132,13 @@ const AddAccount = () =>{
         } else {
             // if form is valid then do something
             api
-      .post("/account/create", state)
-      .then((res) => {
-          console.log(res)
-       })
-          
+            .post("/account/create", state)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err); 
+              });
         }
         history.goBack();
       }

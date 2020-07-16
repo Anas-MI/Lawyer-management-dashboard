@@ -27,6 +27,7 @@ const AddEditFeature = (props) => {
 
   const handleChange = (e) => {
     e.persist();
+    setDisplay(false)
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
