@@ -92,9 +92,7 @@ const Activity = React.lazy(() =>
 const AddMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/AddMatter')
 );
-const Invoice = React.lazy(() =>
-  import('./App/components/Invoice/Invoice')
-);
+const Invoice = React.lazy(() => import('./App/components/Invoice/Invoice'));
 const EditMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/EditMatter')
 );
@@ -206,8 +204,6 @@ export const adminRoutes = [
   // { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
   // { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
   // { path: '/calendar', exact: true, name: 'Calendar', component: CalendarContainer}
-
-  ,
 ];
 const routes = [
   {
@@ -347,10 +343,7 @@ const routes = [
     name: 'Invoice',
     component: Invoice,
   },
-  { path: '/settings', 
-    exact: true, 
-    name: 'Settings', 
-    component: Settings },
+  { path: '/settings', exact: true, name: 'Settings', component: Settings },
   {
     path: '/settings/customFeilds',
     exact: true,
