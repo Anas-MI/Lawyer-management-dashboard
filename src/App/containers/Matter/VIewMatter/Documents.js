@@ -9,7 +9,7 @@ import {
   Form,
   Select,
 } from 'antd';
-import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from '@ant-design/icons';
 
 import api from '../../../../resources/api';
 const { Option } = Select;
@@ -31,6 +31,8 @@ const Documents = (props) => {
       title: 'Name',
       dataIndex: 'name',
       key: '1',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
       title: 'Matter',
@@ -46,11 +48,15 @@ const Documents = (props) => {
       title: 'Received Date',
       dataIndex: 'receivedDate',
       key: '4',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.receivedDate > b.receivedDate,
     },
     {
       title: 'Last Edit',
       dataIndex: 'lastEdit',
       key: '5',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.lastEdit > b.lastEdit,
     },
 
     {
@@ -123,13 +129,15 @@ const Documents = (props) => {
       setUploadData({ ...uploadData });
     }
   };
-
+  const getISTDate = (dateInUTC) => {
+    var localDate = new Date(dateInUTC);
+    return localDate.toLocaleString();
+  };
   const getDocuments = async () => {
     let tempDocs = [];
     await api
       .get(`/document/viewformatter/${props.userId}/${props.matterId}`)
       .then((res) => {
-        // setDocs(res.data.data);
         res.data.data.map((item, index) => {
           tempDocs = [
             ...tempDocs,
@@ -137,6 +145,8 @@ const Documents = (props) => {
               ...item,
               key: item._id,
               matter: item.matter.matterDescription,
+              receivedDate: getISTDate(item.receivedDate),
+              lastEdit: getISTDate(item.lastEdit),
             },
           ];
         });
@@ -349,6 +359,7 @@ const Documents = (props) => {
       }
     >
       {uploadForm()}
+      {console.log(docs)}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
   );
