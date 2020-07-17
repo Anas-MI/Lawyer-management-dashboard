@@ -2,8 +2,8 @@ import React from 'react'
 import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Emailform from './form/emailform'
-import api from '../../../resources/api'
+import Emailform from '../../Communication/form/emailform'
+import api from '../../../../resources/api'
 
 class Communication extends React.Component{
     constructor(props){
