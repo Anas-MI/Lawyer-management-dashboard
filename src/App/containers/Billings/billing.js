@@ -8,25 +8,13 @@ export default class billing extends React.Component {
   handelBills = (type) => {
     if (type === 'record') {
       this.props.history.push('/manage/billing/record');
-    } else if (type === 'expense') {
     }
   };
 
   render() {
     const callback = () => {};
     const dataSource = [
-      {
-        key: '1',
-        name: 'Mike',
-        age: 32,
-        address: '10 Downing Street',
-      },
-      {
-        key: '2',
-        name: 'John',
-        age: 42,
-        address: '10 Downing Street',
-      },
+
     ];
 
     const columns = [

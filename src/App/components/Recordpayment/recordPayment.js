@@ -5,26 +5,30 @@ import api from '../../../resources/api'
 import { connect } from 'react-redux'
 
 let optns = null
+let contacts = {}
 class Record extends React.Component{
    constructor(props){
        super(props)
        this.state = {
            data : {
                client : "",
-               destination : "",
+            //   destination : "",
                paymentDate : "" , 
                source : "" ,
+               userId : this.props.userId
 
            }
        }
    }
    componentDidMount(){
      api.get('/contact/viewforuser/'+this.props.userId).then((res)=>{
-        optns = res.data.data.map((value, index)=>{
-
-            return <option id={index}>{value.firstName}</option>
+         contacts = res.data.data
+         optns = res.data.data.map((value, index)=>{
+          return <option id={index}>{value.firstName}</option>
            })
-     }).then(()=>{this.setState({options : optns})})
+     }).then(()=>{
+         this.setState({options : optns})
+        })
     
     
    }
@@ -33,36 +37,37 @@ class Record extends React.Component{
             e.persist()
             const { name, id, value} = e.target
             let newData = this.state.data
-            newData[name] = value
-            this.setState({data : newData})   
+          
+            if(name === "client"){
+                newData[name] = contacts[e.target.selectedIndex]
+            }else{
+                newData[name] = value
+            }
+            this.setState({data : newData})  
+             
             console.log(this.state.data)
         }
         const handleSubmit = (e) =>{
-            if(this.state.data.client === ""){
+            if(this.state.data.client === "" || this.state.data.source ===  "Select a client"){
                 notification.error({message : "Please select a client"})
-            }else if(this.state.data.source === ""){
+            }else if(this.state.data.source === "" || this.state.data.source ===  "Select a Source"){
                 notification.error({message : "Please select a source"})
-            }else if(this.state.data.destination === ""){
+            } /* else if(this.state.data.destination === "" || this.state.data.destination === "Select a Destination"){
                 notification.error({message : "Please select a destination"})
-            }else if(this.state.data.paymentDate === ""){
+            }*/else if(this.state.data.paymentDate === ""){
                 notification.error({message : "Please select a payment date"})
             }else{
-                this.props.history.goBack()
+               api.post('/billing/create',this.state.data).then((res)=>{
+                   console.log(res)
+                   notification.success({message : "Bill Recorded"})
+                   this.props.history.goBack()
+               }).catch((err)=>{
+                    notification.error({message : "Failure "})
+               })
             }
         }
         const dataSource = [
-            {
-              key: '1',
-              name: 'Mike',
-              age: 32,
-              address: '10 Downing Street',
-            },
-            {
-              key: '2',
-              name: 'John',
-              age: 42,
-              address: '10 Downing Street',
-            },
+          
           ];
           
           const columns = [
@@ -200,7 +205,10 @@ class Record extends React.Component{
                               as="select"
                               onChange = { handleChange }>
                                 <option>Select a Source</option>
-                                <option>Source</option>
+                                <option>Card Payment</option>
+                                <option>Cash Payment</option>
+                                <option>Net Banking</option>
+                                <option>Other</option>
                             </Form.Control>
                         </Form.Group>
                      </Col>
