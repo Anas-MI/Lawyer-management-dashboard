@@ -3,21 +3,23 @@ import api from '../../../../resources/api';
 import { Card, Tabs, Button, Modal, Table, Upload, notification } from 'antd';
 import { number } from 'prop-types';
 import { Form, Row, Col } from 'react-bootstrap';
-
+import Communication from './communnication'
+import TaskFuntions from './Task'
+import Activity from './Activity'
 import 'jspdf-autotable';
 import Bills from './Bills';
 import Documents from './Documents';
+
 const { TabPane } = Tabs;
 
 function CompanyView(props) {
   let response = {};
   let calendar = {};
-
+  const [Amount, setAmount] = useState("0")
   const [state, setState] = useState({ visible: false });
   const [client, setClient] = useState({});
   const [contact, setContact] = useState([]);
   const [Calendar, setCalendar] = useState([]);
-  const [Task, setTask] = useState([]);
   const [act, setAct] = useState([]);
   const [address, setAddress] = useState();
   const [events, setEvents] = useState();
@@ -46,51 +48,6 @@ function CompanyView(props) {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    api.get('/tasks/fetchformatter/' + props.location.state.id).then((res) => {
-      console.log('task', res.data);
-      let tsk = [];
-      res.data.data.map((value, index) => {
-        tsk.push(
-          <Card title="Task" className="form-width mb-4">
-            <table class="table table-borderless">
-              <tbody>
-                <tr>
-                  <td className="border-0 py-2">
-                    <span className="table-span-dark">Date</span>
-                  </td>
-                  <td className="border-0 py-2">
-                    <span className="table-span-light">
-                      {value.dueDate.substring(0, 10)}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-0 py-2">
-                    <span className="table-span-dark">Task</span>
-                  </td>
-                  <td className="border-0 py-2">
-                    <span className="table-span-light">{value.taskName}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-0 py-2">
-                    <span className="table-span-dark">Description</span>
-                  </td>
-                  <td className="border-0">
-                    <span className="table-span-light">
-                      {value.description}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </Card>
-        );
-      });
-      setTask(tsk);
-    });
-  }, []);
   useEffect(() => {
     api
       .get(
@@ -187,6 +144,8 @@ function CompanyView(props) {
     </Card>
   );
   const setValue = () => {
+    const amnt = window.localStorage.getItem('total')
+    setAmount(amnt)
     let data = [];
     //  setRealatedContacts(rcntct)
     response.data.relatedContacts.map(async (value, index) => {
@@ -382,7 +341,7 @@ function CompanyView(props) {
                   <p>
                     <b>Outstanding Amount</b>
                   </p>
-                  <span>$347.00</span>
+                  <span>${Amount}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p>
@@ -482,35 +441,14 @@ function CompanyView(props) {
           </Modal>
         </TabPane>
         <TabPane tab="Acitivites" key="2">
-          <Card title="Activity">
-            <Tabs defaultActiveKey="3" onChange={callback}>
-              <TabPane tab="Time" key="1">
-                {act
-                  .filter((item) => item.type === 'time')
-                  .map((item, index) => activityCard(item, index))}
-              </TabPane>
-
-              <TabPane tab="Expense" key="2">
-                {act
-                  .filter((item) => item.type === 'expense')
-                  .map((item, index) => activityCard(item, index))}
-              </TabPane>
-              <TabPane tab="All" key="3">
-                {act.map((item, index) => activityCard(item, index))}
-              </TabPane>
-            </Tabs>
-          </Card>
+          <Activity id={props.location.state.id}></Activity>
         </TabPane>
         <TabPane tab="Calendar" key="3">
           {console.log(Calendar)}
           {Calendar}
         </TabPane>
         <TabPane tab="Communication" key="4">
-          <Card
-            title="Communication"
-            extra={<a href="#"></a>}
-            className="form-width mb-4"
-          ></Card>
+          <Communication></Communication>
         </TabPane>
         <TabPane tab="Phone Log" key="5">
           <Card
@@ -534,7 +472,7 @@ function CompanyView(props) {
           />
         </TabPane>
         <TabPane tab="Task" key="8">
-          {Task}
+          <TaskFuntions id = {props.location.state.id}></TaskFuntions>
         </TabPane>
         <TabPane tab="Bills" key="9">
           <Bills dataSource={dataForBills} />

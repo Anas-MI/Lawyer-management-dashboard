@@ -1,14 +1,13 @@
 import React from 'react'
 import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
 import { useSelector , connect} from 'react-redux'
-import AddressForm from './AddressForm/Form'
 import ExpenseForm from '../../Activities/Form/expenseForm'
 import TimeForm from '../../Activities/Form/timeForm'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Form, Col,Row } from 'react-bootstrap'
 import api from '../../../../resources/api'
-
+import { add } from 'lodash'
 
 let matters = {}
 let activity = {}
@@ -53,21 +52,22 @@ class Activity extends React.Component{
       return locdat;
     }
     componentDidMount(){
-        console.log(this.props.location.state)
+        
       api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
         matters = res 
       
       })
-      api.get('/activity/viewformatter/'+this.props.userId+'/'+ this.props.location.state).then((res)=>{
+      api.get('/activity/viewformatter/'+this.props.userId+'/'+ this.props.id).then((res)=>{
         activity = res.data.data
-        
-        api.get('/matter/view/' + this.props.location.state).then((res) => {
+        /*
+        api.get('/matter/view/' + this.props.id).then((res) => {
           const name = res.data.data.client.firstName + " " + res.data.data.client.lastName
           const address = res.data.data.client.address[0] ? res.data.data.client.address[0] : ""
           const matter = res.data.data.matterDescription
           this.setState({name  : name , address : address, matter : matter})
           
         });
+        */
       
      
         let timedata = []
@@ -120,9 +120,12 @@ class Activity extends React.Component{
  
 
         })
+
         const localData = JSON.parse(window.localStorage.getItem("Case.user"))
         const Lname = localData.token.user.firstName + " " +localData.token.user.firstName
         this.setState({ expenseData : expenseData , timeData : timedata, total : total , LName : Lname })
+        window.localStorage.setItem('total' , this.state.total)
+
       })
     }
     showModal = (type) => {
@@ -468,55 +471,17 @@ class Activity extends React.Component{
 
             console.log(this.state)
         }
-        const invoiceProps = {
-          invoiceData : { id: '644', status: 'due', date: '24/6/20' },
-          companyData: {
-            logo: 'https://uilogos.co/img/logotype/hexa.png',
-            name: 'ABC Company',
-            address: '4354  Settlers Lane, New York',
-            phone: '917-821-3450',
-            email: 'w9lk6p927j@temporary-mail.net',
-          },
-          clientData : {
-            name: this.state.name,
-            address: this.state.address,
-          },
-          timeData: this.state.timeData,
-          expenseData : this.state.expenseData,
-          Total : this.state.total
-        }
-        const HandleAddressChange = (e) => {
-          /*
-          e.persist();
-          const { id, value, name } = e.target;
-          console.log(id + value + name)
-          let newState = this.state;
-          newState.address[id][name] = value;
-          this.setState(newState);
-          console.log(this.state);
-          */
-        }
+        
         
         return <div className='p-2 '>
             
-            <Card title="New Quick Bill" className="overflow-auto mb-3">
+           <Card>
               <div className="d-flex justify-content-between">
-                  <div>
-                    <p><b>FROM</b></p>
-                    <p style={{fontWeight : '600'}}>{this.state.LName}</p>
-                    <AddressForm HandleAddressChange={HandleAddressChange} type="From"></AddressForm>
-                 </div>
-                 <div>
-                    <p><b>TO</b></p>
-                    <p style={{fontWeight : '600'}}>{this.state.name}</p><br/>
-                    <AddressForm HandleAddressChange={HandleAddressChange} type="To"></AddressForm>            
-                 </div>
-                 <div>
-                    <p><b>Matter</b></p>
-                    <p style={{fontWeight : '600'}}>{this.state.matter}</p><br/>
-                 </div>
+              <h4 style={{ fontWeight: 'bold' }}>Acitivites</h4>
+              <div></div>
+               <Button onClick={exportPDF}>Export</Button>
               </div>
-            </Card>
+           </Card>
             
             <Card bodyStyle={{"padding": "0px"}} className="overflow-auto  mb-3" title="Time Entries"> 
               <Table columns={columnsForTime} dataSource={this.state.timeData}  />
@@ -542,10 +507,7 @@ class Activity extends React.Component{
                   <h4><b>{this.state.total ? this.state.total.toFixed(2) : "0"}</b></h4>
                 </div>
             </Card>
-            <Button onClick={()=>{this.props.history.push('/view/matter/invoice', invoiceProps)}} type="primary" className="mr-2">Generate Bill</Button>
-            <span>or</span>
-            <Button onClick={()=>{this.props.history.goBack()}} className="ml-2">Cancel</Button>
-            
+          
             <Modal
                 title="New Time Entry"
                 visible={this.state.timeModal}

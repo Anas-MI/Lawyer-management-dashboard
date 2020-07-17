@@ -20,6 +20,7 @@ class matterManage extends React.Component {
   }
 
   async componentDidMount() {
+    window.localStorage.setItem('total' , this.state.total)
     const data = [];
     await api
       .get('/matter/viewforuser/' + this.props.userId)
@@ -29,9 +30,9 @@ class matterManage extends React.Component {
         key: index,
         id: value._id,
         matterDescription: value.matterDescription,
-        Client: value.client,
-        PractiseArea: value.practiseArea,
-        OpenDate: value.openDate,
+        Client: value.client.firstName + " " + value.client.lastName ,
+        PractiseArea: value.practiseArea?  value.practiseArea : "-",
+        OpenDate: value.openDate ? value.openDate : "-",
       };
       data.push(newData);
     });
