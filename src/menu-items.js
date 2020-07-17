@@ -92,6 +92,13 @@ export default {
       icon: 'icon-navigation',
       children: [
         {
+          id: 'profile',
+          title: 'Profile',
+          type: 'item',
+          icon: 'feather icon-user',
+          url: '/profile',
+        },
+        {
           id: 'dashboard',
           title: 'Dashboard',
           type: 'item',

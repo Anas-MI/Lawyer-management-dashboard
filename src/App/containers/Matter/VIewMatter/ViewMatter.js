@@ -14,7 +14,7 @@ function CompanyView(props) {
   let calendar = {};
 
   const [state, setState] = useState({ visible: false });
-  const [client , setClient ] = useState({})
+  const [client, setClient] = useState({});
   const [contact, setContact] = useState([]);
   const [Calendar, setCalendar] = useState([]);
   const [Task, setTask] = useState([]);
@@ -48,7 +48,7 @@ function CompanyView(props) {
 
   useEffect(() => {
     api.get('/tasks/fetchformatter/' + props.location.state.id).then((res) => {
-      console.log(res.data);
+      console.log('task', res.data);
       let tsk = [];
       res.data.data.map((value, index) => {
         tsk.push(
@@ -102,92 +102,90 @@ function CompanyView(props) {
       .then((res) => {
         let activity = [];
         res.data.data.map((val, index) => {
-          activity.push(
-            <Card
-              title={val.description}
-              style={{ width: '40%' }}
-              extra={
-                <div>
-                  <a href="#">Edit</a> <a href="#">Delete</a>{' '}
-                  <a href="#">Dublicate</a>
-                </div>
-              }
-            >
-              <table class="table table-borderless form-width">
-                <tbody>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Type</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.type}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Qty</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.qty}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Discription</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.description}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Rate</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.rate}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Billable</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.billable ? 'Yes' : 'NO'}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Date</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.date.substring(0, 10)}
-                      </span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Invoice Status</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.invoiceStatus}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </Card>
-          );
+          activity.push(val);
         });
+        console.log('activiviviviv', activity);
         setAct(activity);
       });
   }, []);
+  const activityCard = (val, index) => (
+    <Card
+      key={index}
+      title={val.description}
+      style={{ width: '40%' }}
+      extra={
+        <div>
+          <a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a>
+        </div>
+      }
+    >
+      <table class="table table-borderless form-width">
+        <tbody>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Type</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.type}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Qty</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.qty}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Discription</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.description}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Rate</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.rate}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Billable</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">
+                {val.billable ? 'Yes' : 'NO'}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Date</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">
+                {val.date.substring(0, 10)}
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Invoice Status</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.invoiceStatus}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  );
   const setValue = () => {
     let data = [];
     //  setRealatedContacts(rcntct)
@@ -301,7 +299,8 @@ function CompanyView(props) {
         </div>
       );
     });
-    const fNAme = response.data.client.firstName +" "+ response.data.client.lastName ;
+    const fNAme =
+      response.data.client.firstName + ' ' + response.data.client.lastName;
     const IDx = response.data.client._id;
     setAddress(adrs);
     setID(IDx);
@@ -483,10 +482,24 @@ function CompanyView(props) {
           </Modal>
         </TabPane>
         <TabPane tab="Acitivites" key="2">
-          <Card>
-            <p style={{ fontWeight: 'bold' }}>Activity</p>
+          <Card title="Activity">
+            <Tabs defaultActiveKey="3" onChange={callback}>
+              <TabPane tab="Time" key="1">
+                {act
+                  .filter((item) => item.type === 'time')
+                  .map((item, index) => activityCard(item, index))}
+              </TabPane>
+
+              <TabPane tab="Expense" key="2">
+                {act
+                  .filter((item) => item.type === 'expense')
+                  .map((item, index) => activityCard(item, index))}
+              </TabPane>
+              <TabPane tab="All" key="3">
+                {act.map((item, index) => activityCard(item, index))}
+              </TabPane>
+            </Tabs>
           </Card>
-          {act}
         </TabPane>
         <TabPane tab="Calendar" key="3">
           {console.log(Calendar)}
