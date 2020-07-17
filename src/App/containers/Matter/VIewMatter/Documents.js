@@ -195,7 +195,7 @@ const Documents = (props) => {
   const editHandler = async (docId) => {
     setModalFor('Edit');
     setViewUpload(true);
-    await api.get(`/document/view/${docId}`, uploadData).then((response) => {
+    await api.get(`/document/view/${docId}`).then((response) => {
       setUploadData(response.data.data);
     });
   };

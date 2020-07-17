@@ -3,23 +3,23 @@ import api from '../../../../resources/api';
 import { Card, Tabs, Button, Modal, Table, Upload, notification } from 'antd';
 import { number } from 'prop-types';
 import { Form, Row, Col } from 'react-bootstrap';
-import Communication from './communnication'
-import TaskFuntions from './Task'
-import Activity from './Activity'
+import Communication from './communnication';
+import TaskFuntions from './Task';
+import Activity from './Activity';
 import 'jspdf-autotable';
 import Bills from './Bills';
 import Documents from './Documents';
+import Calendar from './Calendar';
 
 const { TabPane } = Tabs;
 
 function CompanyView(props) {
   let response = {};
-  let calendar = {};
-  const [Amount, setAmount] = useState("0")
+
+  const [Amount, setAmount] = useState('0');
   const [state, setState] = useState({ visible: false });
   const [client, setClient] = useState({});
   const [contact, setContact] = useState([]);
-  const [Calendar, setCalendar] = useState([]);
   const [act, setAct] = useState([]);
   const [address, setAddress] = useState();
   const [events, setEvents] = useState();
@@ -42,7 +42,6 @@ function CompanyView(props) {
                api.get('/activity/viewformatter/'+props.location.state.userId+props.location.state.id).then((res)=>{console.log(res)})
            })*/
       }
-      console.log(calendar);
       setValue();
     }
     fetchData();
@@ -65,87 +64,10 @@ function CompanyView(props) {
         setAct(activity);
       });
   }, []);
-  const activityCard = (val, index) => (
-    <Card
-      key={index}
-      title={val.description}
-      style={{ width: '40%' }}
-      extra={
-        <div>
-          <a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a>
-        </div>
-      }
-    >
-      <table class="table table-borderless form-width">
-        <tbody>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Type</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">{val.type}</span>
-            </td>
-          </tr>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Qty</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">{val.qty}</span>
-            </td>
-          </tr>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Discription</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">{val.description}</span>
-            </td>
-          </tr>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Rate</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">{val.rate}</span>
-            </td>
-          </tr>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Billable</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">
-                {val.billable ? 'Yes' : 'NO'}
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Date</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">
-                {val.date.substring(0, 10)}
-              </span>
-            </td>
-          </tr>
 
-          <tr>
-            <td className="border-0 py-2">
-              <span className="table-span-dark">Invoice Status</span>
-            </td>
-            <td className="border-0 py-2">
-              <span className="table-span-light">{val.invoiceStatus}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </Card>
-  );
   const setValue = () => {
-    const amnt = window.localStorage.getItem('total')
-    setAmount(amnt)
+    const amnt = window.localStorage.getItem('total');
+    setAmount(amnt);
     let data = [];
     //  setRealatedContacts(rcntct)
     response.data.relatedContacts.map(async (value, index) => {
@@ -202,35 +124,7 @@ function CompanyView(props) {
       );
       setContact(data);
     });
-    /*
-       let cal = []
-       calendar.data.data.map((value,index)=>{
-        cal.push(  <Card title="Calendar"  className="form-width mb-4">
-        <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Start</span></td>
-    <td className="border-0 py-2"><span className="table-span-light">{value.startTime}</span></td>
-                    </tr>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">End</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light">{value.endTime}</span></td>
-                    </tr>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Title</span></td>
-                        <td className="border-0"><span className="table-span-light">{value.title}</span></td>
-                    </tr>
-                    <tr>
-                        <td className="border-0 py-2"><span className="table-span-dark">Description</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light">{value.description}</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </Card>)
-        setCalendar(cal)
-    })  
-        
-       */
+
     // setEvents(evnt)
     const adrs = response.data.client.address.map((value, index) => {
       return (
@@ -444,8 +338,10 @@ function CompanyView(props) {
           <Activity id={props.location.state.id}></Activity>
         </TabPane>
         <TabPane tab="Calendar" key="3">
-          {console.log(Calendar)}
-          {Calendar}
+          <Calendar
+            userId={props.location.state.userId}
+            matterId={props.location.state.id}
+          />
         </TabPane>
         <TabPane tab="Communication" key="4">
           <Communication></Communication>
@@ -472,7 +368,7 @@ function CompanyView(props) {
           />
         </TabPane>
         <TabPane tab="Task" key="8">
-          <TaskFuntions id = {props.location.state.id}></TaskFuntions>
+          <TaskFuntions id={props.location.state.id}></TaskFuntions>
         </TabPane>
         <TabPane tab="Bills" key="9">
           <Bills dataSource={dataForBills} />
@@ -482,46 +378,3 @@ function CompanyView(props) {
   );
 }
 export default CompanyView;
-
-{
-  /* <Invoice
-              invoiceData={{ id: '644', status: 'due', date: '24/6/20' }}
-              companyData={{
-                logo: 'https://uilogos.co/img/logotype/hexa.png',
-                name: 'ABC Company',
-                address: '4354  Settlers Lane, New York',
-                phone: '917-821-3450',
-                email: 'w9lk6p927j@temporary-mail.net',
-              }}
-              clientData={{
-                name: 'M Salamanca',
-                address: '4354  Settlers Lane, New York',
-              }}
-              billData={[
-                {
-                  date: '12/12/12',
-                  attorney: 'AB',
-                  notes: 'dumpy data 1',
-                  rate: '21',
-                  hours: '1.4',
-                  total: '16',
-                },
-                {
-                  date: '12/12/12',
-                  attorney: 'AB',
-                  notes: 'dumpy data 2',
-                  rate: '120',
-                  hours: '1',
-                  total: '17',
-                },
-                {
-                  date: '12/12/20',
-                  attorney: 'AB',
-                  notes: 'dumpy data 3',
-                  rate: '120',
-                  hours: '1',
-                  total: '12',
-                },
-              ]}
-            /> */
-}
