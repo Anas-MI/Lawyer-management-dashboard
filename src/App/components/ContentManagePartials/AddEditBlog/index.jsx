@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { updateBlog, createBlog } from "../../../../store/Actions";
-import { Form, Button } from "react-bootstrap";
-import { notification } from "antd";
-import api from "../../../../resources/api"
-import { result } from "lodash";
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateBlog, createBlog } from '../../../../store/Actions';
+import { Form, Button } from 'react-bootstrap';
+import { notification } from 'antd';
+import api from '../../../../resources/api';
+import { result } from 'lodash';
 
-const validNameRegex = RegExp(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u);
-
+const validNameRegex = RegExp(
+  /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
+);
 
 const AddEditBlog = (props) => {
   const [state, setState] = useState({
-    title: "",
-    author: "",
-    shortDescription: "",
-    description:"",
-    imageFile: "",
+    title: '',
+    author: '',
+    shortDescription: '',
+    description: '',
+    imageFile: '',
   });
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
 
   //image url
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('');
 
   const dispatch = useDispatch();
   const selectedBlog = useSelector((state) => state.Blog.selected);
@@ -38,40 +39,44 @@ const AddEditBlog = (props) => {
 
   const handleChange = (e) => {
     e.persist();
-    setDisplay(false)
+    setDisplay(false);
     const { name, value } = e.target;
     let errors = error;
     switch (name) {
-      case "title":
+      case 'title':
         errors.title =
-            (value.length == 0) 
-            ? "Title is Required"
-            : (value.length > 60) 
-            ? "Title is too Long" :""
-       break;
-       case "author":
+          value.length == 0
+            ? 'Title is Required'
+            : value.length > 60
+            ? 'Title is too Long'
+            : '';
+        break;
+      case 'author':
         errors.author =
-            (value.length == 0) 
-            ? "Author is required"
-            : (!validNameRegex.test(value))
-            ? "Author Name must be in characters!": ""
-       break;
-       case "shortDescription":
+          value.length == 0
+            ? 'Author is required'
+            : !validNameRegex.test(value)
+            ? 'Author Name must be in characters!'
+            : '';
+        break;
+      case 'shortDescription':
         errors.shortDescription =
-            (value.length == 0) 
-            ? "Short Description is required"
-            : (value.length > 110) 
-            ? "Short Description is too Long" 
-            : (value.length < 50) 
-            ? "Short Description is too Short" :""
-       break;
-       case "description":
+          value.length == 0
+            ? 'Short Description is required'
+            : value.length > 110
+            ? 'Short Description is too Long'
+            : value.length < 50
+            ? 'Short Description is too Short'
+            : '';
+        break;
+      case 'description':
         errors.description =
-            (value.length == 0) 
-            ? "Description is required"
-            : (value.length < 110) 
-            ? "Description is too Short" :""
-       break;
+          value.length == 0
+            ? 'Description is required'
+            : value.length < 110
+            ? 'Description is too Short'
+            : '';
+        break;
       default:
         break;
     }
@@ -81,31 +86,34 @@ const AddEditBlog = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!display){
+    if (!display) {
       const validateForm = (error) => {
         let valid = true;
-        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+        Object.values(error).forEach(
+          (val) => val.length > 0 && (valid = false)
+        );
         return valid;
       };
       if (validateForm(error)) {
         checkValidity();
       } else {
-        setDisplay(true)
+        setDisplay(true);
         return notification.warning({
-          message: "Failed to Add New Blog",
+          message: 'Failed to Add New Blog',
         });
       }
     }
   };
 
   function checkValidity() {
-    if (!Object.keys(state).every((k) => state[k] !== "")) {
-      setDisplay(true)
+    if (!Object.keys(state).every((k) => state[k] !== '')) {
+      setDisplay(true);
       return notification.warning({
-        message: "Fields Should Not Be Empty",
+        message: 'Fields Should Not Be Empty',
       });
     } else {
       if (editMode) {
+        console.log('blog', state);
         dispatch(
           updateBlog({ id: state._id, body: state }, (err, response) => {
             if (err) {
@@ -117,26 +125,27 @@ const AddEditBlog = (props) => {
         );
       } else {
         api
-        .post("/blogs/create" , state).then( (result) => {
-
-          // image upload to the server 
-          const files = state.imageFile
-          const uploadData = new FormData();
-          uploadData.append('image', files[0])
-          api
-            .post("/blogs/upload/"+result.data.data._id, uploadData, {
-              headers: {
-              'content-type': 'multipart/form-data'
-              }}
-            ).then(
-              (newresult) => {
-                console.log(newresult)
+          .post('/blogs/create', state)
+          .then((result) => {
+            // image upload to the server
+            const files = state.imageFile;
+            const uploadData = new FormData();
+            uploadData.append('image', files[0]);
+            console.log('data ', uploadData);
+            api
+              .post('/blogs/upload/' + result.data.data._id, uploadData, {
+                headers: {
+                  'content-type': 'multipart/form-data',
+                },
               })
+              .then((newresult) => {
+                console.log(newresult);
+              });
+          })
+          .catch((err) => {
+            console.log({ err });
+          });
 
-        }).catch((err) => {
-          console.log({ err });
-        });
-        
         // dispatch(
         //   createBlog(state, (err, response) => {
         //     if (err) {
@@ -146,25 +155,28 @@ const AddEditBlog = (props) => {
         //     }
         //   })
         // );
-
       }
     }
     props.history.goBack();
   }
 
-  // handel Image Upload 
+  // handel Image Upload
   const uploadImage = (e) => {
-    setState({...state, imageFile : e.target.files})
-  }
+    setState({ ...state, imageFile: e.target.files });
+  };
 
   return (
     <div className="w-75 m-auto">
       <h3 className="text-center">Add New Blog</h3>
       <Form className="form-details">
-        
-      <Form.Group controlId="formGroupEmail">
-        <input type="file" name="file"  onChange={uploadImage} placeholder="Upload Image"/>
-      </Form.Group>
+        <Form.Group controlId="formGroupEmail">
+          <input
+            type="file"
+            name="file"
+            onChange={uploadImage}
+            placeholder="Upload Image"
+          />
+        </Form.Group>
 
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Title</Form.Label>
@@ -172,7 +184,7 @@ const AddEditBlog = (props) => {
             name="title"
             type="text"
             placeholder="Feature Title"
-            value={state["title"]}
+            value={state['title']}
             onChange={handleChange}
           />
           <p className="help-block text-danger">{error.title}</p>
@@ -183,7 +195,7 @@ const AddEditBlog = (props) => {
             name="author"
             type="text"
             placeholder="author"
-            value={state["author"]}
+            value={state['author']}
             onChange={handleChange}
           />
           <p className="help-block text-danger">{error.author}</p>
@@ -195,7 +207,7 @@ const AddEditBlog = (props) => {
             name="shortDescription"
             type="text"
             placeholder="Short Description"
-            value={state["shortDescription"]}
+            value={state['shortDescription']}
             onChange={handleChange}
           />
           <p className="help-block text-danger">{error.shortDescription}</p>
@@ -207,13 +219,14 @@ const AddEditBlog = (props) => {
             name="description"
             type="text"
             placeholder="Description"
-            value={state["description"]}
+            value={state['description']}
             onChange={handleChange}
-            as="textarea" rows="3"
+            as="textarea"
+            rows="3"
           />
           <p className="help-block text-danger">{error.description}</p>
         </Form.Group>
-        <Button onClick={handleSubmit}>{editMode ? "Update" : "Create"}</Button>
+        <Button onClick={handleSubmit}>{editMode ? 'Update' : 'Create'}</Button>
       </Form>
     </div>
   );

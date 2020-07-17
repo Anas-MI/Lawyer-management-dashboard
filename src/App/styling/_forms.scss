@@ -139,6 +139,18 @@ select {
 		color: #777;
 	}
 }
+.quickBill{
+    padding-top: 0px;
+    input,select {
+        border: 1px dashed #b0bec5;
+        padding: 4px 10px;
+        height: auto !important;
+    }
+    .form-group {
+        margin-bottom: 5px;
+    }
+}
+
 @media only screen and (max-width: 767px) {
     .form-width, .form-width2{
         width: 100% !important;
