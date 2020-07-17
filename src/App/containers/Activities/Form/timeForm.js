@@ -2,7 +2,7 @@ import React, {useEffect , useState} from 'react'
 import { useSelector , connect} from 'react-redux'
 import { Form, Col, Row } from 'react-bootstrap'
 import api from '../../../../resources/api'
-import Timer from './Timer'
+import Timer from '../../../components/Timer/index.js'
 let option = null
 class ExpenseForm extends React.Component{
     constructor(props){
@@ -51,9 +51,9 @@ class ExpenseForm extends React.Component{
                                             </Form.Group>
  
        return  this.props.editmode ? <Form >
-
-       <Col>
-       <Form.Group controlId="duration">
+       <Row>
+           <Col>
+           <Form.Group controlId="duration">
                <Form.Label>Duration</Form.Label>
                <Form.Control 
                type="text" 
@@ -61,9 +61,14 @@ class ExpenseForm extends React.Component{
                defaultValue = {this.props.record.time}
                onChange={this.props.handleChange}/>
            </Form.Group>
-       </Col>
-       <Col>
-          
+           </Col>
+           <Col>
+               <Timer setTime = {this.props.setTime} ></Timer>
+           </Col>
+       </Row>
+       
+       <Row>
+           <Col>
            <Form.Group controlId="matter">
                <Form.Label>Matter</Form.Label>
                <Form.Control 
@@ -75,19 +80,9 @@ class ExpenseForm extends React.Component{
                {this.state.option}
                </Form.Control>
             </Form.Group>
-            <Form.Group controlId="Description">
-               <Form.Label>Description</Form.Label>
-               <Form.Control 
-               name="description" 
-               as="textarea" 
-               rows="3"
-               defaultValue = {this.props.record.description}
-               onChange={this.props.handleChange} />
-           </Form.Group>
-       </Col>
-           
-       <Col>
-       <Form.Group controlId="rate">
+           </Col>
+           <Col>
+           <Form.Group controlId="rate">
                <Form.Label>Rate</Form.Label>
                <Form.Control 
                required
@@ -96,6 +91,39 @@ class ExpenseForm extends React.Component{
                defaultValue = {this.props.record.rate}
                onChange={this.props.handleChange} />
            </Form.Group>
+           </Col>
+
+       </Row>
+      
+           
+       <Row>
+           <Col>
+           <Form.Group controlId="Description">
+               <Form.Label>Description</Form.Label>
+               <Form.Control 
+               name="description" 
+               as="textarea" 
+               rows="3"
+               defaultValue = {this.props.record.description}
+               onChange={this.props.handleChange} />
+           </Form.Group>
+           </Col>
+
+       </Row>
+      
+       <Row>
+           <Col>
+           <Form.Group controlId="rate">
+               <Form.Label>Rate</Form.Label>
+               <Form.Control 
+               required
+               type="text" 
+               name="rate" 
+               defaultValue = {this.props.record.rate}
+               onChange={this.props.handleChange} />
+           </Form.Group>
+           </Col>
+           <Col>
            <Form.Group controlId="date">
                <Form.Label>Date</Form.Label>
                <Form.Control 
@@ -105,43 +133,53 @@ class ExpenseForm extends React.Component{
                defaultValue = {date}
                onChange={this.props.handleChange}/>
            </Form.Group>
-           <Form.Group controlId="invoiceStatus">
-               <Form.Label>Invoice Status</Form.Label>
-               <Form.Control 
-                   as="select"
-                   name="invoiceStatus"
-                   defaultValue = {this.props.record.invoiceStatus}
-                   onChange={this.props.handleChange} >
-               <option>Unbilled</option>
-               <option>Billed</option>
-               </Form.Control>
-            </Form.Group>
-            
-             
-            <Form.Check 
-               type="checkbox"
-               id="billable"
-               name="billable"
-               label="Billable"
-               defaultChecked = {this.props.record.billable==="Yes"? true : false}
-               onChange={this.props.handleChange}
-           /><br></br>
-    
-            {
-                /*
-                <Form.Check 
-               type="checkbox"
-               id="nonBillable"
-               name="nonBillable"
-               label="Non-billable"
-               defaultChecked = {!this.props.record.billable}
-               onChange={this.props.handleChange}
-           />
-                */
-            }
-            
-       </Col>
+           </Col>
+           {/*
+                <Col>
+                <Form.Group controlId="invoiceStatus">
+                    <Form.Label>Invoice Status</Form.Label>
+                    <Form.Control 
+                        as="select"
+                        name="invoiceStatus"
+                        defaultValue = {this.props.record.invoiceStatus}
+                        onChange={this.props.handleChange} >
+                    <option>Unbilled</option>
+                    <option>Billed</option>
+                    </Form.Control>
+                 </Form.Group>
+                </Col>
+           */}
+          
+       </Row>
+           
+           <Row>
+               <Col>
+               <Form.Check 
+              type="checkbox"
+              id="billable"
+              name="billable"
+              label="Billable"
+              defaultChecked = {this.props.record.billable==="Yes"? true : false}
+              onChange={this.props.handleChange}
+          /><br></br>
+               </Col>
+           </Row>
+   
+           {
+               /*
+               <Form.Check 
+              type="checkbox"
+              id="nonBillable"
+              name="nonBillable"
+              label="Non-billable"
+              defaultChecked = {!this.props.record.billable}
+              onChange={this.props.handleChange}
+          />
+               */
+           }
    </Form>
+
+
    :
    <Form >
         <Row>
@@ -209,7 +247,9 @@ class ExpenseForm extends React.Component{
                 onChange={this.props.handleChange}/>
             </Form.Group>
             </Col>
-            <Col>
+            {
+                /* 
+                <Col>
             <Form.Group controlId="invoiceStatus">
                 <Form.Label>Invoice Status</Form.Label>
                 <Form.Control 
@@ -221,6 +261,8 @@ class ExpenseForm extends React.Component{
                 </Form.Control>
              </Form.Group>
             </Col>
+                */
+            }
         </Row>
             
             <Row>
