@@ -64,7 +64,7 @@ const Invoice = (props) => {
       </div>
       <div className="float-left text-left">
         <div>{props.location.state.clientData.name}</div>
-        <div>{props.location.state.clientData.address}</div>
+      {/*  <div>{props.location.state.clientData.address}</div>*/}
       </div>
       <div className="my-5 py-5">
         <table class="table">

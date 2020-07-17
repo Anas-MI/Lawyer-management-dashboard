@@ -1,13 +1,14 @@
 import React from 'react'
 import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
 import { useSelector , connect} from 'react-redux'
+import AddressForm from './AddressForm/Form'
 import ExpenseForm from '../../Activities/Form/expenseForm'
 import TimeForm from '../../Activities/Form/timeForm'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Form, Col,Row } from 'react-bootstrap'
 import api from '../../../../resources/api'
-import { add } from 'lodash'
+
 
 let matters = {}
 let activity = {}
@@ -97,7 +98,7 @@ class Activity extends React.Component{
                 invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
                 subTotal : (rate * sHours + ((rate/60)*sMinutes)).toFixed(2)
            }
-           total = total + rate * sHours + rate * ((rate/60)*sMinutes)
+           total = total + rate * sHours + ((rate/60)*sMinutes)
            timedata.push(time)
         }
            
@@ -484,6 +485,17 @@ class Activity extends React.Component{
           expenseData : this.state.expenseData,
           Total : this.state.total
         }
+        const HandleAddressChange = (e) => {
+          /*
+          e.persist();
+          const { id, value, name } = e.target;
+          console.log(id + value + name)
+          let newState = this.state;
+          newState.address[id][name] = value;
+          this.setState(newState);
+          console.log(this.state);
+          */
+        }
         
         return <div className='p-2 '>
             
@@ -492,13 +504,12 @@ class Activity extends React.Component{
                   <div>
                     <p><b>FROM</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.LName}</p>
+                    <AddressForm HandleAddressChange={HandleAddressChange} type="From"></AddressForm>
                  </div>
                  <div>
                     <p><b>TO</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.name}</p><br/>
-                    <p>{this.state.address.street}</p>
-                    <p>{this.state.address.city+","+this.state.address.zipCode+","+this.state.address.state}</p> 
-              
+                    <AddressForm HandleAddressChange={HandleAddressChange} type="To"></AddressForm>            
                  </div>
                  <div>
                     <p><b>Matter</b></p>

@@ -98,7 +98,7 @@ class Activity extends React.Component{
                 invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
                 subTotal : (rate * sHours + ((rate/60)*sMinutes)).toFixed(2)
            }
-           total = total + rate * sHours + rate * ((rate/60)*sMinutes)
+           total = total + rate * sHours + ((rate/60)*sMinutes)
            timedata.push(time)
         }
            
@@ -120,9 +120,12 @@ class Activity extends React.Component{
  
 
         })
+
         const localData = JSON.parse(window.localStorage.getItem("Case.user"))
         const Lname = localData.token.user.firstName + " " +localData.token.user.firstName
         this.setState({ expenseData : expenseData , timeData : timedata, total : total , LName : Lname })
+        window.localStorage.setItem('total' , this.state.total)
+
       })
     }
     showModal = (type) => {

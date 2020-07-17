@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 function CompanyView(props) {
   let response = {};
   let calendar = {};
-
+  const [Amount, setAmount] = useState("0")
   const [state, setState] = useState({ visible: false });
   const [client , setClient ] = useState({})
   const [contact, setContact] = useState([]);
@@ -147,6 +147,8 @@ function CompanyView(props) {
       });
   }, []);
   const setValue = () => {
+    const amnt = window.localStorage.getItem('total')
+    setAmount(amnt)
     let data = [];
     //  setRealatedContacts(rcntct)
     response.data.relatedContacts.map(async (value, index) => {
@@ -341,7 +343,7 @@ function CompanyView(props) {
                   <p>
                     <b>Outstanding Amount</b>
                   </p>
-                  <span>$347.00</span>
+                  <span>${Amount}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p>
