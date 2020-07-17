@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Form, Col,Row } from 'react-bootstrap'
 import api from '../../../resources/api'
+import { min } from 'lodash'
 
 let matters = {}
 let activity = {}
@@ -31,7 +32,7 @@ class Activity extends React.Component{
             tableData : [],
             editmode : false,
             record : "",
-            touched : false
+            touched : true
 
         }
     }
@@ -77,7 +78,8 @@ class Activity extends React.Component{
               rate : val.rate, 
               billable : val.billable ? "Yes" : "No" ,
               date : val.date.substring(0,10),
-              invoiceStatus : val.invoiceStatus?  val.invoiceStatus : "-" ,
+              invoiceStatus : "Unbilled"
+            //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
             }
             if(val.type ==="time"){
               timedata.push(temp)
@@ -108,6 +110,18 @@ class Activity extends React.Component{
         })
         this.setState({completeData : completeData, expenseData : expenseData , timeData : timedata, tableData: completeData, thisWeek : thisWeek, thisMonth : thisMonth, thisYear :thisYear })
       })
+      const time = window.localStorage.getItem('timer')
+      let hours = Math.floor(time / 3600);
+      let minutes = Math.floor(time / 60)
+      if(minutes >= 59){
+        minutes = minutes % 60
+      }
+        
+   //   const Seconds = time % 60;
+      const data = this.state.data
+      data.time = hours +":"+minutes
+      this.setState({data:data, touched : true})
+      console.log(this.state)
     }
     showModal = (type) => {
         if(type==="time"){
@@ -303,16 +317,7 @@ class Activity extends React.Component{
       };
 
     render(){
-      const setTime = () => {
-        const time = window.localStorage.getItem('timer')
-        const hours = Math.floor(time / 3600);
-        const minutes = Math.floor(time / 60);
-     //   const Seconds = time % 60;
-        const data = this.state.data
-        data.time = hours +":"+minutes
-        this.setState({data:data, touched : true})
-        console.log(this.state)
-   }
+     
         const handleEdit = record => {
           if(record.type==="time"){
             this.setState({
@@ -635,7 +640,7 @@ class Activity extends React.Component{
                 onCancel={()=>this.handleCancel("time")}
                 afterClose = {()=>this.handleCancel("time")}
                 >
-                <TimeForm setTime={setTime} touched={this.state.touched} time={this.state.data.time} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
+                <TimeForm  touched={this.state.touched} time={this.state.data.time} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm>
             </Modal>
             <Modal
                 title="New Expense"

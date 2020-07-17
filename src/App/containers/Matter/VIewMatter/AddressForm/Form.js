@@ -4,11 +4,10 @@ import reactWindowSize from 'react-window-size'
 
 class AddressForm extends React.Component{
   render(){
-      return <Form>
+      return <Form className="quickBill">
                     <Row>
-                        <Col>
+                        <Col className="px-1">
                           <Form.Group controlId="type">
-                         { /*  <Form.Label>Type</Form.Label> */ }
                           <Form.Control
                             as="select"
                             name="type"
@@ -19,9 +18,8 @@ class AddressForm extends React.Component{
                           </Form.Control>
                         </Form.Group>
                         </Col>
-                        <Col>
+                        <Col className="px-1">
                         <Form.Group controlId="street">
-                         {/*  <Form.Label>Street</Form.Label>*/}
                           <Form.Control
                             name="street"
                             type="text"
@@ -32,9 +30,8 @@ class AddressForm extends React.Component{
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col className="px-1">
                         <Form.Group controlId="city">
-                         {/* <Form.Label>City</Form.Label> */}
                           <Form.Control
                             name="city"
                             type="text"
@@ -43,9 +40,8 @@ class AddressForm extends React.Component{
                           />
                         </Form.Group>
                         </Col>
-                        <Col>
+                        <Col className="px-1">
                         <Form.Group controlId="state">
-                         {/*  <Form.Label>State</Form.Label>*/}
                           <Form.Control
                             name="state"
                             type="text"
@@ -56,9 +52,8 @@ class AddressForm extends React.Component{
                         </Col>
                     </Row>
                     <Row>
-                    <Col>
+                    <Col className="px-1">
                         <Form.Group controlId="zipCode">
-                          {/* <Form.Label>ZipCode</Form.Label>*/}
                           <Form.Control
                             name="zipCode"
                             type="number"
@@ -68,9 +63,8 @@ class AddressForm extends React.Component{
                         </Form.Group>
                         
                       </Col>
-                      <Col>
+                      <Col className="px-1">
                         <Form.Group controlId="country">
-                          {/* <Form.Label>Country</Form.Label>*/}
                           <select
                             name="country"
                             onChange={this.props.HandleAddressChange}
@@ -403,13 +397,8 @@ class AddressForm extends React.Component{
                             <option value="Zimbabwe">Zimbabwe</option>
                           </select>
                         </Form.Group>
-                      
                       </Col>
-                      </Row>
-                    
-                        
-                       
-                
+                    </Row>
       </Form>
   }
 }

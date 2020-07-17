@@ -40,7 +40,7 @@ const Timer = props => {
 
     const handlePause = e => {
         setStarted(false)
-        clearInterval(intervalId.current)
+        clearInterval(intervalId.current) 
     }
 
     const handleChange = e => {
@@ -48,6 +48,7 @@ const Timer = props => {
         var M = e.minutes() * 60
         var S = e.seconds()
         setTimer(H+M+S)
+        localStorage.setItem('timer',H+M+S)
         toggleModal()
     }
 
