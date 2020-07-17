@@ -117,6 +117,9 @@ const accountNpayment = React.lazy(() =>
 const AddAccount = React.lazy(() =>
   import('./App/components/AddEditAccount/AddAccount')
 );
+const EditAccount = React.lazy(() =>
+  import('./App/components/AddEditAccount/EditAccount')
+);
 const profile = React.lazy(() =>
   import('./App/containers/Settings/profile/index')
 );
@@ -404,10 +407,16 @@ const routes = [
   },
   { path: '/accounts', exact: true, name: 'Accounts', component: Accounts },
   {
-    path: '/accounts/add',
+    path: '/add/accounts',
     exact: true,
     name: 'Add Accounts',
     component: AddAccount,
+  },
+  {
+    path: '/edit/accounts',
+    exact: true,
+    name: 'Edit Account',
+    component: EditAccount,
   },
   { path: '/documents', exact: true, name: 'Documents', component: Documents },
   {

@@ -17,7 +17,7 @@ function CompanyView(props) {
   let calendar = {};
   const [Amount, setAmount] = useState("0")
   const [state, setState] = useState({ visible: false });
-  const [client , setClient ] = useState({})
+  const [client, setClient] = useState({});
   const [contact, setContact] = useState([]);
   const [Calendar, setCalendar] = useState([]);
   const [act, setAct] = useState([]);
@@ -48,7 +48,6 @@ function CompanyView(props) {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     api
       .get(
@@ -60,92 +59,90 @@ function CompanyView(props) {
       .then((res) => {
         let activity = [];
         res.data.data.map((val, index) => {
-          activity.push(
-            <Card
-              title={val.description}
-              style={{ width: '40%' }}
-              extra={
-                <div>
-                  <a href="#">Edit</a> <a href="#">Delete</a>{' '}
-                  <a href="#">Dublicate</a>
-                </div>
-              }
-            >
-              <table class="table table-borderless form-width">
-                <tbody>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Type</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.type}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Qty</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.qty}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Discription</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.description}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Rate</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">{val.rate}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Billable</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.billable ? 'Yes' : 'NO'}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Date</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.date.substring(0, 10)}
-                      </span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="border-0 py-2">
-                      <span className="table-span-dark">Invoice Status</span>
-                    </td>
-                    <td className="border-0 py-2">
-                      <span className="table-span-light">
-                        {val.invoiceStatus}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </Card>
-          );
+          activity.push(val);
         });
+        console.log('activiviviviv', activity);
         setAct(activity);
       });
   }, []);
+  const activityCard = (val, index) => (
+    <Card
+      key={index}
+      title={val.description}
+      style={{ width: '40%' }}
+      extra={
+        <div>
+          <a href="#">Edit</a> <a href="#">Delete</a> <a href="#">Dublicate</a>
+        </div>
+      }
+    >
+      <table class="table table-borderless form-width">
+        <tbody>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Type</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.type}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Qty</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.qty}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Discription</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.description}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Rate</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.rate}</span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Billable</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">
+                {val.billable ? 'Yes' : 'NO'}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Date</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">
+                {val.date.substring(0, 10)}
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <td className="border-0 py-2">
+              <span className="table-span-dark">Invoice Status</span>
+            </td>
+            <td className="border-0 py-2">
+              <span className="table-span-light">{val.invoiceStatus}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  );
   const setValue = () => {
     const amnt = window.localStorage.getItem('total')
     setAmount(amnt)
@@ -261,7 +258,8 @@ function CompanyView(props) {
         </div>
       );
     });
-    const fNAme = response.data.client.firstName +" "+ response.data.client.lastName ;
+    const fNAme =
+      response.data.client.firstName + ' ' + response.data.client.lastName;
     const IDx = response.data.client._id;
     setAddress(adrs);
     setID(IDx);
