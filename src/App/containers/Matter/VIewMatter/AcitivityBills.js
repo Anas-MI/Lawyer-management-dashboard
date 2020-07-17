@@ -504,7 +504,6 @@ class Activity extends React.Component{
                   <div>
                     <p><b>FROM</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.LName}</p>
-                    <AddressForm HandleAddressChange={HandleAddressChange} type="From"></AddressForm>
                  </div>
                  <div>
                     <p><b>TO</b></p>
@@ -513,7 +512,10 @@ class Activity extends React.Component{
                  </div>
                  <div>
                     <p><b>Matter</b></p>
-                    <p style={{fontWeight : '600'}}>{this.state.matter}</p><br/>
+                    <Form className="quickBill">
+                     <Form.Control  type="text" placeholder="Small text" value={this.state.matter} />
+                    </Form>
+                    <p style={{fontWeight : '600'}}>{}</p><br/>
                  </div>
               </div>
             </Card>
