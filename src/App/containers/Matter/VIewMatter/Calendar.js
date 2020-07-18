@@ -15,20 +15,20 @@ export default function Calendar(props) {
   const [calendar, setCalendar] = useState([]);
   const [visible, setVisible] = useState(false);
   const [calEvent, setcalEvent] = useState({
-    _id: '',
-    title: 'test event 2',
+    id: '',
+    title: '',
     startDate: '',
     startTime: '',
     endDate: '',
     endTime: '',
-    type: 'allday',
-    location: 'newyork',
+    type: '',
+    location: '',
     matter: props.matterId,
     userId: props.userId,
     notification: 'true',
     email: 'true',
     timeForReminder: '',
-    description: 'decription for this task',
+    description: '',
   });
   const [modalFor, setModalFor] = useState('Add');
 
@@ -122,16 +122,14 @@ export default function Calendar(props) {
     setcalEvent({ ...calEvent });
   };
   const handleEdit = async () => {
-    console.log(calEvent._id);
-    console.log(calEvent);
     await api
-      .post(`/calendar/update/${calEvent._id}`, calEvent)
+      .post(`/calendar/update/${calEvent.id}`, calEvent)
       .then(function (response) {
-        notification.success({ message: 'Document Uploaded.' });
+        notification.success({ message: 'Event Updated.' });
         getCalendar();
       })
       .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
+        notification.error({ message: 'Event Update Failed.' });
       });
     setTimeout(() => {
       setVisible(false);
@@ -142,7 +140,6 @@ export default function Calendar(props) {
     await api
       .get(`/calendar/delete/${id}`)
       .then((res) => {
-        console.log('deleted');
         getCalendar();
         notification.success({ message: 'Event Deleted SuccessFully.' });
       })
@@ -152,7 +149,6 @@ export default function Calendar(props) {
   };
 
   const handleSubmit = async () => {
-    console.log(calEvent);
     await api
       .post('/calendar/create', calEvent)
       .then((res) => {
@@ -173,9 +169,10 @@ export default function Calendar(props) {
   const editHandler = async (docId) => {
     setVisible(true);
     setModalFor('Edit');
-    // await api.get(`/calendar/view/${docId}`).then((response) => {
-    //   setcalEvent(response.data.data);
-    // });
+    await api.get(`/calendar/view/${docId}`).then((response) => {
+      console.log('updateDate', response.data.data);
+      setcalEvent({ ...response.data.data, id: docId });
+    });
   };
   const modalForm = () => (
     <Modal
@@ -234,11 +231,11 @@ export default function Calendar(props) {
           },
           {
             name: ['notification'],
-            value: calEvent.notification,
+            checked: calEvent.notification,
           },
           {
             name: ['email'],
-            value: calEvent.email,
+            checked: calEvent.email,
           },
           {
             name: ['timeForReminder'],
@@ -277,6 +274,7 @@ export default function Calendar(props) {
         <Form.Item key="type" label="Type" name="type">
           <Input onChange={handleInput('type')} />
         </Form.Item>
+        <Form.Item key="text" label="Get Notified on" name="text"></Form.Item>
         <Form.Item key="email" label="Email" name="email">
           <Checkbox defaultChecked onChange={handleInput('email')} />
         </Form.Item>
@@ -321,6 +319,22 @@ export default function Calendar(props) {
               onClick={() => {
                 setVisible(true);
                 setModalFor('Add');
+                setcalEvent({
+                  id: '',
+                  title: '',
+                  startDate: '',
+                  startTime: '',
+                  endDate: '',
+                  endTime: '',
+                  type: '',
+                  location: '',
+                  matter: props.matterId,
+                  userId: props.userId,
+                  notification: 'true',
+                  email: 'true',
+                  timeForReminder: '',
+                  description: '',
+                });
               }}
             >
               Add +
