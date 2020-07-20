@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UpcomingTasks from './UpcomingTasks/upcomingTasks';
 import CompletedTask from './CompletedTasks/CompletedTasks';
 import List from './List/List';
@@ -7,6 +7,7 @@ import api from '../../../resources/api';
 import { Button, Modal, notification, Popconfirm, message } from 'antd';
 import { Form, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { useState } from 'react';
 
 let res = {};
 let response = {};
@@ -60,6 +61,8 @@ class Tasks extends React.Component {
       this.state.Data.matter === '' ||
       this.state.Data.matter === undefined
     ) {
+      console.log(this.state.Data);
+
       return notification.warning({
         message: 'Fields Should Not Be Empty',
       });
@@ -103,7 +106,6 @@ class Tasks extends React.Component {
   handleChange = (e) => {
     e.persist();
     let newState = this.state;
-    console.log(e.target);
     if (e.target.id === 'matter') {
       newState.Data[e.target.id] = response[e.target.selectedIndex];
     } else {
@@ -142,14 +144,14 @@ class Tasks extends React.Component {
             ...item,
             key: item._id,
             matter: item.matter.matterDescription,
-            dueDate: this.getISTDate(item.receivedDate),
+            dueDate: item.dueDate,
           },
         ];
       });
       ListData = res.data.data.map((value, index) => {
         return (
           <tr>
-            <th scope="row">{this.getISTDate(value.dueDate)}</th>
+            <th scope="row">{value.dueDate}</th>
             <td>{value.description}</td>
             <td>{value.taskName}</td>
             <td>{value.matter.matterDescription}</td>
@@ -243,7 +245,6 @@ class Tasks extends React.Component {
       },
     },
   ];
-
   render() {
     const operations = <Button onClick={this.showModal}>ADD</Button>;
     const { TabPane } = Tabs;
