@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import ExportExcel from './ExportExcel';
-
 import api from '../../../resources/api';
-
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 const ContactsManage = (props) => {
@@ -257,6 +255,9 @@ const ContactsManage = (props) => {
   ];
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    setState({ tableData: contactData });
+    console.log(state.tableData)
+    console.log(selectedKeys)
     state.tableData.map((value, id) => {
       let key = id;
 

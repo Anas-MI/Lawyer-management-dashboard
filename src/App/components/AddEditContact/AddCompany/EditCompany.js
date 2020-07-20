@@ -45,7 +45,7 @@ class editCompany extends React.Component{
     }
   }
   async componentDidMount(){
-    const editData = await api.get('/company/view/'+this.props.location.state._id)
+    const editData = await api.get('/company/view/'+this.props.location.state ? this.props.location.state : this.props.location.state._id)
     this.setState({editData : editData.data.data})
     console.log(this.state)
     this.setState({phone : editData.data.data.phone , emailAddress : editData.data.data.emailAddress,  address : editData.data.data.address, website : editData.data.data.website})
