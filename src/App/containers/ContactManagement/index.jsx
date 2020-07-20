@@ -308,17 +308,7 @@ const ContactsManage = (props) => {
   return (
     <Card title="Contacts">
       <span className="ml-auto">
-<<<<<<< HEAD
         
-=======
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={exportPDF}
-        >
-          Export to Pdf
-        </button>
-        <ExportExcel dataSource={state.tableData || []} />
->>>>>>> def49738fa8ae01bc2c97a78184e0785bab9a63c
       </span>
       <div className="p-2 ">
         <div className="d-flex float-left">
