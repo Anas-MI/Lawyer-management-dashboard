@@ -1,30 +1,70 @@
-import { Tabs } from 'antd';
-import React from "react";
-import Content from  './ListContent/Content'
+import { Tabs, Table } from 'antd';
+import React, { useState } from 'react';
 const { TabPane } = Tabs;
 
-function callback(key) {
-  console.log(key);
-}
+const UpcomingTasks = (props) => {
+  var now = new Date();
+  var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
+  var end_of_week = new Date(
+    now.getTime() + (6 - now.getDay()) * 24 * 60 * 60 * 1000
+  );
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (props.tableData !== undefined && props.tableData.length !== 0) {
+    return (
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="All" key="1">
+          <Table dataSource={props.tableData} columns={props.columns} />
+        </TabPane>
+        <TabPane tab="Due Today" key="3">
+          <Table
+            dataSource={props.tableData.filter((item) => {
+              var date = new Date(Date.parse(item.dueDate));
+              return (
+                date.getDate() === now.getDate() &&
+                date.getMonth() === now.getMonth() &&
+                date.getFullYear() === now.getFullYear()
+              );
+            })}
+            columns={props.columns}
+          />
+        </TabPane>
+        <TabPane tab="Due this Week" key="2">
+          <Table
+            dataSource={props.tableData.filter((item) => {
+              var date = new Date(Date.parse(item.dueDate));
+              return date < end_of_week && date > start_of_week;
+            })}
+            columns={props.columns}
+          />
+        </TabPane>
 
-const UpcomingTasks = (props) => (
-  <Tabs defaultActiveKey="1" onChange={callback}>
-    <TabPane tab="All" key="1">
-     <Content tableData={props.tableData}></Content>
-    </TabPane>
-    <TabPane tab="Due this Week" key="2">
-      <Content tableData={props.tableData}></Content>
-    </TabPane>
-    <TabPane tab="Due Today" key="3">
-      <Content tableData={props.tableData}></Content>
-    </TabPane>
-    <TabPane tab="Due Tomorow" key="4">
-      <Content tableData={props.tableData}></Content>
-    </TabPane>
-    <TabPane tab="Overdue" key="5">
-      <Content tableData={props.tableData}></Content>
-    </TabPane>
-  </Tabs>
-);
+        <TabPane tab="Due Tomorow" key="4">
+          <Table
+            dataSource={props.tableData.filter((item) => {
+              var date = new Date(Date.parse(item.dueDate));
+              return (
+                date.getDate() === tomorrow.getDate() &&
+                date.getMonth() === tomorrow.getMonth() &&
+                date.getFullYear() === tomorrow.getFullYear()
+              );
+            })}
+            columns={props.columns}
+          />
+        </TabPane>
+        <TabPane tab="Overdue" key="5">
+          <Table
+            dataSource={props.tableData.filter((item) => {
+              var date = new Date(Date.parse(item.dueDate));
+              return date < now;
+            })}
+            columns={props.columns}
+          />
+        </TabPane>
+      </Tabs>
+    );
+  }
+  return <div></div>;
+};
 
-export default UpcomingTasks
+export default UpcomingTasks;
