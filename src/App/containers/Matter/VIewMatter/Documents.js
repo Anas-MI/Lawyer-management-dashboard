@@ -135,6 +135,7 @@ const Documents = (props) => {
   };
   const getDocuments = async () => {
     let tempDocs = [];
+    console.log('tempDocs ', typeof tempDocs);
     await api
       .get(`/document/viewformatter/${props.userId}/${props.matterId}`)
       .then((res) => {
