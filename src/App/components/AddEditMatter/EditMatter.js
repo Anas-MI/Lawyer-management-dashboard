@@ -60,16 +60,16 @@ class AddEditMatter extends React.Component{
       return <option id={index}>{value.firstName}</option>
      })
    
-    
+    /*
     customFields = res.data.data.customFields.map((value, index)=>{
       return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
               <Form.Control required={value.required} 
               name={value.name} type={value.type} 
-              defaultValue={this.state.editData.customFields[index][value.name]}
+              defaultValue={this.state.editData.customFields ? this.state.editData.customFields[index][value.name] : ""}
                onChange={this.handleCustom}/>
              </Form.Group>
-    })
+    })*/
     this.setState({optns : optns, customFields : customFields})
   }
    openNotificationWithIcon = type => {
@@ -105,9 +105,11 @@ class AddEditMatter extends React.Component{
         api.post('/matter/edit/'+this.props.location.state, data).then((res)=>{
             console.log(res)
             this.openNotificationWithIcon('success')}).catch(()=>this.openNotificationWithfailure('error'))
+            /*
              if(this.props.location!=undefined){
-            this.props.history.goBack()
+               this.props.history.goBack()
               }
+              */
 
        }else{
          api.post('/matter/create', data).then(res=>console.log(res)).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
@@ -303,6 +305,7 @@ class AddEditMatter extends React.Component{
       </Form>
       </Card>
       <Button onClick={this.handleSubmit} className="btn btn-success" >Update</Button>
+      <Button onClick={()=>{this.props.history.goBack()}} >CANCEL</Button>
      <br></br>
       <Modal
         centered

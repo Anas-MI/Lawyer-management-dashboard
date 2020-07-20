@@ -292,7 +292,8 @@ class AddEditMatter extends React.Component{
        
       </Form>
       </Card>
-      <Button onClick={this.handleSubmit} lassName="btn btn-success" >ADD</Button>
+      <Button onClick={this.handleSubmit} className="btn btn-success" >ADD</Button>
+      <Button onClick={()=>{this.props.history.goBack()}} >CANCEL</Button>
      <br></br>
       <Modal
         centered
