@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import { Button } from 'antd';
 
 export class ExportExcel extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ export class ExportExcel extends Component {
         </table>
 
         <ReactHTMLTableToExcel
-          className="btn btn-outline-primary btn-sm ml-auto"
+          className="ant-btn ml-auto"
           table="emp"
           filename="contacts"
           sheet="Sheet"

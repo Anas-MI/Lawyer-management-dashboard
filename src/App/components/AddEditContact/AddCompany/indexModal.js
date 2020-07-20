@@ -26,6 +26,7 @@ let error = {
   Title:"",
 }
 let errors ={
+  Type : [""],
   Email: [""],
   phone: [""],
   Website:[""],
@@ -92,10 +93,11 @@ class newPerson extends React.Component{
        }else{
 
           api.post('company/create', data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
+          if(this.props.location!=undefined){
+            this.props.history.goBack()
+          }
        }
-       if(this.props.location!=undefined){
-         this.props.history.goBack()
-       }
+      
       } else {
         return notification.warning({
           message: "Please enter valid details",
@@ -111,6 +113,7 @@ class newPerson extends React.Component{
     const handleChange = (e) => {
       e.persist()
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      console.log(this.state)
 
       const { name, value, id } = e.target;
       switch (name) {
@@ -136,12 +139,12 @@ class newPerson extends React.Component{
     }
     const HandleAddressChange=(e)=>{
       e.persist()
-      const { id, value, name} = e.target
-      address = {...address, [name]:value}
-      let newState = this.state
-      newState.address[id]=address
-      this.setState(newState)
-      console.log(this.state)
+      const { id, value, name } = e.target;
+      console.log(id + value + name)
+      let newState = this.state;
+      newState.address[id][name] = value;
+      this.setState(newState);
+      console.log(this.state);
       switch (e.target.name) {
         
         
@@ -154,7 +157,7 @@ class newPerson extends React.Component{
                   value === "default" ? "Country is required!" : "";
                 break;
 
-            case "street":
+          case "street":
                 errors.Street[id] =
                 (value.length == 0) 
                 ? "Street is Required" 
@@ -228,7 +231,7 @@ class newPerson extends React.Component{
           this.setState(list)
         }else
         if(type==="address"){
-          list.address.push("")
+          list.address.push({})
           this.setState(list)
         }else if(type==="phone"){
           list.phone.push("")
@@ -309,12 +312,14 @@ class newPerson extends React.Component{
             </div>
             <Row>
               <Col>
+              {/*
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
                   <Form.Control name='title' type="text" placeholder="Title" 
-                  value={res.title} onChange={handleChange}/>
+                  onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
+              */}
               </Col>
             </Row>
   
@@ -337,7 +342,7 @@ class newPerson extends React.Component{
               <Col>
               <Form.Group controlId={index}>
                 <Form.Label>Type</Form.Label>
-                <Form.Control as="select" onChange={HandleAddressChange}>
+                <Form.Control as="select" name="type" onChange={HandleAddressChange}>
                   <option>Work</option>
                   <option>Home</option>
                 </Form.Control>
@@ -387,9 +392,10 @@ class newPerson extends React.Component{
                 <Form.Group controlId={index}>
               <Form.Label>Country</Form.Label>
                 <select
-                          name="Country"
+                          name="country"
                           onChange={HandleAddressChange}
                           value={res.Country}
+                          id = {index}
                           style={{"border-radius": "5px"}}
                         >
                           <option value="default">Country</option>

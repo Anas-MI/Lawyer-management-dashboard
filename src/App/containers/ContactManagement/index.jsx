@@ -325,15 +325,19 @@ const ContactsManage = (props) => {
   return (
     <Card title="Contacts">
       <span className="ml-auto">
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={exportPDF}
-        >
-          Export to Pdf
-        </button>
-        <ExportExcel dataSource={state.tableData} />
+        
       </span>
       <div className="p-2 ">
+        <div className="d-flex float-left">
+          <Button
+            className="ml-auto"
+            color="success"
+            onClick={exportPDF}
+          >
+            Export to Pdf
+          </Button>
+          <ExportExcel dataSource={state.tableData} />
+        </div>
         <Button
           className="ml-auto"
           color="success"
