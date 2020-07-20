@@ -9,7 +9,8 @@ import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { EventSettingsModel } from "@syncfusion/ej2-react-schedule";
 import api from '../../../resources/api'
-import {notification, Button, Descriptions} from 'antd'
+import {notification, Button, Card} from 'antd'
+
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
 import "@syncfusion/ej2-calendars/styles/material.css";
@@ -62,11 +63,14 @@ const CalendarContainer = props => {
 
     const [ state, setState ] = useState({tableData : []})
     const [ data, setData ] = useState({email : false, notification : false})
+    const [listEvent, setListEvent] = useState([])
     let instance = new Internationalization();
     useEffect(()=>{
       async function fetchData(){
         res =  await api.get('/calendar/viewforuser/'+userId)
         response =  await api.get('matter/viewforuser/'+userId)
+        const fetchEvents = await api.get('/calendar/showall')
+        setListEvent([...listEvent, ...fetchEvents.data.data])
         setOptions(response.data.data)
         setdata()
       }
@@ -197,19 +201,49 @@ const CalendarContainer = props => {
     }
    
    
-    return <ScheduleComponent height='550px'   actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
-          showQuickInfo={false} popupOpen={onPopupOpen}
-          eventSettings={{dataSource : state.tableData}}
-            editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
-                <ViewsDirective>
-                   <ViewDirective option='Day'/>
-                    <ViewDirective option='Week'/>
-                    <ViewDirective option='WorkWeek'/>
-                    <ViewDirective option='Month'/>
-                </ViewsDirective>
-            <Inject services={[Day, Week, WorkWeek, Month, Agenda]} currentView={"Month"}/>
-         </ScheduleComponent>
-    
+    return (        
+        <div className="row">
+            <div className="col-lg-8">
+                <Card bodyStyle={{"padding" : "0px"}} 
+                extra={<span style={{ float: 'right' }}>
+                    <Button className="ml-auto" color="success" >
+                        Add Event 
+                    </Button>
+                </span>}>
+                    <ScheduleComponent height='550px' actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
+                        showQuickInfo={false} popupOpen={onPopupOpen}
+                        eventSettings={{dataSource : state.tableData}}
+                        editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+                        <ViewsDirective>
+                        <ViewDirective option='Day'/>
+                            <ViewDirective option='Week'/>
+                            <ViewDirective option='WorkWeek'/>
+                            <ViewDirective option='Month'/>
+                        </ViewsDirective>
+                        <Inject services={[Day, Week, WorkWeek, Month, Agenda]} currentView={"Month"}/>
+                    </ScheduleComponent>
+                 </Card>
+            </div>
+            <div className="col-lg-4">
+                <Card title="Events" style={{"height" : "550px"}} className="overflow-auto" bodyStyle={{"padding" : "15px"}}>
+                    {listEvent.map((eventlist) => <div key={eventlist._id} style={{ "border-bottom" : "1px solid #e5e5e5"}} className="pb-2 mb-2">
+                        <span style={{"font-size" : "18px" , "color": "#3f51b5"}}><b>{eventlist.title}</b></span>
+                        <div className="d-flex justify-content-between">
+                            <span style={{ "padding-right" : "5%", "border-right" : "1px solid #e5e5e5"}}>
+                                <span><b>{eventlist.startTime}</b></span><br /> 
+                                <span style={{"font-size" : "11px"}}>(Starting Date & Time)</span>
+                            </span>
+                            <span>
+                                <span><b>{eventlist.endTime}</b></span><br /> 
+                                <span style={{"font-size" : "11px"}}>(Ending Date & Time)</span>
+                            </span>                            
+                        </div>
+                    </div> 
+                    )}
+                </Card>
+            </div>
+        </div>
+    )
 }
 
 export default CalendarContainer

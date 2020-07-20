@@ -91,17 +91,17 @@ const EditorTemplate = props => {
         <tr>    
                   <td className="e-textlabel">type </td>
                     <td colSpan={4}>
-                    <label>
+                    <label className="my-2">
                       <input type="checkbox" id="allday" name="allday" data-name="AllDay"
-                      onChange={props.handleChange} defaultChecked = {props.Allday}
+                      onChange={props.handleChange} defaultChecked = {props.Allday} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
                       All day
                     </label>
              
-                    <label>
+                    <label className="m-2">
                       <input type="checkbox" id="repeat" name="repeat" data-name="Repeat"
-                        onChange={props.handleChange} defaultChecked = {props.Repeat}
+                        onChange={props.handleChange} defaultChecked = {props.Repeat} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
                       Repeat
@@ -164,17 +164,17 @@ const EditorTemplate = props => {
         <tr>    
                   <td className="e-textlabel">Remind via : </td>
                     <td colSpan={4}>
-                    <label>
+                    <label className="my-2">
                       <input type="checkbox" id="email" name="email" data-name="email" defaultChecked = {props.Email}
-                        onChange={props.handleChange}
+                        onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
                       Email
                     </label>
              
-                    <label>
+                    <label className="m-2">
                       <input type="checkbox" id="notification" name="notification" data-name="Notification" defaultChecked={props.Notification}
-                        onChange={props.handleChange}
+                        onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
                       Notification

@@ -139,6 +139,14 @@ select {
 		color: #777;
 	}
 }
+.e-input-group.e-error, .e-input-group.e-control-wrapper.e-error, .e-input-group.e-error:not(.e-float-icon-left), .e-input-group.e-control-wrapper.e-error:not(.e-float-icon-left) {
+    border-bottom-color: rgba(0, 0, 0, 0.42) !important;
+}
+
+.e-ddl-hidden{
+    padding: 0;
+}
+
 .quickBill{
     padding-top: 0px;
     input,select {
