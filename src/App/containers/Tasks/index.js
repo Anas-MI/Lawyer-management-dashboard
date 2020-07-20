@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UpcomingTasks from './UpcomingTasks/upcomingTasks';
 import CompletedTask from './CompletedTasks/CompletedTasks';
 import List from './List/List';
@@ -7,7 +7,10 @@ import api from '../../../resources/api';
 import { Button, Modal, notification, Popconfirm, message } from 'antd';
 import { Form, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { useState } from 'react';
+import jsPDF from 'jspdf';
 
+import 'jspdf-autotable';
 let res = {};
 let response = {};
 let ListData = null;
@@ -26,6 +29,45 @@ class Tasks extends React.Component {
       selected: null,
     };
   }
+  exportPDF = () => {
+    const unit = 'pt';
+    const size = 'A4'; // Use A1, A2, A3 or A4
+    const orientation = 'portrait'; // portrait or landscape
+
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = 'Tasks';
+    const headers = [
+      ['S.No', 'Task Name', 'Description', 'Matter', 'Due Date'],
+    ];
+
+    let data = [];
+
+    this.state.tableData.map((val, index) => {
+      const td = [
+        index + 1,
+        val.taskName,
+
+        val.description,
+        val.matter,
+        this.getISTDate(val.dueDate),
+      ];
+      data.push(td);
+    });
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data,
+    };
+
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save('Tasks.pdf');
+  };
 
   cancel(e) {
     console.log(e);
@@ -60,6 +102,8 @@ class Tasks extends React.Component {
       this.state.Data.matter === '' ||
       this.state.Data.matter === undefined
     ) {
+      console.log(this.state.Data);
+
       return notification.warning({
         message: 'Fields Should Not Be Empty',
       });
@@ -103,7 +147,6 @@ class Tasks extends React.Component {
   handleChange = (e) => {
     e.persist();
     let newState = this.state;
-    console.log(e.target);
     if (e.target.id === 'matter') {
       newState.Data[e.target.id] = response[e.target.selectedIndex];
     } else {
@@ -133,23 +176,35 @@ class Tasks extends React.Component {
   }
   async componentDidMount() {
     let tableData = [];
+    await api
+      .get('/matter/viewforuser/' + this.props.userId)
+      .then((res) => (response = res.data.data));
+    console.log(response);
+    options = response.map((value, index) => {
+      if (index == 0) {
+        let newdata = this.state;
+        newdata.Data.matter = value._id;
+        this.setState(newdata);
+      }
+      return <option>{value.matterDescription}</option>;
+    });
+
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
-      console.log('table data ', typeof tableData);
-      res.data.data.map((item) => {
+      console.log(res.data.data);
+      res.data.data.map((item, index) => {
         tableData = [
           ...tableData,
           {
             ...item,
             key: item._id,
-            matter: item.matter.matterDescription,
-            dueDate: this.getISTDate(item.receivedDate),
           },
         ];
       });
+
       ListData = res.data.data.map((value, index) => {
         return (
           <tr>
-            <th scope="row">{this.getISTDate(value.dueDate)}</th>
+            <th scope="row">{value.dueDate}</th>
             <td>{value.description}</td>
             <td>{value.taskName}</td>
             <td>{value.matter.matterDescription}</td>
@@ -173,20 +228,6 @@ class Tasks extends React.Component {
         );
       });
     });
-
-    console.log(res);
-    await api
-      .get('/matter/viewforuser/' + this.props.userId)
-      .then((res) => (response = res.data.data));
-    console.log(response);
-    options = response.map((value, index) => {
-      if (index == 0) {
-        let newdata = this.state;
-        newdata.Data.matter = value._id;
-        this.setState(newdata);
-      }
-      return <option>{value.matterDescription}</option>;
-    });
     this.setState({ ListData, tableData, options });
   }
 
@@ -205,14 +246,20 @@ class Tasks extends React.Component {
       title: 'Matter',
       dataIndex: 'matterDescription',
       key: '3',
+      render: (_, record) => {
+        // console.log(record);
+        return record.matter;
+      },
     },
     {
       title: 'Due Date',
       dataIndex: 'dueDate',
       key: '3',
-
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
+      render: (_, record) => {
+        return this.getISTDate(record.dueDate);
+      },
     },
     {
       title: 'Edit',
@@ -243,9 +290,15 @@ class Tasks extends React.Component {
       },
     },
   ];
-
   render() {
-    const operations = <Button onClick={this.showModal}>ADD</Button>;
+    const operations = (
+      <span>
+        <Button className="ml-auto" color="success" onClick={this.exportPDF}>
+          Export
+        </Button>
+        <Button onClick={this.showModal}>ADD</Button>
+      </span>
+    );
     const { TabPane } = Tabs;
     function callback(key) {
       console.log(key);
@@ -283,30 +336,26 @@ class Tasks extends React.Component {
           onOk={this.handleOk}
         >
           <Form>
-            <Col>
-              <Row>
-                <Form.Group controlId="taskName">
-                  <Form.Label>Task Name</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="Task Name"
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group controlId="dueDate">
-                  <Form.Label>Due Date</Form.Label>
-                  <Form.Control
-                    required
-                    type="date"
-                    placeholder="Due Date"
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
-              </Row>
-            </Col>
+            <Form.Group controlId="taskName">
+              <Form.Label>Task Name</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="Task Name"
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="dueDate">
+              <Form.Label>Due Date</Form.Label>
+              <Form.Control
+                required
+                type="date"
+                placeholder="Due Date"
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
