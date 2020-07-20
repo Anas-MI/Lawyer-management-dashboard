@@ -19,6 +19,22 @@ class DynamicFeilds extends React.Component {
                  <div key={idx}>
                     <Form.Row>
                     <Col>
+                      <Form.Group >
+                          <Form.Label>Type</Form.Label>
+                          <Form.Control
+                            as="select"
+                            name="type"
+                            defaultValue={this.props.record[idx]}
+                            onChange={this.props.change}
+                     
+                          >
+                            <option>Work</option>
+                            <option>Home</option>
+                            <option>Other</option>
+                          </Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col>
                     <Form.Group controlId={idx}>
                       <Form.Label>{this.props.text}</Form.Label>
                       <Form.Control name={this.props.name} type={this.props.type} className={this.props.type}  defaultValue={this.props.record[idx]}
@@ -33,6 +49,20 @@ class DynamicFeilds extends React.Component {
                   :       
                   <div key={idx}>
                       <Form.Row>
+                      <Col>
+                      <Form.Group>
+                          <Form.Label>Type</Form.Label>
+                          <Form.Control
+                            as="select"
+                            name="type"
+                            onChange={this.props.change}                   
+                          >
+                            <option>Work</option>
+                            <option>Home</option>
+                            <option>Other</option>
+                          </Form.Control>
+                        </Form.Group>
+                      </Col>
                       <Col>
                       <Form.Group controlId={idx}>
                         <Form.Label>{this.props.text}</Form.Label>

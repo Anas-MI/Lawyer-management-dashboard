@@ -50,7 +50,7 @@ let errors = {
 let formData = new FormData();
 let finalres = "";
 
-class newPerson extends React.Component {
+class editPerson extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,11 +93,12 @@ class newPerson extends React.Component {
 
     customFields = feilds.data.data.customFields.map((value, index) => {
       let val = ""
-      if(this.state.editData.customFields[index] != undefined){
+      if(this.state.editData.customFields!= undefined){
         val = this.state.editData.customFields[index][value.name]
       }
       return (
-        <Form.Group key={index} controlId={index}>
+        <Col md = "6">
+           <Form.Group key={index} controlId={index}>
           <Form.Label>{value.name}</Form.Label>
           <Form.Control
             name={value.name}
@@ -106,6 +107,8 @@ class newPerson extends React.Component {
             onChange={this.handleCustom}
           />
         </Form.Group>
+        </Col>
+        
       );
     });
   
@@ -554,6 +557,7 @@ class newPerson extends React.Component {
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
               <h4>Personal Details</h4>
+              <div className="form-header-container mb-4">
               <Row>
                   <Col xs={7} md="6" >
         
@@ -1144,6 +1148,9 @@ class newPerson extends React.Component {
                 <span onClick={() => addFeild("address")}>Add an Address</span>
               </div>
               <br></br>
+              </div>
+              <br></br>
+              <div className="form-header-container mb-4">
               <h4>Custom Fields</h4>
               <p>
                 Customise your
@@ -1157,9 +1164,70 @@ class newPerson extends React.Component {
                 </Button>
               </p>
               {customFields}
+              <br></br>
+              </div>
+              <br></br>
+              <h4>Billing preferences</h4>
+              <Row>
+                 <Col md="6">
+                 <Form.Group >
+                          <Form.Label>Payment profile</Form.Label>
+                          <Form.Control
+                            as="select"
+                            name="Payment profile"
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                            <option>default</option>
+                          </Form.Control>
+                      </Form.Group>
+                 </Col>
+              </Row>
 
+              <p>Hourly billing</p>      
+              <Row >
+                <Col md="3">
+                <Form.Group>
+                          <Form.Label>Firm user or group</Form.Label>
+                          <Form.Control
+                            as="select"
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                          </Form.Control>
+                      </Form.Group>
+                </Col>
+                <Col md="3">
+                         <Form.Group>
+                          <Form.Label>Rate</Form.Label>
+                          <Form.Control
+                            name="rate"
+                            type="text"
+                            placeholder="$0.0"
+                          />
+                        </Form.Group>
+
+                </Col>
+              </Row>
+              <Row>
+                  <Col md="6">
+                  <Form.Group>
+                          <Form.Label>ClientID</Form.Label>
+                          <Form.Control
+                            name="clientId"
+                            type="text"
+                            placeholder="ClientID"
+                          />
+                        </Form.Group>
+                  </Col>
+              </Row>
+
+              
               <Button type="submit" className="btn btn-success">
                 {editMode ? "Update" : "Create"}
+              </Button>
+              <Button onClick={()=>this.props.history.goBack()}>
+                  Cancel
               </Button>
             </Form>
 
@@ -1195,5 +1263,5 @@ class newPerson extends React.Component {
 const mapStateToProps = (state) => ({
   userId: state.user.token.user._id,
 });
-export default connect(mapStateToProps)(newPerson);
+export default connect(mapStateToProps)(editPerson);
 

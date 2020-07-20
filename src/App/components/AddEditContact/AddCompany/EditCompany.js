@@ -37,7 +37,7 @@ let errors ={
 }
 
 
-class newPerson extends React.Component{
+class editCompany extends React.Component{
   constructor(props){
     super(props)
     this.state={
@@ -728,7 +728,9 @@ class newPerson extends React.Component{
             </div>
   
             <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create'}</Button>
-
+            <Button onClick={()=>this.props.history.goBack()}>
+                  Cancel
+              </Button>
           </Form>
           </div>
       </div>
@@ -740,4 +742,4 @@ class newPerson extends React.Component{
 const mapStateToProps = state => ({
   userId: state.user.token.user._id
 });
-export default connect( mapStateToProps)(newPerson)
+export default connect( mapStateToProps)(editCompany)
