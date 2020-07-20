@@ -9,23 +9,28 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import ExportExcel from './ExportExcel';
 import api from '../../../resources/api';
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 const ContactsManage = (props) => {
   const userId = useSelector((state) => state.user.token.user._id);
   const [type, setType] = useState('contact');
-  console.log(userId);
+  console.log('id', userId);
   const dispatch = useDispatch();
   const [companyData, setcompanyData] = useState([]);
-  const [searchData, setsearchData] = useState([]);
+  const [value, setValue] = useState('');
   const [contactData, setcontactData] = useState([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [showEmailInput, setShowEmailInput] = useState(false);
   let response = {};
   let company = {};
   //Search Related
-  const [state, setState] = useState({ tableData: [] });
+  const [state, setState] = useState({
+    tableData: [],
+  });
+  const [dataSrc, setDataSrc] = useState([]);
   const contacts = useSelector((state) => {
     return state.Contact.contacts;
   });
+  const [searchInput, setSearchInput] = useState();
   /*
   useEffect(()=>{
     setTableData(contacts)
@@ -34,14 +39,14 @@ const ContactsManage = (props) => {
   useEffect(() => {
     dispatch(getBlogs());
   }, []); */
+  async function fetchData() {
+    response = await api.get('/contact/viewforuser/' + userId);
+    company = await api.get('/company/viewforuser/' + userId);
+    console.log(response);
+    console.log(company);
+    setTable();
+  }
   useEffect(() => {
-    async function fetchData() {
-      response = await api.get('/contact/viewforuser/' + userId);
-      company = await api.get('/company/viewforuser/' + userId);
-      console.log(response);
-      console.log(company);
-      setTable();
-    }
     fetchData();
   }, []);
 
@@ -77,75 +82,6 @@ const ContactsManage = (props) => {
     setState({ tableData: contactData });
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={(node) => {
-            // console.log('Node',node)
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) => {
-      console.log(dataIndex, record);
-      return record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase());
-    },
-
-    onFilterDropdownVisibleChange: (visible) => {
-      if (visible) {
-        // setTimeout(() => this.searchInput.select());
-      }
-    },
-    render: (text) =>
-      state.searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[state.searchText]}
-          autoEscape
-          textToHighlight={text.toString()}
-        />
-      ) : (
-        text
-      ),
-  });
-
   //   const handleciSelect = (record) => {
   //     // dispatch(selectBlog(record))
   //     // props.history.push('/lawyer/details')
@@ -164,6 +100,7 @@ const ContactsManage = (props) => {
     if (company != {} && response != {}) {
       if (type === 'Person') {
         setState({ tableData: contactData });
+
         setType('contact');
       } else if (type === 'Company') {
         setState({ tableData: companyData });
@@ -199,27 +136,109 @@ const ContactsManage = (props) => {
       window.location.reload();
     }, 1000);
   };
+  const FilterByNameInput = (
+    <div>
+      <SearchOutlined
+        onClick={() => {
+          var dump =
+            showNameInput === false
+              ? setShowNameInput(true)
+              : setShowNameInput(false);
+        }}
+      />
+      <span> Name </span>
 
+      {showNameInput && (
+        <div>
+          <input
+            placeholder="Search"
+            value={value}
+            onChange={(e) => {
+              let filteredData;
+              setValue(e.target.value);
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = state.tableData.filter((item) =>
+                  item.firstName
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
+                );
+                setDataSrc(filteredData);
+              } else {
+                setDataSrc(state.tableData);
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+  const FilterByEmailInput = (
+    <div>
+      <SearchOutlined
+        onClick={() => {
+          showEmailInput === false
+            ? setShowEmailInput(true)
+            : setShowEmailInput(false);
+        }}
+      />
+      <span> Email </span>
+
+      {showEmailInput && (
+        <div>
+          <input
+            placeholder="Search Email"
+            value={value}
+            onChange={(e) => {
+              let filteredData;
+              setValue(e.target.value);
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = state.tableData.filter(
+                  (item) =>
+                    item.emailAddress !== undefined &&
+                    item.emailAddress
+                      .toLowerCase()
+                      .includes(e.target.value.toLowerCase())
+                );
+                setDataSrc(filteredData);
+              } else {
+                setDataSrc(state.tableData);
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
   const columns = [
     {
-      title: 'Name',
+      title: FilterByNameInput,
       dataIndex: 'firstName',
       key: '_id',
-      ...getColumnSearchProps('firstName'),
-      sorter: (a, b, c) =>
-        c === 'ascend' ? a.author < b.author : a.author > b.author,
-    },
 
+      render: (text) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[value]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
+    },
     {
       title: 'Email',
       dataIndex: 'emailAddress',
       key: '_id',
-      ...getColumnSearchProps('emailAddress'),
-      sorter: (a, b, c) =>
-        c === 'ascend'
-          ? a.shortDescription < b.shortDescription
-          : a.shortDescription > b.shortDescription,
+
+      // render: (text) => (
+      //   <Highlighter
+      //     highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+      //     searchWords={[value]}
+      //     autoEscape
+      //     textToHighlight={text ? text.toString() : ''}
+      //   />
+      // ),
     },
+
     {
       title: 'Edit',
       dataIndex: 'edit',
@@ -254,42 +273,6 @@ const ContactsManage = (props) => {
     },
   ];
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    setState({ tableData: contactData });
-    console.log(state.tableData)
-    console.log(selectedKeys)
-    state.tableData.map((value, id) => {
-      let key = id;
-
-      if (value[dataIndex] == selectedKeys) {
-        const data = {
-          firstName: value.firstName,
-          billingCustomRate: value.billingCustomRate,
-          emailAddress: value.emailAddress.map((value) => {
-            return (
-              <div>
-                {value}
-                <br></br>
-              </div>
-            );
-          }),
-        };
-
-        let newtableData = searchData;
-        newtableData.push(data);
-        setsearchData(newtableData);
-      }
-    });
-    setState({ tableData: searchData });
-  };
-
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setState({ searchText: '' });
-    setState({ tableData: contactData });
-    setsearchData([]);
-  };
-
   const handleView = (i) => {
     console.log(type);
     console.log({ i });
@@ -300,7 +283,6 @@ const ContactsManage = (props) => {
       props.history.push('/view/company', i._id);
     }
   };
-  const tableforxcel = <table id="emp"></table>;
   const exportPDF = () => {
     const unit = 'pt';
     const size = 'A4'; // Use A1, A2, A3 or A4
@@ -330,19 +312,22 @@ const ContactsManage = (props) => {
     doc.autoTable(content);
     doc.save('contact.pdf');
   };
-
   return (
     <Card title="Contacts">
       <span className="ml-auto">
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={exportPDF}
-        >
-          Export to Pdf
-        </button>
-        <ExportExcel dataSource={state.tableData} />
+        
       </span>
       <div className="p-2 ">
+        <div className="d-flex float-left">
+          <Button
+            className="ml-auto"
+            color="success"
+            onClick={exportPDF}
+          >
+            Export to Pdf
+          </Button>
+          <ExportExcel dataSource={state.tableData} />
+        </div>
         <Button
           className="ml-auto"
           color="success"
@@ -375,7 +360,9 @@ const ContactsManage = (props) => {
         </Button>
       </div>
       <Table
-        dataSource={state.tableData}
+        dataSource={
+          dataSrc.length === 0 && value === '' ? state.tableData : dataSrc
+        }
         columns={columns}
         onRow={(record, rowIndex) => {
           return {

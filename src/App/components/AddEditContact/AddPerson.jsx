@@ -527,13 +527,6 @@ class newPerson extends React.Component {
         <div className="form-width">
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
-              <Upload {...props}>
-                <AntdButton>Select File</AntdButton>
-              </Upload>
-              <br />
-              {/* <AntdButton  onClick={this.handleUpload}>
-        Upload
-    </AntdButton> */}
               <div className="form-header-container mb-4">
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
