@@ -135,19 +135,31 @@ class Tasks extends React.Component {
   }
   async componentDidMount() {
     let tableData = [];
+    await api
+      .get('/matter/viewforuser/' + this.props.userId)
+      .then((res) => (response = res.data.data));
+    console.log(response);
+    options = response.map((value, index) => {
+      if (index == 0) {
+        let newdata = this.state;
+        newdata.Data.matter = value._id;
+        this.setState(newdata);
+      }
+      return <option>{value.matterDescription}</option>;
+    });
+
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
-      console.log('table data ', typeof tableData);
-      res.data.data.map((item) => {
+      console.log(res.data.data);
+      res.data.data.map((item, index) => {
         tableData = [
           ...tableData,
           {
             ...item,
             key: item._id,
-            matter: item.matter.matterDescription,
-            dueDate: item.dueDate,
           },
         ];
       });
+
       ListData = res.data.data.map((value, index) => {
         return (
           <tr>
@@ -175,20 +187,6 @@ class Tasks extends React.Component {
         );
       });
     });
-
-    console.log(res);
-    await api
-      .get('/matter/viewforuser/' + this.props.userId)
-      .then((res) => (response = res.data.data));
-    console.log(response);
-    options = response.map((value, index) => {
-      if (index == 0) {
-        let newdata = this.state;
-        newdata.Data.matter = value._id;
-        this.setState(newdata);
-      }
-      return <option>{value.matterDescription}</option>;
-    });
     this.setState({ ListData, tableData, options });
   }
 
@@ -207,14 +205,20 @@ class Tasks extends React.Component {
       title: 'Matter',
       dataIndex: 'matterDescription',
       key: '3',
+      render: (_, record) => {
+        // console.log(record);
+        return record.matter;
+      },
     },
     {
       title: 'Due Date',
       dataIndex: 'dueDate',
       key: '3',
-
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
+      render: (_, record) => {
+        return this.getISTDate(record.dueDate);
+      },
     },
     {
       title: 'Edit',
