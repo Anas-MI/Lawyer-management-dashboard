@@ -47,7 +47,7 @@ class AddList extends React.Component {
           onClick={this.showModal}
           className="form-add-button"
         >
-          + AddList
+          + Add List
         </Button>
         <Modal
           title="Add to List"
