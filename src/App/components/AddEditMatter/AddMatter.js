@@ -208,10 +208,23 @@ class AddEditMatter extends React.Component{
                   <option>{editRes.practiseArea}</option>
                   <option>Attorney</option>
                   <option>Administrative</option>
+                  <option>Bankruptcy</option>
                   <option>Business</option>
+                  <option>Builder's Liens</option>
+                  <option>Civil Litigation</option>
+                  <option>Commercial</option>
+                  <option>Conveyance (Purchase)</option>
+                  <option>Conveyance (Sale)</option>
+                  <option>Corporate</option>
+                  <option>Criminal</option>
+                  <option>Employment</option>
+                  <option>Estates</option>
                   <option>Family</option>
-                  <option>Imployment</option>
+                  <option>Immigration</option>
+                  <option>Insurance</option>
+                  <option>Personal Injury</option>
                   <option>Tax</option>
+                  <option>Wills</option>
                 </Form.Control>
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect1">

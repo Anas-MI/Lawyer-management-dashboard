@@ -5,10 +5,12 @@ import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
 import api from '../../../resources/api';
 import { connect } from 'react-redux';
+import ExportExcel from './ExcelExport';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 let response = {};
 let tableData = [];
-
 class matterManage extends React.Component {
   constructor(props) {
     super(props);
@@ -267,15 +269,7 @@ class matterManage extends React.Component {
       data.matters = this.state.tableData;
       this.props.history.push('/view/matter', data);
     };
-    const Add = <div>
-                  <Button
-                    className="ml-auto"
-                    color="success"
-                    onClick={() => handleAddNew()}
-                  >
-                    Add Matter
-                  </Button>
-                </div>
+  
 
     const setTable = (type) => {
       if(type === "All"){
@@ -291,9 +285,56 @@ class matterManage extends React.Component {
         this.setState({tableData : this.state.pending})
       }
     }
+    const exportPDF = () => {
+      const unit = 'pt';
+      const size = 'A4'; // Use A1, A2, A3 or A4
+      const orientation = 'portrait'; // portrait or landscape
+  
+      const marginLeft = 40;
+      const doc = new jsPDF(orientation, unit, size);
+  
+      doc.setFontSize(15);
+  
+      const title = 'Matters';
+      const headers = [['S.N', 'Matter', 'Client' ,'Practice Area' , 'Open Date' ]];
+    
+      let data = [];
+      this.state.tableData.map((value, index) => {
+        const td = [index + 1, value.matterDescription, value.Client, value.practiseArea?  value.practiseArea : "-", value.openDate ? value.openDate : "-" ];
+        data.push(td);
+      });
+  
+      let content = {
+        startY: 50,
+        head: headers,
+        body: data,
+      };
+  
+      doc.text(title, marginLeft, 40);
+      doc.autoTable(content);
+      doc.save('matters.pdf');
+    };
+      const Add = <div className="d-flex justify-content-center">
+                  <button
+                    className="ml-auto btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                  >
+                    Export to Pdf
+                  </button>
+                  <ExportExcel dataSource={this.state.tableData} />
+                  <button
+                    className="ml-auto btn  btn-outline-primary   btn-sm"
+                    onClick={() => handleAddNew()}
+                  >
+                     Add Matter
+                  </button>
+                </div>
     return (
       <Card title="Matter" extra={Add}>
         <div>
+            <span className="ml-auto">
+            
+          </span>
           <Button onClick={()=>{setTable("All")}}>All</Button>
           <Button onClick={()=>{setTable("open")}}>Open</Button>
           <Button onClick={()=>{setTable("pending")}}>Pending</Button>

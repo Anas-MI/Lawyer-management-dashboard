@@ -15,10 +15,10 @@ const { TabPane } = Tabs;
 
 function CompanyView(props) {
   let response = {};
-
+  const [desc, setdesc] = useState("")
+  const [Client, setClient] = useState("")
   const [Amount, setAmount] = useState('0');
   const [state, setState] = useState({ visible: false });
-  const [client, setClient] = useState({});
   const [contact, setContact] = useState([]);
   const [act, setAct] = useState([]);
   const [address, setAddress] = useState();
@@ -34,6 +34,8 @@ function CompanyView(props) {
       await api.get('/matter/view/' + props.location.state.id).then((res) => {
         response = res.data;
         console.log(response);
+        setdesc(res.data.data.matterDescription)
+        setClient(res.data.data.client.firstName + " " +res.data.data.client.lastName )
       });
       {
         /*
@@ -68,6 +70,7 @@ function CompanyView(props) {
   const setValue = () => {
     const amnt = window.localStorage.getItem('total');
     setAmount(amnt);
+  
     let data = [];
     //  setRealatedContacts(rcntct)
     response.data.relatedContacts.map(async (value, index) => {
@@ -217,6 +220,22 @@ function CompanyView(props) {
   };
   return (
     <div>
+      <Card style={{height : "110px" }}>
+        <div className="d-flex mb-3 example-parent">
+          <div className="mr-auto p-2 col-example">
+            <h4>{Client}</h4>
+            <p>{desc}</p>
+          </div>
+         
+          <div className="p-2 col-example">
+            <Button onClick={()=>props.history.push('/edit/matter', props.location.state.id )} type="link">Edit</Button>
+
+          </div>
+        </div>
+     
+  
+
+      </Card>
       <Tabs defaultActiveKey="1" onChange={callback}>
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
