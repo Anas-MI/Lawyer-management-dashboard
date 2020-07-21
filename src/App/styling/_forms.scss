@@ -142,6 +142,11 @@ select {
 .e-input-group.e-error, .e-input-group.e-control-wrapper.e-error, .e-input-group.e-error:not(.e-float-icon-left), .e-input-group.e-control-wrapper.e-error:not(.e-float-icon-left) {
     border-bottom-color: rgba(0, 0, 0, 0.42) !important;
 }
+.e-input:focus:not(.e-success):not(.e-warning):not(.e-error) {
+    border-color: #000 !important;
+    border-bottom: 1px solid;
+}
+
 
 .e-ddl-hidden{
     padding: 0;
