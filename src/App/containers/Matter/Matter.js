@@ -12,15 +12,21 @@ let tableData = [];
 class matterManage extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       data: {},
       tableData: [],
       searchData: [],
+      showSearchMatter: false,
+      showSearchClient: false,
+      showSearchPractise: false,
+      value: '',
+      finalData: [],
     };
+    this.filterByMatterInput = this.filterByMatterInput.bind(this);
   }
-
   async componentDidMount() {
-    window.localStorage.setItem('total' , this.state.total)
+    window.localStorage.setItem('total', this.state.total);
     const data = [];
     await api
       .get('/matter/viewforuser/' + this.props.userId)
@@ -30,9 +36,9 @@ class matterManage extends React.Component {
         key: index,
         id: value._id,
         matterDescription: value.matterDescription,
-        Client: value.client.firstName + " " + value.client.lastName ,
-        PractiseArea: value.practiseArea?  value.practiseArea : "-",
-        OpenDate: value.openDate ? value.openDate : "-",
+        Client: value.client.firstName + ' ' + value.client.lastName,
+        PractiseArea: value.practiseArea ? value.practiseArea : '-',
+        OpenDate: value.openDate ? value.openDate : '-',
       };
       data.push(newData);
     });
@@ -40,7 +46,125 @@ class matterManage extends React.Component {
       this.setState({ tableData: data });
     }
   }
+  filterByMatterInput = () => (
+    <div>
+      <SearchOutlined
+        onClick={() => {
+          this.state.showSearchMatter === false
+            ? this.setState({ ...this.state, showSearchMatter: true })
+            : this.setState({ ...this.state, showSearchMatter: false });
+        }}
+      />
+      <span> Matter Description </span>
 
+      <div>
+        {this.state.showSearchMatter && (
+          <input
+            placeholder="Search Matter "
+            value={this.state.value}
+            onChange={(e) => {
+              let filteredData = [];
+              this.setState({ value: e.target.value });
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = this.state.tableData.filter(
+                  (item) =>
+                    item.matterDescription !== undefined &&
+                    item.matterDescription
+                      .toLowerCase()
+                      .includes(e.target.value.toLowerCase())
+                );
+                this.setState({ finalData: filteredData });
+              } else {
+                this.setState({
+                  finalData: this.state.tableData,
+                });
+              }
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+  filterByClientInput = () => (
+    <div>
+      <SearchOutlined
+        onClick={() => {
+          this.state.showSearchClient === false
+            ? this.setState({ ...this.state, showSearchClient: true })
+            : this.setState({ ...this.state, showSearchClient: false });
+        }}
+      />
+      <span> Client </span>
+
+      <div>
+        {this.state.showSearchClient && (
+          <input
+            placeholder="Search Client "
+            value={this.state.value}
+            onChange={(e) => {
+              let filteredData = [];
+              this.setState({ value: e.target.value });
+
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = this.state.tableData.filter(
+                  (item) =>
+                    item.Client !== undefined &&
+                    item.Client.toLowerCase().includes(
+                      e.target.value.toLowerCase()
+                    )
+                );
+                this.setState({ finalData: filteredData });
+              } else {
+                this.setState({
+                  finalData: this.state.tableData,
+                });
+              }
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+  filterByPractiseInput = () => (
+    <div>
+      <SearchOutlined
+        onClick={() => {
+          this.state.showSearchPractise === false
+            ? this.setState({ ...this.state, showSearchPractise: true })
+            : this.setState({ ...this.state, showSearchPractise: false });
+        }}
+      />
+      <span> Practise Area </span>
+
+      <div>
+        {this.state.showSearchPractise && (
+          <input
+            placeholder="Search Practise Area "
+            value={this.state.value}
+            onChange={(e) => {
+              let filteredData = [];
+              this.setState({ value: e.target.value });
+
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = this.state.tableData.filter(
+                  (item) =>
+                    item.PractiseArea !== undefined &&
+                    item.PractiseArea.toLowerCase().includes(
+                      e.target.value.toLowerCase()
+                    )
+                );
+                this.setState({ finalData: filteredData });
+              } else {
+                this.setState({
+                  finalData: this.state.tableData,
+                });
+              }
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
   render() {
     //Search Related
 
@@ -54,75 +178,6 @@ class matterManage extends React.Component {
     fetchData();
   }, []);
  */
-
-    const getColumnSearchProps = (dataIndex) => ({
-      filterDropdown: ({
-        setSelectedKeys,
-        selectedKeys,
-        confirm,
-        clearFilters,
-      }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            ref={(node) => {
-              // console.log('Node',node)
-            }}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90 }}
-            >
-              Search
-            </Button>
-            <Button
-              onClick={() => handleReset(clearFilters)}
-              size="small"
-              style={{ width: 90 }}
-            >
-              Reset
-            </Button>
-          </Space>
-        </div>
-      ),
-      filterIcon: (filtered) => (
-        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-      ),
-      onFilter: (value, record) => {
-        console.log(dataIndex, record);
-        return record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase());
-      },
-
-      onFilterDropdownVisibleChange: (visible) => {
-        if (visible) {
-          // setTimeout(() => this.searchInput.select());
-        }
-      },
-      render: (text) =>
-        this.state.searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[this.state.searchText]}
-            autoEscape
-            textToHighlight={text.toString()}
-          />
-        ) : (
-          text
-        ),
-    });
 
     //   const handleciSelect = (record) => {
     //     // dispatch(selectBlog(record))
@@ -150,46 +205,50 @@ class matterManage extends React.Component {
 
     const columns = [
       {
-        title: 'Matter Description',
+        title: this.filterByMatterInput,
         dataIndex: 'matterDescription',
         key: '_id',
-        defaultSortOrder: 'descend',
-        ...getColumnSearchProps('matterDescription'),
-        sorter: (a, b, c) =>
-          c === 'ascend'
-            ? a.description < b.description
-            : a.description > b.description,
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[this.state.value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
       },
       {
-        title: 'Client',
+        title: this.filterByClientInput,
         dataIndex: 'Client',
         key: '_id',
-        defaultSortOrder: 'ascend',
-        ...getColumnSearchProps('Client'),
-        sorter: (a, b, c) =>
-          c === 'ascend'
-            ? a.shortDescription < b.shortDescription
-            : a.shortDescription > b.shortDescription,
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[this.state.value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
       },
       {
-        title: 'Practise Area',
+        title: this.filterByPractiseInput,
         dataIndex: 'PractiseArea',
         key: '_id',
-        ...getColumnSearchProps('PractiseArea'),
-        sorter: (a, b, c) =>
-          c === 'ascend'
-            ? a.shortDescription < b.shortDescription
-            : a.shortDescription > b.shortDescription,
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[this.state.value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
       },
       {
         title: 'Open Date',
         dataIndex: 'OpenDate',
         key: '_id',
-        ...getColumnSearchProps('OpenDate'),
-        sorter: (a, b, c) =>
-          c === 'ascend'
-            ? a.shortDescription < b.shortDescription
-            : a.shortDescription > b.shortDescription,
+        sortDirections: ['descend', 'ascend'],
+        sorter: (a, b) => a.OpenDate.length - b.OpenDate.length,
       },
       {
         title: 'Edit',
@@ -217,30 +276,6 @@ class matterManage extends React.Component {
       },
     ];
 
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      const newSearchData = [];
-      this.state.tableData.map((value, index) => {
-        if (value[dataIndex] == selectedKeys) {
-          let newdata = {
-            key: index,
-            matterDescription: value.matterDescription,
-            Client: value.Client,
-            PractiseArea: value.PractiseArea,
-            OpenDate: value.OpenDate,
-          };
-          newSearchData.push(newdata);
-        }
-      });
-
-      this.setState({ tableData: newSearchData });
-    };
-
-    const handleReset = (clearFilters) => {
-      clearFilters();
-      this.setState({ searchText: '' });
-      this.setState({ tableData: tableData, searchData: [] });
-    };
-
     const handleView = (rec) => {
       let data = {};
       data.id = response[rec.key]._id;
@@ -261,7 +296,11 @@ class matterManage extends React.Component {
           </Button>
         </div>
         <Table
-          dataSource={this.state.tableData}
+          dataSource={
+            this.state.finalData.length === 0 && this.state.value.length === 0
+              ? this.state.tableData
+              : this.state.finalData
+          }
           columns={columns}
           onRow={(record, rowIndex) => {
             return {
