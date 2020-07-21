@@ -53,12 +53,13 @@ const ContactsManage = (props) => {
   const setTable = () => {
     response.data.data.map((value, id) => {
       let key = id;
+
       const data = {
         firstName: value.firstName + ' ' + value.lastName,
         billingCustomRate: value.billingCustomRate,
         _id: value._id,
         emailAddress: value.emailAddress.map((value) => {
-          return value + ' , ';
+          return value.emailType + ' : ' + value.emailAddress + ' ,\n ';
         }),
       };
       let newtableData = contactData;
@@ -72,7 +73,7 @@ const ContactsManage = (props) => {
         _id: value._id,
         billingCustomRate: value.billingCustomRate,
         emailAddress: value.emailAddress.map((value) => {
-          return value + ' , ';
+          return value.emailType + ' : ' + value.emailAddress + ' ,\n ';
         }),
       };
       let newtableData = companyData;
@@ -228,7 +229,10 @@ const ContactsManage = (props) => {
       title: 'Email',
       dataIndex: 'emailAddress',
       key: '_id',
-
+      // render: (_, record) => {
+      //   console.log(record);
+      //   return <div>hi{record.emailAddress[0].emailAddress}</div>;
+      // },
       // render: (text) => (
       //   <Highlighter
       //     highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
