@@ -306,16 +306,20 @@ const ContactsManage = (props) => {
     doc.save('contact.pdf');
   };
   return (
-    <Card title="Contacts">
-      <span className="ml-auto">
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={exportPDF}
-        >
-          Export to Pdf
-        </button>
-        <ExportExcel dataSource={state.tableData || []} />
-      </span>
+    <Card
+      title="Contacts"
+      extra={
+        <div className="d-flex justify-content-center">
+          <button
+            className="ml-auto btn  btn-outline-primary   btn-sm"
+            onClick={exportPDF}
+          >
+            Export to Pdf
+          </button>
+          <ExportExcel dataSource={state.tableData || []} />
+        </div>
+      }
+    >
       <div className="p-2 ">
         <Button
           className="ml-auto"

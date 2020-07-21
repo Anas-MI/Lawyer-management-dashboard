@@ -35,7 +35,7 @@ export class ExportExcel extends Component {
         </table>
 
         <ReactHTMLTableToExcel
-          className="ant-btn ml-auto"
+          className="btn btn-outline-primary btn-sm ml-auto"
           table="emp"
           filename="contacts"
           sheet="Sheet"
