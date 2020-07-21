@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Space, notification, Card, Popconfirm } from 'antd';
+import { Table, Button, Input, Space, notification, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
@@ -8,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import ExportExcel from './ExportExcel';
+
 import api from '../../../resources/api';
 
 const ContactsManage = (props) => {
@@ -253,23 +253,16 @@ const ContactsManage = (props) => {
     },
 
     {
-        title:'Delete',
-        dataIndex: "delete",
-        key: "_id",
-        render:(_,record)=>{
-            return (
-              <Popconfirm
-              title="Are you sure delete this task?"
-              onConfirm={()=>handleDelete(record)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger >
-                    Delete
-                </Button>
-            </Popconfirm>            
-            )
-        }
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: '_id',
+      render: (_, record) => {
+        return (
+          <Button variant="danger" onClick={() => handleDelete(record)}>
+            Delete
+          </Button>
+        );
+      },
     },
   ];
 
@@ -315,19 +308,15 @@ const ContactsManage = (props) => {
   return (
     <Card title="Contacts">
       <span className="ml-auto">
-        
+        <button
+          className="ml-auto btn  btn-outline-primary   btn-sm"
+          onClick={exportPDF}
+        >
+          Export to Pdf
+        </button>
+        <ExportExcel dataSource={state.tableData || []} />
       </span>
       <div className="p-2 ">
-        <div className="d-flex float-left">
-          <Button
-            className="ml-auto"
-            color="success"
-            onClick={exportPDF}
-          >
-            Export to Pdf
-          </Button>
-          <ExportExcel dataSource={state.tableData} />
-        </div>
         <Button
           className="ml-auto"
           color="success"
