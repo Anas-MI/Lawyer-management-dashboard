@@ -76,7 +76,12 @@ class matterManage extends React.Component {
       <SearchOutlined
         onClick={() => {
           this.state.showSearchMatter === false
-            ? this.setState({ ...this.state, showSearchMatter: true })
+            ? this.setState({
+                ...this.state,
+                showSearchMatter: true,
+                showSearchClient: false,
+                showSearchPractise: false,
+              })
             : this.setState({ ...this.state, showSearchMatter: false });
         }}
       />
@@ -115,7 +120,12 @@ class matterManage extends React.Component {
       <SearchOutlined
         onClick={() => {
           this.state.showSearchClient === false
-            ? this.setState({ ...this.state, showSearchClient: true })
+            ? this.setState({
+                ...this.state,
+                showSearchClient: true,
+                showSearchPractise: false,
+                showSearchMatter: false,
+              })
             : this.setState({ ...this.state, showSearchClient: false });
         }}
       />
@@ -155,7 +165,13 @@ class matterManage extends React.Component {
       <SearchOutlined
         onClick={() => {
           this.state.showSearchPractise === false
-            ? this.setState({ ...this.state, showSearchPractise: true })
+            ? this.setState({
+                ...this.state,
+                showSearchPractise: true,
+                showSearchClient: false,
+
+                showSearchMatter: false,
+              })
             : this.setState({ ...this.state, showSearchPractise: false });
         }}
       />
