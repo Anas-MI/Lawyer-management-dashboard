@@ -27,43 +27,36 @@ class Tasks extends React.Component {
       editMode: false,
       res: '',
       selected: null,
+      status: false,
     };
   }
   exportPDF = () => {
     const unit = 'pt';
     const size = 'A4'; // Use A1, A2, A3 or A4
     const orientation = 'portrait'; // portrait or landscape
-
     const marginLeft = 40;
     const doc = new jsPDF(orientation, unit, size);
-
     doc.setFontSize(15);
-
     const title = 'Tasks';
     const headers = [
       ['S.No', 'Task Name', 'Description', 'Matter', 'Due Date'],
     ];
-
     let data = [];
-
     this.state.tableData.map((val, index) => {
       const td = [
         index + 1,
         val.taskName,
-
         val.description,
         val.matter,
         this.getISTDate(val.dueDate),
       ];
       data.push(td);
     });
-
     let content = {
       startY: 50,
       head: headers,
       body: data,
     };
-
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save('Tasks.pdf');
@@ -137,6 +130,23 @@ class Tasks extends React.Component {
       }, 1000);
     }
   };
+
+  handelAction = (_id) =>{
+    console.log(_id)
+    this.setState({
+      status : true
+    })
+    const data = this.state.status;
+
+    console.log(data)
+    api.get('/tasks/updatetask/'+_id, data)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+        console.log(err); 
+      });
+  }
 
   handleCancel = () => {
     this.setState({
@@ -262,6 +272,24 @@ class Tasks extends React.Component {
       },
     },
     {
+      title: 'Action',
+      dataIndex: 'status',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Popconfirm
+            title="Mark as Complete"
+            onConfirm={() => this.handelAction(record._id)}
+            onCancel={this.cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Form.Check type="checkbox"  />
+          </Popconfirm>
+        );
+      },
+    },
+    {
       title: 'Edit',
       dataIndex: 'edit',
       key: '6',
@@ -290,6 +318,85 @@ class Tasks extends React.Component {
       },
     },
   ];
+
+  newcolumns = [
+    {
+      title: 'Task Name',
+      dataIndex: 'taskName',
+      key: '1',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: '2',
+    },
+    {
+      title: 'Matter',
+      dataIndex: 'matterDescription',
+      key: '3',
+      render: (_, record) => {
+        // console.log(record);
+        return record.matter;
+      },
+    },
+    {
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      key: '3',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.dueDate.length - b.dueDate.length,
+      render: (_, record) => {
+        return this.getISTDate(record.dueDate);
+      },
+    },
+    {
+      title: 'Action',
+      dataIndex: 'status',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Popconfirm
+            title="Mark as Incomplete"
+            onConfirm={() => this.handelAction(record._id)}
+            onCancel={this.cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Form.Check type="checkbox"  />
+          </Popconfirm>
+        );
+      },
+    },
+    {
+      title: 'Edit',
+      dataIndex: 'edit',
+      key: '6',
+      render: (_, record) => {
+        return (
+          <Button onClick={() => this.EditHandler(record._id)}>Edit</Button>
+        );
+      },
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Popconfirm
+            title="Are you sure delete this task?"
+            onConfirm={() => this.deleteHandler(record._id)}
+            onCancel={this.cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger>Delete</Button>
+          </Popconfirm>
+        );
+      },
+    },
+  ];
+
   render() {
     const operations = (
       <span>
@@ -320,7 +427,7 @@ class Tasks extends React.Component {
           </TabPane>
           <TabPane tab="Completed Tasks" key="2">
             <CompletedTask
-              columns={this.columns}
+              columns={this.newcolumns}
               tableData={this.state.tableData}
             />
           </TabPane>
