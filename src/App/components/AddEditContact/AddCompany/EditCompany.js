@@ -121,7 +121,7 @@ class editCompany extends React.Component {
           .then(() => this.openNotificationWithIcon('success'))
           .catch((err) => this.openNotificationWithfailure('error'));
         if (this.props.location != undefined) {
-          this.props.history.goBack();
+          this.props.history.push('/manage/contacts');
         }
       } else {
         api
@@ -130,7 +130,7 @@ class editCompany extends React.Component {
           .catch((err) => this.openNotificationWithfailure('error'));
       }
       if (this.props.location != undefined) {
-        this.props.history.goBack();
+        this.props.history.push('/manage/contacts');
       }
     } else {
       return notification.warning({
@@ -843,7 +843,9 @@ class editCompany extends React.Component {
               <Button type="submit" className="btn btn-success">
                 {editMode ? 'Update' : 'Create'}
               </Button>
-              <Button onClick={() => this.props.history.goBack()}>
+              <Button
+                onClick={() => this.props.history.push('/manage/contacts')}
+              >
                 Cancel
               </Button>
             </Form>

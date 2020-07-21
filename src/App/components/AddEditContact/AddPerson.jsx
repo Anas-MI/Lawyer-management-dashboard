@@ -63,14 +63,7 @@ class newPerson extends React.Component {
       modal: false,
       valid: false,
       visible: false,
-      fileList: [
-        {
-          uid: '-1',
-          name: 'xxx.png',
-          status: 'done',
-          url: 'http://www.baidu.com/xxx.png',
-        },
-      ],
+      fileList: [],
     };
   }
 
@@ -180,34 +173,41 @@ class newPerson extends React.Component {
               duration: 5,
             });
           };
-          openMessage();
-          const formData = new FormData();
-          dataList.fileList.forEach((file) => {
-            formData.append('image', file);
-          });
-          console.log({ result });
-          api
-            .post('/contact/upload/' + result.data.data._id, formData)
-            .then((res) => {
-              console.log(res);
-              if (res.status === 200) {
-                setTimeout(() => {
-                  message.success({
-                    content: 'Uploaded!',
-                    key,
-                    duration: 3,
-                  });
-                }, 1000);
-              } else {
-                console.log({ res });
-              }
-              if (this.props.location != undefined) {
-                this.props.history.goBack();
-              }
-            })
-            .catch((err) => {
-              console.log({ err });
+
+          if (dataList.fileList.length !== 0) {
+            openMessage();
+            const formData = new FormData();
+            dataList.fileList.forEach((file) => {
+              formData.append('image', file);
             });
+            console.log({ result });
+            api
+              .post('/contact/upload/' + result.data.data._id, formData)
+              .then((res) => {
+                console.log(res);
+                if (res.status === 200) {
+                  setTimeout(() => {
+                    message.success({
+                      content: 'Uploaded!',
+                      key,
+                      duration: 3,
+                    });
+                  }, 1000);
+                } else {
+                  console.log({ res });
+                }
+                if (this.props.location != undefined) {
+                  this.props.history.push('/manage/contact');
+                }
+              })
+              .catch((err) => {
+                console.log({ err });
+              });
+          } else {
+            if (this.props.location != undefined) {
+              this.props.history.push('/manage/contacts');
+            }
+          }
         });
       }
     } else {
@@ -230,39 +230,39 @@ class newPerson extends React.Component {
     });
   };
 
-  handleUpload = () => {
-    // e.preventDefault();
-    const key = 'updatingDetails';
-    const openMessage = () => {
-      message.loading({ content: 'Uploading Files...', key });
-    };
-    openMessage();
-    // const { updateUserDetailsApi } = apiList;
-    // const updateUserDetailsApiUrl = updateUserDetailsApi + "/media/" + this.state._id;
+  // handleUpload = () => {
+  //   // e.preventDefault();
+  //   const key = 'updatingDetails';
+  //   const openMessage = () => {
+  //     message.loading({ content: 'Uploading Files...', key });
+  //   };
+  //   openMessage();
+  //   // const { updateUserDetailsApi } = apiList;
+  //   // const updateUserDetailsApiUrl = updateUserDetailsApi + "/media/" + this.state._id;
 
-    const formData = new FormData();
-    this.state.fileList.forEach((file) => {
-      formData.append('images', file);
-    });
-    api
-      .get('/api/contact/upload/' + finalres)
-      .then((res) => {
-        if (res.status === 200) {
-          setTimeout(() => {
-            message.success({
-              content: 'Uploaded!',
-              key,
-              duration: 3,
-            });
-          }, 1000);
-        } else {
-          console.log({ res });
-        }
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
-  };
+  //   const formData = new FormData();
+  //   this.state.fileList.forEach((file) => {
+  //     formData.append('images', file);
+  //   });
+  //   api
+  //     .get('/api/contact/upload/' + finalres)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setTimeout(() => {
+  //           message.success({
+  //             content: 'Uploaded!',
+  //             key,
+  //             duration: 3,
+  //           });
+  //         }, 1000);
+  //       } else {
+  //         console.log({ res });
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     });
+  // };
 
   render() {
     let address = null;
