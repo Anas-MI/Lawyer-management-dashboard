@@ -412,16 +412,16 @@ class newPerson extends React.Component {
     const addFeild = (type) => {
       let list = this.state;
       if (type === 'emailAddress') {
-        list.emailAddress.push({});
+        list.emailAddress.push({ emailType: 'work' });
         this.setState(list);
       } else if (type === 'address') {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({});
+        list.phone.push({ phoneType: 'work' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({});
+        list.website.push({ websiteType: 'work' });
         this.setState(list);
       }
     };

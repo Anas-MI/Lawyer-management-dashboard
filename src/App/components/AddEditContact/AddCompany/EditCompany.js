@@ -52,9 +52,7 @@ class editCompany extends React.Component {
   }
   async componentDidMount() {
     const editData = await api.get(
-      '/company/view/' + this.props.location.state
-        ? this.props.location.state
-        : this.props.location.state._id
+      '/company/view/' + this.props.location.state._id
     );
     this.setState({ editData: editData.data.data });
 
@@ -259,19 +257,20 @@ class editCompany extends React.Component {
     const addFeild = (type) => {
       let list = this.state;
       if (type === 'email') {
-        list.emailAddress.push({});
+        list.emailAddress.push({ emailType: 'work' });
         this.setState(list);
       } else if (type === 'address') {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({});
+        list.phone.push({ phoneType: 'work' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({});
+        list.website.push({ websiteType: 'work' });
         this.setState(list);
       }
     };
+
     const imageHandler = {
       name: 'file',
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -336,7 +335,7 @@ class editCompany extends React.Component {
               </Form.Row>
 
               <DynamicFeilds
-                record={this.state.editData.emailAddress || []}
+                record={this.state.editData.emailAddress}
                 editMode={editMode}
                 type={'text'}
                 name={'emailAddress'}

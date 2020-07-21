@@ -82,12 +82,12 @@ class editPerson extends React.Component {
   }
   async componentDidMount() {
     await api
-      .get(
-        '/contact/view/' + this.props.location.state
-          ? this.props.location.state
-          : this.props.location.state._id
-      )
-      .then((response) => this.setState({ editData: response.data.data }));
+      .get('/contact/view/' + this.props.location.state._id)
+      .then((response) => {
+        console.log(response);
+        this.setState({ editData: response.data.data });
+      });
+
     // this.setState({ editData: tempData.data.data });
 
     console.log('data', this.state.editData);
@@ -98,27 +98,27 @@ class editPerson extends React.Component {
     });
     feilds = await api.get('/user/view/' + this.props.userId);
 
-    customFields = feilds.data.data.customFields.map((value, index) => {
-      let val = '';
-      if (this.state.editData.customFields != undefined) {
-        val = this.state.editData.customFields[index][value.name];
-      }
-      return (
-        <Col md="6">
-          <Form.Group key={index} controlId={index}>
-            <Form.Label>{value.name}</Form.Label>
-            <Form.Control
-              name={value.name}
-              type={value.type}
-              defaultValue={val}
-              onChange={this.handleCustom}
-            />
-          </Form.Group>
-        </Col>
-      );
-    });
+    // customFields = feilds.data.data.customFields.map((value, index) => {
+    //   let val = '';
+    //   if (this.state.editData.customFields !== undefined) {
+    //     val = this.state.editData.customFields[index][value.name];
+    //   }
+    //   return (
+    //     <Col md="6">
+    //       <Form.Group key={index} controlId={index}>
+    //         <Form.Label>{value.name}</Form.Label>
+    //         <Form.Control
+    //           name={value.name}
+    //           type={value.type}
+    //           defaultValue={val}
+    //           onChange={this.handleCustom}
+    //         />
+    //       </Form.Group>
+    //     </Col>
+    //   );
+    // });
 
-    this.setState({ customFields, options });
+    // this.setState({ customFields, options });
 
     {
       /*
@@ -420,23 +420,21 @@ class editPerson extends React.Component {
           break;
       }
     };
-
     const addFeild = (type) => {
       let list = this.state;
       if (type === 'emailAddress') {
-        list.emailAddress.push({});
+        list.emailAddress.push({ emailType: 'work' });
         this.setState(list);
       } else if (type === 'address') {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({});
+        list.phone.push({ phoneType: 'work' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({});
+        list.website.push({ websiteType: 'work' });
         this.setState(list);
       }
-      console.log(this.state);
     };
 
     const AddCompanyHandler = () => {
@@ -664,7 +662,7 @@ class editPerson extends React.Component {
                   name={'emailAddress'}
                   text={'Email'}
                   editMode={editMode}
-                  record={this.state.editData.emailAddress}
+                  record={this.state.editData.emailAddress || []}
                   error={errors.Email}
                   inputList={this.state.emailAddress}
                   change={handleMultipleChange}
@@ -696,7 +694,7 @@ class editPerson extends React.Component {
                   text={'Phone Number'}
                   editMode={editMode}
                   error={errors.phone}
-                  record={this.state.editData.phone}
+                  record={this.state.editData.phone || []}
                   inputList={this.state.phone}
                   change={handleMultipleChange}
                   delete={handleDelete}
@@ -712,7 +710,7 @@ class editPerson extends React.Component {
                   text={'website'}
                   error={errors.Website}
                   editMode={editMode}
-                  record={this.state.editData.website}
+                  record={this.state.editData.website || []}
                   inputList={this.state.website}
                   change={handleMultipleChange}
                   delete={handleDelete}

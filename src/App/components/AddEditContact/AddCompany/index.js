@@ -245,13 +245,14 @@ class AddCompany extends React.Component {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({});
+        list.phone.push({ phoneType: 'work' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({});
+        list.website.push({ websiteType: 'work' });
         this.setState(list);
       }
     };
+
     const imageHandler = {
       name: 'file',
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
