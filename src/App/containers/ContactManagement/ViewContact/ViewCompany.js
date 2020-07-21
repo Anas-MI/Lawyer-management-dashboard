@@ -83,7 +83,7 @@ function CompanyView(props){
             </div>
         </div>
         <div className="d-flex flex-wrap"> 
-            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/company', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
+            <Card extra={<Button type="link" onClick={()=>props.history.push('/edit/company', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                        <tr>

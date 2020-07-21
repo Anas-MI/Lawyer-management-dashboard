@@ -1,7 +1,8 @@
 import React , {useEffect, useState } from 'react'
 import api from '../../../../resources/api'
-import {Card, Button} from 'antd'
+import {Card, Button, Tabs} from 'antd'
 import { useDispatch, useSelector } from "react-redux";
+const { TabPane } = Tabs;
 
 
 function CompanyView(props){
@@ -76,6 +77,8 @@ function CompanyView(props){
       
  return(
     <>
+    <Tabs defaultActiveKey="1">
+        <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
         <div className="d-flex flex-wrap mb-3">
             <div>
                 <h3>{Title}</h3>
@@ -85,7 +88,7 @@ function CompanyView(props){
             </div>
         </div>
         <div className="d-flex flex-wrap"> 
-            <Card extra={<Button type="link" onClick={()=>props.history.push('/manage/contacts/edit/person', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
+            <Card extra={<Button type="link" onClick={()=>props.history.push('/edit/contact', props.location.state)}>Edit</Button>} title="Contact Details" className="m-2 card-box">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -129,6 +132,43 @@ function CompanyView(props){
                 </table>
             </Card>
         </div>
+        </TabPane>
+        
+        <TabPane tab="Communication" key="4">
+          
+        </TabPane>
+        <TabPane tab="Phone Log" key="5">
+          <Card
+            title="Phone Log"
+            extra={<a href="#"></a>}
+            className="form-width mb-4"
+          ></Card>
+        </TabPane>
+        <TabPane tab="Notes" key="6">
+          <Card
+            title="Notes"
+            extra={<a href="#"></a>}
+            className="form-width mb-4"
+          ></Card>
+        </TabPane>
+        <TabPane tab="Document" key="7">
+          {/* 
+            <Documents
+            matters={props.location.state.matters}
+            userId={props.location.state.userId}
+            matterId={props.location.state.id}
+          />
+          */
+
+          }
+        </TabPane>
+        <TabPane tab="Bills" key="9">
+          
+        </TabPane>
+        <TabPane tab="Transactions" key="10">
+        </TabPane>
+      </Tabs>
+        
     </>
  )
 

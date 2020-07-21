@@ -1,14 +1,24 @@
 import React from 'react';
-import { Table, Button, Input, Space, notification } from 'antd';
+import {
+  Table,
+  Button,
+  Input,
+  Space,
+  notification,
+  Popconfirm,
+  Card,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
 import api from '../../../resources/api';
 import { connect } from 'react-redux';
+import ExportExcel from './ExcelExport';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 let response = {};
 let tableData = [];
-
 class matterManage extends React.Component {
   constructor(props) {
     super(props);
@@ -26,8 +36,10 @@ class matterManage extends React.Component {
     this.filterByMatterInput = this.filterByMatterInput.bind(this);
   }
   async componentDidMount() {
-    window.localStorage.setItem('total', this.state.total);
-    const data = [];
+    let data = [];
+    let open = [];
+    let closed = [];
+    let pending = [];
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
@@ -40,10 +52,23 @@ class matterManage extends React.Component {
         PractiseArea: value.practiseArea ? value.practiseArea : '-',
         OpenDate: value.openDate ? value.openDate : '-',
       };
+      if (value.status === 'Open') {
+        open.push(newData);
+      } else if (value.status === 'Closed') {
+        closed.push(newData);
+      } else if (value.status === 'Pending') {
+        pending.push(newData);
+      }
       data.push(newData);
     });
     if (this.state.tableData != []) {
-      this.setState({ tableData: data });
+      this.setState({
+        tableData: data,
+        open: open,
+        closed: closed,
+        pending: pending,
+        all: data,
+      });
     }
   }
   filterByMatterInput = () => (
@@ -268,9 +293,14 @@ class matterManage extends React.Component {
         key: '_id',
         render: (_, record) => {
           return (
-            <Button variant="danger" onClick={() => handleDelete(record)}>
-              Delete
-            </Button>
+            <Popconfirm
+              title="Are you sure delete this task?"
+              onConfirm={() => handleDelete(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>Delete</Button>
+            </Popconfirm>
           );
         },
       },
@@ -284,17 +314,106 @@ class matterManage extends React.Component {
       this.props.history.push('/view/matter', data);
     };
 
+    const setTable = (type) => {
+      if (type === 'All') {
+        this.setState({ tableData: this.state.all });
+      } else if (type === 'open') {
+        this.setState({ tableData: this.state.open });
+      } else if (type === 'closed') {
+        this.setState({ tableData: this.state.closed });
+      } else if (type === 'pending') {
+        this.setState({ tableData: this.state.pending });
+      }
+    };
+    const exportPDF = () => {
+      const unit = 'pt';
+      const size = 'A4'; // Use A1, A2, A3 or A4
+      const orientation = 'portrait'; // portrait or landscape
+
+      const marginLeft = 40;
+      const doc = new jsPDF(orientation, unit, size);
+
+      doc.setFontSize(15);
+
+      const title = 'Matters';
+      const headers = [
+        ['S.N', 'Matter', 'Client', 'Practice Area', 'Open Date'],
+      ];
+
+      let data = [];
+      this.state.tableData.map((value, index) => {
+        const td = [
+          index + 1,
+          value.matterDescription,
+          value.Client,
+          value.practiseArea ? value.practiseArea : '-',
+          value.openDate ? value.openDate : '-',
+        ];
+        data.push(td);
+      });
+
+      let content = {
+        startY: 50,
+        head: headers,
+        body: data,
+      };
+
+      doc.text(title, marginLeft, 40);
+      doc.autoTable(content);
+      doc.save('matters.pdf');
+    };
+    const Add = (
+      <div className="d-flex justify-content-center">
+        <button
+          className="ml-auto btn  btn-outline-primary   btn-sm"
+          onClick={exportPDF}
+        >
+          Export to Pdf
+        </button>
+        <ExportExcel dataSource={this.state.tableData} />
+        <button
+          className="ml-auto btn  btn-outline-primary   btn-sm"
+          onClick={() => handleAddNew()}
+        >
+          Add Matter
+        </button>
+      </div>
+    );
     return (
-      <div>
-        <div className="p-2 ">
+      <Card title="Matter" extra={Add}>
+        <div>
+          <span className="ml-auto"></span>
           <Button
-            className="ml-auto"
-            color="success"
-            onClick={() => handleAddNew()}
+            onClick={() => {
+              setTable('All');
+            }}
           >
-            Add Matter
+            All
+          </Button>
+          <Button
+            onClick={() => {
+              setTable('open');
+            }}
+          >
+            Open
+          </Button>
+          <Button
+            onClick={() => {
+              setTable('pending');
+            }}
+          >
+            Pending
+          </Button>
+          <Button
+            onClick={() => {
+              setTable('closed');
+            }}
+          >
+            Closed
           </Button>
         </div>
+        <br></br>
+
         <Table
           dataSource={
             this.state.finalData.length === 0 && this.state.value.length === 0
@@ -311,7 +430,7 @@ class matterManage extends React.Component {
             };
           }}
         ></Table>
-      </div>
+      </Card>
     );
   }
 }

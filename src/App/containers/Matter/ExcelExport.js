@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import { Button } from 'antd';
 
 export class ExportExcel extends Component {
   constructor(props) {
@@ -11,23 +10,26 @@ export class ExportExcel extends Component {
   render() {
     return (
       <div>
-        <table id="emp" className="d-none">
+        <table id="matter" className="d-none">
           <thead>
             <tr>
               <th>S.No</th>
-              <th>Name</th>
-              <th>Email Address</th>
+              <th>Matter</th>
+              <th>Client</th>
+              <th>Practice Area</th>
+              <th>Open date</th>
             </tr>
           </thead>
 
           <tbody>
-            {this.props.dataSource.map((p, index) => {
+            {this.props.dataSource.map((value, index) => {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-
-                  <td>{p.firstName}</td>
-                  <td>{p.emailAddress}</td>
+                  <td>{value.matterDescription}</td>
+                  <td>{value.Client}</td>
+                  <th>{value.practiseArea?  value.practiseArea : "-"}</th>
+                  <th>{ value.openDate ? value.openDate : "-"}</th>
                 </tr>
               );
             })}
@@ -35,9 +37,9 @@ export class ExportExcel extends Component {
         </table>
 
         <ReactHTMLTableToExcel
-          className="ant-btn ml-auto"
-          table="emp"
-          filename="contacts"
+          className="btn btn-outline-primary btn-sm ml-auto"
+          table="matter"
+          filename="matters"
           sheet="Sheet"
           buttonText="Export to Excel"
         />

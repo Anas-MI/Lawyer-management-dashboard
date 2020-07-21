@@ -37,7 +37,16 @@ class EmailForm extends React.Component{
        return    this.props.editMode ?
        <Form >
         <Row>
-            
+            <Col>
+            <Form.Group controlId="duration">
+               <Form.Label>Duration</Form.Label>
+               <Form.Control 
+               type="text" 
+               name="addTime" 
+               defaultValue = {this.props.record.addTime}
+               onChange={this.props.handleChange}/>
+           </Form.Group>
+            </Col>
             <Col>
             <Form.Group>
         <Form.Label>Matter</Form.Label>
@@ -134,7 +143,16 @@ class EmailForm extends React.Component{
        :
        <Form >
         <Row>
-            
+            <Col>
+            <Form.Group controlId="duration">
+               <Form.Label>Duration</Form.Label>
+               <Form.Control 
+               type="text" 
+               name="addTime" 
+               placeholder="hh:mm:ss" 
+               onChange={this.props.handleChange}/>
+           </Form.Group>
+            </Col>
             <Col>
             <Form.Group>
         <Form.Label>Matter</Form.Label>

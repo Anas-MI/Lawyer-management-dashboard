@@ -89,15 +89,17 @@ class newPerson extends React.Component {
 
     customFields = feilds.data.data.customFields.map((value, index) => {
       return (
-        <Form.Group key={index} controlId={index}>
-          <Form.Label>{value.name}</Form.Label>
-          <Form.Control
-            name={value.name}
-            type={value.type}
-            placeholder={value.name}
-            onChange={this.handleCustom}
-          />
-        </Form.Group>
+        <Col md = "6">
+            <Form.Group key={index} controlId={index}>
+              <Form.Label>{value.name}</Form.Label>
+              <Form.Control
+                name={value.name}
+                type={value.type}
+                placeholder={value.name}
+                onChange={this.handleCustom}
+              />
+            </Form.Group>
+        </Col>
       );
     });
 
@@ -525,39 +527,35 @@ class newPerson extends React.Component {
         <div className="form-width">
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
-              <Upload {...props}>
-                <AntdButton>Select File</AntdButton>
-              </Upload>
-              <br />
-              {/* <AntdButton  onClick={this.handleUpload}>
-        Upload
-    </AntdButton> */}
               <div className="form-header-container mb-4">
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
               <h4>Personal Details</h4>
-
-              <Form.Group controlId="formGroupPrefix">
-                <Form.Label>Prefix</Form.Label>
-                <select
-                  required
-                  name="prefix"
-                  onChange={handleChange}
-                  value={res.Prefix}
-                  style={{ "border-radius": "5px" }}
-                >
-                  <option value="default">Prefix</option>
-                  <option value="Mr.">Mr.</option>
-                  <option value="Miss.">Miss.</option>
-                  <option value="Ms.">Ms.</option>
-                  <option value="Dr.">Dr.</option>
-                  <option value="Gov.">Gov.</option>
-                  <option value="Prof.">Prof.</option>
-                </select>
-              </Form.Group>
-              <p className="help-block text-danger">{error.Prefix}</p>
+              <div className="form-header-container mb-4">
+              
 
               <Form.Row>
+                <Col md="2">
+                      <Form.Group controlId="formGroupPrefix">
+                      <Form.Label>Prefix</Form.Label>
+                      <select
+                        required
+                        name="prefix"
+                        onChange={handleChange}
+                        value={res.Prefix}
+                        style={{ "border-radius": "5px" }}
+                      >
+                        <option value="default">Prefix</option>
+                        <option value="Mr.">Mr.</option>
+                        <option value="Miss.">Miss.</option>
+                        <option value="Ms.">Ms.</option>
+                        <option value="Dr.">Dr.</option>
+                        <option value="Gov.">Gov.</option>
+                        <option value="Prof.">Prof.</option>
+                      </select>
+                    </Form.Group>
+                    <p className="help-block text-danger">{error.Prefix}</p>
+                </Col>
                 <Col>
                   <Form.Group controlId="formGroupFirstName">
                     <Form.Label>First Name</Form.Label>
@@ -611,6 +609,19 @@ class newPerson extends React.Component {
                     </Form.Control>
                   </Form.Group>
                 </Col>
+                <Col>
+                  <Form.Group controlId="formGroupTitle">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      name="title"
+                      type="text"
+                      placeholder="Title"
+                      value={res.title}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <p className="help-block text-danger">{error.Title}</p>
+                </Col>
               </Row>
               <div className="form-add mb-4">
                 <span onClick={() => this.setState({ modal: true })}>
@@ -631,22 +642,7 @@ class newPerson extends React.Component {
                   Add an Email
                 </span>
               </div>
-              <Row>
-                <Col>
-                  <Form.Group controlId="formGroupTitle">
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control
-                      name="title"
-                      type="text"
-                      placeholder="Title"
-                      value={res.title}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <p className="help-block text-danger">{error.Title}</p>
-                </Col>
-              </Row>
-
+              
               <DynamicFeilds
                 type={"number"}
                 name={"phone"}
@@ -1111,6 +1107,9 @@ class newPerson extends React.Component {
                 <span onClick={() => addFeild("address")}>Add an Address</span>
               </div>
               <br></br>
+              </div>
+              <br></br>
+              <div className="form-header-container mb-4"> 
               <h4>Custom Fields</h4>
               <p>
                 Customise your
@@ -1123,10 +1122,74 @@ class newPerson extends React.Component {
                   Custom Field
                 </Button>
               </p>
+              
               {customFields}
+              <br></br>
+              </div>
+              
+              <br></br>
+              <h4>Billing preferences</h4>
+              <Row>
+                 <Col md="6">
+                 <Form.Group >
+                          <Form.Label>Payment profile</Form.Label>
+                          <Form.Control
+                            as="select"
+                            name="Payment profile"
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                            <option>default</option>
+                          </Form.Control>
+                      </Form.Group>
+                 </Col>
+              </Row>
+
+              <p>Hourly billing</p>      
+              <Row >
+                <Col md="3">
+                <Form.Group>
+                          <Form.Label>Firm user or group</Form.Label>
+                          <Form.Control
+                            as="select"
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                          </Form.Control>
+                      </Form.Group>
+                </Col>
+                <Col md="3">
+                         <Form.Group>
+                          <Form.Label>Rate</Form.Label>
+                          <Form.Control
+                            name="rate"
+                            type="text"
+                            placeholder="$0.0"
+                          />
+                        </Form.Group>
+
+                </Col>
+              </Row>
+              <Row>
+                  <Col md="6">
+                  <Form.Group>
+                          <Form.Label>ClientID</Form.Label>
+                          <Form.Control
+                            name="clientId"
+                            type="text"
+                            placeholder="ClientID"
+                          />
+                        </Form.Group>
+                  </Col>
+              </Row>
+
+                         
 
               <Button type="submit" className="btn btn-success">
                 {editMode ? "Update" : "Create"}
+              </Button>
+              <Button onClick={()=>this.props.history.goBack()}>
+                  Cancel
               </Button>
             </Form>
 
