@@ -183,8 +183,39 @@ const EditorTemplate = props => {
                  
                 </tr>
                 <tr>
-          <td className="e-textlabel">Time For Reminder :</td>
+                  <td className="e-textlabel">Time for Reminder</td>
+                  <td colSpan={4}>
+                    <input
+                      onChange={props.handleChange}
+                      id="timeForReminder"
+                      placeholder={props.timeForReminder ? props.timeForReminder : "Time (in mins)"}
+                      className="e-field e-input"
+                      data-name="TimeForReminder"
+                      type="text"
+                      name="timeForReminder"
+                      style={{ width: "100%" }}
+                    />
+                  </td>
+                </tr>
+                {
+                    /* 
+                       <tr>
+                <td className="e-textlabel">Time for Reminder</td>
+                  <td colSpan={6}>
+                    <input
+                      id="timeForReminder" 
+                      change={props.DateTimeChange}
+                      data-name="TimeForReminder"
+                      value={props.timeForReminder || props.TimeForReminder}
+                      placeholder="Time (in mins)"
+                         style={{ width: "100%" }}
+                    />
+                  </td>
+                  
+                    
+                     <td className="e-textlabel">Time For Reminder :</td>
           <td colSpan={4}>
+          
           <TimePickerComponent 
           id="timeForReminder" 
           change={props.DateTimeChange}
@@ -193,8 +224,14 @@ const EditorTemplate = props => {
           placeholder="Select a Time"
           className="e-field"  />
           </td>
-        </tr>
-      </tbody>
+                  
+                  
+         
+                  </tr>
+          
+                    */
+                }
+                     </tbody>
     </table>
   ) : (
     <div></div>
