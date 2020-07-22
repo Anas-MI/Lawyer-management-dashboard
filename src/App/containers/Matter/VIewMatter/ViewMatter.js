@@ -33,10 +33,35 @@ function CompanyView(props) {
     async function fetchData() {
       await api.get('/matter/view/' + props.location.state.id).then((res) => {
         response = res.data;
-        console.log(response);
+        response.data.client =
+          response.data.client === null
+            ? {
+                _id: '',
+                updated_at: '',
+                created_at: '-',
+                userId: '-',
+                title: '-',
+                lastName: '-',
+                firstName: '',
+                __v: 0,
+                image: '',
+                customFields: [
+                  {
+                    Email: '-',
+                  },
+                ],
+                address: [],
+                website: [],
+                phone: [],
+                emailAddress: [],
+                company: ['-'],
+              }
+            : response.data.client;
         setdesc(res.data.data.matterDescription);
         setClient(
           res.data.data.client.firstName + ' ' + res.data.data.client.lastName
+
+          // res.data.data.client
         );
       });
       {
@@ -135,6 +160,7 @@ function CompanyView(props) {
       return (
         <div className="table-span-light" key={index}>
           <p>{value.street}</p>
+          {console.log('data', response.data)}
           <p>{value.city}</p>
           <p>{value.state}</p>
           <p>{value.zipCode}</p>
@@ -146,14 +172,19 @@ function CompanyView(props) {
     const mail = response.data.client.emailAddress.map((value, index) => {
       return (
         <div className="table-span-light" key={index}>
-          <p>{value}</p>
+          <p>
+            {value.emailType} : {value.emailAddress}
+          </p>
         </div>
       );
     });
     const Num = response.data.client.phone.map((value, index) => {
       return (
         <div className="table-span-light" key={index}>
-          <p>{value.number}</p>
+          <p>
+            {console.log(value)}
+            {value.phoneType} : {value.phone}
+          </p>
         </div>
       );
     });
@@ -313,7 +344,7 @@ function CompanyView(props) {
                     <span className="table-span-dark">Phone</span>
                   </td>
                   <td className="border-0 py-2">
-                    <span className="table-span-light">{number}</span>
+                    <span className="table-span-light">{Number}</span>
                   </td>
                 </tr>
                 <tr>
@@ -404,6 +435,7 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Document" key="7">
+          {console.log('matter in viw', props.location.state.matters)}
           <Documents
             matters={props.location.state.matters}
             userId={props.location.state.userId}

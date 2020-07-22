@@ -43,12 +43,16 @@ class matterManage extends React.Component {
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
+    console.log(response);
     response.map((value, index) => {
       let newData = {
         key: index,
         id: value._id,
         matterDescription: value.matterDescription,
-        Client: value.client.firstName + ' ' + value.client.lastName,
+        Client:
+          value.client !== null
+            ? value.client.firstName + ' ' + value.client.lastName
+            : '-',
         PractiseArea: value.practiseArea ? value.practiseArea : '-',
         OpenDate: value.openDate ? value.openDate : '-',
       };
