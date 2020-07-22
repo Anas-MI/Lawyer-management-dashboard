@@ -132,12 +132,25 @@ class Tasks extends React.Component {
   };
 
   handelAction = (_id) =>{
-    console.log(_id)
     this.setState({
       status : true
     })
     const data = this.state.status;
+    console.log(data)
+    api.get('/tasks/updatetask/'+_id, data)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+        console.log(err); 
+      });
+  }
 
+  handelNonAction = (_id) =>{
+    this.setState({
+      status : false
+    })
+    const data = this.state.status;
     console.log(data)
     api.get('/tasks/updatetask/'+_id, data)
     .then((res) => {
@@ -201,15 +214,19 @@ class Tasks extends React.Component {
 
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
       console.log(res.data.data);
-      res.data.data.map((item, index) => {
-        tableData = [
-          ...tableData,
-          {
-            ...item,
-            key: item._id,
-          },
-        ];
-      });
+      const newdata = res.data.data.filter(function( obj ) {
+        return obj.status == false;});
+      tableData = [ ...tableData, ...newdata]  
+
+      // res.data.data.map((item, index) => {
+      //   tableData = [
+      //     ...tableData,
+      //     {
+      //       ...item,
+      //       key: item._id,
+      //     },
+      //   ];
+      // });
 
       ListData = res.data.data.map((value, index) => {
         return (
@@ -330,15 +347,15 @@ class Tasks extends React.Component {
       dataIndex: 'description',
       key: '2',
     },
-    {
-      title: 'Matter',
-      dataIndex: 'matterDescription',
-      key: '3',
-      render: (_, record) => {
-        // console.log(record);
-        return record.matter;
-      },
-    },
+    // {
+    //   title: 'Matter',
+    //   dataIndex: 'matterDescription',
+    //   key: '3',
+    //   render: (_, record) => {
+    //     // console.log(record);
+    //     return record.matter;
+    //   },
+    // },
     {
       title: 'Due Date',
       dataIndex: 'dueDate',
@@ -357,7 +374,7 @@ class Tasks extends React.Component {
         return (
           <Popconfirm
             title="Mark as Incomplete"
-            onConfirm={() => this.handelAction(record._id)}
+            onConfirm={() => this.handelNonAction(record._id)}
             onCancel={this.cancel}
             okText="Yes"
             cancelText="No"
