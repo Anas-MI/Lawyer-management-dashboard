@@ -22,6 +22,7 @@ const Documents = (props) => {
     _id: '',
     name: '',
     matter: '',
+    contact: '',
     category: '',
   });
   const [modalFor, setModalFor] = useState('Upload');
@@ -124,21 +125,32 @@ const Documents = (props) => {
     if (item === 'document') {
       setUploadData({ ...uploadData, document: e.target.files[0] });
     } else {
-      uploadData[`${item}`] = item === 'matter' ? e : e.target.value;
-
-      setUploadData({ ...uploadData });
+      if (item === 'matter') {
+        uploadData[`${item}`] = e;
+        setUploadData({ ...uploadData });
+        getMatterById(e);
+      } else {
+        uploadData[`${item}`] = e.target.value;
+        setUploadData({ ...uploadData });
+      }
     }
   };
   const getISTDate = (dateInUTC) => {
     var localDate = new Date(dateInUTC);
     return localDate.toLocaleString();
   };
+  const getMatterById = async (matterId) => {
+    await api.get(`/matter/view/${matterId}`).then((res) => {
+      let data = res.data.data.client !== null ? res.data.data.client._id : '-';
+      setUploadData({ ...uploadData, contact: data });
+    });
+  };
   const getDocuments = async () => {
     let tempDocs = [];
-    console.log('tempDocs ', typeof tempDocs);
     await api
       .get(`/document/viewformatter/${props.userId}/${props.matterId}`)
       .then((res) => {
+        console.log(res.data);
         res.data.data.map((item, index) => {
           tempDocs = [
             ...tempDocs,
@@ -160,6 +172,7 @@ const Documents = (props) => {
     docFormData.set('document', uploadData.document);
     docFormData.set('name', uploadData.name);
     docFormData.set('matter', uploadData.matter);
+    docFormData.set('contact', uploadData.contact);
     docFormData.set('category', uploadData.category);
     docFormData.set('userId', props.userId);
     await api
@@ -167,6 +180,7 @@ const Documents = (props) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
+        console.log('posted', uploadData, response);
         notification.success({ message: 'Document Uploaded.' });
         getDocuments();
       })
