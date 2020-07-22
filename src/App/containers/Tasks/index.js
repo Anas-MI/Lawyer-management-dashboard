@@ -9,12 +9,25 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { useState } from 'react';
 import jsPDF from 'jspdf';
+import { Input, Select } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
+
 
 import 'jspdf-autotable';
 let res = {};
 let response = {};
 let ListData = null;
 let options = null;
+
+const { Option } = Select;
+
+const selectBefore = (
+  <Select defaultValue="Firm User" className="select-before">
+    <Option value="FirmUser">Firm User</Option>
+    <Option value="Contacts">Contacts</Option>
+  </Select>
+);
 
 class Tasks extends React.Component {
   constructor(props) {
@@ -453,13 +466,13 @@ class Tasks extends React.Component {
           </TabPane>
         </Tabs>
         <Modal
-          title="Add to List"
+          title="Add to New Task"
           visible={this.state.visible}
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleCancel}
           onOk={this.handleOk}
         >
-          <Form>
+          <Form className="form-details">
             <Form.Group controlId="taskName">
               <Form.Label>Task Name</Form.Label>
               <Form.Control
@@ -489,6 +502,14 @@ class Tasks extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
+
+            <Form.Group controlId="taskName">
+              <Form.Label>Assignee</Form.Label>
+              <div>
+                <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+              </div>
+            </Form.Group>
+
             <Form.Group controlId="priority">
               <Form.Label>Priority</Form.Label>
               <Form.Control
@@ -513,6 +534,15 @@ class Tasks extends React.Component {
                 {this.state.options}
               </Form.Control>
             </Form.Group>
+            <br />
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Notify me when the task is completed" />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Notify assignee via email" />
+            </Form.Group>
+            <br />
           </Form>
         </Modal>
       </div>
