@@ -1,15 +1,113 @@
 import React from 'react';
 import {Row, Col, Card, Table, Tabs, Tab} from 'react-bootstrap';
-
+import api from '../../resources/api'
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
-
+import { connect } from 'react-redux'
 import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+
 
 class Dashboard extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            time : ""
+        }
+    }
+    convertTime = (serverdate) => {
+        var date = new Date(serverdate);
+        // convert to utc time
+        var toutc = date.toUTCString();
+        //convert to local time
+        var locdat = new Date(toutc + ' UTC');
+        return locdat;
+      };
     render() {
+        
+        setInterval(()=>{
+         
+            api.get('/calendar/viewforuser/'+this.props.userId).then(res=>{
+           
+                res.data.data.map((value, index)=>{
+                   
+                    const StartTime = value.startTime? value.startTime : ""
+                    const Description = value.title
+                    const matter = value.matter ?  value.matter.matterDescription : ""
+                    const timeForReminder = value.timeForReminder ? value.timeForReminder : ""
+                    
+                    if(value.notification == true){
+                        const alertdate =  this.convertTime(value.startTime)
+    
+                        let ddd = alertdate.getDate();
+                        let mmm = alertdate.getMonth()+1; 
+                        let yyyyy = alertdate.getFullYear();
+                        let hourss = alertdate.getHours() > 12 ? alertdate.getHours() - 12 : alertdate.getHours()  ;
+                        let minss = alertdate.getMinutes() ;
+                        console.log(alertdate)
+                        
+                        /*
+                            if(ddd<10) {
+                                ddd = '0' + dd
+                            }          
+                            if(mmm<10) {
+                                mmm = '0' + mm
+                            }
+        */            
+                        let today = new Date();
+                        let dd = today.getDate();
+                        let mm = today.getMonth()+1; 
+                        let yyyy = today.getFullYear();
+                        let hours = today.getHours() > 12 ?  today.getHours() - 12 :  today.getHours() ;
+                        let mins = today.getMinutes();
+
+                        /*
+                            if(dd<10) {
+                                dd = '0'+dd
+                            } 
+                            
+                            if(mm<10) {
+                                mm = '0'+mm
+                            } 
+*/
+                        console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
+                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
+                        if ( mins == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && hours -1  == hourss && ( minss + timeForReminder > 59 )){
+                            alert("Event reminder : \n" + Description + "\n at : " + StartTime + "\n Associated matter : " + matter)
+                            console.log(value)
+                        
+                        }else
+                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss && ( minss - mins < timeForReminder && minss - mins > 0   )){
+                                alert("Event reminder : \n" + Description + "\n at : " + StartTime + "\n Associated matter : " + matter)
+                                console.log(value)
+                            
+                        }
+                        else{
+                            console.log("i min passed")
+                        }
+                               
+                    }
+                    /*
+                    const tableData={
+                        id: value._id,
+                        Subject : value.title,
+                       
+                        TimeForReminder : value.timeForReminder,
+                        Matter : value.matter ?  value.matter.matterDescription : "",
+                        Email : value.email,
+                        Notification : value.notification,
+                  
+        
+                    }
+                   */
+                })
+
+            
+            })
+
+        },5*60*1000)
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">
@@ -364,5 +462,7 @@ class Dashboard extends React.Component {
         );
     }
 }
-
-export default Dashboard;
+const mapStateToProps = (state) => ({
+    userId: state.user.token.user._id,
+  });
+  export default connect(mapStateToProps)(Dashboard);
