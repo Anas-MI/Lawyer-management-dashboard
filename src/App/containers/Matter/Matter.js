@@ -48,7 +48,7 @@ class matterManage extends React.Component {
         key: index,
         id: value._id,
         matterDescription: value.matterDescription,
-        Client: value.client.firstName + ' ' + value.client.lastName,
+        Client: value.client,
         PractiseArea: value.practiseArea ? value.practiseArea : '-',
         OpenDate: value.openDate ? value.openDate : '-',
       };
