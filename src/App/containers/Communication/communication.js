@@ -9,8 +9,10 @@ import api from '../../../resources/api'
 let timeError = "" ;
 let matters = {};
 let communication = {};
+let contact = {}
 const user = JSON.parse(window.localStorage.getItem('Case.user'))
 const name = user.token.user.firstName + " " + user.token.user.lastName;
+console.log(user.token.user)
 
 class Communication extends React.Component{
     constructor(props){
@@ -22,7 +24,7 @@ class Communication extends React.Component{
             data : {
                 subject : "",
                 body : "",
-                from : name
+                from : ""
             },
             emailData : [],
             phoneData : [],
@@ -44,6 +46,9 @@ class Communication extends React.Component{
 
       api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
         matters = res;
+      });
+      api.get('/contact/viewforuser/' + this.props.userId).then((res) => {
+        contact = res;
       });
     
       api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
@@ -124,7 +129,7 @@ class Communication extends React.Component{
             notification.error({message : "Please add a subject"})
         }else
         if(this.state.data.body == ""){
-            notification.error({message : "Please add a subject"})
+            notification.error({message : "Please add a body"})
         }else{
           let data = this.state.data
             if(type === "email"){
@@ -136,9 +141,11 @@ class Communication extends React.Component{
               this.setState({email : false})
             }
             data.userId = this.props.userId;
+            console.log(data)
             api
               .post('/communication/create', data)
               .then((res) => {
+                console.log(res)
                 notification.success({ message: 'Log Added !' });
               })
               .catch((err) => {
@@ -209,49 +216,60 @@ class Communication extends React.Component{
         this.setState({ touched: false });
         const { name, id, value, selectedIndex } = e.target;
         let newData = this.state.data;
+
         if (name === 'matter') {
           console.log(matters)
           if (selectedIndex >= 1) {
-            newData[name] = matters.data.data[selectedIndex - 1];
+            console.log(matters.data.data[selectedIndex - 1]._id)
+            newData[name] = matters.data.data[selectedIndex - 1]._id;
           } else {
             newData[name] = '';
           }
-        } else if (name === 'addTime') {
-          timeError = '';
-          var timeValue = value;
-          if (timeValue == '' || timeValue.indexOf(':') < 0) {
-            timeError = 'Inavlid Time';
-            console.log(timeError);
+
+        }if (name === 'to') {
+          console.log(matters)
+          if (selectedIndex >= 1) {
+            newData[name] = contact.data.data[selectedIndex - 1]._id;
           } else {
-            var sHours = timeValue.split(':')[0];
-            var sMinutes = timeValue.split(':')[1];
-            var sSeconds = timeValue.split(':')[1];
-
-            
-  
-            if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
-              timeError = 'Inavlid Time';
-              console.log(timeError);
-            } else if (parseInt(sHours) == 0) sHours = '00';
-            else if (sHours < 10) sHours = '0' + sHours;
-  
-            if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
-              timeError = 'Inavlid Time';
-              console.log(timeError);
-            } else if (parseInt(sMinutes) == 0) sMinutes = '00';
-            else if (sMinutes < 10) sMinutes = '0' + sMinutes;
-
-            if (sSeconds == '' || isNaN(sSeconds) || parseInt(sSeconds) > 59) {
-              timeError = 'Inavlid Time';
-              console.log(timeError);
-            } else if (parseInt(sSeconds) == 0) sSeconds = '00';
-            else if (sSeconds < 10) sSeconds = '0' + sSeconds;
-  
-            timeValue = sHours + ':' + sMinutes + ':' + sSeconds;
+            newData[name] = '';
           }
-          newData[name] = timeValue;
-          this.setState({ data: newData });
-        } 
+
+        } else if (name === 'addTime') {
+            timeError = '';
+            var timeValue = value;
+            if (timeValue == '' || timeValue.indexOf(':') < 0) {
+              timeError = 'Inavlid Time';
+              console.log(timeError);
+            } else {
+              var sHours = timeValue.split(':')[0];
+              var sMinutes = timeValue.split(':')[1];
+              var sSeconds = timeValue.split(':')[1];
+
+              
+    
+              if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sHours) == 0) sHours = '00';
+              else if (sHours < 10) sHours = '0' + sHours;
+    
+              if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sMinutes) == 0) sMinutes = '00';
+              else if (sMinutes < 10) sMinutes = '0' + sMinutes;
+
+              if (sSeconds == '' || isNaN(sSeconds) || parseInt(sSeconds) > 59) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sSeconds) == 0) sSeconds = '00';
+              else if (sSeconds < 10) sSeconds = '0' + sSeconds;
+    
+              timeValue = sHours + ':' + sMinutes + ':' + sSeconds;
+            }
+            newData[name] = timeValue;
+            this.setState({ data: newData });
+          } 
         else {
           newData[name] = value;
           this.setState({ data: newData });
