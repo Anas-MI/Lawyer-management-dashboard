@@ -55,8 +55,6 @@ class editCompany extends React.Component {
       '/company/view/' + this.props.location.state._id
     );
     this.setState({ editData: editData.data.data });
-
-    console.log(this.state);
     this.setState({
       phone: editData.data.data.phone,
       emailAddress: editData.data.data.emailAddress,
@@ -257,16 +255,16 @@ class editCompany extends React.Component {
     const addFeild = (type) => {
       let list = this.state;
       if (type === 'email') {
-        list.emailAddress.push({ emailType: 'work' });
+        list.emailAddress.push({ emailType: 'work', emailAddress: '' });
         this.setState(list);
       } else if (type === 'address') {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({ phoneType: 'work' });
+        list.phone.push({ phoneType: 'work', phone: '' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({ websiteType: 'work' });
+        list.website.push({ websiteType: 'work', website: '' });
         this.setState(list);
       }
     };

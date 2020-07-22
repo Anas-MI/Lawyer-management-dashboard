@@ -64,14 +64,7 @@ class editPerson extends React.Component {
       valid: false,
       visible: false,
       editData: '',
-      fileList: [
-        {
-          uid: '-1',
-          name: 'xxx.png',
-          status: 'done',
-          url: 'http://www.baidu.com/xxx.png',
-        },
-      ],
+      fileList: [],
     };
   }
 
@@ -81,12 +74,17 @@ class editPerson extends React.Component {
     customData[id] = { [name]: value };
   }
   async componentDidMount() {
-    await api
-      .get('/contact/view/' + this.props.location.state._id)
-      .then((response) => {
-        console.log(response);
-        this.setState({ editData: response.data.data });
-      });
+    let editData = await api.get(
+      '/contact/view/' + this.props.location.state._id
+    );
+    this.setState({ editData: editData.data.data });
+
+    this.setState({
+      phone: editData.data.data.phone,
+      emailAddress: editData.data.data.emailAddress,
+      address: editData.data.data.address,
+      website: editData.data.data.website,
+    });
 
     // this.setState({ editData: tempData.data.data });
 
@@ -96,7 +94,7 @@ class editPerson extends React.Component {
     options = response.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
-    feilds = await api.get('/user/view/' + this.props.userId);
+    // feilds = await api.get('/user/view/' + this.props.userId);
 
     // customFields = feilds.data.data.customFields.map((value, index) => {
     //   let val = '';
@@ -118,7 +116,7 @@ class editPerson extends React.Component {
     //   );
     // });
 
-    // this.setState({ customFields, options });
+    this.setState({ customFields, options });
 
     {
       /*
@@ -197,33 +195,42 @@ class editPerson extends React.Component {
                 duration: 5,
               });
             };
-            openMessage();
-            const formData = new FormData();
-            dataList.fileList.forEach((file) => {
-              formData.append('image', file);
-            });
-            console.log({ data });
-            api
-              .post('/contact/upload/' + data.data.data._id, formData)
-              .then((res) => {
-                if (res.status === 200) {
-                  setTimeout(() => {
-                    message.success({
-                      content: 'Uploaded!',
-                      key,
-                      duration: 3,
-                    });
-                  }, 1000);
-                } else {
-                  console.log({ res });
-                }
-                if (this.props.location != undefined) {
-                  this.props.history.goBack();
-                }
-              })
-              .catch((err) => {
-                console.log({ err });
+            if (dataList.fileList.length !== 0) {
+              openMessage();
+              const formData = new FormData();
+              dataList.fileList.forEach((file) => {
+                formData.append('image', file);
               });
+              console.log({ data });
+              api
+                .post('/contact/upload/' + data.data.data._id, formData)
+                .then((res) => {
+                  if (res.status === 200) {
+                    setTimeout(() => {
+                      message.success({
+                        content: 'Uploaded!',
+                        key,
+                        duration: 3,
+                      });
+                    }, 1000);
+                  } else {
+                    console.log({ res });
+                  }
+                  if (this.props.location != undefined) {
+                    this.props.history.goBack();
+                  }
+                })
+                .catch((err) => {
+                  console.log({ err });
+                });
+            } else {
+              if (this.props.location != undefined) {
+                this.props.history.push('/manage/contacts');
+                return notification.success({
+                  message: 'Contact Edit SuccessFully',
+                });
+              }
+            }
           });
       }
     } else {
@@ -244,40 +251,6 @@ class editPerson extends React.Component {
     this.setState({
       visible: false,
     });
-  };
-
-  handleUpload = () => {
-    // e.preventDefault();
-    const key = 'updatingDetails';
-    const openMessage = () => {
-      message.loading({ content: 'Uploading Files...', key });
-    };
-    openMessage();
-    // const { updateUserDetailsApi } = apiList;
-    // const updateUserDetailsApiUrl = updateUserDetailsApi + "/media/" + this.state._id;
-
-    const formData = new FormData();
-    this.state.fileList.forEach((file) => {
-      formData.append('images', file);
-    });
-    api
-      .get('/api/contact/upload/' + finalres)
-      .then((res) => {
-        if (res.status === 200) {
-          setTimeout(() => {
-            message.success({
-              content: 'Uploaded!',
-              key,
-              duration: 3,
-            });
-          }, 1000);
-        } else {
-          console.log({ res });
-        }
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
   };
 
   render() {
@@ -423,16 +396,16 @@ class editPerson extends React.Component {
     const addFeild = (type) => {
       let list = this.state;
       if (type === 'emailAddress') {
-        list.emailAddress.push({ emailType: 'work' });
+        list.emailAddress.push({ emailType: 'work', emailAddress: '' });
         this.setState(list);
       } else if (type === 'address') {
         list.address.push({});
         this.setState(list);
       } else if (type === 'phone') {
-        list.phone.push({ phoneType: 'work' });
+        list.phone.push({ phoneType: 'work', phone: '' });
         this.setState(list);
       } else if (type === 'website') {
-        list.website.push({ websiteType: 'work' });
+        list.website.push({ websiteType: 'work', website: '' });
         this.setState(list);
       }
     };
@@ -460,15 +433,6 @@ class editPerson extends React.Component {
           message.error(`${info.file.name} file upload failed.`);
         }
       }
-    };
-    const image = {
-      action: 'http://localhost:3002/api/contact/upload/' + finalres,
-      headers: {
-        'content-type': 'multipart/form-data', // do not forget this
-      },
-      data: formData,
-      onChange: handleImageChange,
-      multiple: false,
     };
 
     const props = {
@@ -563,9 +527,6 @@ class editPerson extends React.Component {
         <div className="form-width">
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
-              {/* <AntdButton  onClick={this.handleUpload}>
-        Upload
-    </AntdButton> */}
               <div className="form-header-container mb-4">
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
@@ -662,7 +623,7 @@ class editPerson extends React.Component {
                   name={'emailAddress'}
                   text={'Email'}
                   editMode={editMode}
-                  record={this.state.editData.emailAddress || []}
+                  record={this.state.editData.emailAddress}
                   error={errors.Email}
                   inputList={this.state.emailAddress}
                   change={handleMultipleChange}
@@ -694,7 +655,7 @@ class editPerson extends React.Component {
                   text={'Phone Number'}
                   editMode={editMode}
                   error={errors.phone}
-                  record={this.state.editData.phone || []}
+                  record={this.state.editData.phone}
                   inputList={this.state.phone}
                   change={handleMultipleChange}
                   delete={handleDelete}
@@ -710,7 +671,7 @@ class editPerson extends React.Component {
                   text={'website'}
                   error={errors.Website}
                   editMode={editMode}
-                  record={this.state.editData.website || []}
+                  record={this.state.editData.website}
                   inputList={this.state.website}
                   change={handleMultipleChange}
                   delete={handleDelete}
@@ -1272,21 +1233,6 @@ class editPerson extends React.Component {
             >
               <AddCompany modal={true}></AddCompany>
             </Modal>
-            {/* <Modal
-          title="Basic Modal"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <Upload {...props}>
-
-           <AntdButton  onClick={this.handleUpload}>
-        Upload
-    </AntdButton>
-        <Button>
-          <UploadOutlined /> Upload
-        </Button>
-        </Modal> */}
           </div>
         </div>
       </>

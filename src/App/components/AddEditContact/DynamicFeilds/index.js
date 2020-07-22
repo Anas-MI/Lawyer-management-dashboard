@@ -9,6 +9,7 @@ class DynamicFeilds extends React.Component {
   render() {
     return (
       <div>
+        {console.log('data fro record', this.props.record)}
         {this.props.inputList.map((val, idx) => {
           let inputId = `input-${idx}`;
           const jsx = this.props.editMode ? (
@@ -20,11 +21,7 @@ class DynamicFeilds extends React.Component {
                     <Form.Control
                       as="select"
                       name={this.props.name}
-                      defaultValue={
-                        this.props.record.length === 0
-                          ? ''
-                          : this.props.record[idx][this.props.type]
-                      }
+                      defaultValue={this.props.record[idx][this.props.type]}
                       onChange={this.props.change}
                     >
                       <option value="work">Work</option>
@@ -40,11 +37,7 @@ class DynamicFeilds extends React.Component {
                       name={this.props.name}
                       type={this.props.type}
                       className={this.props.type}
-                      defaultValue={
-                        this.props.record.length === 0
-                          ? ''
-                          : this.props.record[idx][this.props.name]
-                      }
+                      defaultValue={this.props.record[idx][this.props.name]}
                       onChange={this.props.change}
                     />
                   </Form.Group>
