@@ -126,7 +126,11 @@ class AddEditMatter extends React.Component{
     e.persist()
  
     if(e.target.name==="client"){
-       this.setState(st=>({...st,[e.target.name]: contacts.data.data[e.target.selectedIndex]}))
+       if(e.target.selectedIndex !=0){
+        this.setState(st=>({...st,[e.target.name]: contacts.data.data[e.target.selectedIndex - 1]}))
+       }else{
+        this.setState(st=>({...st,[e.target.name]: ""}))
+       }
     }else{
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
     }

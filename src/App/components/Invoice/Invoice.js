@@ -32,8 +32,34 @@ const Invoice = (props) => {
     );
   };
 
+  const street = props.location.state.clientData.address.street 
+                  ? props.location.state.clientData.address.street 
+                  : "" 
+          
+  const city =   props.location.state.clientData.address.city 
+                  ? props.location.state.clientData.address.city 
+                  : "" 
   
-
+  const state =   props.location.state.clientData.address.state 
+                  ?
+                  props.location.state.clientData.address.state
+                  : 
+                  "" 
+            
+  const zipCode = props.location.state.clientData.address.zipCode 
+                  ?
+                  props.location.state.clientData.address.zipCode
+                  : 
+                  "" 
+                  + " "
+  const country =  props.location.state.clientData.address.country 
+                  ?
+                  props.location.state.clientData.address.country
+                  : 
+                  "" 
+          
+  const ddate = props.location.state.invoiceData.dueDate
+  const dueDate = ddate.getDate() +"/"+ ddate.getMonth()+1 + "/" +  ddate.getFullYear()
   const invoiceForm = () => (
     
     <Card  bodyStyle={{"padding": "30px"}} className="mb-3">
@@ -42,8 +68,11 @@ const Invoice = (props) => {
         Invoice #{props.location.state.invoiceData.id} - {props.location.state.invoiceData.date}
       </h6>
 
-      <div>
-        <img
+    
+        {
+/* 
+  <div>
+<img
           src={props.location.state.companyData.logo}
           alt="companyLogo"
           style={{ width: '200px' }}
@@ -53,18 +82,29 @@ const Invoice = (props) => {
         <div>Phone : {props.location.state.companyData.phone}</div>
         <div>Email : {props.location.state.companyData.email}</div>
       </div>
+*/
+        }
+        
 
       <div className="text-right">
         <h5 className="font-weight-bold">INVOICE</h5>
         <div>
           <div>Invoice #{props.location.state.invoiceData.id}</div>
           <div>Date : {props.location.state.invoiceData.date}</div>
+          <div>Due Date : {dueDate}</div>
           <div>{props.location.state.invoiceData.status}</div>
         </div>
       </div>
       <div className="float-left text-left">
-        <div>{props.location.state.clientData.name}</div>
-      {/*  <div>{props.location.state.clientData.address}</div>*/}
+        <div><h3 style={{fontWeight : "bold"}}>Law office of {props.location.state.clientData.name} </h3></div>
+        <div>
+          <span>{street + " " + city }</span><br></br>
+          <span>{state +  " " + zipCode}</span><br></br>
+          <span>{country}</span><br></br>
+        </div>
+        <br></br>
+      <div><h4 style={{fontWeight : '650'}}>{props.location.state.matter}</h4></div>
+      <br></br>
       </div>
       <div className="my-5 py-5">
         <table class="table">
@@ -119,7 +159,7 @@ const Invoice = (props) => {
     </div>
     </Card>
   );
-
+      
   return (
     <div>
       {invoiceForm()}
