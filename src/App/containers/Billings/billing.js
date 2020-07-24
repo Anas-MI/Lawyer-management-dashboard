@@ -119,18 +119,9 @@ class billing extends React.Component {
           'Balance',
         ],
       ];
-      const temp = {
-          lastSeen : value.lastSeen ? value.lastSeen.substring(0,10) : "-",
-          status : value.status,
-          dueDate : value.dueDate.substring(0,10),
-          id : value.invoiceId,
-          client : value.client,
-          matter : value.matter,
-          issueDate : value.issueDate.substring(0,10) ,
-          balance : value.balance
-        }
+    
       let data = 
-            state.tableData.map((val, index)=>{
+            this.state.tableData.map((val, index)=>{
               const td= [val.lastSeen, val.status , val.dueDate , val.id ,val.client , val.matter , val.issueDate , val.balance]
               data.push(td)
             })
