@@ -33,8 +33,9 @@ class EmailForm extends React.Component{
 
     render(){
        
-    
-       return    this.props.editMode ?
+        console.log(this.props.editmode)
+        console.log(this.props.record)
+       return    this.props.editmode ?
        <Form >
         <Row>
             <Col>
@@ -149,7 +150,7 @@ class EmailForm extends React.Component{
                <Form.Control 
                type="text" 
                name="addTime" 
-               placeholder="hh:mm:ss" 
+               placeholder="hh:mm" 
                onChange={this.props.handleChange}/>
            </Form.Group>
             </Col>
