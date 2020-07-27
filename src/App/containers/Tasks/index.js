@@ -5,12 +5,10 @@ import CompletedTask from './CompletedTasks/CompletedTasks';
 import List from './List/List';
 import api from '../../../resources/api';
 import { Button, Modal, notification, Popconfirm, message } from 'antd';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { useState } from 'react';
 import jsPDF from 'jspdf';
 import { Input, Select } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 
@@ -210,6 +208,13 @@ class Tasks extends React.Component {
     var localDate = new Date(dateInUTC);
     return localDate.toLocaleString();
   }
+  handleView = (record) => {
+
+    delete record.edit
+    delete record.delete
+  
+    this.props.history.push('/tasks/view/list', record)
+  };
   async componentDidMount() {
     let tableData = [];
     await api
@@ -462,7 +467,7 @@ class Tasks extends React.Component {
             />
           </TabPane>
           <TabPane tab="List" key="3">
-            <List tableData={this.state.ListData}></List>
+            <List handleView={this.handleView} tableData={this.state.ListData}></List>
           </TabPane>
         </Tabs>
         <Modal

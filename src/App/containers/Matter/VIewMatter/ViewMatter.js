@@ -309,7 +309,7 @@ function CompanyView(props) {
                   <p>
                     <b>Outstanding Amount</b>
                   </p>
-                  <span>${Amount}</span>
+                  <span>$500</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p>
