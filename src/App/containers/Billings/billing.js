@@ -1,5 +1,6 @@
 import React from 'react';
-import { Tabs, Card, Table, Button } from 'antd';
+import { Tabs, Card, Table, Button, Popconfirm, message } from 'antd';
+import { Form } from 'react-bootstrap';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import api from '../../../resources/api';
@@ -10,7 +11,8 @@ class billing extends React.Component {
   constructor(){
     super()
     this.state = {
-      tableData : []
+      tableData : [],
+      status : false
     }
   }
   handelBills = (type) => {
@@ -19,7 +21,20 @@ class billing extends React.Component {
     }
   };
 
+  cancel(e) {
+    message.error('Canceled');
+  }
+
+  handelAction = (e) => {
+    this.setState({
+      status : true
+    })
+  }
+
   componentDidMount(){
+    api.get('/tasks/list/showall').then((res)=> {
+      console.log(res.data)
+    })
     api.get('/billing/bill/viewforuser/'+this.props.userId).then((res)=>{
       console.log(res.data.data)
       let tableData = []
@@ -96,6 +111,68 @@ class billing extends React.Component {
         key: 'balance',
       },
     ];
+
+    const unpaidColumns= [
+      {
+        title: 'Last Seen',
+        dataIndex: 'lastSeen',
+        key: 'lastSeen',
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+      },
+      {
+        title: 'Due Date',
+        dataIndex: 'dueDate',
+        key: 'dueDate',
+      },
+      {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+      },
+      {
+        title: 'Client',
+        dataIndex: 'client',
+        key: 'client',
+      },
+      {
+        title: 'Matter',
+        dataIndex: 'matter',
+        key: 'matter',
+      },
+      {
+        title: 'Issue Date',
+        dataIndex: 'issueDate',
+        key: 'issueDate',
+      },
+      {
+        title: 'Balance',
+        dataIndex: 'balance',
+        key: 'balance',
+      },
+      {
+        title: 'Action',
+        dataIndex: 'status',
+        key: '7',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Mark as Paid"
+              onConfirm={() => this.handelAction(record._id)}
+              onCancel={this.cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Form.Check type="checkbox"  />
+            </Popconfirm>
+          );
+        },
+      },
+    ];
+
     const exportPDF = () => {
       const unit = 'pt';
       const size = 'A4'; // Use A1, A2, A3 or A4
@@ -162,15 +239,14 @@ class billing extends React.Component {
             </TabPane>
               */
             }
-           
-            <TabPane tab="Paid" key="2">
-              <Table dataSource={this.state.paidBills} columns={columns} />;
+           <TabPane tab="All" key="4">
+              <Table dataSource={this.state.tableData} columns={columns} />
             </TabPane>
             <TabPane tab="Unpaid" key="3">
-              <Table dataSource={this.state.unpaidBills} columns={columns} />;
+              <Table dataSource={this.state.unpaidBills} columns={unpaidColumns} />
             </TabPane>
-            <TabPane tab="All" key="4">
-              <Table dataSource={this.state.tableData} columns={columns} />;
+            <TabPane tab="Paid" key="2">
+              <Table dataSource={this.state.paidBills} columns={columns} />
             </TabPane>
           </Tabs>
         </Card>
