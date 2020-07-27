@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Space, notification, Card } from 'antd';
+import { Table, Button, Input, Space, notification, Card , Popconfirm} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
@@ -262,9 +262,17 @@ const ContactsManage = (props) => {
       key: '_id',
       render: (_, record) => {
         return (
-          <Button variant="danger" onClick={() => handleDelete(record)}>
+          <Popconfirm
+          title="Are you sure delete this contact?"
+          onConfirm={() => handleDelete(record)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button variant="danger">
             Delete
           </Button>
+        </Popconfirm>
+          
         );
       },
     },
