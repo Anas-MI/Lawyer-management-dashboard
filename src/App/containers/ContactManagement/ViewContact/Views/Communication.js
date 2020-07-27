@@ -63,7 +63,7 @@ class Communication extends React.Component{
         
         res.data.data.map((val, index) => {
           
-          const date = this.convertTime(val.date);
+
           const temp = {
             key: index,
             logType: val.logType,
@@ -71,11 +71,11 @@ class Communication extends React.Component{
             addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
             matter: val.matter ? val.matter.matterDescription : '-',
-            from: name,
+            from: val.from ? val.from.firstName + " " + val.from.lastName  : '-',
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
             subject: val.subject ? val.subject : '-',
             body: val.body,
-            date: date          
+            date: val.date? val.date.substring(0,10) : "-"        
           };
           if (val.logType === 'email') {
             emailData.push(temp);
@@ -291,7 +291,7 @@ class Communication extends React.Component{
           }
 
         }else
-        if (name === 'to') {
+        if (name == 'to' || name == "from" ) {
           console.log(matters)
           if (selectedIndex >= 1) {
             newData[name] = contact.data.data[selectedIndex - 1]._id;

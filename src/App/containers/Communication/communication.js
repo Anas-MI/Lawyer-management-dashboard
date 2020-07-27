@@ -70,7 +70,7 @@ class Communication extends React.Component{
             addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
             matter: val.matter ? val.matter.matterDescription : '-',
-            from: name,
+            from: val.from ? val.from.firstName + " " + val.from.lastName  : '-',
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
             subject: val.subject ? val.subject : '-',
             body: val.body,

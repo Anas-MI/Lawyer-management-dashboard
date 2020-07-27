@@ -290,6 +290,7 @@ class editCompany extends React.Component{
                 </antdButton>
               </Upload><br></br>
             
+            <div className="form-header-container mb-4">
             <Form.Row>
               <Col>
                 <Form.Group controlId="formGroupFirstName">
@@ -721,6 +722,56 @@ class editCompany extends React.Component{
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("address")}>Add an Address</span>
             </div>
+            </div>
+            <h4>Billing preferences</h4>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Payment profile</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="Payment profile"
+                      //defaultValue={this.props.record[idx]}
+                      //onChange={this.props.change}
+                    >
+                      <option>default</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <p>Hourly billing</p>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Firm user or group</Form.Label>
+                    <Form.Control
+                      as="select"
+                      //defaultValue={this.props.record[idx]}
+                      //onChange={this.props.change}
+                    ></Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col >
+                  <Form.Group>
+                    <Form.Label>Rate</Form.Label>
+                    <Form.Control name="rate" type="text" placeholder="$0.0" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col >
+                  <Form.Group>
+                    <Form.Label>ClientID</Form.Label>
+                    <Form.Control
+                      name="clientId"
+                      type="text"
+                      placeholder="ClientID"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
   
             <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create'}</Button>
 

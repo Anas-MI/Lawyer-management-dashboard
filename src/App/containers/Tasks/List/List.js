@@ -245,7 +245,7 @@ class AddList extends React.Component {
 
     return (
       <div >
-        <div className="float-right">
+        <div>
           <Button
             onClick={this.showModal}
             className="form-add-button"
@@ -259,6 +259,14 @@ class AddList extends React.Component {
           onOk={this.handleOk}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary"  onClick={this.handleOk}>
+              Submit
+            </Button>,
+          ]}
         >
           <Form editMode = {this.state.editMode} record = {this.state.data} handleChange = {handleChange} ></Form>
         </Modal>
