@@ -1,11 +1,11 @@
 import React from 'react'
 import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
-import { useSelector, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Emailform from './form/emailform'
-import PhoneLog from './form/phoneLog'
-import api from '../../../resources/api'
+import Emailform from '../../../Communication/form/emailform'
+import PhoneLog from '../../../Communication/form/phoneLog'
+import api from '../../../../../resources/api'
 
 let timeError = "" ;
 let matters = {};
@@ -52,9 +52,10 @@ class Communication extends React.Component{
         contact = res;
       });
     
-      api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
+      api.get('/communication/viewforcontact/' + this.props.userId + '/' + this.props.id).then((res) => {
+        console.log(res.data.data)
         communication = res.data.data;
-       console.log(communication)
+        console.log(communication)
 
         let emailData = [];
         let phoneData = [];
@@ -260,14 +261,13 @@ class Communication extends React.Component{
                   from : name
               },
               });
-              console.log(this.state)
-        
+              console.log(this.state)     
         }
-        
+        /*
         setTimeout(() => {
           window.location.reload();
-        }, 500);
-        
+        }, 1000);
+        */
        
       
       };
@@ -291,7 +291,7 @@ class Communication extends React.Component{
           }
 
         }else
-        if (name === 'to' || name === 'from') {
+        if (name === 'to') {
           console.log(matters)
           if (selectedIndex >= 1) {
             newData[name] = contact.data.data[selectedIndex - 1]._id;
@@ -508,7 +508,7 @@ class Communication extends React.Component{
         <br></br>
         <br></br>
         
-        <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
+        <Card bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
             <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
             <Button onClick={()=>this.showModal("email")}>New email log</Button>
             <Button onClick={()=>this.showModal("phone")}>New phone log</Button>
