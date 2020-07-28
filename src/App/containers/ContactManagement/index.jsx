@@ -147,10 +147,10 @@ const ContactsManage = (props) => {
               : setShowNameInput(false);
         }}
       />
-      <span> Name </span>
+      <span style={{paddingLeft : "8px"}}> Name </span>
 
       {showNameInput && (
-        <div>
+        <div style={{paddingTop : "10px"}}>
           <input
             placeholder="Search"
             value={value}
@@ -218,7 +218,7 @@ const ContactsManage = (props) => {
 
       render: (text) => (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
           searchWords={[value]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
