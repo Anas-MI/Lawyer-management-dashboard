@@ -1,5 +1,6 @@
 import React from 'react';
-import {Row, Col, Card, Table, Tabs, Tab} from 'react-bootstrap';
+import {Row, Col, Card, Table, Tabs, Tab,} from 'react-bootstrap';
+import {notification} from 'antd'
 import api from '../../resources/api'
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
@@ -44,10 +45,14 @@ class Dashboard extends React.Component {
                         let ddd = alertdate.getDate();
                         let mmm = alertdate.getMonth()+1; 
                         let yyyyy = alertdate.getFullYear();
-                        let hourss = alertdate.getHours() > 12 ? alertdate.getHours() - 12 : alertdate.getHours()  ;
-                        let minss = alertdate.getMinutes() ;
-                        console.log(alertdate)
-                        
+                       // let hourss = timeForReminder.getHours() > 12 ? timeForReminder.getHours() - 12 : timeForReminder.getHours()  ;
+                      //  let minss = timeForReminder.getMinutes() ;
+                        let hourss = timeForReminder.split(':')[0];
+                        let minss = timeForReminder.split(':')[1];
+                        minss = minss.substring(0,2)
+                       
+                       
+                       
                         /*
                             if(ddd<10) {
                                 ddd = '0' + dd
@@ -61,7 +66,10 @@ class Dashboard extends React.Component {
                         let mm = today.getMonth()+1; 
                         let yyyy = today.getFullYear();
                         let hours = today.getHours() > 12 ?  today.getHours() - 12 :  today.getHours() ;
+                        let plusonehour = parseInt(hours) + 1
+                        console.log(plusonehour)
                         let mins = today.getMinutes();
+                        let plusmins = parseInt(mins + 5)
 
                         /*
                             if(dd<10) {
@@ -73,15 +81,31 @@ class Dashboard extends React.Component {
                             } 
 */
                         console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
-                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
-                        if ( mins == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && hours -1  == hourss && ( minss + timeForReminder > 59 )){
-                            alert("Event reminder : \n" + Description + "\n at : " + StartTime + "\n Associated matter : " + matter)
+                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + plusonehour + ":" + plusmins)
+                        if ( minss == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && plusonehour  == hourss && ( plusmins > 59 )){
+                            notification.open({
+                                message: Description,
+                                description:
+                                    'Event assosiated to matter ' + matter + 'starts at ' + StartTime,
+                                className: 'custom-class',
+                                style: {
+                                  width: 600,
+                                },
+                              });
                             console.log(value)
                         
                         }else
-                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss && ( minss - mins < timeForReminder && minss - mins > 0   )){
-                                alert("Event reminder : \n" + Description + "\n at : " + StartTime + "\n Associated matter : " + matter)
-                                console.log(value)
+                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss && ( minss - mins < 5 && minss - mins > 0  )){
+                            notification.open({
+                                message: Description,
+                                description:
+                                    'Event assosiated to matter ' + matter + 'starts at ' + StartTime,
+                                className: 'custom-class',
+                                style: {
+                                  width: 600,
+                                },
+                              });
+                            console.log(value)
                             
                         }
                         else{
@@ -107,7 +131,7 @@ class Dashboard extends React.Component {
             
             })
 
-        },5*60*1000)
+        },5*10*1000)
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">

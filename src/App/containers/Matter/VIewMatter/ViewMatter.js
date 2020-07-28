@@ -16,6 +16,7 @@ const { TabPane } = Tabs;
 function CompanyView(props) {
   let response = {};
   const [desc, setdesc] = useState('');
+  const [total, settotal] = useState("0")
   const [Client, setClient] = useState('');
   const [Amount, setAmount] = useState('0');
   const [state, setState] = useState({ visible: false });
@@ -86,11 +87,32 @@ function CompanyView(props) {
       )
       .then((res) => {
         let activity = [];
+        let total = 0
         res.data.data.map((val, index) => {
+
+          let rate = val.rate
+          if(rate.includes("$")){
+            rate = parseFloat(rate.substring(0, rate.length - 1))
+          }
+
+          if(val.type === "time" && val.time != undefined ){
+            console.log(rate)
+
+            const sHours = parseInt(val.time.split(':')[0]);
+            const sMinutes = parseInt(val.time.split(':')[1]);
+            console.log(sHours + "  " + sMinutes)
+            total = (total + rate * sHours + ((rate/60)*sMinutes)).toFixed('2')
+          }
+          if(val.type ==="expense"){ 
+              total = total + rate * parseInt(val.qty)
+        }
+         
           activity.push(val);
+          
         });
         console.log('activiviviviv', activity);
         setAct(activity);
+        settotal(total)
       });
   }, []);
 
@@ -309,7 +331,7 @@ function CompanyView(props) {
                   <p>
                     <b>Outstanding Amount</b>
                   </p>
-                  <span>$500</span>
+                     <span>{total}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p>

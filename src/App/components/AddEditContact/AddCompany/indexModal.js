@@ -20,6 +20,7 @@ const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
 let editMode = null
 let options = null
 let response = {}
+let contacts = [];
 let res = ""
 let error = {
   Name: "",
@@ -43,20 +44,23 @@ class editCompany extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[]
+      address : [], emailAddress : [], phone : [], website:[],employee: [""],
+      optionsss : null
     }
   }
-  async componentDidMount(){
-  
-  }
-  componentWillUpdate(){
-    /*
-    if(this.props.location.pathname == "/manage/contacts/edit/person"){
-      editMode = true
-      res=this.props.location.state
-
-    }*/
-  }
+ componentDidMount() {
+    let optionsss = null
+    api.get('contact/viewforuser/'+this.props.userId).then((res)=>{
+      console.log(res.data.data)
+      contacts = res.data.data
+      optionsss = res.data.data.map((value, index)=>{
+          return <option id={index}>{value.firstName}</option>
+         })
+      this.setState({optionsss : optionsss})
+    }).catch((err)=>{
+      console.log(err)
+    })
+ }
  openNotificationWithIcon=(type) =>{
     notification[type]({
       message: 'Company Saved',
@@ -193,12 +197,26 @@ class editCompany extends React.Component{
       }
     }
     const handleMultipleChange = (e) => {
-      e.persist()
-      let list = this.state
-      const { id , value, name } = e.target  
-      list[name][id] = value
-      this.setState(list)
-      console.log(this.state)
+      e.persist();
+      let list = this.state;
+      console.log(e)
+      const { name, id, value, tagName, selectedIndex } = e.target;
+      if(name == "employee"){
+       if(selectedIndex != 0){
+        list.employee[id] = contacts[selectedIndex - 1]._id
+       }
+      }else{
+        if (tagName === 'SELECT' && name != "employee") {
+          name === 'emailAddress'
+            ? (list[name][id][`emailType`] = value)
+            : (list[name][id][`${name}Type`] = value);
+        } else {
+          list[name][id][name] = value;
+        }
+      }
+     
+      this.setState(list);
+
       switch (name) {
         
         case "emailAddress":
@@ -239,6 +257,10 @@ class editCompany extends React.Component{
         }else if(type==="website"){
           list.website.push("")
           this.setState(list)
+        }
+        else if (type === 'employee') {
+          list.employee.push("");
+          this.setState(list);
         }
      
     }
@@ -719,10 +741,50 @@ class editCompany extends React.Component{
               })
             }
             
+            
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("address")}>Add an Address</span>
             </div>
             </div>
+            <div className="form-header-container mb-4">
+                <h4>Employees</h4>
+                <br></br>
+                {
+                  this.state.employee.map((val, index)=>{
+                    return <div >
+          
+                      <Row>
+                      <Col md="6">
+                        <Form.Group controlId={index}>
+                          <Form.Control
+                            as="select"
+                            name="Payment profile"
+                            name="employee"
+                            onClick = {handleMultipleChange}
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                            <option>Select a contact</option>
+                            {this.state.optionsss}
+                          </Form.Control>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Button id={index} name="employee" onClick={handleDelete}>-</Button>
+                      </Col>
+                    </Row>
+                    </div>
+  
+                  })
+                }
+                <br></br>
+                 <div className="form-add mb-4">
+                    <span onClick={()=>addFeild("employee")}>Add a employee</span>
+                    </div>
+                    
+              <br></br>
+              </div>
+             
             <h4>Billing preferences</h4>
               <Row>
                 <Col>

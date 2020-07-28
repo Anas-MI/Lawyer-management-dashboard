@@ -5,19 +5,23 @@ import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from '../DynamicFeilds/index';
 import api from '../../../../resources/api';
 import { connect } from 'react-redux';
-import { Card, Collapse } from 'antd';
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
+
 const validNameRegex = RegExp(
   /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
 );
 
-const { Panel } = Collapse;
+const validZipRegex = RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
+const validUrlRegex = RegExp(
+  /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+);
+const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
+
 let editMode = null;
-let options = null;
-let response = {};
+let contacts = [];
 let res = '';
 let error = {
   Name: '',
@@ -44,21 +48,23 @@ class AddCompany extends React.Component {
       emailAddress: [],
       phone: [],
       website: [],
+      employee: [""],
+      optionsss : null
     };
   }
-
-  async componentDidMount() {
-
-    response = await api.get('/contact/viewforuser/' + this.props.userId);
-    console.log(response.data.data)
-    options = response.data.data.map((value, id) => {
-      return <option key={id}>{value.firstName + " " + value.lastName}</option>;
-    });
-
-    this.setState({ options });
   
-  }
-  componentWillUpdate() {
+  componentDidMount() {
+    let optionsss = null
+    api.get('contact/viewforuser/'+this.props.userId).then((res)=>{
+      console.log(res.data.data)
+      contacts = res.data.data
+      optionsss = res.data.data.map((value, index)=>{
+          return <option id={index}>{value.firstName}</option>
+         })
+      this.setState({optionsss : optionsss})
+    }).catch((err)=>{
+      console.log(err)
+    })
     /*
     if(this.props.location.pathname == "/manage/contacts/edit/person"){
       editMode = true
@@ -211,15 +217,24 @@ class AddCompany extends React.Component {
     const handleMultipleChange = (e) => {
       e.persist();
       let list = this.state;
-      const { name, id, value, tagName } = e.target;
-      if (tagName === 'SELECT') {
-        name === 'emailAddress'
-          ? (list[name][id][`emailType`] = value)
-          : (list[name][id][`${name}Type`] = value);
-      } else {
-        list[name][id][name] = value;
+      console.log(e)
+      const { name, id, value, tagName, selectedIndex } = e.target;
+      if(name == "employee"){
+       if(selectedIndex != 0){
+        list.employee[id] = contacts[selectedIndex - 1]._id
+       }
+      }else{
+        if (tagName === 'SELECT' && name != "employee") {
+          name === 'emailAddress'
+            ? (list[name][id][`emailType`] = value)
+            : (list[name][id][`${name}Type`] = value);
+        } else {
+          list[name][id][name] = value;
+        }
       }
+     
       this.setState(list);
+      console.log(this.state)
       switch (name) {
         case 'emailAddress':
           errors.Email[id] = validEmailRegex.test(value)
@@ -257,6 +272,10 @@ class AddCompany extends React.Component {
         list.website.push({ websiteType: 'work' });
         this.setState(list);
       }
+      else if (type === 'employee') {
+        list.employee.push("");
+        this.setState(list);
+      }
     };
 
     const imageHandler = {
@@ -292,12 +311,11 @@ class AddCompany extends React.Component {
     return (
       <>
         <div className="form-width">
-            <div className="form-header-container mb-4">
+          <div className="card p-4">
+            <Form className="form-details" onSubmit={this.handleSubmit}>
+              <div className="form-header-container mb-4">
                 <h3 className="form-header-text">Add company</h3>
-            </div>
-            <Card title="Add Company" className="mb-4">
-            <Form className="form-details">
-              
+              </div>
               <Upload {...imageHandler} onChange={handleImageChange}>
                 <antdButton className="form-upload-button">
                   <UploadOutlined /> Click to Upload
@@ -305,6 +323,7 @@ class AddCompany extends React.Component {
               </Upload>
               <br></br>
 
+              <div className="form-header-container mb-4">
               <Form.Row>
                 <Col>
                   <Form.Group controlId="formGroupFirstName">
@@ -810,13 +829,49 @@ class AddCompany extends React.Component {
               <div className="form-add mb-4">
                 <span onClick={() => addFeild('address')}>Add an Address</span>
               </div>
-
-            </Form>
-            </Card>
-
-          <Collapse accordion className="mb-4">
-              <Panel header="Billing preferences" key="1">
-              <Form className="form-details">
+              </div>
+              <div className="form-header-container mb-4">
+                <h4>Employees</h4>
+                <br></br>
+                {
+                  this.state.employee.map((val, index)=>{
+                    return <div >
+          
+                      <Row>
+                      <Col md="6">
+                        <Form.Group controlId={index}>
+                          <Form.Control
+                            as="select"
+                            name="Payment profile"
+                            name="employee"
+                            onClick = {handleMultipleChange}
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                            <option>Select a contact</option>
+                            {this.state.optionsss}
+                          </Form.Control>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Button id={index} name="employee" onClick={handleDelete}>-</Button>
+                      </Col>
+                    </Row>
+                    </div>
+  
+                  })
+                }
+                <br></br>
+                  <div className="form-add mb-4">
+                    <span onClick={()=>addFeild("employee")}>Add a employee</span>
+                    </div>
+                    
+              <br></br>
+              </div>
+              
+              <h4>Billing preferences</h4>
+              <Row>
+                <Col md="6">
                   <Form.Group>
                     <Form.Label>Payment profile</Form.Label>
                     <Form.Control
@@ -828,10 +883,12 @@ class AddCompany extends React.Component {
                       <option>default</option>
                     </Form.Control>
                   </Form.Group>
+                </Col>
+              </Row>
 
-              <p><b>Hourly Billing</b></p>
+              <p>Hourly billing</p>
               <Row>
-                <Col>
+                <Col md="3">
                   <Form.Group>
                     <Form.Label>Firm user or group</Form.Label>
                     <Form.Control
@@ -841,7 +898,7 @@ class AddCompany extends React.Component {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col>
+                <Col md="3">
                   <Form.Group>
                     <Form.Label>Rate</Form.Label>
                     <Form.Control name="rate" type="text" placeholder="$0.0" />
@@ -849,7 +906,7 @@ class AddCompany extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col md="6">
                   <Form.Group>
                     <Form.Label>ClientID</Form.Label>
                     <Form.Control
@@ -860,37 +917,16 @@ class AddCompany extends React.Component {
                   </Form.Group>
                 </Col>
               </Row>
-              </Form>
-        </Panel>
-      </Collapse>
 
-          <Collapse accordion className="mb-4">
-            <Panel header="Employees" key="1">
-              <Form className="form-details">
-              <Form.Group controlId="formGroupFirstName">
-                    <Form.Label>Contacts</Form.Label>
-                    <Form.Control
-                        as="select"
-                        name="company"
-                        placeholder="What's the Person's Name?"
-                        // defaultValue={this.state.editData.company}
-                        // onChange={handleChange}
-                      >
-                        <option key={0}>Select a company</option>
-                        {options}
-                      </Form.Control>
-                   
-                  </Form.Group>
-              </Form>
-            </Panel>
-          </Collapse>
 
-          <Button type="submit" className="btn btn-success" onClick={this.handleSubmit}>
-              {editMode ? 'Update' : 'Create'}
-          </Button>
-          <Button onClick={() => this.props.history.goBack()}>
-            Cancel
-          </Button>
+              <Button type="submit" className="btn btn-success">
+                {editMode ? 'Update' : 'Create'}
+              </Button>
+              <Button onClick={() => this.props.history.goBack()}>
+                Cancel
+              </Button>
+            </Form>
+          </div>
         </div>
       </>
     );
