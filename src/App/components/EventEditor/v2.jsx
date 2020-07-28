@@ -16,7 +16,8 @@ const EditorTemplate = props => {
       res =  await api.get('matter/viewforuser/'+props.userId)
       setdata()
     }
-  
+    
+
     fetchData()
   },[])
   const setdata = ()=>{
@@ -43,6 +44,7 @@ const EditorTemplate = props => {
     } */}
     
   }
+  console.log(props)
   return props !== undefined ? (
     <table
       className="custom-event-editor"
@@ -183,18 +185,16 @@ const EditorTemplate = props => {
                  
                 </tr>
                 <tr>
-                  <td className="e-textlabel">Time for Reminder</td>
+                  <td className="e-textlabel">Time For Reminder :</td>
                   <td colSpan={4}>
-                    <input
-                      onChange={props.handleChange}
-                      id="timeForReminder"
-                      placeholder={props.timeForReminder ? props.timeForReminder : "Time (in mins)"}
-                      className="e-field e-input"
-                      data-name="TimeForReminder"
-                      type="text"
-                      name="timeForReminder"
-                      style={{ width: "100%" }}
-                    />
+                  
+                  <TimePickerComponent 
+                  id="timeForReminder" 
+                  change={props.DateTimeChange}
+                  data-name="TimeForReminder"
+                  value={props.timeForReminder || props.TimeForReminder}
+                  placeholder="Select a Time"
+                  className="e-field"  />
                   </td>
                 </tr>
                 {
@@ -213,17 +213,7 @@ const EditorTemplate = props => {
                   </td>
                   
                     
-                     <td className="e-textlabel">Time For Reminder :</td>
-          <td colSpan={4}>
-          
-          <TimePickerComponent 
-          id="timeForReminder" 
-          change={props.DateTimeChange}
-          data-name="TimeForReminder"
-          value={props.timeForReminder || props.TimeForReminder}
-          placeholder="Select a Time"
-          className="e-field"  />
-          </td>
+                  
                   
                   
          

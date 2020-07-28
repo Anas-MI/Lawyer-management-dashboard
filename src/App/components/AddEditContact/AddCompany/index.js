@@ -21,8 +21,7 @@ const validUrlRegex = RegExp(
 const validPrefixRegex = RegExp(/^(Miss|Mr|Mrs|Ms|Dr|Gov|Prof)\b/gm);
 
 let editMode = null;
-let options = null;
-let response = {};
+let contacts = [];
 let res = '';
 let error = {
   Name: '',
@@ -49,10 +48,23 @@ class AddCompany extends React.Component {
       emailAddress: [],
       phone: [],
       website: [],
+      employee: [""],
+      optionsss : null
     };
   }
-  async componentDidMount() {}
-  componentWillUpdate() {
+  
+  componentDidMount() {
+    let optionsss = null
+    api.get('contact/viewforuser/'+this.props.userId).then((res)=>{
+      console.log(res.data.data)
+      contacts = res.data.data
+      optionsss = res.data.data.map((value, index)=>{
+          return <option id={index}>{value.firstName}</option>
+         })
+      this.setState({optionsss : optionsss})
+    }).catch((err)=>{
+      console.log(err)
+    })
     /*
     if(this.props.location.pathname == "/manage/contacts/edit/person"){
       editMode = true
@@ -205,15 +217,24 @@ class AddCompany extends React.Component {
     const handleMultipleChange = (e) => {
       e.persist();
       let list = this.state;
-      const { name, id, value, tagName } = e.target;
-      if (tagName === 'SELECT') {
-        name === 'emailAddress'
-          ? (list[name][id][`emailType`] = value)
-          : (list[name][id][`${name}Type`] = value);
-      } else {
-        list[name][id][name] = value;
+      console.log(e)
+      const { name, id, value, tagName, selectedIndex } = e.target;
+      if(name == "employee"){
+       if(selectedIndex != 0){
+        list.employee[id] = contacts[selectedIndex - 1]._id
+       }
+      }else{
+        if (tagName === 'SELECT' && name != "employee") {
+          name === 'emailAddress'
+            ? (list[name][id][`emailType`] = value)
+            : (list[name][id][`${name}Type`] = value);
+        } else {
+          list[name][id][name] = value;
+        }
       }
+     
       this.setState(list);
+      console.log(this.state)
       switch (name) {
         case 'emailAddress':
           errors.Email[id] = validEmailRegex.test(value)
@@ -249,6 +270,10 @@ class AddCompany extends React.Component {
         this.setState(list);
       } else if (type === 'website') {
         list.website.push({ websiteType: 'work' });
+        this.setState(list);
+      }
+      else if (type === 'employee') {
+        list.employee.push("");
         this.setState(list);
       }
     };
@@ -805,6 +830,45 @@ class AddCompany extends React.Component {
                 <span onClick={() => addFeild('address')}>Add an Address</span>
               </div>
               </div>
+              <div className="form-header-container mb-4">
+                <h4>Employees</h4>
+                <br></br>
+                {
+                  this.state.employee.map((val, index)=>{
+                    return <div >
+          
+                      <Row>
+                      <Col md="6">
+                        <Form.Group controlId={index}>
+                          <Form.Control
+                            as="select"
+                            name="Payment profile"
+                            name="employee"
+                            onClick = {handleMultipleChange}
+                            //defaultValue={this.props.record[idx]}
+                            //onChange={this.props.change}
+                          >
+                            <option>Select a contact</option>
+                            {this.state.optionsss}
+                          </Form.Control>
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Button id={index} name="employee" onClick={handleDelete}>-</Button>
+                      </Col>
+                    </Row>
+                    </div>
+  
+                  })
+                }
+                <br></br>
+                  <div className="form-add mb-4">
+                    <span onClick={()=>addFeild("employee")}>Add a employee</span>
+                    </div>
+                    
+              <br></br>
+              </div>
+              
               <h4>Billing preferences</h4>
               <Row>
                 <Col md="6">
