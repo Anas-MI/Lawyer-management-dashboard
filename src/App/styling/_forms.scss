@@ -54,7 +54,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     color: #fff;
     margin-right: 10px;
 }
-
+.form-flex-equal {
+    flex : 1
+}
+.support-form-div{
+    background: #fff;
+    border-radius: 10px;
+}
 .form-upload-button{
     cursor: pointer;
     text-align: center;

@@ -16,6 +16,7 @@ import Documents from './App/containers/Documents';
 import Support from './App/containers/Support/Support';
 import HelpCenter from './App/containers/HelpCenter';
 import HelpForm from './App/containers/HelpCenter/HelpForm';
+import SupportManagement from './App/containers/SupportManagement';
 
 // import Profile from './App/containers/Profile';
 
@@ -135,6 +136,12 @@ export const adminRoutes = [
     exact: true,
     name: 'Lawyer Management',
     component: LawyerManagement,
+  },
+  {
+    path: '/support',
+    exact: true,
+    name: 'Support',
+    component: SupportManagement,
   },
   {
     path: '/lawyer/details',
