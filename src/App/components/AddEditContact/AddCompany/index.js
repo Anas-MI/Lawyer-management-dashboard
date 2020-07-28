@@ -47,9 +47,17 @@ class AddCompany extends React.Component {
     };
   }
 
-  componentDidMount() {
-  }
+  async componentDidMount() {
+
+    response = await api.get('/contact/viewforuser/' + this.props.userId);
+    console.log(response.data.data)
+    options = response.data.data.map((value, id) => {
+      return <option key={id}>{value.firstName + " " + value.lastName}</option>;
+    });
+
+    this.setState({ options });
   
+  }
   componentWillUpdate() {
     /*
     if(this.props.location.pathname == "/manage/contacts/edit/person"){
@@ -862,12 +870,16 @@ class AddCompany extends React.Component {
               <Form.Group controlId="formGroupFirstName">
                     <Form.Label>Contacts</Form.Label>
                     <Form.Control
-                      required
-                      name="name"
-                      type="text"
-                      placeholder="What's the Person's Name?"
-                      onChange={handleChange}
-                    />
+                        as="select"
+                        name="company"
+                        placeholder="What's the Person's Name?"
+                        // defaultValue={this.state.editData.company}
+                        // onChange={handleChange}
+                      >
+                        <option key={0}>Select a company</option>
+                        {options}
+                      </Form.Control>
+                   
                   </Form.Group>
               </Form>
             </Panel>
