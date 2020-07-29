@@ -264,7 +264,7 @@ class AddList extends React.Component {
               Cancel
             </Button>,
             <Button type="primary"  onClick={this.handleOk}>
-              Submit
+              Create List
             </Button>,
           ]}
         >

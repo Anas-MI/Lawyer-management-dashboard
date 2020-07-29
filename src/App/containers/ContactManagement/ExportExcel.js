@@ -22,12 +22,16 @@ export class ExportExcel extends Component {
 
           <tbody>
             {this.props.dataSource.map((p, index) => {
+              
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
 
                   <td>{p.firstName}</td>
-                  <td>{p.emailAddress}</td>
+                  <td>{p.emailAddress.map((value) => {
+                    console.log(value)
+                        return value;
+                      })}</td>
                 </tr>
               );
             })}

@@ -8,6 +8,7 @@ import { Button, Modal, notification, Popconfirm, message } from 'antd';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import jsPDF from 'jspdf';
+import TaskForm from './EditForm'
 import { Input, Select } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -18,14 +19,7 @@ let response = {};
 let ListData = null;
 let options = null;
 
-const { Option } = Select;
 
-const selectBefore = (
-  <Select defaultValue="Firm User" className="select-before">
-    <Option value="FirmUser">Firm User</Option>
-    <Option value="Contacts">Contacts</Option>
-  </Select>
-);
 
 class Tasks extends React.Component {
   constructor(props) {
@@ -155,8 +149,10 @@ class Tasks extends React.Component {
     .catch((err) => {
         console.log(err); 
       });
+   setTimeout(()=>{
+    window.location.reload()
+   },600)
   }
-
   handelNonAction = (_id) =>{
     this.setState({
       status : false
@@ -192,7 +188,8 @@ class Tasks extends React.Component {
 
   EditHandler(_id) {
     this.setState({ editMode: true });
-    this.setState({ res: _id });
+    this.setState({ Data: _id });
+    console.log(this.state.Data)
     this.setState({ selected: _id });
     this.showModal();
   }
@@ -330,7 +327,7 @@ class Tasks extends React.Component {
       key: '6',
       render: (_, record) => {
         return (
-          <Button onClick={() => this.EditHandler(record._id)}>Edit</Button>
+          <Button onClick={() => this.EditHandler(record)}>Edit</Button>
         );
       },
     },
@@ -477,78 +474,7 @@ class Tasks extends React.Component {
           onCancel={this.handleCancel}
           onOk={this.handleOk}
         >
-          <Form className="form-details">
-            <Form.Group controlId="taskName">
-              <Form.Label>Task Name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Task Name"
-                onChange={this.handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="dueDate">
-              <Form.Label>Due Date</Form.Label>
-              <Form.Control
-                required
-                type="date"
-                placeholder="Due Date"
-                onChange={this.handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                required
-                as="textarea"
-                rows="3"
-                onChange={this.handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="taskName">
-              <Form.Label>Assignee</Form.Label>
-              <div>
-                <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
-              </div>
-            </Form.Group>
-
-            <Form.Group controlId="priority">
-              <Form.Label>Priority</Form.Label>
-              <Form.Control
-                as="select"
-                defaultValue="Normal"
-                required
-                onChange={this.handleChange}
-              >
-                <option>Low</option>
-                <option>Normal</option>
-                <option>High</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="matter">
-              <Form.Label>Matter</Form.Label>
-              <Form.Control
-                required
-                as="select"
-                onChange={this.handleChange}
-                name="matter"
-              >
-                {this.state.options}
-              </Form.Control>
-            </Form.Group>
-            <br />
-            <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Notify me when the task is completed" />
-            </Form.Group>
-            <br />
-            <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Notify assignee via email" />
-            </Form.Group>
-            <br />
-          </Form>
+          <TaskForm options={this.state.options} data={this.state.Data} editMode={this.state.editMode} handleChange={this.handleChange}></TaskForm>
         </Modal>
       </div>
     );

@@ -102,7 +102,7 @@ class editPerson extends React.Component {
    api.get(
       '/contact/view/' + this.props.location.state._id
     ).then((editData)=>{
-      console.log(editData.data.data.company[0].name)
+  
       const preForm = <div>
          <Form.Group controlId="Prefix">
                       <Form.Label>Prefix</Form.Label>
@@ -125,13 +125,14 @@ class editPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.Prefix}</p>
       </div>
+      console.log(editData.data.data)
       const comForm = <div>
         <Form.Group controlId="formGroupCompany">
                       <Form.Label>Company</Form.Label>
                       <Form.Control
                         as="select"
                         name="company"
-                        defaultValue={editData.data.data.company[0].name}
+                        defaultValue={editData.data.data.company[0] == null ? "" : editData.data.data.company[0].name  }
                         onChange={this.handleChange}
                       >
                         <option key={0}>Select a company</option>
@@ -249,7 +250,6 @@ class editPerson extends React.Component {
       delete data.fileList;
       delete data.prefixx
       delete data.companyy
-      delete data.editData
       delete data.modal
 
       if (editMode) {
@@ -583,7 +583,7 @@ class editPerson extends React.Component {
         });
       },
     };
-    const imageUpload = this.state.editData.image ? (
+    const imageUpload = this.state.editData ? (
       <div>
         <img height="100" width="100" src={this.state.editData.image}></img>
         <br />
@@ -618,7 +618,7 @@ class editPerson extends React.Component {
                         required
                         name="firstName"
                         type="text"
-                        defaultValue={this.state.editData.firstName}
+                        defaultValue={this.state.editData.firstName ? this.state.editData.firstName :"" }
                         onChange={handleChange}
                       />
                     </Form.Group>
@@ -634,7 +634,7 @@ class editPerson extends React.Component {
                       <Form.Control
                         name="middleName"
                         type="text"
-                        defaultValue={this.state.editData.middleName}
+                        defaultValue={this.state.editData.middleName ? this.state.editData.middleName : ""}
                         onChange={handleChange}
                       />
                     </Form.Group>
@@ -647,7 +647,7 @@ class editPerson extends React.Component {
                         required
                         name="lastName"
                         type="text"
-                        defaultValue={this.state.editData.lastName}
+                        defaultValue={this.state.editData.lastName ? this.state.editData.lastName : ""}
                         onChange={handleChange}
                       />
                     </Form.Group>
