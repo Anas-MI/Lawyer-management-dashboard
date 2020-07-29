@@ -40,8 +40,9 @@ class Dashboard extends React.Component {
                     const timeForReminder = value.timeForReminder ? value.timeForReminder : ""
                     
                     if(value.notification == true){
+
                         const alertdate =  this.convertTime(value.startTime)
-    
+                        console.log(alertdate)
                         let ddd = alertdate.getDate();
                         let mmm = alertdate.getMonth()+1; 
                         let yyyyy = alertdate.getFullYear();
@@ -49,7 +50,7 @@ class Dashboard extends React.Component {
                       //  let minss = timeForReminder.getMinutes() ;
                         let hourss = timeForReminder.split(':')[0];
                         let minss = timeForReminder.split(':')[1];
-                        minss = minss.substring(0,2)
+                        minss = minss ?  minss.substring(0,2) : ""
                        
                        
                        
@@ -68,8 +69,8 @@ class Dashboard extends React.Component {
                         let hours = today.getHours() > 12 ?  today.getHours() - 12 :  today.getHours() ;
                         let plusonehour = parseInt(hours) + 1
                         console.log(plusonehour)
-                        let mins = today.getMinutes();
-                        let plusmins = parseInt(mins + 5)
+                        let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()
+                        let plusmins = parseInt(mins + 0)
 
                         /*
                             if(dd<10) {
@@ -81,8 +82,9 @@ class Dashboard extends React.Component {
                             } 
 */
                         console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
-                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + plusonehour + ":" + plusmins)
-                        if ( minss == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && plusonehour  == hourss && ( plusmins > 59 )){
+                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
+                        /*
+                        if ( minss == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && plusonehour  == hourss && ( plusmins == 00 )){
                             notification.open({
                                 message: Description,
                                 description:
@@ -95,7 +97,10 @@ class Dashboard extends React.Component {
                             console.log(value)
                         
                         }else
-                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss && ( minss - mins < 5 && minss - mins > 0  )){
+                        */
+                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss &&  minss == mins  ){
+                            alert("Event : " + Description + "\n" + 'Event assosiated to matter ' + matter + 'starts at ' + StartTime )
+                           /*
                             notification.open({
                                 message: Description,
                                 description:
@@ -106,6 +111,7 @@ class Dashboard extends React.Component {
                                 },
                               });
                             console.log(value)
+                            */
                             
                         }
                         else{
@@ -131,7 +137,7 @@ class Dashboard extends React.Component {
             
             })
 
-        },5*10*1000)
+        },10*1000)
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">
