@@ -1129,7 +1129,9 @@ class newPerson extends React.Component {
                             {error.Country}
                           </p>
                         </Col>
-                        <Button
+                        
+                      </Row>
+                      <Button
                           id={index}
                           name="address"
                           style={{ height: '45px', 'margin-top': '25px' }}
@@ -1137,7 +1139,6 @@ class newPerson extends React.Component {
                         >
                           -
                         </Button>
-                      </Row>
                     </div>
                   );
                 })}

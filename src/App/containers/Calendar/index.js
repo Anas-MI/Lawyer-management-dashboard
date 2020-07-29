@@ -9,7 +9,7 @@ import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { EventSettingsModel } from "@syncfusion/ej2-react-schedule";
 import api from '../../../resources/api'
-import {notification, Button, Card} from 'antd'
+import {notification, Button, Card, message} from 'antd'
 
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
@@ -54,7 +54,7 @@ const CalendarContainer = props => {
     let startTime = ""
     let endTime = ""
     const [ state, setState ] = useState({tableData : []})
-    const [ data, setData ] = useState({email : false, notification : false, startTime : ""})
+    const [ data, setData ] = useState({email : false, notification : false, startTime : "", title: ""})
     const [listEvent, setListEvent] = useState([])
     let instance = new Internationalization();
     useEffect(()=>{
@@ -179,21 +179,31 @@ const CalendarContainer = props => {
             
         }
         if(e.requestType==="eventCreated"){
+    
             let eventdata = data
             eventdata.userId = userId
             eventdata.startTime = startTime
             eventdata.endTime = endTime
-        api.post('/calendar/create', eventdata).then((res)=>{
-            console.log(res)
-            openNotificationWithIcon('success')}).catch((err)=>{
-                console.log(err)
-                openNotificationWithfailure('error')})
-        setData({})
-        setTimeout(()=>{
-            window.location.reload()
-        },1500)
-        }
-       
+            console.log(data)
+            if(data.title == ""){
+                    notification.warning({message : "Please provide a title" })
+            }else{
+            
+                api.post('/calendar/create', eventdata).then((res)=>{
+                    console.log(res)
+                    notification.success({message : "Evented Added"})
+                 }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed!"})
+                 })
+                 setTimeout(()=>{
+                    window.location.reload()
+                },1500)
+            
+                 }
+                
+            }
+        
     }
     
     

@@ -38,15 +38,22 @@ class AddEditMatter extends React.Component{
     e.persist()
     const { id , value, name } = e.target
     customData[id]={[name] : value}
-    console.log(customData)
+  
 
+  }
+  handleChange = (e) => {
+    e.persist()
+    this.setState(st=>({...st,[e.target.name]:e.target.value}))
+    if(e.target.name==="client"){
+      clientId = e.target.selectedIndex - 1
+    }
   }
   async componentDidMount(){
       
     const editData = await api.get('/matter/view/'+this.props.location.state)
     this.setState({editData : editData.data.data, matterDescription : editData.data.data.matterDescription , relatedContacts : editData.data.data.relatedContacts? editData.data.data.relatedContacts : [] })
 
-    console.log(editData.data.data.relatedContacts) 
+
     if(this.props.location.pathname==="/manage/Matter/edit"){
       editMode= true;
       editRes= this.props.location.state
@@ -59,6 +66,64 @@ class AddEditMatter extends React.Component{
  
       return <option id={index}>{value.firstName}</option>
      })
+     console.log(this.state.editData.client)
+     const formData = <div>
+       <Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Client</Form.Label>
+              <Form.Control as="select" name="client" defaultValue={this.state.editData.client.firstName} onChange={this.handleChange}>
+              <option>Select a contact</option>
+
+                {optns}
+              </Form.Control>
+            </Form.Group>
+            <div className="form-add mb-4">
+              <span onClick={() => this.setState({modal:true})}>Add Contact</span>
+            </div>
+        <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Practise Area</Form.Label>
+                <Form.Control as="select" name="practiseArea" onChange={this.handleChange} defaultValue={this.state.editData.practiseArea}>
+                  <option>Select a practiseArea</option>
+                  <option>Attorney</option>
+                  <option>Administrative</option>
+                  <option>Business</option>
+                  <option>Family</option>
+                  <option>Imployment</option>
+                  <option>Tax</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Status</Form.Label>
+                <Form.Control as="select" name="status" onChange={this.handleChange} defaultValue={this.state.editData.status}>
+                  <option>Open</option>
+                  <option>Closed</option>
+                  <option>Pending</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Row>
+                <Col>
+                  <Form.Group controlId="formGroupOpenDate">
+                  <Form.Label>Open Date</Form.Label>
+                  <Form.Control name='openDate' type="Date" defaultValue={this.state.editData.openDate} 
+                  onChange={this.handleChange}/>
+                  </Form.Group>
+                </Col>
+                <Col>  
+                  <Form.Group controlId="formGroupClosing Date">
+                  <Form.Label>Closing Date</Form.Label>
+                  <Form.Control name='closeDate' type="Date" defaultValue={this.state.editData.closeDate}
+                   onChange={this.handleChange}/>
+                  </Form.Group>
+                </Col>  
+                <Col>
+                  <Form.Group controlId="formGroupPendingDate">
+                  <Form.Label>Pending Date</Form.Label>
+                  <Form.Control name='pendingDate' type="Date" defaultValue={this.state.editData.pendingDate}
+                 onChange={this.handleChange}/>
+                  </Form.Group>
+                </Col> 
+              </Form.Row>
+     </div>
+     this.setState({formData : formData})
    
     /*
     customFields = res.data.data.customFields.map((value, index)=>{
@@ -100,7 +165,7 @@ class AddEditMatter extends React.Component{
         data.customFields = customData
         data.client = contacts.data.data[clientId]._id
         data.userId = this.props.userId
-        console.log(data)
+
        if(editMode){
         api.post('/matter/edit/'+this.props.location.state, data).then((res)=>{
             console.log(res)
@@ -129,7 +194,7 @@ class AddEditMatter extends React.Component{
       let list = this.state.relatedContacts
       list.push({relationship : "", contact : "", billThis : "", id: ""})
       this.setState({relatedContacts : list})
-      console.log(this.state)
+ 
     }
   
   const handleChange = (e) => {
@@ -138,9 +203,6 @@ class AddEditMatter extends React.Component{
     if(e.target.name==="client"){
       clientId = e.target.selectedIndex - 1
     }
-    console.log(clientId)
-   
-    console.log(this.state)
   }
   const handleDelete = (e)=>{
     e.persist()
@@ -163,7 +225,7 @@ class AddEditMatter extends React.Component{
       list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
       list.relatedContacts[id].id = selectedIndex
     }
-    console.log(error.relationship)
+ 
     switch (name) {
       case "relationship":
         error.relationship[id] =
@@ -178,7 +240,7 @@ class AddEditMatter extends React.Component{
         break;
     }
     this.setState(list)
-    console.log(this.state)
+
   }
 
  
@@ -192,71 +254,23 @@ class AddEditMatter extends React.Component{
       </div>
       <Card title="Matter Information" className="mb-4">
         <Form className="form-details" >
+          {console.log(this.state.editData)}
           
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Client</Form.Label>
-              <Form.Control as="select" name="client" onChange={handleChange}>
-              <option>Select a contact</option>
-
-                {optns}
-              </Form.Control>
-            </Form.Group>
-            <div className="form-add mb-4">
-              <span onClick={() => this.setState({modal:true})}>Add Contact</span>
-            </div>
+           
             <Form.Group controlId="formGroupMatter">
               <Form.Label>Matter Description</Form.Label>
                 <Form.Control required name='matterDescription' as="textarea" rows="3" type="text" defaultValue={this.state.editData.matterDescription}
                  onChange={handleChange}/>
               </Form.Group>
+              {
+                this.state.formData
+              }
               <Form.Group controlId="formGroupClientRefenceNumber">
                 <Form.Label>Client reference number</Form.Label>
                 <Form.Control name='clientReferenceNumber' type="number" defaultValue={this.state.editData.clientReferenceNumber}
                  onChange={handleChange}/>
               </Form.Group>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Practise Area</Form.Label>
-                <Form.Control as="select" name="practiseArea" onChange={handleChange} defaultValue={this.state.editData.practiseArea}>
-                  <option>{editRes.practiseArea}</option>
-                  <option>Attorney</option>
-                  <option>Administrative</option>
-                  <option>Business</option>
-                  <option>Family</option>
-                  <option>Imployment</option>
-                  <option>Tax</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Status</Form.Label>
-                <Form.Control as="select" name="status" onChange={handleChange} defaultValue={this.state.editData.status}>
-                  <option>Open</option>
-                  <option>Closed</option>
-                  <option>Pending</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Row>
-                <Col>
-                  <Form.Group controlId="formGroupOpenDate">
-                  <Form.Label>Open Date</Form.Label>
-                  <Form.Control name='openDate' type="Date" defaultValue={this.state.editData.openDate} 
-                  onChange={handleChange}/>
-                  </Form.Group>
-                </Col>
-                <Col>  
-                  <Form.Group controlId="formGroupClosing Date">
-                  <Form.Label>Closing Date</Form.Label>
-                  <Form.Control name='closeDate' type="Date" defaultValue={this.state.editData.closeDate}
-                   onChange={handleChange}/>
-                  </Form.Group>
-                </Col>  
-                <Col>
-                  <Form.Group controlId="formGroupPendingDate">
-                  <Form.Label>Pending Date</Form.Label>
-                  <Form.Control name='pendingDate' type="Date" defaultValue={this.state.editData.pendingDate}
-                 onChange={handleChange}/>
-                  </Form.Group>
-                </Col> 
-              </Form.Row>
+            
        </Form>
       </Card>
 

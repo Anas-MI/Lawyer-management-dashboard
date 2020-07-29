@@ -59,12 +59,15 @@ class editPerson extends React.Component {
       phone: [],
       website: [],
       client: '',
+      prefix : "",
       customFields: [{}],
       modal: false,
       valid: false,
       visible: false,
       editData: '',
       fileList: [],
+      prefixx : "",
+      companyy : ""
     };
   }
 
@@ -73,29 +76,93 @@ class editPerson extends React.Component {
     const { id, value, name } = e.target;
     customData[id] = { [name]: value };
   }
-  async componentDidMount() {
-    let editData = await api.get(
+   handleChange = (e) => {
+    e.persist();
+    if (e.target.name === 'company' && e.target.selectedIndex != 0) {
+
+      this.setState((st) => ({
+        ...st,
+        [e.target.name]: response.data.data[e.target.selectedIndex - 1],
+      }));
+    } else {
+      this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
+    }
+
+    const { name, value, id } = e.target;
+    switch (name) {
+      case 'prefix':
+        error.Prefix = value === 'default' ? 'Prefix is required!' : '';
+        break;
+
+      default:
+        break;
+    }
+  };
+   componentDidMount() {
+   api.get(
       '/contact/view/' + this.props.location.state._id
-    );
+    ).then((editData)=>{
+      console.log(editData.data.data.company[0].name)
+      const preForm = <div>
+         <Form.Group controlId="Prefix">
+                      <Form.Label>Prefix</Form.Label>
+                      <select
+                        as="select"
+                        name="prefix"
+                    
+                        defaultValue = {editData.data.data.prefix}
+                        onChange={this.handleChange}
+                        style={{ 'border-radius': '5px' }}
+                      >
+                        <option>Prefix</option>
+                        <option>Mr.</option>
+                        <option>Miss.</option>
+                        <option>Ms.</option>
+                        <option>Dr.</option>
+                        <option>Gov.</option>
+                        <option>Prof.</option>
+                      </select>
+                    </Form.Group>
+                    <p className="help-block text-danger">{error.Prefix}</p>
+      </div>
+      const comForm = <div>
+        <Form.Group controlId="formGroupCompany">
+                      <Form.Label>Company</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="company"
+                        defaultValue={editData.data.data.company[0].name}
+                        onChange={this.handleChange}
+                      >
+                        <option key={0}>Select a company</option>
+                        {options}
+                      </Form.Control>
+                    </Form.Group>
+        </div>
+      this.setState({ editData: editData.data.data, prefixx : preForm, companyy:comForm });
 
-    console.log(editData.data.data.prefix);
-    this.setState({ editData: editData.data.data });
+      this.setState({
+        phone: editData.data.data.phone,
+        emailAddress: editData.data.data.emailAddress,
+        address: editData.data.data.address,
+        website: editData.data.data.website,
+        prefix : editData.data.data.prefix 
+      });
+    })
 
-    this.setState({
-      phone: editData.data.data.phone,
-      emailAddress: editData.data.data.emailAddress,
-      address: editData.data.data.address,
-      website: editData.data.data.website,
-    });
+    
 
     // this.setState({ editData: tempData.data.data });
 
-    console.log(this.state.editData.prefix);
-    response = await api.get('/company/viewforuser/' + this.props.userId);
-
-    options = response.data.data.map((value, id) => {
+ 
+   api.get('/company/viewforuser/' + this.props.userId).then((res)=>{
+    response = res
+    options = res.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
+   })
+
+    
     // feilds = await api.get('/user/view/' + this.props.userId);
 
     // customFields = feilds.data.data.customFields.map((value, index) => {
@@ -145,7 +212,7 @@ class editPerson extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     notification.destroy();
-    console.log(this.props);
+
     const validateForm = () => {
       let valid = true;
       Object.values(error).forEach((val) => val.length > 0 && (valid = false));
@@ -170,7 +237,7 @@ class editPerson extends React.Component {
       Object.values(errors.Country).forEach(
         (val) => val.length > 0 && (valid = false)
       );
-      console.log(valid);
+ 
       return valid;
     };
     if (validateForm()) {
@@ -180,7 +247,11 @@ class editPerson extends React.Component {
       data.customFields = customData;
       let dataList = Object.assign({}, this.state);
       delete data.fileList;
-      console.log(data);
+      delete data.prefixx
+      delete data.companyy
+      delete data.editData
+      delete data.modal
+
       if (editMode) {
         api
           .post('/contact/edit/' + this.props.location.state._id, data)
@@ -259,7 +330,7 @@ class editPerson extends React.Component {
     const handleChange = (e) => {
       e.persist();
       if (e.target.name === 'company' && e.target.selectedIndex != 0) {
-        console.log(e.target.selectedIndex);
+
         this.setState((st) => ({
           ...st,
           [e.target.name]: response.data.data[e.target.selectedIndex - 1],
@@ -267,7 +338,7 @@ class editPerson extends React.Component {
       } else {
         this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
       }
-      console.log(this.state);
+  
       const { name, value, id } = e.target;
       switch (name) {
         case 'prefix':
@@ -318,7 +389,7 @@ class editPerson extends React.Component {
       let newState = this.state;
       newState.address[id][name] = value;
       this.setState(newState);
-      console.log(this.state);
+
       switch (e.target.name) {
         case 'type':
           errors.Type[id] = value === 'default' ? 'Type is required!' : '';
@@ -378,9 +449,11 @@ class editPerson extends React.Component {
       } else {
         list[name][id][name] = value;
       }
+      this.setState(list)
+      console.log(this.state)
       switch (name) {
         case 'emailAddress':
-          errors.Email[id] = validEmailRegex.test(value)
+          errors.Email[id] = validEmailRegex.test(this.state.emailAddress[id].emailAddress)
             ? ''
             : 'Email is not valid!';
           break;
@@ -515,14 +588,15 @@ class editPerson extends React.Component {
         <img height="100" width="100" src={this.state.editData.image}></img>
         <br />
         <Upload {...props}>
-          <AntdButton style={{marginTop : "10px"}}>Select File</AntdButton>
+          <AntdButton style={{marginTop : "10px"}}>Upload Image</AntdButton>
         </Upload>
       </div>
     ) : (
       <Upload {...props}>
-        <AntdButton style={{marginTop : "10px"}}>Select File</AntdButton>
+        <AntdButton style={{marginTop : "10px"}}>Upload Image</AntdButton>
       </Upload>
     );
+
     return (
       <>
         <div className="form-width">
@@ -535,25 +609,8 @@ class editPerson extends React.Component {
               <div className="form-header-container mb-4">
                 <Row>
                   <Col xs={7} md="6">
-                    <Form.Group controlId="formGroupPrefix">
-                      <Form.Label>Prefix</Form.Label>
-                      <select
-                        required
-                        name="prefix"
-                        value={this.state.editData.prefix}
-                        onChange={handleChange}
-                        style={{ 'border-radius': '5px' }}
-                      >
-                        <option value="default">Prefix</option>
-                        <option value="Mr.">Mr.</option>
-                        <option value="Miss.">Miss.</option>
-                        <option value="Ms.">Ms.</option>
-                        <option value="Dr.">Dr.</option>
-                        <option value="Gov.">Gov.</option>
-                        <option value="Prof.">Prof.</option>
-                      </select>
-                    </Form.Group>
-                    <p className="help-block text-danger">{error.Prefix}</p>
+                  {console.log(this.state.prefix)}
+                    {this.state.prefixx}
 
                     <Form.Group controlId="formGroupFirstName">
                       <Form.Label>First Name</Form.Label>
@@ -600,18 +657,7 @@ class editPerson extends React.Component {
 
                 <Row>
                   <Col>
-                    <Form.Group controlId="formGroupCompany">
-                      <Form.Label>Company</Form.Label>
-                      <Form.Control
-                        as="select"
-                        name="company"
-                        value={this.state.editData.company}
-                        onChange={handleChange}
-                      >
-                        <option key={0}>Select a company</option>
-                        {options}
-                      </Form.Control>
-                    </Form.Group>
+                    {this.state.companyy}
                   </Col>
                 </Row>
                 <div className="form-add mb-4">
@@ -1131,7 +1177,8 @@ class editPerson extends React.Component {
                             {error.Country}
                           </p>
                         </Col>
-                        <Button
+                      </Row>
+                      <Button
                           id={index}
                           name="address"
                           style={{ height: '45px', 'margin-top': '25px' }}
@@ -1139,7 +1186,6 @@ class editPerson extends React.Component {
                         >
                           -
                         </Button>
-                      </Row>
                     </div>
                   );
                 })}

@@ -53,19 +53,21 @@ class editCompany extends React.Component {
       optionsss : null
     };
   }
-  async componentDidMount() {
-    const editData = await api.get(
-      '/company/view/' + this.props.location.state._id
-    );
-    this.setState({ editData: editData.data.data });
-    this.setState({
-      phone: editData.data.data.phone,
-      emailAddress: editData.data.data.emailAddress,
-      address: editData.data.data.address,
-      website: editData.data.data.website,
-    });
-  }
+  
   componentDidMount() {
+    api.get(
+      '/company/view/' + this.props.location.state._id
+    ).then((editData)=>{
+      console.log(editData)
+      this.setState({ editData: editData.data.data });
+      this.setState({
+        phone: editData.data.data.phone,
+        emailAddress: editData.data.data.emailAddress,
+        address: editData.data.data.address,
+        website: editData.data.data.website,
+      });
+
+    })
     let optionsss = null
     api.get('contact/viewforuser/'+this.props.userId).then((res)=>{
       console.log(res.data.data)
@@ -254,7 +256,7 @@ class editCompany extends React.Component {
 
       switch (name) {
         case 'emailAddress':
-          errors.Email[id] = validEmailRegex.test(value)
+          errors.Email[id] = validEmailRegex.test(this.state.emailAddress[id].emailAddress)
             ? ''
             : 'Email is not valid!';
           break;
