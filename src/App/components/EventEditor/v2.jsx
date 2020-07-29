@@ -98,7 +98,7 @@ const EditorTemplate = props => {
                       onChange={props.handleChange} defaultChecked = {props.Allday} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      All day
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>All day</span>
                     </label>
              
                     <label className="m-2">
@@ -106,7 +106,8 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} defaultChecked = {props.Repeat} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Repeat
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Repeat</span>
+                      
                     </label>
                   </td>
                  
@@ -171,7 +172,8 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Email
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Email</span>
+                      
                     </label>
              
                     <label className="m-2">
@@ -179,7 +181,8 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Notification
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Notification</span>
+                      
                     </label>
                   </td>
                  
