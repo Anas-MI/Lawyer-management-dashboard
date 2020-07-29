@@ -140,6 +140,7 @@ const ContactsManage = (props) => {
   const FilterByNameInput = (
     <div>
       <SearchOutlined
+      style={{"vertical-align": "revert"}}
         onClick={() => {
           var dump =
             showNameInput === false

@@ -78,6 +78,7 @@ class matterManage extends React.Component {
   filterByMatterInput = () => (
     <div>
       <SearchOutlined
+      style={{"vertical-align": "revert"}}
         onClick={() => {
           this.state.showSearchMatter === false
             ? this.setState({
@@ -122,6 +123,7 @@ class matterManage extends React.Component {
   filterByClientInput = () => (
     <div>
       <SearchOutlined
+      style={{"vertical-align": "revert"}}
         onClick={() => {
           this.state.showSearchClient === false
             ? this.setState({
@@ -167,6 +169,7 @@ class matterManage extends React.Component {
   filterByPractiseInput = () => (
     <div>
       <SearchOutlined
+      style={{"vertical-align": "revert"}}
         onClick={() => {
           this.state.showSearchPractise === false
             ? this.setState({
