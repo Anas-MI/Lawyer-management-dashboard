@@ -77,6 +77,8 @@ class editPerson extends React.Component {
     let editData = await api.get(
       '/contact/view/' + this.props.location.state._id
     );
+
+    console.log(editData.data.data.prefix);
     this.setState({ editData: editData.data.data });
 
     this.setState({
@@ -88,7 +90,7 @@ class editPerson extends React.Component {
 
     // this.setState({ editData: tempData.data.data });
 
-    console.log('data', this.state.editData);
+    console.log(this.state.editData.prefix);
     response = await api.get('/company/viewforuser/' + this.props.userId);
 
     options = response.data.data.map((value, id) => {
@@ -512,14 +514,13 @@ class editPerson extends React.Component {
       <div>
         <img height="100" width="100" src={this.state.editData.image}></img>
         <br />
-        <br></br>
         <Upload {...props}>
-          <AntdButton>Select File</AntdButton>
+          <AntdButton style={{marginTop : "10px"}}>Select File</AntdButton>
         </Upload>
       </div>
     ) : (
       <Upload {...props}>
-        <AntdButton>Select File</AntdButton>
+        <AntdButton style={{marginTop : "10px"}}>Select File</AntdButton>
       </Upload>
     );
     return (
@@ -539,7 +540,7 @@ class editPerson extends React.Component {
                       <select
                         required
                         name="prefix"
-                        defaultValue={this.state.editData.prefix}
+                        value={this.state.editData.prefix}
                         onChange={handleChange}
                         style={{ 'border-radius': '5px' }}
                       >
@@ -566,7 +567,7 @@ class editPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.FirstName}</p>
                   </Col>
-                  <Col>{imageUpload}</Col>
+                  <Col className="py-3">{imageUpload}</Col>
                 </Row>
 
                 <Form.Row>
@@ -604,7 +605,7 @@ class editPerson extends React.Component {
                       <Form.Control
                         as="select"
                         name="company"
-                        defaultValue={this.state.editData.company}
+                        value={this.state.editData.company}
                         onChange={handleChange}
                       >
                         <option key={0}>Select a company</option>
@@ -694,7 +695,7 @@ class editPerson extends React.Component {
                             <Form.Control
                               as="select"
                               name="type"
-                              defaultValue={
+                              value={
                                 this.state.editData.address[index].type
                               }
                               onChange={HandleAddressChange}
