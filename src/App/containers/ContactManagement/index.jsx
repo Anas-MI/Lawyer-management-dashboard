@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Space, notification, Card } from 'antd';
+import { Table, Button, Input, Space, notification, Card , Popconfirm} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
@@ -140,6 +140,7 @@ const ContactsManage = (props) => {
   const FilterByNameInput = (
     <div>
       <SearchOutlined
+      style={{"vertical-align": "revert"}}
         onClick={() => {
           var dump =
             showNameInput === false
@@ -147,10 +148,10 @@ const ContactsManage = (props) => {
               : setShowNameInput(false);
         }}
       />
-      <span> Name </span>
+      <span style={{paddingLeft : "8px"}}> Name </span>
 
       {showNameInput && (
-        <div>
+        <div style={{paddingTop : "10px"}}>
           <input
             placeholder="Search"
             value={value}
@@ -218,7 +219,7 @@ const ContactsManage = (props) => {
 
       render: (text) => (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
           searchWords={[value]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -262,9 +263,17 @@ const ContactsManage = (props) => {
       key: '_id',
       render: (_, record) => {
         return (
-          <Button variant="danger" onClick={() => handleDelete(record)}>
+          <Popconfirm
+          title="Are you sure delete this contact?"
+          onConfirm={() => handleDelete(record)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button variant="danger">
             Delete
           </Button>
+        </Popconfirm>
+          
         );
       },
     },

@@ -72,8 +72,8 @@ class EmailForm extends React.Component{
                     name="from" 
                     defaultValue = {this.props.record.from}
                     onChange={this.props.handleChange}>
-                    {/* <option>Select a contact</option> */}    
-                <option>{this.props.from}</option>
+                    <option>Select a contact</option> 
+                {this.state.contacts}
                 </Form.Control>
                 </Form.Group>
            </Col>
@@ -178,8 +178,8 @@ class EmailForm extends React.Component{
                     name="from" 
                     placeholder="Select a contact"
                     onChange={this.props.handleChange}>
-              {/* <option>Select a contact</option> */}    
-              <option>{this.props.from}</option>
+               <option>Select a contact</option>     
+              {this.state.contacts}
                 </Form.Control>
                 </Form.Group>
            </Col>

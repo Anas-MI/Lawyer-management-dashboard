@@ -16,6 +16,7 @@ import Documents from './App/containers/Documents';
 import Support from './App/containers/Support/Support';
 import HelpCenter from './App/containers/HelpCenter';
 import HelpForm from './App/containers/HelpCenter/HelpForm';
+import SupportManagement from './App/containers/SupportManagement';
 
 // import Profile from './App/containers/Profile';
 
@@ -56,6 +57,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 const tasks = React.lazy(() => import('./App/containers/Tasks/index'));
+const list = React.lazy(() => import('./App/containers/Tasks/List/viewList/listView'));
 const Profile = React.lazy(() => import('./App/containers/Profile'));
 const Login = React.lazy(() => import('./App/containers/Auth/Login'));
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
@@ -136,6 +138,12 @@ export const adminRoutes = [
     component: LawyerManagement,
   },
   {
+    path: '/support',
+    exact: true,
+    name: 'Support',
+    component: SupportManagement,
+  },
+  {
     path: '/lawyer/details',
     exact: true,
     name: 'Lawyer Details',
@@ -213,6 +221,7 @@ const routes = [
     component: DashboardDefault,
   },
   { path: '/tasks', exact: true, name: 'Tasks', component: tasks },
+  { path: '/tasks/view/list', exact: true, name: 'View List', component: list },
   { path: '/profile', exact: true, name: 'Profile', component: Profile },
   {
     path: '/basic/button',

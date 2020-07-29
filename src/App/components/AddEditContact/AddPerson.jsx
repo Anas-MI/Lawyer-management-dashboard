@@ -612,10 +612,10 @@ class newPerson extends React.Component {
                     <p className="help-block text-danger">{error.LastName}</p>
                   </Col>
                 </Form.Row>
-                <Row>
+                <Form.Row className="mb-3">
                   <Col>{imageUpload}</Col>
-                </Row>
-                <Row>
+                </Form.Row>
+                <Form.Row>
                   <Col>
                     <Form.Group controlId="formGroupCompany">
                       <Form.Label>Company</Form.Label>
@@ -642,7 +642,7 @@ class newPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.Title}</p>
                   </Col>
-                </Row>
+                </Form.Row>
                 <div className="form-add mb-4">
                   <span onClick={() => this.setState({ modal: true })}>
                     Add Company
@@ -1129,7 +1129,9 @@ class newPerson extends React.Component {
                             {error.Country}
                           </p>
                         </Col>
-                        <Button
+                        
+                      </Row>
+                      <Button
                           id={index}
                           name="address"
                           style={{ height: '45px', 'margin-top': '25px' }}
@@ -1137,7 +1139,6 @@ class newPerson extends React.Component {
                         >
                           -
                         </Button>
-                      </Row>
                     </div>
                   );
                 })}
@@ -1231,6 +1232,11 @@ class newPerson extends React.Component {
               visible={this.state.modal}
               onOk={AddCompanyHandler}
               onCancel={() => this.setState({ modal: false })}
+              footer={[
+                <Button onClick={() => this.setState({ modal: false })}>
+                  Cancel
+                </Button>,
+              ]}
             >
               <AddCompany modal={true}></AddCompany>
             </Modal>

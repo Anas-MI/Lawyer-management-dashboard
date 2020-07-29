@@ -33,6 +33,7 @@ export default function Calendar(props) {
   const [modalFor, setModalFor] = useState('Add');
 
   const columns = [
+    /*
     {
       title: 'Start Date',
       dataIndex: 'startDate',
@@ -40,6 +41,7 @@ export default function Calendar(props) {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.startDate > b.startDate,
     },
+    */
     {
       title: 'Start Time',
       dataIndex: 'startTime',
@@ -47,6 +49,7 @@ export default function Calendar(props) {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.startTime > b.startTime,
     },
+    /*
     {
       title: 'End Date',
       dataIndex: 'endDate',
@@ -54,6 +57,7 @@ export default function Calendar(props) {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.endDate > b.endDate,
     },
+    */
     {
       title: 'End Time',
       dataIndex: 'endTime',

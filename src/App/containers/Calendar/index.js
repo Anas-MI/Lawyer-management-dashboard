@@ -9,7 +9,7 @@ import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { EventSettingsModel } from "@syncfusion/ej2-react-schedule";
 import api from '../../../resources/api'
-import {notification, Button, Card} from 'antd'
+import {notification, Button, Card, message} from 'antd'
 
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
@@ -28,16 +28,7 @@ import { getEvents } from '../../../store/Actions';
 import {  L10n, Internationalization } from '@syncfusion/ej2-base';
 
 const Add = <Button type="link">Add</Button>
-L10n.load({
-    'en-US': {
-        'schedule': {
-            'saveButton': 'Add',
-            'cancelButton': 'Close',
-            'deleteButton': 'Remove',
-            'newEvent': 'Add Event',
-        },
-    }
-});
+
 const fields = {
     id: 'Id',
     subject: { name: 'Title' },
@@ -60,9 +51,10 @@ const CalendarContainer = props => {
     //State
     const dispatch = useDispatch()
     const userId = useSelector(state=>state.user.token.user._id)
-
+    let startTime = ""
+    let endTime = ""
     const [ state, setState ] = useState({tableData : []})
-    const [ data, setData ] = useState({email : false, notification : false})
+    const [ data, setData ] = useState({email : false, notification : false, startTime : "", title: ""})
     const [listEvent, setListEvent] = useState([])
     let instance = new Internationalization();
     useEffect(()=>{
@@ -117,9 +109,18 @@ const CalendarContainer = props => {
         if (args.type === 'Editor') {
             SchedulerRef.current.eventWindow.recurrenceEditor = recurrenceRef.current;
         }
+        /*
+        if (args.type == "QuickInfo") {
+            var dialogObj = args.element.ej2_instances[0];
+            dialogObj.hide();
+            var currentAction = args.target.classList.contains("e-work-cells") ? "Add" : "Save";
+            SchedulerRef.openEditor(args.data, currentAction);
+        }
+        */
     }
     const handleChange = (e) =>{
         e.persist()
+
         const { value, id } = e.target
         let newdata  = data
         if(id === "allday" || id==="repeat"){
@@ -157,6 +158,7 @@ const CalendarContainer = props => {
           message: 'Failure'});
       };
     const handleSubmit = (e) =>{
+        console.log(e)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
             api.get('/calendar/delete/'+id).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
@@ -169,51 +171,71 @@ const CalendarContainer = props => {
             const id = e.data.id 
             let eventdata = data
             eventdata.userId = userId 
-            api.post('/calendar/update/'+id, eventdata ).then(res=>console.log(res)).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+           
+            api.post('/calendar/update/'+id, eventdata )
+            .then((res)=>{
+                console.log(res)
+                notification.success({message : "Event Edited"})
+            }).catch((err)=>{
+                console.log(err)
+                notification.error({message : "Failed"})
+            })
             setData({})
             setTimeout(()=>{
-                window.location.reload()
+               // window.location.reload()
             },1500)
             
         }
         if(e.requestType==="eventCreated"){
+    
             let eventdata = data
             eventdata.userId = userId
-        api.post('/calendar/create', eventdata).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
-        setData({})
-        setTimeout(()=>{
-            window.location.reload()
-        },1500)
-        }
-       
+            eventdata.startTime = startTime
+            eventdata.endTime = endTime
+            console.log(data)
+            if(data.title == ""){
+                    notification.warning({message : "Please provide a title" })
+            }else{
+            
+                api.post('/calendar/create', eventdata).then((res)=>{
+                    console.log(res)
+                    notification.success({message : "Evented Added"})
+                 }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed!"})
+                 })
+                 setData({})
+                 setTimeout(()=>{
+                    //window.location.reload()
+                },1500)
+            
+                 }
+              
+            }
+        
     }
     
     
     const setInit = (args) =>{
-        var strDateTime = args.StartTime
-        var myDate = new Date(strDateTime);
-        const startTime = myDate.toLocaleString()
-        var strDateTime = args.EndTime
-        var myDate = new Date(strDateTime);
-        const endTime = myDate.toLocaleString()
-        setData({startTime : startTime, endTime: endTime})
-        
+        console.log(args)
+        if(args.StartTime != undefined){
+            const props = args
+             startTime = props.StartTime.toLocaleString()
+             endTime = props.EndTime.toLocaleString()
+        }      
     }
    
    
     return (        
         <div className="row">
             <div className="col-lg-8">
-                <Card bodyStyle={{"padding" : "0px"}} 
-                extra={<span style={{ float: 'right' }}>
-                    <Button className="ml-auto" color="success" >
-                        Add Event 
-                    </Button>
-                </span>}>
+                <Card bodyStyle={{"padding" : "0px"}}>
                     <ScheduleComponent height='550px' actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
-                        showQuickInfo={false} popupOpen={onPopupOpen}
+                        showQuickInfo={false} 
+                        popupOpen={onPopupOpen}
                         eventSettings={{dataSource : state.tableData}}
-                        editorTemplate={pr=><EditorTemplate {...pr} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+                        
+                        editorTemplate={pr=><EditorTemplate {...pr} setInit = {setInit(pr)} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
                         <ViewsDirective>
                         <ViewDirective option='Day'/>
                             <ViewDirective option='Week'/>

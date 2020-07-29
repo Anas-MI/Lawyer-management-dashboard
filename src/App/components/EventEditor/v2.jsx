@@ -16,7 +16,8 @@ const EditorTemplate = props => {
       res =  await api.get('matter/viewforuser/'+props.userId)
       setdata()
     }
-  
+    
+
     fetchData()
   },[])
   const setdata = ()=>{
@@ -43,6 +44,7 @@ const EditorTemplate = props => {
     } */}
     
   }
+  console.log(props)
   return props !== undefined ? (
     <table
       className="custom-event-editor"
@@ -53,6 +55,7 @@ const EditorTemplate = props => {
           <td className="e-textlabel">Title</td>
           <td colSpan={4}>
             <input
+              required
               id="title"
               className="e-field e-input"
               type="text"
@@ -96,7 +99,7 @@ const EditorTemplate = props => {
                       onChange={props.handleChange} defaultChecked = {props.Allday} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      All day
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>All day</span>
                     </label>
              
                     <label className="m-2">
@@ -104,7 +107,8 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} defaultChecked = {props.Repeat} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Repeat
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Repeat</span>
+                      
                     </label>
                   </td>
                  
@@ -169,7 +173,8 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Email
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Email</span>
+                      
                     </label>
              
                     <label className="m-2">
@@ -177,24 +182,23 @@ const EditorTemplate = props => {
                         onChange={props.handleChange} className="mr-2"
                         //onChange={() => setChecked(!checked)}
                       />
-                      Notification
+                      <span style={{"vertical-align": "text-top", "line-height": "1"}}>Notification</span>
+                      
                     </label>
                   </td>
                  
                 </tr>
                 <tr>
-                  <td className="e-textlabel">Time for Reminder</td>
+                  <td className="e-textlabel">Time For Reminder :</td>
                   <td colSpan={4}>
-                    <input
-                      onChange={props.handleChange}
-                      id="timeForReminder"
-                      placeholder={props.timeForReminder ? props.timeForReminder : "Time (in mins)"}
-                      className="e-field e-input"
-                      data-name="TimeForReminder"
-                      type="text"
-                      name="timeForReminder"
-                      style={{ width: "100%" }}
-                    />
+                  
+                  <TimePickerComponent 
+                  id="timeForReminder" 
+                  change={props.DateTimeChange}
+                  data-name="TimeForReminder"
+                  value={props.timeForReminder || props.TimeForReminder}
+                  placeholder="Select a Time"
+                  className="e-field"  />
                   </td>
                 </tr>
                 {
@@ -213,17 +217,7 @@ const EditorTemplate = props => {
                   </td>
                   
                     
-                     <td className="e-textlabel">Time For Reminder :</td>
-          <td colSpan={4}>
-          
-          <TimePickerComponent 
-          id="timeForReminder" 
-          change={props.DateTimeChange}
-          data-name="TimeForReminder"
-          value={props.timeForReminder || props.TimeForReminder}
-          placeholder="Select a Time"
-          className="e-field"  />
-          </td>
+                  
                   
                   
          
