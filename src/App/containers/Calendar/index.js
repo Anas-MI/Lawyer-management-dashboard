@@ -109,6 +109,14 @@ const CalendarContainer = props => {
         if (args.type === 'Editor') {
             SchedulerRef.current.eventWindow.recurrenceEditor = recurrenceRef.current;
         }
+        /*
+        if (args.type == "QuickInfo") {
+            var dialogObj = args.element.ej2_instances[0];
+            dialogObj.hide();
+            var currentAction = args.target.classList.contains("e-work-cells") ? "Add" : "Save";
+            SchedulerRef.openEditor(args.data, currentAction);
+        }
+        */
     }
     const handleChange = (e) =>{
         e.persist()
@@ -174,7 +182,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-                window.location.reload()
+               // window.location.reload()
             },1500)
             
         }
@@ -196,12 +204,13 @@ const CalendarContainer = props => {
                     console.log(err)
                     notification.error({message : "Failed!"})
                  })
+                 setData({})
                  setTimeout(()=>{
-                    window.location.reload()
+                    //window.location.reload()
                 },1500)
             
                  }
-                
+              
             }
         
     }
@@ -213,17 +222,7 @@ const CalendarContainer = props => {
             const props = args
              startTime = props.StartTime.toLocaleString()
              endTime = props.EndTime.toLocaleString()
-            
-            /*
-            const startTime = args.StartTime.toLocaleString()
-         
-            console.log(startTime)
-          
-            setData({startTime : startTime , endTime : endTime})
-            */
-        }
-
-        
+        }      
     }
    
    
@@ -232,8 +231,10 @@ const CalendarContainer = props => {
             <div className="col-lg-8">
                 <Card bodyStyle={{"padding" : "0px"}}>
                     <ScheduleComponent height='550px' actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
-                        showQuickInfo={false} popupOpen={onPopupOpen}
+                        showQuickInfo={false} 
+                        popupOpen={onPopupOpen}
                         eventSettings={{dataSource : state.tableData}}
+                        
                         editorTemplate={pr=><EditorTemplate {...pr} setInit = {setInit(pr)} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
                         <ViewsDirective>
                         <ViewDirective option='Day'/>
