@@ -1231,6 +1231,11 @@ class newPerson extends React.Component {
               visible={this.state.modal}
               onOk={AddCompanyHandler}
               onCancel={() => this.setState({ modal: false })}
+              footer={[
+                <Button onClick={() => this.setState({ modal: false })}>
+                  Cancel
+                </Button>,
+              ]}
             >
               <AddCompany modal={true}></AddCompany>
             </Modal>
