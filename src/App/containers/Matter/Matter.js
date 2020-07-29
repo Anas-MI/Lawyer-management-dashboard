@@ -90,11 +90,12 @@ class matterManage extends React.Component {
             : this.setState({ ...this.state, showSearchMatter: false });
         }}
       />
-      <span> Matter Description </span>
+      <span style={{paddingLeft : "8px"}}> Matter Description </span>
 
       <div>
         {this.state.showSearchMatter && (
           <input
+          className="mt-2"
             placeholder="Search Matter "
             value={this.state.value}
             onChange={(e) => {
@@ -135,11 +136,12 @@ class matterManage extends React.Component {
             : this.setState({ ...this.state, showSearchClient: false });
         }}
       />
-      <span> Client </span>
+      <span style={{paddingLeft : "8px"}}> Client </span>
 
       <div>
         {this.state.showSearchClient && (
           <input
+          className="mt-2"
             placeholder="Search Client "
             value={this.state.value}
             onChange={(e) => {
@@ -182,11 +184,11 @@ class matterManage extends React.Component {
             : this.setState({ ...this.state, showSearchPractise: false });
         }}
       />
-      <span> Practise Area </span>
+      <span style={{paddingLeft : "8px"}}> Practise Area </span>
 
-      <div>
+      <div >
         {this.state.showSearchPractise && (
-          <input
+          <input className="mt-2"
             placeholder="Search Practise Area "
             value={this.state.value}
             onChange={(e) => {
