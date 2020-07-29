@@ -137,7 +137,7 @@ class Dashboard extends React.Component {
             
             })
 
-        },10*1000)
+        },60*1000)
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">
