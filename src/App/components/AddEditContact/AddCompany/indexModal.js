@@ -402,7 +402,7 @@ class editCompany extends React.Component{
               </Col>
             
             </Form.Row>
-            <Row>
+            <Form.Row>
                 <Col>
                   <Form.Group controlId={index}>
                     <Form.Label>ZipCode</Form.Label>
@@ -733,7 +733,7 @@ class editCompany extends React.Component{
               <p className="help-block text-danger">{error.Country}</p>
 
                 </Col>
-              </Row>
+              </Form.Row>
               <Button id={index} name="address" onClick={handleDelete}>-</Button>
 
                   
