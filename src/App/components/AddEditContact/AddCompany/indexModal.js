@@ -834,8 +834,10 @@ class editCompany extends React.Component{
                 </Col>
               </Row>
 
-  
-            <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create'}</Button>
+          <div className="float-right" style={{marginTop : "7.5%"}}>
+          <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
+
+          </div>
 
           </Form>
           </div>
