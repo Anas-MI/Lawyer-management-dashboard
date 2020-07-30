@@ -61,8 +61,7 @@ const CalendarContainer = props => {
       async function fetchData(){
         res =  await api.get('/calendar/viewforuser/'+userId)
         response =  await api.get('matter/viewforuser/'+userId)
-        const fetchEvents = await api.get('/calendar/showall')
-        setListEvent([...listEvent, ...fetchEvents.data.data])
+        setListEvent(res.data.data)
         setOptions(response.data.data)
         setdata()
       }
