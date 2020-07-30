@@ -52,7 +52,7 @@ class AddEditMatter extends React.Component{
       
     const editData = await api.get('/matter/view/'+this.props.location.state)
     this.setState({editData : editData.data.data, matterDescription : editData.data.data.matterDescription , relatedContacts : editData.data.data.relatedContacts? editData.data.data.relatedContacts : [] })
-
+    this.setState({client: editData.data.data.client._id})
 
     if(this.props.location.pathname==="/manage/Matter/edit"){
       editMode= true;

@@ -531,7 +531,7 @@ class newPerson extends React.Component {
               <h4>Personal Details</h4>
 
               <Upload {...props}>
-                <AntdButton>Select File</AntdButton>
+                <AntdButton>Upload Image</AntdButton>
               </Upload>
               <br />
 

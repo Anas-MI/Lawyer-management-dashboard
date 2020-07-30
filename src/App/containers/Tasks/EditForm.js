@@ -1,0 +1,189 @@
+import React from 'react'
+import { extend } from 'jquery'
+import { Form, Row , Col , Button } from "react-bootstrap";
+import { Input, Select } from 'antd';
+import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
+
+
+const { Option } = Select;
+
+const selectBefore = (
+  <Select defaultValue="Firm User" className="select-before">
+    <Option value="FirmUser">Firm User</Option>
+    <Option value="Contacts">Contacts</Option>
+  </Select>
+);
+class TaskForm extends React.Component{
+    render(){
+        console.log(this.props.editMode)
+        console.log(this.props.data)
+        return this.props.editMode ?
+        <Form className="form-details">
+        <Form.Group controlId="taskName">
+          <Form.Label>Task Name</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            defaultValue={this.props.data.taskName}
+            onChange={this.props.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="dueDate">
+          <Form.Label>Due Date</Form.Label>
+          <Form.Control
+            required
+            type="date"
+            defaultValue={this.props.data.dueDate.substring(0,10)}
+            onChange={this.props.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            required
+            defaultValue={this.props.data.description}
+            as="textarea"
+            rows="3"
+            onChange={this.props.handleChange}
+          />
+        </Form.Group>
+
+       {
+         /*
+          <Form.Group controlId="taskName">
+          <Form.Label>Assignee</Form.Label>
+          <div>
+            <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+          </div>
+        </Form.Group>
+         */
+       }
+
+        <Form.Group controlId="priority">
+          <Form.Label>Priority</Form.Label>
+          <Form.Control
+            as="select"
+           
+            required
+            defaultValue={this.props.data.priority}
+            onChange={this.props.handleChange}
+          >
+            <option>Low</option>
+            <option>Normal</option>
+            <option>High</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="matter">
+          <Form.Label>Matter</Form.Label>
+          <Form.Control
+            required
+            as="select"
+            defaultValue={this.props.data.matter}
+            onChange={this.props.handleChange}
+            name="matter"
+          >
+            {this.props.options}
+          </Form.Control>
+        </Form.Group>
+        <br />
+        {
+          /* 
+          <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify me when the task is completed" />
+        </Form.Group>
+        <br />
+        <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify assignee via email" />
+        </Form.Group>
+        <br />
+          */
+        }
+      </Form>
+      :
+      <Form className="form-details">
+            <Form.Group controlId="taskName">
+              <Form.Label>Task Name</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="Task Name"
+                onChange={this.props.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="dueDate">
+              <Form.Label>Due Date</Form.Label>
+              <Form.Control
+                required
+                type="date"
+                placeholder="Due Date"
+                onChange={this.props.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="description">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                required
+                as="textarea"
+                rows="3"
+                onChange={this.props.handleChange}
+              />
+            </Form.Group>
+
+          {/*
+            <Form.Group controlId="taskName">
+              <Form.Label>Assignee</Form.Label>
+              <div>
+                <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+              </div>
+            </Form.Group>
+          */
+          }
+
+            <Form.Group controlId="priority">
+              <Form.Label>Priority</Form.Label>
+              <Form.Control
+                as="select"
+                defaultValue="Normal"
+                required
+                onChange={this.props.handleChange}
+              >
+                <option>Low</option>
+                <option>Normal</option>
+                <option>High</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="matter">
+              <Form.Label>Matter</Form.Label>
+              <Form.Control
+                required
+                as="select"
+                onChange={this.props.handleChange}
+                name="matter"
+              >
+                {this.props.options}
+              </Form.Control>
+            </Form.Group>
+            <br />
+            {
+              /*
+                <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Notify me when the task is completed" />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Notify assignee via email" />
+            </Form.Group>
+            <br />
+              */
+
+            }
+           
+          </Form>
+    }
+}
+
+export default TaskForm
