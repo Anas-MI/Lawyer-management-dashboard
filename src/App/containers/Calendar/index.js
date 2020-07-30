@@ -171,6 +171,8 @@ const CalendarContainer = props => {
             const id = e.data.id 
             let eventdata = data
             eventdata.userId = userId 
+            eventdata.startTime = startTime
+            eventdata.endTime = endTime
            
             api.post('/calendar/update/'+id, eventdata )
             .then((res)=>{
@@ -182,7 +184,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-                window.location.reload()
+               window.location.reload()
             },1500)
             
         }

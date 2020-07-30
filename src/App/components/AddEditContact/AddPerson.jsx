@@ -389,6 +389,7 @@ class newPerson extends React.Component {
       } else {
         list[name][id][name] = value;
       }
+      console.log(list)
       this.setState(list);
       if (name === 'emailAddress')
         switch (name) {
@@ -533,7 +534,7 @@ class newPerson extends React.Component {
     const imageUpload = (
       <Upload {...props}>
         <AntdButton>
-          <UploadOutlined /> Click to Upload
+          <UploadOutlined /> Upload Image
         </AntdButton>
       </Upload>
     );

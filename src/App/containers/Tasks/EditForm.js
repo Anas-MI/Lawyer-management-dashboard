@@ -50,12 +50,16 @@ class TaskForm extends React.Component{
           />
         </Form.Group>
 
-        <Form.Group controlId="taskName">
+       {
+         /*
+          <Form.Group controlId="taskName">
           <Form.Label>Assignee</Form.Label>
           <div>
             <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
           </div>
         </Form.Group>
+         */
+       }
 
         <Form.Group controlId="priority">
           <Form.Label>Priority</Form.Label>
@@ -84,7 +88,9 @@ class TaskForm extends React.Component{
           </Form.Control>
         </Form.Group>
         <br />
-        <Form.Group controlId="formBasicCheckbox">
+        {
+          /* 
+          <Form.Group controlId="formBasicCheckbox">
           <Form.Check type="checkbox" label="Notify me when the task is completed" />
         </Form.Group>
         <br />
@@ -92,6 +98,8 @@ class TaskForm extends React.Component{
           <Form.Check type="checkbox" label="Notify assignee via email" />
         </Form.Group>
         <br />
+          */
+        }
       </Form>
       :
       <Form className="form-details">
@@ -125,12 +133,15 @@ class TaskForm extends React.Component{
               />
             </Form.Group>
 
+          {/*
             <Form.Group controlId="taskName">
               <Form.Label>Assignee</Form.Label>
               <div>
                 <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
               </div>
             </Form.Group>
+          */
+          }
 
             <Form.Group controlId="priority">
               <Form.Label>Priority</Form.Label>
@@ -157,7 +168,9 @@ class TaskForm extends React.Component{
               </Form.Control>
             </Form.Group>
             <br />
-            <Form.Group controlId="formBasicCheckbox">
+            {
+              /*
+                <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Notify me when the task is completed" />
             </Form.Group>
             <br />
@@ -165,6 +178,10 @@ class TaskForm extends React.Component{
               <Form.Check type="checkbox" label="Notify assignee via email" />
             </Form.Group>
             <br />
+              */
+
+            }
+           
           </Form>
     }
 }

@@ -318,7 +318,7 @@ class AddCompany extends React.Component {
               </div>
               <Upload {...imageHandler} onChange={handleImageChange}>
                 <antdButton className="form-upload-button">
-                  <UploadOutlined /> Click to Upload
+                  <UploadOutlined /> Upload Image
                 </antdButton>
               </Upload>
               <br></br>
