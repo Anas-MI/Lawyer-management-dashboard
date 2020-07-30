@@ -55,7 +55,6 @@ const EditorTemplate = props => {
           <td className="e-textlabel">Title</td>
           <td colSpan={4}>
             <input
-              required
               id="title"
               className="e-field e-input"
               type="text"

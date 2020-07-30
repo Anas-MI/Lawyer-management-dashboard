@@ -519,7 +519,7 @@ class Activity extends React.Component{
 
             const data = {
               userId : this.props.userId,
-              status : "Unpaid",
+              status : "draft",
               invoiceId: this.state.invoiceId,
               client : thisMatter.data.data.client._id,
               matter : thisMatter.data.data._id,

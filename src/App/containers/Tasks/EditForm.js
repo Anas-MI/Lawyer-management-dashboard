@@ -3,6 +3,7 @@ import { extend } from 'jquery'
 import { Form, Row , Col , Button } from "react-bootstrap";
 import { Input, Select } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
+import api from '../../../resources/api';
 
 
 const { Option } = Select;
@@ -13,7 +14,35 @@ const selectBefore = (
     <Option value="Contacts">Contacts</Option>
   </Select>
 );
+
 class TaskForm extends React.Component{
+  constructor(){
+    super()
+    this.state = {
+      matter : ""
+    }
+  }
+  componentDidMount(){
+    if(this.props.editMode){
+      api.get('/matter/view/'+ this.props.data.matter).then((res)=>{
+        console.log(res)
+        const formData = <Form.Group controlId="matter">
+                          <Form.Label>Matter</Form.Label>
+                          <Form.Control
+                            required
+                            as="select"
+                            defaultValue={res.data.data.matterDescription}
+                            onChange={this.props.handleChange}
+                            name="matter"
+                          >
+                            <option>Select a matter</option>
+                            {this.props.options}
+                          </Form.Control>
+                        </Form.Group>
+        this.setState({matter : formData})
+      })
+    }
+  }
     render(){
         console.log(this.props.editMode)
         console.log(this.props.data)
@@ -75,18 +104,8 @@ class TaskForm extends React.Component{
             <option>High</option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="matter">
-          <Form.Label>Matter</Form.Label>
-          <Form.Control
-            required
-            as="select"
-            defaultValue={this.props.data.matter}
-            onChange={this.props.handleChange}
-            name="matter"
-          >
-            {this.props.options}
-          </Form.Control>
-        </Form.Group>
+        {this.state.matter}
+        
         <br />
         {
           /* 
@@ -164,6 +183,7 @@ class TaskForm extends React.Component{
                 onChange={this.props.handleChange}
                 name="matter"
               >
+                <option>Select a matter</option>
                 {this.props.options}
               </Form.Control>
             </Form.Group>

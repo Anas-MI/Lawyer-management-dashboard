@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Card, Table, Tabs, Tab,} from 'react-bootstrap';
+import {Row, Col, Card, Table, Tabs, Tab, Button} from 'react-bootstrap';
 import {notification} from 'antd'
 import api from '../../resources/api'
 import Aux from "../../hoc/_Aux";
@@ -15,8 +15,61 @@ class Dashboard extends React.Component {
     constructor(){
         super()
         this.state = {
-            time : ""
+            time : "",
+            taskCount : 0,
+            eventCount : 0,
+            draftCount : 0,
+            draftAmount : 0,
+            unPaidCount : 0,
+            unPaidAmount :0
         }
+    }
+    componentDidMount(){
+        api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
+            let tcount = 0
+       
+            res.data.data.map((val,index)=>{
+                if(val.status == false){
+                    tcount++
+                }
+            })
+            this.setState({taskCount : tcount})
+        })
+
+        api.get('/calendar/viewforuser/'+this.props.userId).then((res)=>{
+            let Ecount = 0
+        
+            res.data.data.map((val,index)=>{
+                Ecount++
+            })
+            this.setState({eventCount : Ecount})
+        })
+
+        api.get('/billing/bill/viewforuser/'+this.props.userId).then((res)=>{
+            let draftCount = 0
+            let draftAmount = 0
+            let unPaidCount = 0
+            let unPaidAmount =0
+            res.data.data.map((value , index)=>{
+             
+              if(value.status=="Unpaid"){
+                unPaidCount++
+                unPaidAmount = unPaidAmount + parseFloat(value.balance)
+              }
+              if(value.status=="draft"){
+                draftCount++
+                draftAmount = draftAmount + parseFloat(value.balance)
+            
+              }
+              
+            })
+            this.setState({
+                unPaidAmount : unPaidAmount,
+                unPaidCount : unPaidCount,
+                draftAmount : draftAmount,
+                draftCount : draftCount
+            })
+          })
     }
     convertTime = (serverdate) => {
         var date = new Date(serverdate);
@@ -26,6 +79,7 @@ class Dashboard extends React.Component {
         var locdat = new Date(toutc + ' UTC');
         return locdat;
       };
+    
     render() {
         
         setInterval(()=>{
@@ -208,11 +262,11 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             297</h3>
+                                        {this.state.taskCount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
+                                        <Button variant="success" onClick={()=>this.props.history.push('/tasks' , "from dashboard")}>Create Task</Button>
                                     </div>
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -229,11 +283,11 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                             314</h3>
+                                            {this.state.eventCount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Events</a>
+                                        <Button variant="info" onClick={()=>this.props.history.push('/calendar')}>Create Event</Button>
                                     </div>
                                 </div>
                                 {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -250,7 +304,7 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                            453</h3>
+                                        {this.state.draftCount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">
@@ -319,7 +373,7 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             724</h3>
+                                            ${this.state.draftAmount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">
@@ -339,7 +393,7 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             25</h3>
+                                            {this.state.unPaidCount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">
@@ -361,7 +415,7 @@ class Dashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             98</h3>
+                                            ${this.state.unPaidAmount}</h3>
                                     </div>
 
                                     <div className="col-8 text-right">

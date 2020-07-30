@@ -28,7 +28,7 @@ class Tasks extends React.Component {
       visible: false,
       confirmLoading: false,
       loading: false,
-      Data: { priority: 'Normal', matter: '' },
+      Data: { priority: 'Normal', matter: "" },
       editMode: false,
       res: '',
       selected: null,
@@ -90,21 +90,26 @@ class Tasks extends React.Component {
   handleOk = (e) => {
     e.preventDefault();
     notification.destroy();
-    if (
-      this.state.Data.taskName === '' ||
-      this.state.Data.taskName === undefined ||
-      this.state.Data.description === '' ||
-      this.state.Data.taskName === undefined ||
-      this.state.Data.dueDate === '' ||
-      this.state.Data.dueDate === undefined ||
-      this.state.Data.matter === '' ||
-      this.state.Data.matter === undefined
-    ) {
-      console.log(this.state.Data);
-
-      return notification.warning({
-        message: 'Fields Should Not Be Empty',
+    if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
+      notification.warning({
+        message: 'Please provide a taskName',
       });
+    }
+    if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
+      notification.warning({
+        message: 'Please provide a description',
+      });
+    }
+    if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
+      notification.warning({
+          message: 'Please select a due date',
+        });
+    }
+    if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
+      notification.warning({
+        message: 'Please select a matter',
+      });
+      
     } else {
       this.setState({
         confirmLoading: true,
@@ -113,27 +118,39 @@ class Tasks extends React.Component {
       data.userId = this.props.userId;
       if (this.state.editMode) {
         api
-          .post('tasks/edit/' + this.state.selected, data)
-          .then(() => this.openNotificationWithSucces('success'))
+          .post('tasks/edit/' + data._id, data)
+          .then((res) => {
+            console.log(res)
+            this.openNotificationWithSucces('success')
+          }
+          )
           .catch(() => {
             this.openNotificationWithFailure('error');
           });
       } else {
         api
           .post('/tasks/create', data)
-          .then(() => this.openNotificationWithSucces('success'))
+          .then((res) => {
+            console.log(res)
+            this.openNotificationWithSucces('success')
+          })
           .catch(() => {
             this.openNotificationWithFailure('error');
           });
       }
-      setTimeout(() => {
-        this.setState({
-          visible: false,
-          confirmLoading: false,
-        });
-        window.location.reload();
-      }, 1000);
-    }
+      if(this.props.location.state === "from dashboard"){
+        this.props.history.goBack()
+      }else{
+        setTimeout(() => {
+          this.setState({
+            visible: false,
+            confirmLoading: false,
+          });
+          //window.location.reload();
+        }, 1000);
+      }
+      }
+      
   };
 
   handelAction = (_id) =>{
@@ -177,8 +194,11 @@ class Tasks extends React.Component {
   handleChange = (e) => {
     e.persist();
     let newState = this.state;
-    if (e.target.id === 'matter') {
-      newState.Data[e.target.id] = response[e.target.selectedIndex];
+    if (e.target.id === "matter" ) {
+      if( e.target.selectedIndex > 0){
+        newState.Data[e.target.id] = response[e.target.selectedIndex - 1];
+      }
+      
     } else {
       newState.Data[e.target.id] = e.target.value;
     }
@@ -213,12 +233,15 @@ class Tasks extends React.Component {
     this.props.history.push('/tasks/view/list', record)
   };
   async componentDidMount() {
+    if(this.props.location.state === "from dashboard"){
+      this.showModal()
+    }
     let tableData = [];
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
-    console.log(response);
-    options = response.map((value, index) => {
+        console.log(response);
+        options = response.map((value, index) => {
       if (index == 0) {
         let newdata = this.state;
         newdata.Data.matter = value._id;
@@ -428,8 +451,9 @@ class Tasks extends React.Component {
       },
     },
   ];
-
+  
   render() {
+    console.log(this.props)
     const operations = (
       <span>
         <Button className="ml-auto" color="success" onClick={this.exportPDF}>

@@ -44,7 +44,7 @@ class editCompany extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[],employee: [""],
+      address : [], emailAddress : [], phone : [], website:[],employees: [""],
       optionsss : null
     }
   }
@@ -201,12 +201,12 @@ class editCompany extends React.Component{
       let list = this.state;
       console.log(e)
       const { name, id, value, tagName, selectedIndex } = e.target;
-      if(name == "employee"){
+      if(name == "employees"){
        if(selectedIndex != 0){
-        list.employee[id] = contacts[selectedIndex - 1]._id
+        list.employees[id] = contacts[selectedIndex - 1]._id
        }
       }else{
-        if (tagName === 'SELECT' && name != "employee") {
+        if (tagName === 'SELECT' && name != "employees") {
           name === 'emailAddress'
             ? (list[name][id][`emailType`] = value)
             : (list[name][id][`${name}Type`] = value);
@@ -258,8 +258,8 @@ class editCompany extends React.Component{
           list.website.push("")
           this.setState(list)
         }
-        else if (type === 'employee') {
-          list.employee.push("");
+        else if (type === 'employees') {
+          list.employees.push("");
           this.setState(list);
         }
      
@@ -747,10 +747,10 @@ class editCompany extends React.Component{
             </div>
             </div>
             <div className="form-header-container mb-4">
-                <h4>Employees</h4>
+                <h4>employeess</h4>
                 <br></br>
                 {
-                  this.state.employee.map((val, index)=>{
+                  this.state.employees.map((val, index)=>{
                     return <div >
           
                       <Row>
@@ -759,7 +759,7 @@ class editCompany extends React.Component{
                           <Form.Control
                             as="select"
                             name="Payment profile"
-                            name="employee"
+                            name="employees"
                             onClick = {handleMultipleChange}
                             //defaultValue={this.props.record[idx]}
                             //onChange={this.props.change}
@@ -770,7 +770,7 @@ class editCompany extends React.Component{
                         </Form.Group>
                       </Col>
                       <Col>
-                        <Button id={index} name="employee" onClick={handleDelete}>-</Button>
+                        <Button id={index} name="employees" onClick={handleDelete}>-</Button>
                       </Col>
                     </Row>
                     </div>
@@ -779,7 +779,7 @@ class editCompany extends React.Component{
                 }
                 <br></br>
                  <div className="form-add mb-4">
-                    <span onClick={()=>addFeild("employee")}>Add a employee</span>
+                    <span onClick={()=>addFeild("employees")}>Add a employees</span>
                     </div>
                     
               <br></br>
