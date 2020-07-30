@@ -107,6 +107,9 @@ const ViewMatter = React.lazy(() =>
 const Bills = React.lazy(() =>
   import('./App/containers/Matter/VIewMatter/AcitivityBills')
 );
+const CreateBills = React.lazy(() =>
+  import('./App/containers/Billings/CreateBills/CreateBill')
+);
 const Settings = React.lazy(() => import('./App/containers/Settings/index'));
 const customFeilds = React.lazy(() =>
   import('./App/containers/Settings/CustomFeilds/CustomFeilds')
@@ -345,6 +348,12 @@ const routes = [
     exact: true,
     name: 'Bills for a Matter',
     component: Bills,
+  },
+  {
+    path: '/create/bills',
+    exact: true,
+    name: 'Bills',
+    component: CreateBills,
   },
   {
     path: '/view/matter/invoice',

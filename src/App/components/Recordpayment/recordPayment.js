@@ -21,9 +21,11 @@ class Record extends React.Component{
            clientId : "",
            clientData :"",
            tableData : [],
+           unpaidBills : [],
            payment :[],
            total : 0,
-           fromTotal  : true
+           fromTotal  : true,
+
        }
    }
    componentDidMount(){
@@ -77,10 +79,12 @@ class Record extends React.Component{
                         let paidBills = []
                         let unpaidBills = []
                         res.data.data.map((value , index)=>{
+                               if(value.status == "Unpaid"){
                                 let pay = this.state.payment
                                 pay[index] = 0.00
                                 this.setState({payment : pay , total : this.state.total  + parseFloat(value.balance)})
 
+                               }
                             //    const issueDate = today.getDate() + "/" + today.getMonth() + "/" + today.getFullYear()
                                 const temp = {
                                   id : value._id,
@@ -117,6 +121,7 @@ class Record extends React.Component{
                                 if(value.status=="Unpaid"){
                                   unpaidBills.push(temp)
                                 }
+                            
                                 tableData.push(temp)
                               })
                               this.setState({tableData :  tableData, paidBills : paidBills , unpaidBills : unpaidBills})
@@ -264,7 +269,7 @@ class Record extends React.Component{
                             <div>
 
                                 <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">
-                                    <Table dataSource={this.state.tableData} columns={columns} />
+                                    <Table dataSource={this.state.unpaidBills} columns={columns} />
                                 </Card> 
 
 
