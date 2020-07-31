@@ -3,8 +3,31 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 
 class ListForm extends React.Component{
+  constructor(){
+    super()
+    this.state = {
+     name : '',
+    
+    }
+  }
+  componentDidMount(){
+    this.setState({
+      name : ""
+    })
+      if(this.props.editMode){
+        this.setState({
+          name : this.props.record.name
+        })
+      }else{
+        this.setState({
+          name : ""
+        })
+      }
+  }
     render(){
+        console.log(this.state)
         console.log(this.props.editMode)
+        console.log(this.props.record)
         const ModalForm = this.props.editMode ? <Form>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
@@ -12,7 +35,7 @@ class ListForm extends React.Component{
           type="text" 
           placeholder="Name"
           name="name"
-          defaultValue = {this.props.record.name}
+          defaultValue = {this.state.name}
           onChange={this.props.handleChange} />
         </Form.Group>
     

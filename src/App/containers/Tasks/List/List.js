@@ -34,7 +34,7 @@ class AddList extends React.Component {
           description : value.decription,
           practiseArea : value.practiseArea,
         }
-        console.log(temp)
+    
         tableData.push(temp)
       })
       this.setState({tableData : tableData})
@@ -48,6 +48,8 @@ class AddList extends React.Component {
     this.setState({
       visible: true,
     });
+    console.log("show modal" + this.state)
+    console.log("showModal " + this.props)
   };
 
   handleOk = () => {
@@ -57,19 +59,14 @@ class AddList extends React.Component {
       if(this.state.editMode){
         const data = this.state.data
         api.post('/tasks/list/edit/'+data.id,data).then((res)=>{
-        
-          
-          let tableData = this.state.tableData
-          tableData[data.key] = data
-          this.setState({tableData : tableData})
-          console.log(this.state.tableData)
-          
+  
          this.setState({data :  {
               userId : user.token.user._id
             },
             name : '',
             editMode : false
           })
+          this.componentDidMount()
           notification.success({message : "List Edited Successfully"})
         }).catch((err)=>{
           notification.error({message : "Failed"})
@@ -81,11 +78,7 @@ class AddList extends React.Component {
   
       }else {
         api.post('/tasks/list/create',this.state.data).then((res)=>{
-          let tableData = this.state.tableData
-          console.log(tableData)
-          tableData.push(this.state.data)
-          this.setState({tableData : tableData})
-          console.log(this.state.tableData)
+          this.componentDidMount()
           notification.success({message : "List created Successfully"})
         }).catch((err)=>{
           console.log(err)
@@ -99,7 +92,7 @@ class AddList extends React.Component {
       }
       
           setTimeout(() => {
-        window.location.reload()
+        //window.location.reload()
         this.setState({
           visible: false,
           confirmLoading: false,
@@ -112,8 +105,7 @@ class AddList extends React.Component {
   handleCancel = () => {
     console.log('Clicked cancel button');
     const newstate = this.state
-    delete newstate.data
-    delete newstate.editMode
+   
     newstate.data = {
       userId : user.token.user._id,
       name : '',
@@ -122,9 +114,8 @@ class AddList extends React.Component {
     newstate.editMode = false
     this.setState(newstate);
     console.log(this.state.data)
-    setTimeout(()=>{
-      window.location.reload()
-    }, 600) 
+    
+    
   };
 
  
@@ -190,48 +181,22 @@ class AddList extends React.Component {
 
       console.log(record)
       this.setState({editMode : true, data : record , visible : true})
-    
-      /*
-     
-      if (type === 'contact') {
-        props.history.push('/edit/contact', record);
-      } else if (type === 'company') {
-        props.history.push('/edit/company', record);
-      }
-      */
+ 
     };
   
     const handleDelete = (record) => {
       api
           .get('/tasks/list/delete/' + record.id)
           .then((res) => {
+            this.componentDidMount()
             notification.success({ message: 'List deleted.' })
-            let tableData = this.state.tableData
-            tableData.splice(record.key , 1)
-            this.setState({tableData : tableData})
-            console.log(this.state.tableData)
+          
           })
           .catch(() => notification.error({ message: 'Failed to delete' }));
           setTimeout(() => {
-            window.location.reload();
+            //window.location.reload();
           }, 1000);
-      /*
-    
-      if (type === 'contact') {
-        api
-          .get('/contact/delete/' + record._id)
-          .then(() => notification.success({ message: 'Contact deleted.' }))
-          .catch(() => notification.error({ message: 'Failed to delete' }));
-      } else if (type === 'company') {
-        api
-          .get('/company/delete/' + record._id)
-          .then(() => notification.success({ message: 'Company deleted.' }))
-          .catch(() => notification.error({ message: 'Failed to delete' }));
-      }
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-      */
+     
     };
     const { visible, confirmLoading } = this.state;
     const handleChange = (e) =>{
@@ -264,7 +229,7 @@ class AddList extends React.Component {
               Cancel
             </Button>,
             <Button type="primary"  onClick={this.handleOk}>
-              Create List
+              {this.state.editMode ? "Update List" : "Create list"}
             </Button>,
           ]}
         >

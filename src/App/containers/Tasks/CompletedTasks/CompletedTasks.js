@@ -5,7 +5,7 @@ import api from '../../../../resources/api';
 function CompletedTask(props) {
 
   const [state, setState] = useState([])
-
+ /*
   useEffect(() => {
     api.get('/tasks/showall')
     .then((res)=> {
@@ -16,10 +16,11 @@ function CompletedTask(props) {
       setState([...state, ...newdata])
     })
   }, []);
+  */
 
   return (
     <div>
-      <Table columns={props.columns} dataSource={state} />
+      <Table columns={props.columns} dataSource={props.tableData} />
     </div>
   );
 }

@@ -87,103 +87,6 @@ class Tasks extends React.Component {
     });
   };
 
-  handleOk = (e) => {
-    e.preventDefault();
-    notification.destroy();
-    if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
-      notification.warning({
-        message: 'Please provide a taskName',
-      });
-    }
-    if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
-      notification.warning({
-        message: 'Please provide a description',
-      });
-    }
-    if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
-      notification.warning({
-          message: 'Please select a due date',
-        });
-    }
-    if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
-      notification.warning({
-        message: 'Please select a matter',
-      });
-      
-    } else {
-      this.setState({
-        confirmLoading: true,
-      });
-      const data = this.state.Data;
-      data.userId = this.props.userId;
-      if (this.state.editMode) {
-        api
-          .post('tasks/edit/' + data._id, data)
-          .then((res) => {
-            console.log(res)
-            this.openNotificationWithSucces('success')
-          }
-          )
-          .catch(() => {
-            this.openNotificationWithFailure('error');
-          });
-      } else {
-        api
-          .post('/tasks/create', data)
-          .then((res) => {
-            console.log(res)
-            this.openNotificationWithSucces('success')
-          })
-          .catch(() => {
-            this.openNotificationWithFailure('error');
-          });
-      }
-      if(this.props.location.state === "from dashboard"){
-        this.props.history.goBack()
-      }else{
-        setTimeout(() => {
-          this.setState({
-            visible: false,
-            confirmLoading: false,
-          });
-          //window.location.reload();
-        }, 1000);
-      }
-      }
-      
-  };
-
-  handelAction = (_id) =>{
-    this.setState({
-      status : true
-    })
-    const data = this.state.status;
-    console.log(data)
-    api.get('/tasks/updatetask/'+_id, data)
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-        console.log(err); 
-      });
-   setTimeout(()=>{
-    window.location.reload()
-   },600)
-  }
-  handelNonAction = (_id) =>{
-    this.setState({
-      status : false
-    })
-    const data = this.state.status;
-    console.log(data)
-    api.get('/tasks/updatetask/'+_id, data)
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-        console.log(err); 
-      });
-  }
 
   handleCancel = () => {
     this.setState({
@@ -206,21 +109,9 @@ class Tasks extends React.Component {
     console.log(this.state);
   };
 
-  EditHandler(_id) {
-    this.setState({ editMode: true });
-    this.setState({ Data: _id });
-    console.log(this.state.Data)
-    this.setState({ selected: _id });
-    this.showModal();
-  }
+  
 
-  deleteHandler(_id) {
-    api.get('tasks/delete/' + _id);
-    message.success('Deleted');
-    setTimeout(() => {
-      window.location.reload();
-    }, 1500);
-  }
+ 
   getISTDate(dateInUTC) {
     var localDate = new Date(dateInUTC);
     return localDate.toLocaleString();
@@ -237,6 +128,8 @@ class Tasks extends React.Component {
       this.showModal()
     }
     let tableData = [];
+    let CompletedData = []
+    let upcomingData = []
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
@@ -251,11 +144,22 @@ class Tasks extends React.Component {
     });
 
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
-      console.log(res.data.data);
-      const newdata = res.data.data.filter(function( obj ) {
-        return obj.status == false;});
-      tableData = [ ...tableData, ...newdata]  
+      console.log(res)
+      res.data.data.map((value, index)=>{
+        const newdata = value
+        newdata.key = index 
+        if(value.status == false){
+          
+          upcomingData.push(newdata)
+        }
+        if(value.status == true){
 
+          CompletedData.push(newdata)
+        }
+        tableData.push(newdata)
+        
+      })
+      this.setState({ CompletedData, tableData, options , upcomingData });
       // res.data.data.map((item, index) => {
       //   tableData = [
       //     ...tableData,
@@ -265,7 +169,7 @@ class Tasks extends React.Component {
       //     },
       //   ];
       // });
-
+/*
       ListData = res.data.data.map((value, index) => {
         return (
           <tr>
@@ -291,9 +195,10 @@ class Tasks extends React.Component {
             </td>
           </tr>
         );
-      });
+      });*/
     });
-    this.setState({ ListData, tableData, options });
+    
+
   }
 
   columns = [
@@ -373,6 +278,122 @@ class Tasks extends React.Component {
       },
     },
   ];
+  deleteHandler(_id) {
+    api.get('tasks/delete/' + _id).then((res)=>{
+      notification.success({message : "Task Deleted"})
+      this.componentDidMount()
+    })
+   
+  }
+  EditHandler(_id) {
+    this.setState({ editMode: true });
+    this.setState({ Data: _id });
+    console.log(this.state.Data)
+    this.setState({ selected: _id });
+    this.showModal();
+  }
+  handleOk = (e) => {
+    e.preventDefault();
+    notification.destroy();
+    if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
+      notification.warning({
+        message: 'Please provide a taskName',
+      });
+    }
+    if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
+      notification.warning({
+        message: 'Please provide a description',
+      });
+    }
+    if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
+      notification.warning({
+          message: 'Please select a due date',
+        });
+    }
+    if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
+      notification.warning({
+        message: 'Please select a matter',
+      });
+      
+    } else {
+      this.setState({
+        confirmLoading: true,
+      });
+      const data = this.state.Data;
+      data.userId = this.props.userId;
+      if (this.state.editMode) {
+        api
+          .post('tasks/edit/' + data._id, data)
+          .then((res) => {
+            console.log(res)
+            this.componentDidMount()
+            notification.success({message : "Task Edited"})
+          }
+          )
+          .catch(() => {
+            this.openNotificationWithFailure('error');
+          });
+      } else {
+        api
+          .post('/tasks/create', data)
+          .then((res) => {
+            console.log(res)
+            this.openNotificationWithSucces('success')
+            this.componentDidMount()
+          })
+          .catch(() => {
+            this.openNotificationWithFailure('error');
+          });
+      }
+      if(this.props.location.state === "from dashboard"){
+        this.props.history.goBack()
+      }else{
+        setTimeout(() => {
+          this.setState({
+            visible: false,
+            confirmLoading: false,
+          });
+          //window.location.reload();
+        }, 1000);
+      }
+      }
+      
+  };
+
+  handelAction = (_id) =>{
+    this.setState({
+      status : true
+    })
+    const data = this.state.status;
+    console.log(data)
+    api.get('/tasks/updatetask/'+_id, data)
+    .then((res) => {
+      this.componentDidMount()
+      notification.success({message : "Marked as completed"})
+      console.log(res)
+    })
+    .catch((err) => {
+        console.log(err); 
+      });
+   setTimeout(()=>{
+    //window.location.reload()
+   },600)
+  }
+  handelNonAction = (record) =>{
+    const data = record
+    data.status = false
+    console.log(data)
+    api.get('/tasks/setfalse/' + record._id, data)
+    .then((res) => {
+      console.log(res)
+      this.componentDidMount()
+      notification.success({message : "Unmarked as completed"})
+    })
+    .catch((err) => {
+        console.log(err); 
+      });
+  }
+
 
   newcolumns = [
     {
@@ -412,7 +433,7 @@ class Tasks extends React.Component {
         return (
           <Popconfirm
             title="Mark as Incomplete"
-            onConfirm={() => this.handelNonAction(record._id)}
+            onConfirm={() => this.handelNonAction(record)}
             onCancel={this.cancel}
             okText="Yes"
             cancelText="No"
@@ -453,7 +474,7 @@ class Tasks extends React.Component {
   ];
   
   render() {
-    console.log(this.props)
+    console.log(this.state.tableData)
     const operations = (
       <span>
         <Button className="ml-auto" color="success" onClick={this.exportPDF}>
@@ -478,13 +499,13 @@ class Tasks extends React.Component {
           <TabPane tab="Upcoming Tasks" key="1">
             <UpcomingTasks
               columns={this.columns}
-              tableData={this.state.tableData}
+              tableData={this.state.upcomingData}
             />
           </TabPane>
           <TabPane tab="Completed Tasks" key="2">
             <CompletedTask
               columns={this.newcolumns}
-              tableData={this.state.tableData}
+              tableData={this.state.CompletedData}
             />
           </TabPane>
           <TabPane tab="List" key="3">

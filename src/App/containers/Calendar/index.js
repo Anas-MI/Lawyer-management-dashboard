@@ -167,7 +167,7 @@ const CalendarContainer = props => {
             },1500)
         }
         if(e.requestType==="eventChanged"){
-     
+            console.log(e.data.id)
             let eventdata = data
             eventdata.userId = userId 
             eventdata.startTime = startTime
@@ -183,7 +183,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-                window.location.reload()
+               // window.location.reload()
             },1500)
             
         }
