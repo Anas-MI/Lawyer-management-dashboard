@@ -9,6 +9,7 @@ import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import jsPDF from 'jspdf';
 import TaskForm from './EditForm'
+import TaskForm2 from './Taskform'
 import { Input, Select } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -91,6 +92,8 @@ class Tasks extends React.Component {
   handleCancel = () => {
     this.setState({
       visible: false,
+      editMode : false,
+      Data: { priority: 'Normal', matter: "" },
     });
   };
 
@@ -290,7 +293,6 @@ class Tasks extends React.Component {
     this.setState({ Data: _id });
     console.log(this.state.Data)
     this.setState({ selected: _id });
-    this.showModal();
   }
   handleOk = (e) => {
     e.preventDefault();
@@ -351,6 +353,8 @@ class Tasks extends React.Component {
         setTimeout(() => {
           this.setState({
             visible: false,
+            editMode : false,
+            Data: { priority: 'Normal', matter: "" },
             confirmLoading: false,
           });
           //window.location.reload();
@@ -449,7 +453,7 @@ class Tasks extends React.Component {
       key: '6',
       render: (_, record) => {
         return (
-          <Button onClick={() => this.EditHandler(record._id)}>Edit</Button>
+          <Button onClick={() => this.EditHandler(record)}>Edit</Button>
         );
       },
     },
@@ -519,7 +523,16 @@ class Tasks extends React.Component {
           onCancel={this.handleCancel}
           onOk={this.handleOk}
         >
-          <TaskForm options={this.state.options} data={this.state.Data} editMode={this.state.editMode} handleChange={this.handleChange}></TaskForm>
+          <TaskForm2 options={this.state.options} handleChange={this.handleChange}></TaskForm2>
+        </Modal>
+        <Modal
+          title="Edit task"
+          visible={this.state.editMode}
+          confirmLoading={this.state.confirmLoading}
+          onCancel={this.handleCancel}
+          onOk={this.handleOk}
+        >
+          <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
         </Modal>
       </div>
     );

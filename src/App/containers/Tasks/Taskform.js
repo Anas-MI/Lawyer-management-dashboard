@@ -1,3 +1,5 @@
+
+
 import React from 'react'
 import { extend } from 'jquery'
 import { Form, Row , Col , Button } from "react-bootstrap";
@@ -51,7 +53,7 @@ class TaskForm extends React.Component{
           <Form.Control
             required
             type="text"
-            defaultValue={this.props.data.taskName}
+            placeholder="Task Name"
             onChange={this.props.handleChange}
           />
         </Form.Group>
@@ -61,7 +63,7 @@ class TaskForm extends React.Component{
           <Form.Control
             required
             type="date"
-            defaultValue={this.props.data.dueDate ? this.props.data.dueDate.substring(0,10) : ""}
+            placeholder="Due Date"
             onChange={this.props.handleChange}
           />
         </Form.Group>
@@ -70,31 +72,28 @@ class TaskForm extends React.Component{
           <Form.Label>Description</Form.Label>
           <Form.Control
             required
-            defaultValue={this.props.data.description}
             as="textarea"
             rows="3"
             onChange={this.props.handleChange}
           />
         </Form.Group>
 
-       {
-         /*
-          <Form.Group controlId="taskName">
+      {/*
+        <Form.Group controlId="taskName">
           <Form.Label>Assignee</Form.Label>
           <div>
             <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
           </div>
         </Form.Group>
-         */
-       }
+      */
+      }
 
         <Form.Group controlId="priority">
           <Form.Label>Priority</Form.Label>
           <Form.Control
             as="select"
-           
+            defaultValue="Normal"
             required
-            defaultValue={this.props.data.priority}
             onChange={this.props.handleChange}
           >
             <option>Low</option>
@@ -102,12 +101,22 @@ class TaskForm extends React.Component{
             <option>High</option>
           </Form.Control>
         </Form.Group>
-        {this.state.matter}
-        
+        <Form.Group controlId="matter">
+          <Form.Label>Matter</Form.Label>
+          <Form.Control
+            required
+            as="select"
+            onChange={this.props.handleChange}
+            name="matter"
+          >
+            <option>Select a matter</option>
+            {this.props.options}
+          </Form.Control>
+        </Form.Group>
         <br />
         {
-          /* 
-          <Form.Group controlId="formBasicCheckbox">
+          /*
+            <Form.Group controlId="formBasicCheckbox">
           <Form.Check type="checkbox" label="Notify me when the task is completed" />
         </Form.Group>
         <br />
@@ -116,10 +125,10 @@ class TaskForm extends React.Component{
         </Form.Group>
         <br />
           */
+
         }
+       
       </Form>
-    
-      
     }
 }
 
