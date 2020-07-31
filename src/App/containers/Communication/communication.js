@@ -158,6 +158,7 @@ class Communication extends React.Component{
                   body : "",
                   from : user.token.user._id
               }})
+                this.componentDidMount()
                 notification.success({ message: 'Log Edited !' });
               })
               .catch((err) => {
@@ -181,7 +182,7 @@ class Communication extends React.Component{
                 */
                
                 setTimeout(() => {
-                  window.location.reload();
+                  //window.location.reload();
                 }, 1500)
               });
   
@@ -205,6 +206,7 @@ class Communication extends React.Component{
                 const newData = this.state.tableData
                 newData.push(res.data.data)
                 this.setState({tableData : newData})
+                this.componentDidMount()
                 notification.success({ message: 'Log Added !' });
               })
               .catch((err) => {
@@ -228,7 +230,7 @@ class Communication extends React.Component{
                 */
                
                 setTimeout(() => {
-                  window.location.reload();
+                //  window.location.reload();
                 }, 1500)
               });
   
@@ -368,10 +370,10 @@ class Communication extends React.Component{
             const handleDelete = record => {
             
               api.get('/communication/delete/'+record.id).then((res)=>{
-  
+                this.componentDidMount()
                 notification.success({message : "Log Deleted !"})
                 setTimeout(()=>{
-                  window.location.reload()
+                  //window.location.reload()
                 },1500)
               }).catch((err)=>{
     

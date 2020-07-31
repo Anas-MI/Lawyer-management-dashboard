@@ -843,7 +843,7 @@ class AddCompany extends React.Component {
               </div>
               </div>
               <div className="form-header-container mb-4">
-                <h4>employeess</h4>
+                <h4>Employees</h4>
                 <br></br>
                 {
                   this.state.employees.map((val, index)=>{

@@ -174,6 +174,7 @@ class Activity extends React.Component {
           api
             .post('/activity/edit/' + this.state.data.id, data)
             .then((res) => {
+              this.componentDidMount()
               notification.success({ message: 'Time entry Edited !' });
             })
             .catch((err) => {
@@ -193,7 +194,7 @@ class Activity extends React.Component {
                 },
               });
               setTimeout(() => {
-                window.location.reload();
+                //window.location.reload();
               }, 1500);
             });
         } else if (type === 'expense') {
@@ -203,6 +204,7 @@ class Activity extends React.Component {
           api
             .post('/activity/edit/' + this.state.data.id, data)
             .then((res) => {
+              this.componentDidMount()
               notification.success({ message: 'Expense Edited!' });
             })
             .catch((err) => {
@@ -222,7 +224,7 @@ class Activity extends React.Component {
                 },
               });
               setTimeout(() => {
-                window.location.reload();
+               // window.location.reload();
               }, 1500);
             });
         }
@@ -234,6 +236,7 @@ class Activity extends React.Component {
           api
             .post('/activity/create', data)
             .then((res) => {
+              this.componentDidMount()
               notification.success({ message: 'Time entry Added !' });
             })
             .catch((err) => {
@@ -253,7 +256,7 @@ class Activity extends React.Component {
                 },
               });
               setTimeout(() => {
-                window.location.reload();
+                //window.location.reload();
               }, 1500);
             });
         } else if (type === 'expense') {
@@ -263,6 +266,7 @@ class Activity extends React.Component {
           api
             .post('/activity/create', data)
             .then((res) => {
+              this.componentDidMount()
               notification.success({ message: 'Expense Added !' });
             })
             .catch((err) => {
@@ -282,7 +286,7 @@ class Activity extends React.Component {
                 },
               });
               setTimeout(() => {
-                window.location.reload();
+                //window.location.reload();
               }, 1500);
             });
         }
@@ -291,6 +295,7 @@ class Activity extends React.Component {
   };
 
   handleCancel = (type) => {
+
     if (type === 'time') {
       this.setState({
         timeModal: false,
@@ -321,7 +326,7 @@ class Activity extends React.Component {
       console.log(this.state);
     }
     setTimeout(() => {
-      window.location.reload();
+      //window.location.reload();
     }, 1000);
   };
 
@@ -346,9 +351,10 @@ class Activity extends React.Component {
       api
         .get('/activity/delete/' + record.id)
         .then((res) => {
+          this.componentDidMount()
           notification.success({ message: 'Activity Deleted !' });
           setTimeout(() => {
-            window.location.reload();
+            //window.location.reload();
           }, 1500);
         })
         .catch((err) => {

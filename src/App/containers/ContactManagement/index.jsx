@@ -39,7 +39,7 @@ const ContactsManage = (props) => {
   useEffect(() => {
     dispatch(getBlogs());
   }, []); */
-  async function fetchData() {
+  async function fetchEventData() {
     response = await api.get('/contact/viewforuser/' + userId);
     company = await api.get('/company/viewforuser/' + userId);
     console.log(response);
@@ -47,7 +47,7 @@ const ContactsManage = (props) => {
     setTable();
   }
   useEffect(() => {
-    fetchData();
+    fetchEventData();
   }, []);
 
   const setTable = () => {
@@ -125,7 +125,11 @@ const ContactsManage = (props) => {
     if (type === 'contact') {
       api
         .get('/contact/delete/' + record._id)
-        .then(() => notification.success({ message: 'Contact deleted.' }))
+        .then(() =>{
+          //fetchEventData()
+          notification.success({ message: 'Contact deleted.' })
+        }
+        )
         .catch(() => notification.error({ message: 'Failed to delete' }));
     } else if (type === 'company') {
       api
@@ -269,7 +273,7 @@ const ContactsManage = (props) => {
           okText="Yes"
           cancelText="No"
         >
-          <Button variant="danger">
+          <Button danger>
             Delete
           </Button>
         </Popconfirm>

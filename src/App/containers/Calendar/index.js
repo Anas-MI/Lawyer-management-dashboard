@@ -58,15 +58,17 @@ const CalendarContainer = props => {
     const [ data, setData ] = useState({email : false, notification : false, startTime : "", title: ""})
     const [listEvent, setListEvent] = useState([])
     let instance = new Internationalization();
-    useEffect(()=>{
-      async function fetchData(){
+
+    async function fetchEventData(){
+        console.log("Set event")
         res =  await api.get('/calendar/viewforuser/'+userId)
         response =  await api.get('matter/viewforuser/'+userId)
         setListEvent(res.data.data)
         setOptions(response.data.data)
         setdata()
       }
-      fetchData()
+    useEffect(()=>{
+      fetchEventData()
     },[])
     const setdata = () =>{
         let newTableData = []
@@ -161,13 +163,18 @@ const CalendarContainer = props => {
         console.log(e)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
-            api.get('/calendar/delete/'+id).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+            api.get('/calendar/delete/'+id).then(()=>{
+                fetchEventData()
+                openNotificationWithIcon('success')
+            }
+           ).catch(()=>openNotificationWithfailure('error'))
             setTimeout(()=>{
-                window.location.reload()
+                //window.location.reload()
+                
             },1500)
         }
         if(e.requestType==="eventChanged"){
-     
+            console.log(e)
             let eventdata = data
             eventdata.userId = userId 
             eventdata.startTime = startTime
@@ -175,7 +182,7 @@ const CalendarContainer = props => {
            
             api.post('/calendar/update/'+ e.data.id , eventdata )
             .then((res)=>{
-                console.log(res)
+                fetchEventData()
                 notification.success({message : "Event Edited"})
             }).catch((err)=>{
                 console.log(err)
@@ -183,7 +190,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-                window.location.reload()
+               // window.location.reload()
             },1500)
             
         }
@@ -200,6 +207,7 @@ const CalendarContainer = props => {
             
                 api.post('/calendar/create', eventdata).then((res)=>{
                     console.log(res)
+                    fetchEventData()
                     notification.success({message : "Evented Added"})
                  }).catch((err)=>{
                     console.log(err)
@@ -207,7 +215,7 @@ const CalendarContainer = props => {
                  })
                  setData({})
                  setTimeout(()=>{
-                    window.location.reload()
+                    //window.location.reload()
                 },1500)
             
                  }
@@ -219,10 +227,119 @@ const CalendarContainer = props => {
     
     const setInit = (args) =>{
         console.log(args)
+    
         if(args.StartTime != undefined){
             const props = args
-             startTime = props.StartTime.toLocaleString()
-             endTime = props.EndTime.toLocaleString()
+            startTime = props.StartTime
+            endTime = props.EndTime
+
+            let sdd = startTime.getDate()
+            let smm = startTime.getMonth()+1
+            let syyyy = startTime.getFullYear()
+            let shours = startTime.getHours()
+            let smins = startTime.getMinutes()
+            smins < 10 ? smins = "0"+smins : smins = smins
+
+          
+            let edd = endTime.getDate()
+            let emm = endTime.getMonth()+1
+            let eyyyy = endTime.getFullYear()
+            let ehours = endTime.getHours()
+            let emins = endTime.getMinutes()
+            emins < 10 ? emins = "0"+emins : emins = emins
+
+            
+            startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '
+            endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '
+
+            console.log(startTime)
+            console.log(endTime)
+
+             /*
+             if((startTime.toLocaleString()).includes("AM") || (startTime.toLocaleString()).includes("PM")){
+                 console.log("Windows")
+               
+                 
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+                
+                
+                
+                startTime = startTime.toLocaleString()
+                endTime = props.EndTime.toLocaleString()
+                
+             }else{
+                
+                let sdd = startTime.getDate()
+                let smm = startTime.getMonth()+1
+                let syyyy = startTime.getFullYear()
+                let sAMPM = "AM"
+                let shours = startTime.getHours()
+               // shours < 10 ? shours = "0"+shours : shours = shours
+               
+                if(shours > 12){
+                   shours = shours - 12
+                   sAMPM = "AM"
+               }else{
+                  shours = shours
+                  sAMPM = "PM"
+               }
+               
+                let smins = startTime.getMinutes()
+                smins < 10 ? smins = "0"+smins : smins = smins
+   
+              
+                let edd = endTime.getDate()
+                let emm = endTime.getMonth()+1
+                let eyyyy = endTime.getFullYear()
+                let eAMPM = ""
+                let ehours = endTime.getHours()
+               // ehours < 10 ? ehours = "0"+ehours : ehours = ehours
+               
+                if(ehours > 12){
+                    ehours = ehours - 12
+                    eAMPM = "AM"
+                    
+                }else{
+                   ehours = ehours
+                   eAMPM = "PM"
+                }
+                
+                let emins = endTime.getMinutes()
+                emins < 10 ? emins = "0"+emins : emins = emins
+   
+                
+                startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '+sAMPM
+                endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '+eAMPM
+   
+                console.log(startTime)
+                console.log(endTime)
+   
+                 /*
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+                 
+                 
+             }
+             
+             
+             */
         }      
     }
    
