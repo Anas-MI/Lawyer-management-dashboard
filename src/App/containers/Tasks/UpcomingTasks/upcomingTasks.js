@@ -4,12 +4,17 @@ const { TabPane } = Tabs;
 
 const UpcomingTasks = (props) => {
   var now = new Date();
-  var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
+ // var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
+  var start_of_week= now
   var end_of_week = new Date(
     now.getTime() + (6 - now.getDay()) * 24 * 60 * 60 * 1000
   );
   const tomorrow = new Date(now);
   tomorrow.setDate(tomorrow.getDate() + 1);
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1);
+  console.log( " tommorow :" + tomorrow )
+  console.log(  " today : " + now)
   if (props.tableData !== undefined && props.tableData.length !== 0) {
     return (
       <Tabs defaultActiveKey="1">
@@ -33,7 +38,9 @@ const UpcomingTasks = (props) => {
           <Table
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
-              return date < end_of_week && date > start_of_week;
+              return date < end_of_week && date > start_of_week || (date.getDate() === now.getDate() &&
+              date.getMonth() === now.getMonth() &&
+              date.getFullYear() === now.getFullYear());
             })}
             columns={props.columns}
           />
@@ -56,7 +63,7 @@ const UpcomingTasks = (props) => {
           <Table
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
-              return date < now;
+              return date <= yesterday
             })}
             columns={props.columns}
           />
