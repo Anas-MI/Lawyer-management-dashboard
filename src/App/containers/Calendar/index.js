@@ -58,15 +58,17 @@ const CalendarContainer = props => {
     const [ data, setData ] = useState({email : false, notification : false, startTime : "", title: ""})
     const [listEvent, setListEvent] = useState([])
     let instance = new Internationalization();
-    useEffect(()=>{
-      async function fetchData(){
+
+    async function fetchEventData(){
+        console.log("Set event")
         res =  await api.get('/calendar/viewforuser/'+userId)
         response =  await api.get('matter/viewforuser/'+userId)
         setListEvent(res.data.data)
         setOptions(response.data.data)
         setdata()
       }
-      fetchData()
+    useEffect(()=>{
+      fetchEventData()
     },[])
     const setdata = () =>{
         let newTableData = []
@@ -161,9 +163,14 @@ const CalendarContainer = props => {
         console.log(e)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
-            api.get('/calendar/delete/'+id).then(()=>openNotificationWithIcon('success')).catch(()=>openNotificationWithfailure('error'))
+            api.get('/calendar/delete/'+id).then(()=>{
+                fetchEventData()
+                openNotificationWithIcon('success')
+            }
+           ).catch(()=>openNotificationWithfailure('error'))
             setTimeout(()=>{
-                window.location.reload()
+                //window.location.reload()
+                
             },1500)
         }
         if(e.requestType==="eventChanged"){
@@ -175,7 +182,7 @@ const CalendarContainer = props => {
            
             api.post('/calendar/update/'+ e.data.id , eventdata )
             .then((res)=>{
-                console.log(res)
+                fetchEventData()
                 notification.success({message : "Event Edited"})
             }).catch((err)=>{
                 console.log(err)
@@ -200,6 +207,7 @@ const CalendarContainer = props => {
             
                 api.post('/calendar/create', eventdata).then((res)=>{
                     console.log(res)
+                    fetchEventData()
                     notification.success({message : "Evented Added"})
                  }).catch((err)=>{
                     console.log(err)
@@ -207,7 +215,7 @@ const CalendarContainer = props => {
                  })
                  setData({})
                  setTimeout(()=>{
-                    window.location.reload()
+                    //window.location.reload()
                 },1500)
             
                  }
@@ -219,10 +227,30 @@ const CalendarContainer = props => {
     
     const setInit = (args) =>{
         console.log(args)
+    
         if(args.StartTime != undefined){
             const props = args
-             startTime = props.StartTime.toLocaleString()
-             endTime = props.EndTime.toLocaleString()
+             startTime = props.StartTime
+             endTime = props.EndTime
+             if((startTime.toLocaleString()).includes("AM") || (startTime.toLocaleString()).includes("PM")){
+                 console.log("Windows")
+                startTime = startTime.toLocaleString()
+                endTime = props.EndTime.toLocaleString()
+             }else{
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+             }
+             
+             
+             
         }      
     }
    
