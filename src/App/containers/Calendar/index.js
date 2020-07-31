@@ -51,6 +51,7 @@ const CalendarContainer = props => {
     //State
     const dispatch = useDispatch()
     const userId = useSelector(state=>state.user.token.user._id)
+    const [ID, setID] = useState("")
     let startTime = ""
     let endTime = ""
     const [ state, setState ] = useState({tableData : []})
@@ -167,13 +168,15 @@ const CalendarContainer = props => {
         }
         if(e.requestType==="eventChanged"){
             console.log(data)
+         
             const id = e.data.id 
+            console.log(id)
             let eventdata = data
             eventdata.userId = userId 
             eventdata.startTime = startTime
             eventdata.endTime = endTime
            
-            api.post('/calendar/update/'+id, eventdata )
+            api.post('/calendar/update/'+ e.data.id , eventdata )
             .then((res)=>{
                 console.log(res)
                 notification.success({message : "Event Edited"})
@@ -183,7 +186,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-               window.location.reload()
+              // window.location.reload()
             },1500)
             
         }
