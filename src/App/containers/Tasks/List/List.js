@@ -2,7 +2,7 @@ import { Modal, notification , Button, Popconfirm ,Table} from 'antd';
 import React from 'react';
 import Form from './Form'
 import api from '../../../../resources/api';
-
+import EditForm from './editForm'
 import {connect} from 'react-redux'
 
 const user = JSON.parse(window.localStorage.getItem('Case.user'))
@@ -78,6 +78,12 @@ class AddList extends React.Component {
   
       }else {
         api.post('/tasks/list/create',this.state.data).then((res)=>{
+          this.setState({
+            data : {
+              userId : user.token.user._id,
+              name : '',
+            }
+          })
           this.componentDidMount()
           notification.success({message : "List created Successfully"})
         }).catch((err)=>{
@@ -229,11 +235,29 @@ class AddList extends React.Component {
               Cancel
             </Button>,
             <Button type="primary"  onClick={this.handleOk}>
-              {this.state.editMode ? "Update List" : "Create list"}
+              Create List
             </Button>,
           ]}
         >
-          <Form editMode = {this.state.editMode} record = {this.state.data} handleChange = {handleChange} ></Form>
+          <Form handleChange = {handleChange} ></Form>
+        </Modal>
+        <Modal
+          title="Edit List"
+          visible={this.state.editMode}
+          onOk={this.handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary"  onClick={this.handleOk}>
+              Update List
+            </Button>,
+          ]}
+        >
+          <EditForm record = {this.state.data} handleChange = {handleChange}></EditForm>
+
         </Modal>
 
         <Table

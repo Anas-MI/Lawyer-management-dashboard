@@ -246,10 +246,13 @@ class matterManage extends React.Component {
     const handleDelete = (record) => {
       api
         .get('/matter/delete/' + record.id)
-        .then(() => notification.success({ message: 'Matter deleted.' }))
+        .then(() => {
+          this.componentDidMount()
+          notification.success({ message: 'Matter deleted.' })
+        })
         .catch(() => notification.error({ message: 'Failed to delete' }));
       setTimeout(() => {
-        window.location.reload();
+        //window.location.reload();
       }, 1000);
     };
 

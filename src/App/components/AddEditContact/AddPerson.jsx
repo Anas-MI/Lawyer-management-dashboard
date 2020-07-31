@@ -163,6 +163,7 @@ class newPerson extends React.Component {
         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
       } else {
         api.post('contact/create', data).then((result) => {
+          notification.success({message : "Contact created"})
           this.setState({ visible: true });
           const key = 'updatingDetails';
 
@@ -184,6 +185,7 @@ class newPerson extends React.Component {
             api
               .post('/contact/upload/' + result.data.data._id, formData)
               .then((res) => {
+                
                 console.log(res);
                 if (res.status === 200) {
                   setTimeout(() => {

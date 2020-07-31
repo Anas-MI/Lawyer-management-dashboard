@@ -11,7 +11,7 @@ class ListForm extends React.Component{
     }
   }
   componentDidMount(){
-    /*
+      /*
     this.setState({
       name : ""
     })
@@ -29,7 +29,6 @@ class ListForm extends React.Component{
     render(){
         
       
-      
       return  <Form>
       <Form.Group controlId="formBasicEmail">
         <Form.Label>Name</Form.Label>
@@ -37,6 +36,7 @@ class ListForm extends React.Component{
         type="text" 
         placeholder="Name"
         name="name"
+        defaultValue = {this.props.record.name}
         onChange={this.props.handleChange} />
       </Form.Group>
   
@@ -45,6 +45,7 @@ class ListForm extends React.Component{
         <Form.Control 
         type="text" 
         placeholder="Description" 
+        defaultValue = {this.props.record.description}
         onChange={this.props.handleChange}
         name="decription"/>
       </Form.Group>
@@ -53,6 +54,7 @@ class ListForm extends React.Component{
         <Form.Control 
         as="select"
         onChange={this.props.handleChange}
+        defaultValue = {this.props.record.practiseArea}
         name="practiseArea"
         >
             <option>Select a practice area</option>
@@ -78,6 +80,8 @@ class ListForm extends React.Component{
         </Form.Control>
       </Form.Group>
     </Form>
+     
+
     }
      
 }
