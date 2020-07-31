@@ -183,7 +183,7 @@ const CalendarContainer = props => {
             })
             setData({})
             setTimeout(()=>{
-               window.location.reload()
+               //window.location.reload()
             },1500)
             
         }
