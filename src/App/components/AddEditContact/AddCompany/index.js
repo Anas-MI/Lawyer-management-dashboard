@@ -48,7 +48,7 @@ class AddCompany extends React.Component {
       emailAddress: [],
       phone: [],
       website: [],
-      employees: [""],
+      employees: [],
       optionsss : null
     };
   }
@@ -107,6 +107,7 @@ class AddCompany extends React.Component {
       Object.values(errors.ZipCode).forEach(
         (val) => val.length > 0 && (valid = false)
       );
+      
       console.log(valid);
       return valid;
     };
@@ -115,17 +116,28 @@ class AddCompany extends React.Component {
       const data = this.state;
       data.userId = this.props.userId;
       console.log(data);
-      if (editMode) {
-        //  dispatch(updateBlog({id:this.state._id,body:this.state}))
-      } else {
-        api
-          .post('company/create', data)
-          .then(() => this.openNotificationWithIcon('success'))
-          .catch((err) => this.openNotificationWithfailure('error'));
-        if (this.props.location != undefined) {
-          this.props.history.goBack();
+      let valid2 = true
+      Object.values(this.state.employees).forEach(
+        (val) => { if(val == ""){
+          valid2 = false
+          notification.warning({message : "Please select a employee"})
+        }
+        }
+      );
+      if(valid2){
+        if (editMode) {
+          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
+        } else {
+          api
+            .post('company/create', data)
+            .then(() => this.openNotificationWithIcon('success'))
+            .catch((err) => this.openNotificationWithfailure('error'));
+          if (this.props.location != undefined) {
+            this.props.history.goBack();
+          }
         }
       }
+      
     } else {
       return notification.warning({
         message: 'Please enter valid details',
