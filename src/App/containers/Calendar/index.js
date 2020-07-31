@@ -174,7 +174,7 @@ const CalendarContainer = props => {
             },1500)
         }
         if(e.requestType==="eventChanged"){
-            console.log(e.data.id)
+            console.log(e)
             let eventdata = data
             eventdata.userId = userId 
             eventdata.startTime = startTime
@@ -232,7 +232,7 @@ const CalendarContainer = props => {
             const props = args
             startTime = props.StartTime
             endTime = props.EndTime
-            
+
             let sdd = startTime.getDate()
             let smm = startTime.getMonth()+1
             let syyyy = startTime.getFullYear()
