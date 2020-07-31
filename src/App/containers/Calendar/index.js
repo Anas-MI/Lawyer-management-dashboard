@@ -230,13 +230,36 @@ const CalendarContainer = props => {
     
         if(args.StartTime != undefined){
             const props = args
-             startTime = props.StartTime
-             endTime = props.EndTime
+            startTime = props.StartTime
+            endTime = props.EndTime
+            
+            let sdd = startTime.getDate()
+            let smm = startTime.getMonth()+1
+            let syyyy = startTime.getFullYear()
+            let shours = startTime.getHours()
+            let smins = startTime.getMinutes()
+            smins < 10 ? smins = "0"+smins : smins = smins
+
+          
+            let edd = endTime.getDate()
+            let emm = endTime.getMonth()+1
+            let eyyyy = endTime.getFullYear()
+            let ehours = endTime.getHours()
+            let emins = endTime.getMinutes()
+            emins < 10 ? emins = "0"+emins : emins = emins
+
+            
+            startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '
+            endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '
+
+            console.log(startTime)
+            console.log(endTime)
+
+             /*
              if((startTime.toLocaleString()).includes("AM") || (startTime.toLocaleString()).includes("PM")){
                  console.log("Windows")
-                startTime = startTime.toLocaleString()
-                endTime = props.EndTime.toLocaleString()
-             }else{
+               
+                 
                  console.log("Mac")
                 if(startTime.getHours() > 12 || endTime.getHours() > 12){
                     startTime.setHours(startTime.getHours()-12)
@@ -247,10 +270,76 @@ const CalendarContainer = props => {
                     startTime = startTime.toLocaleString() + " PM"
                     endTime = endTime.toLocaleString() + " PM"
                  }
+                
+                
+                
+                startTime = startTime.toLocaleString()
+                endTime = props.EndTime.toLocaleString()
+                
+             }else{
+                
+                let sdd = startTime.getDate()
+                let smm = startTime.getMonth()+1
+                let syyyy = startTime.getFullYear()
+                let sAMPM = "AM"
+                let shours = startTime.getHours()
+               // shours < 10 ? shours = "0"+shours : shours = shours
+               
+                if(shours > 12){
+                   shours = shours - 12
+                   sAMPM = "AM"
+               }else{
+                  shours = shours
+                  sAMPM = "PM"
+               }
+               
+                let smins = startTime.getMinutes()
+                smins < 10 ? smins = "0"+smins : smins = smins
+   
+              
+                let edd = endTime.getDate()
+                let emm = endTime.getMonth()+1
+                let eyyyy = endTime.getFullYear()
+                let eAMPM = ""
+                let ehours = endTime.getHours()
+               // ehours < 10 ? ehours = "0"+ehours : ehours = ehours
+               
+                if(ehours > 12){
+                    ehours = ehours - 12
+                    eAMPM = "AM"
+                    
+                }else{
+                   ehours = ehours
+                   eAMPM = "PM"
+                }
+                
+                let emins = endTime.getMinutes()
+                emins < 10 ? emins = "0"+emins : emins = emins
+   
+                
+                startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '+sAMPM
+                endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '+eAMPM
+   
+                console.log(startTime)
+                console.log(endTime)
+   
+                 /*
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+                 
+                 
              }
              
              
-             
+             */
         }      
     }
    
