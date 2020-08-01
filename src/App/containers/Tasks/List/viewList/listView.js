@@ -35,7 +35,7 @@ class ViewList extends React.Component{
             res.data.data.tasks.map((value,index)=>{
                const temp = <tr>
                                 <td>{value.taskName}</td>
-                                <td>{value.assignee}</td>
+                               {/* <td>{value.assignee}</td> */}
                                 <td>{value.priority}</td>
                                 <td>{value.description}</td>
                                 <td>{value.dueDate.substring(0,10)}</td>
@@ -86,22 +86,27 @@ class ViewList extends React.Component{
       handleOk = (e) => {
         e.preventDefault();
         notification.destroy();
-        if (
-          this.state.Data.taskName === '' ||
-          this.state.Data.taskName === undefined ||
-          this.state.Data.description === '' ||
-          this.state.Data.taskName === undefined ||
-          this.state.Data.dueDate === '' ||
-          this.state.Data.dueDate === undefined ||
-          this.state.Data.matter === '' ||
-          this.state.Data.matter === undefined
-        ) {
-          console.log(this.state.Data);
-    
-          return notification.warning({
-            message: 'Fields Should Not Be Empty',
-          });
-        } else {
+    if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
+      notification.warning({
+        message: 'Please provide a taskName',
+      });
+    }
+    if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
+      notification.warning({
+        message: 'Please provide a description',
+      });
+    }
+    if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
+      notification.warning({
+          message: 'Please select a due date',
+        });
+    }
+    if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
+      notification.warning({
+        message: 'Please select a matter',
+      });
+      
+    } else {
           this.setState({
             confirmLoading: true,
           });
@@ -118,6 +123,7 @@ class ViewList extends React.Component{
                     .post('/tasks/list/edit/'+list._id, list)
                     .then((res2) => {
                         console.log(res2)
+                        this.componentDidMount()
                         notification.success("Task Added to the list")
                     })
                     .catch(() => {
@@ -130,7 +136,7 @@ class ViewList extends React.Component{
               visible: false,
               confirmLoading: false,
             });
-            window.location.reload();
+           // window.location.reload();
           }, 1000);
         }
       };
@@ -182,7 +188,7 @@ class ViewList extends React.Component{
                             </h3>
                             <div className="ml-auto p-2 col-example">
                                 <Button onClick={()=>{this.setState({visible : true})}} variant="success">
-                                    Add
+                                    Add task to the list
                                 </Button>
                             </div>
                         </div>
@@ -192,7 +198,7 @@ class ViewList extends React.Component{
                             <thead>
                                 <tr>
                                 <th>Name</th>
-                                <th>Assignee</th>
+                                {/* <th>Assignee</th> */}
                                 <th>Priority</th>
                                 <th>Permissions</th>
                                 <th>Due At</th>
@@ -245,12 +251,16 @@ class ViewList extends React.Component{
               />
             </Form.Group>
 
-            <Form.Group controlId="taskName">
+            {
+              /* 
+              <Form.Group controlId="taskName">
               <Form.Label>Assignee</Form.Label>
               <div>
                 <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
               </div>
             </Form.Group>
+              */
+            }
 
             <Form.Group controlId="priority">
               <Form.Label>Priority</Form.Label>
@@ -277,7 +287,9 @@ class ViewList extends React.Component{
                 {this.state.options}
               </Form.Control>
             </Form.Group>
-            <br />
+            {
+              /*
+               <br />
             <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Notify me when the task is completed" />
             </Form.Group>
@@ -286,6 +298,8 @@ class ViewList extends React.Component{
               <Form.Check type="checkbox" label="Notify assignee via email" />
             </Form.Group>
             <br />
+              */
+            }
           </Form>
         </Modal>
             </div>

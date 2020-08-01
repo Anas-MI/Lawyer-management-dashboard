@@ -354,7 +354,9 @@ const CalendarContainer = props => {
         <div className="row">
             <div className="col-lg-8">
                 <Card bodyStyle={{"padding" : "0px"}}>
-                    <ScheduleComponent height='550px' actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
+                    <ScheduleComponent height='550px' 
+                        actionComplete={handleSubmit}  
+                        ref={cal=>SchedulerRef.current=cal }
                         showQuickInfo={false} 
                         popupOpen={onPopupOpen}
                         eventSettings={{dataSource : state.tableData}}

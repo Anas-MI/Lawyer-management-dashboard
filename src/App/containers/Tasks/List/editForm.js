@@ -7,10 +7,24 @@ class ListForm extends React.Component{
     super()
     this.state = {
      name : '',
+     record : {
+
+     }
     
     }
   }
+  componentWillReceiveProps(nextProps) {
+    
+    if (nextProps !== this.props) {
+      console.log("not equal")
+      console.log(this.props)
+      console.log(nextProps)
+      this.setState({record : nextProps.record})
+    }
+  
+}
   componentDidMount(){
+    this.setState({record : this.props.record})
       /*
     this.setState({
       name : ""
@@ -36,7 +50,7 @@ class ListForm extends React.Component{
         type="text" 
         placeholder="Name"
         name="name"
-        defaultValue = {this.props.record.name}
+        defaultValue = {this.state.record.name}
         onChange={this.props.handleChange} />
       </Form.Group>
   
@@ -45,7 +59,7 @@ class ListForm extends React.Component{
         <Form.Control 
         type="text" 
         placeholder="Description" 
-        defaultValue = {this.props.record.description}
+        defaultValue = {this.state.record.description}
         onChange={this.props.handleChange}
         name="decription"/>
       </Form.Group>
@@ -54,7 +68,7 @@ class ListForm extends React.Component{
         <Form.Control 
         as="select"
         onChange={this.props.handleChange}
-        defaultValue = {this.props.record.practiseArea}
+        defaultValue = {this.state.record.practiseArea}
         name="practiseArea"
         >
             <option>Select a practice area</option>
