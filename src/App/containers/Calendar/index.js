@@ -176,11 +176,17 @@ const CalendarContainer = props => {
         if(e.requestType==="eventChanged"){
             console.log(e)
             let eventdata = data
+            let id = e.changedRecords[0].id
+            /*
+            if(e.data.id == undefined){
+               id = e.data[0].id
+            }
+            */
             eventdata.userId = userId 
             eventdata.startTime = startTime
             eventdata.endTime = endTime
            
-            api.post('/calendar/update/'+ e.data.id , eventdata )
+            api.post('/calendar/update/'+ id , eventdata )
             .then((res)=>{
                 fetchEventData()
                 notification.success({message : "Event Edited"})
@@ -348,7 +354,9 @@ const CalendarContainer = props => {
         <div className="row">
             <div className="col-lg-8">
                 <Card bodyStyle={{"padding" : "0px"}}>
-                    <ScheduleComponent height='550px' actionComplete={handleSubmit}  ref={cal=>SchedulerRef.current=cal }
+                    <ScheduleComponent height='550px' 
+                        actionComplete={handleSubmit}  
+                        ref={cal=>SchedulerRef.current=cal }
                         showQuickInfo={false} 
                         popupOpen={onPopupOpen}
                         eventSettings={{dataSource : state.tableData}}

@@ -9,6 +9,7 @@ import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import jsPDF from 'jspdf';
 import TaskForm from './EditForm'
+import TaskForm2 from './Taskform'
 import { Input, Select } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -91,6 +92,8 @@ class Tasks extends React.Component {
   handleCancel = () => {
     this.setState({
       visible: false,
+      editMode : false,
+      Data: { priority: 'Normal', matter: "" },
     });
   };
 
@@ -130,6 +133,7 @@ class Tasks extends React.Component {
     let tableData = [];
     let CompletedData = []
     let upcomingData = []
+
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
@@ -148,6 +152,7 @@ class Tasks extends React.Component {
       res.data.data.map((value, index)=>{
         const newdata = value
         newdata.key = index 
+        newdata.dueDate = newdata.dueDate.substring(0,10) 
         if(value.status == false){
           
           upcomingData.push(newdata)
@@ -227,9 +232,7 @@ class Tasks extends React.Component {
       key: '3',
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
-      render: (_, record) => {
-        return this.getISTDate(record.dueDate);
-      },
+      
     },
     {
       title: 'Action',
@@ -280,6 +283,7 @@ class Tasks extends React.Component {
   ];
   deleteHandler(_id) {
     api.get('tasks/delete/' + _id).then((res)=>{
+      console.log(res)
       notification.success({message : "Task Deleted"})
       this.componentDidMount()
     })
@@ -290,7 +294,6 @@ class Tasks extends React.Component {
     this.setState({ Data: _id });
     console.log(this.state.Data)
     this.setState({ selected: _id });
-    this.showModal();
   }
   handleOk = (e) => {
     e.preventDefault();
@@ -351,6 +354,8 @@ class Tasks extends React.Component {
         setTimeout(() => {
           this.setState({
             visible: false,
+            editMode : false,
+            Data: { priority: 'Normal', matter: "" },
             confirmLoading: false,
           });
           //window.location.reload();
@@ -421,9 +426,7 @@ class Tasks extends React.Component {
       key: '3',
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
-      render: (_, record) => {
-        return this.getISTDate(record.dueDate);
-      },
+      
     },
     {
       title: 'Action',
@@ -449,7 +452,7 @@ class Tasks extends React.Component {
       key: '6',
       render: (_, record) => {
         return (
-          <Button onClick={() => this.EditHandler(record._id)}>Edit</Button>
+          <Button onClick={() => this.EditHandler(record)}>Edit</Button>
         );
       },
     },
@@ -518,8 +521,33 @@ class Tasks extends React.Component {
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleCancel}
           onOk={this.handleOk}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
+              Create Task
+            </Button>,
+          ]}
         >
-          <TaskForm options={this.state.options} data={this.state.Data} editMode={this.state.editMode} handleChange={this.handleChange}></TaskForm>
+          <TaskForm2 options={this.state.options} handleChange={this.handleChange}></TaskForm2>
+        </Modal>
+        <Modal
+          title="Edit task"
+          visible={this.state.editMode}
+          confirmLoading={this.state.confirmLoading}
+          onCancel={this.handleCancel}
+          onOk={this.handleOk}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
+              Update Task
+            </Button>,
+          ]}
+        >
+          <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
         </Modal>
       </div>
     );

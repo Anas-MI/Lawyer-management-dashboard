@@ -15,6 +15,7 @@ class AddList extends React.Component {
         userId : user.token.user._id,
         name : ''
       },
+      disable : false,
       tableData : [],
       ModalText: 'Content of the modal',
       visible: false,
@@ -53,9 +54,11 @@ class AddList extends React.Component {
   };
 
   handleOk = () => {
+    
     if(this.state.data.name == ''){
       notification.warning("Please provide name for the list")
     }else{
+      this.setState({disable : true})
       if(this.state.editMode){
         const data = this.state.data
         api.post('/tasks/list/edit/'+data.id,data).then((res)=>{
@@ -74,9 +77,11 @@ class AddList extends React.Component {
         this.setState({
           ModalText: 'The modal will be closed after two seconds',
           confirmLoading: true,
+          disable : false
         });
   
       }else {
+        this.setState({disable : true})
         api.post('/tasks/list/create',this.state.data).then((res)=>{
           this.setState({
             data : {
@@ -93,6 +98,7 @@ class AddList extends React.Component {
         this.setState({
           ModalText: 'The modal will be closed after two seconds',
           confirmLoading: true,
+          disable : false
         });
     
       }
@@ -102,6 +108,7 @@ class AddList extends React.Component {
         this.setState({
           visible: false,
           confirmLoading: false,
+          disable : false
         });
       }, 1200);
   
@@ -186,7 +193,7 @@ class AddList extends React.Component {
     const handleEdit = (record) => {
 
       console.log(record)
-      this.setState({editMode : true, data : record , visible : true})
+      this.setState({editMode : true, data : record })
  
     };
   
@@ -234,7 +241,7 @@ class AddList extends React.Component {
             <Button  onClick={this.handleCancel}>
               Cancel
             </Button>,
-            <Button type="primary"  onClick={this.handleOk}>
+            <Button type="primary" disabled={this.state.disable} onClick={this.handleOk}>
               Create List
             </Button>,
           ]}
@@ -251,7 +258,7 @@ class AddList extends React.Component {
             <Button  onClick={this.handleCancel}>
               Cancel
             </Button>,
-            <Button type="primary"  onClick={this.handleOk}>
+            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
               Update List
             </Button>,
           ]}
