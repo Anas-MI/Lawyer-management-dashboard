@@ -320,46 +320,16 @@ class Dashboard extends React.Component {
                     <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
                             <Card.Header>
-                                <Card.Title as='h5'>Recent Users</Card.Title>
+                                <Card.Title as='h5'>Billable Hours Target</Card.Title>
                             </Card.Header>
                             <Card.Body className='px-0 py-2'>
-                                <Table responsive hover>
-                                    <tbody>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar1} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Isabella Christensen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-green f-10 m-r-15"/>11 MAY 12:56</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar2} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Mathilde Andersen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-red f-10 m-r-15"/>11 MAY 10:35</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar3} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Karla Sorensen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-green f-10 m-r-15"/>9 MAY 17:38</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
+                            <div className="text-center">
+                            <p><b>Billable Hours Target</b></p>
+                            </div>
+                                    <div className="col-8 text-right">
+                                        <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>SET UP YOUR TARGET</Button>
+                                    </div>
+                                
                             </Card.Body>
                         </Card>
                    

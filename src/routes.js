@@ -53,13 +53,13 @@ const BootstrapTable = React.lazy(() => import('./Demo/Tables/BootstrapTable'));
 const Nvd3Chart = React.lazy(() => import('./Demo/Charts/Nvd3Chart/index'));
 
 const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
-
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 const tasks = React.lazy(() => import('./App/containers/Tasks/index'));
 const list = React.lazy(() => import('./App/containers/Tasks/List/viewList/listView'));
 const Profile = React.lazy(() => import('./App/containers/Profile'));
 const Login = React.lazy(() => import('./App/containers/Auth/Login'));
+
 // const Calendar = React.lazy(()=> import('./Demo/Calendar/CalendarElements'));
 
 const ContactsManage = React.lazy(() =>
@@ -126,6 +126,8 @@ const EditAccount = React.lazy(() =>
 const profile = React.lazy(() =>
   import('./App/containers/Settings/profile/index')
 );
+
+const Target = React.lazy(() => import('./App/containers/Target'));
 
 export const adminRoutes = [
   {
@@ -443,6 +445,12 @@ const routes = [
     exact: true,
     name: 'Help',
     component: HelpForm,
+  },
+  {
+    path: '/target',
+    exact: true,
+    name: 'Target',
+    component: Target,
   },
 ];
 
