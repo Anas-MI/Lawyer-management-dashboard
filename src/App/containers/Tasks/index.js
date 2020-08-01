@@ -133,6 +133,7 @@ class Tasks extends React.Component {
     let tableData = [];
     let CompletedData = []
     let upcomingData = []
+
     await api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) => (response = res.data.data));
@@ -151,6 +152,7 @@ class Tasks extends React.Component {
       res.data.data.map((value, index)=>{
         const newdata = value
         newdata.key = index 
+        newdata.dueDate = newdata.dueDate.substring(0,10) 
         if(value.status == false){
           
           upcomingData.push(newdata)
@@ -230,9 +232,7 @@ class Tasks extends React.Component {
       key: '3',
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
-      render: (_, record) => {
-        return this.getISTDate(record.dueDate);
-      },
+      
     },
     {
       title: 'Action',
@@ -426,9 +426,7 @@ class Tasks extends React.Component {
       key: '3',
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.dueDate.length - b.dueDate.length,
-      render: (_, record) => {
-        return this.getISTDate(record.dueDate);
-      },
+      
     },
     {
       title: 'Action',
