@@ -2,8 +2,10 @@ import React from 'react';
 import { Form, Row , Col , Button } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup'
 import { message,  Modal, Card, Result, notification } from 'antd';
+import { useHistory } from "react-router-dom";
 
 const PersonalTarget = () => {
+    const history = useHistory();
     return (
         <div className='form-width'>
             <Card title="Personal Performance Target" className="mb-4">
@@ -59,7 +61,7 @@ const PersonalTarget = () => {
                 </Form>
             </Card>
             <Button  variant="success" className="btn" >Save Performance Information</Button> <span className="pr-2">or</span>
-            <Button variant="light" onClick={()=>{this.props.history.goBack()}} >CANCEL</Button>  
+            <Button variant="light" onClick={()=>{history.goBack()}} >CANCEL</Button>  
         </div>
     )
 }
