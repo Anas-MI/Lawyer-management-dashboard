@@ -21,7 +21,8 @@ class TaskForm extends React.Component{
     this.state = {
       matter : "",
       data : {
-        taskName : ""
+        taskName : "",
+        matter : ""
       }
     }
   }
@@ -37,26 +38,27 @@ class TaskForm extends React.Component{
   }
   componentDidMount(){
     this.setState({data : this.props.data})
-    
-    if(this.props.editMode){
-      api.get('/matter/view/'+ this.props.data.matter).then((res)=>{
-        console.log(res)
-        const formData = <Form.Group controlId="matter">
-                          <Form.Label>Matter</Form.Label>
-                          <Form.Control
-                            required
-                            as="select"
-                            defaultValue={res.data.data.matterDescription}
-                            onChange={this.props.handleChange}
-                            name="matter"
-                          >
-                            <option>Select a matter</option>
-                            {this.props.options}
-                          </Form.Control>
-                        </Form.Group>
-        this.setState({matter : formData})
-      })
-    }
+      console.log(this.state.data.matter)
+
+        api.get('/matter/view/'+ this.props.data.matter).then((res)=>{
+          console.log(res)
+          const formData = <Form.Group controlId="matter">
+                            <Form.Label>Matter</Form.Label>
+                            <Form.Control
+                              required
+                              as="select"
+                              defaultValue={res.data.data.matterDescription}
+                              onChange={this.props.handleChange}
+                              name="matter"
+                            >
+                              <option>Select a matter</option>
+                              {this.props.options}
+                            </Form.Control>
+                          </Form.Group>
+          this.setState({matter : formData})
+        })
+
+  
   }
     render(){
         console.log(this.props.data)

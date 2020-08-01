@@ -283,6 +283,7 @@ class Tasks extends React.Component {
   ];
   deleteHandler(_id) {
     api.get('tasks/delete/' + _id).then((res)=>{
+      console.log(res)
       notification.success({message : "Task Deleted"})
       this.componentDidMount()
     })
@@ -522,6 +523,14 @@ class Tasks extends React.Component {
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleCancel}
           onOk={this.handleOk}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
+              Create Task
+            </Button>,
+          ]}
         >
           <TaskForm2 options={this.state.options} handleChange={this.handleChange}></TaskForm2>
         </Modal>
@@ -531,6 +540,14 @@ class Tasks extends React.Component {
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleCancel}
           onOk={this.handleOk}
+          footer={[
+            <Button  onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
+              Update Task
+            </Button>,
+          ]}
         >
           <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
         </Modal>
