@@ -56,7 +56,6 @@ class TaskForm extends React.Component{
         <Form.Group controlId="taskName">
           <Form.Label>Task Name</Form.Label>
           <Form.Control
-            required
             type="text"
             placeholder="Task Name"
             defaultValue={this.state.name}

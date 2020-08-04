@@ -29,11 +29,12 @@ class Tasks extends React.Component {
       visible: false,
       confirmLoading: false,
       loading: false,
-      Data: { priority: 'Normal', matter: ""  },
+      Data: { priority: 'Normal', matter: "" },
       editMode: false,
       res: '',
       selected: null,
       status: false,
+      disable : false
     };
   }
   exportPDF = () => {
@@ -139,11 +140,7 @@ class Tasks extends React.Component {
       .then((res) => (response = res.data.data));
         console.log(response);
         options = response.map((value, index) => {
-      if (index == 0) {
-        let newdata = this.state;
-        newdata.Data.matter = value._id;
-        this.setState(newdata);
-      }
+      
       return <option>{value.matterDescription}</option>;
     });
 
@@ -298,29 +295,37 @@ class Tasks extends React.Component {
   handleOk = (e) => {
     e.preventDefault();
     notification.destroy();
+    let valid = true
+    console.log(this.state.Data.matter)
     if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
+      valid = false
       notification.warning({
         message: 'Please provide a taskName',
       });
     }
     if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
+      valid = false
       notification.warning({
         message: 'Please provide a description',
       });
     }
     if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
+      valid = false
       notification.warning({
           message: 'Please select a due date',
         });
     }
     if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
+      valid = false
       notification.warning({
         message: 'Please select a matter',
       });
       
-    } else {
+    } 
+    if(valid){
       this.setState({
         confirmLoading: true,
+        disable : true
       });
       const data = this.state.Data;
       data.userId = this.props.userId;
@@ -355,13 +360,14 @@ class Tasks extends React.Component {
           this.setState({
             visible: false,
             editMode : false,
+            disable : false,
             Data: { priority: 'Normal', matter: "" },
             confirmLoading: false,
           });
           //window.location.reload();
         }, 1000);
       }
-      }
+    }
       
   };
 
