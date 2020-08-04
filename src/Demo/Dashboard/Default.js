@@ -21,7 +21,9 @@ class Dashboard extends React.Component {
             draftCount : 0,
             draftAmount : 0,
             unPaidCount : 0,
-            unPaidAmount :0
+            unPaidAmount :0,
+            overDueCount : 0, 
+            overDueAmount : 0,
         }
     }
     componentDidMount(){
@@ -49,12 +51,33 @@ class Dashboard extends React.Component {
             let draftAmount = 0
             let unPaidCount = 0
             let unPaidAmount =0
-            
+            let overDueCount = 0
+            let overDueAmount = 0
+            const currentDate = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0]
+
+
+            // for test 
+            const nnndate = res.data.data[0].dueDate;
+           
+            if (currentDate > nnndate) {
+                console.log("hellow")
+            } else {
+                console.log("skadh")
+            }
+            console.log(currentDate)
+            console.log(nnndate)
+
+
             res.data.data.map((value , index)=>{
              
               if(value.status=="Unpaid"){
                 unPaidCount++
                 unPaidAmount = unPaidAmount + parseFloat(value.balance)
+
+                if (currentDate > value.dueDate) {
+                    overDueCount++
+                    overDueAmount += parseFloat(value.balance)
+                }
               }
               if(value.status=="draft"){
                 draftCount++
@@ -67,7 +90,9 @@ class Dashboard extends React.Component {
                 unPaidAmount : unPaidAmount,
                 unPaidCount : unPaidCount,
                 draftAmount : draftAmount,
-                draftCount : draftCount
+                draftCount : draftCount,
+                overDueCount : overDueCount,
+                overDueAmount : overDueAmount
             })
           })
     }
@@ -314,13 +339,12 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Draft bills</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                                        {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                                    {this.state.draftCount}</h3>
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0"><b>
+                                                    {this.state.draftCount}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -335,13 +359,13 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Total in draft</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                                        ${this.state.draftAmount}</h3>
+                                                       <b> ${this.state.draftAmount}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -358,12 +382,12 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Unpaid bills</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                                        {this.state.unPaidCount}</h3>
+                                                        <b> {this.state.unPaidCount}</b></h4>
                                                 </div>
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -378,13 +402,13 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Total unpaid bills</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                                        ${this.state.unPaidAmount}</h3>
+                                                        <b> ${this.state.unPaidAmount}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -401,13 +425,13 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Overdue bills</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                                        423</h3>
+                                                        <b>  {this.state.overDueCount} </b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Events</a>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -422,13 +446,13 @@ class Dashboard extends React.Component {
                                             <h6 className='mb-4'><b>Total overdue bills</b></h6>
                                             <div className="row d-flex align-items-center">
                                                 <div className="col-4">
-                                                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                                        666</h3>
+                                                        <b> ${this.state.overDueAmount}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>View Overdue Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
