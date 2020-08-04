@@ -120,7 +120,7 @@ class Dashboard extends React.Component {
                         let dd = today.getDate();
                         let mm = today.getMonth()+1; 
                         let yyyy = today.getFullYear();
-                        let hours = today.getHours() > 12 ?  today.getHours() - 12 :  today.getHours() ;
+                        let hours = today.getHours() ;
                         let plusonehour = parseInt(hours) + 1
                         console.log(plusonehour)
                         let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()

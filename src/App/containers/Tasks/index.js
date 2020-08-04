@@ -29,7 +29,7 @@ class Tasks extends React.Component {
       visible: false,
       confirmLoading: false,
       loading: false,
-      Data: { priority: 'Normal', matter: "" },
+      Data: { priority: 'Normal', matter: ""  },
       editMode: false,
       res: '',
       selected: null,
@@ -152,7 +152,7 @@ class Tasks extends React.Component {
       res.data.data.map((value, index)=>{
         const newdata = value
         newdata.key = index 
-        newdata.dueDate = newdata.dueDate.substring(0,10) 
+        newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
           
           upcomingData.push(newdata)
@@ -530,7 +530,7 @@ class Tasks extends React.Component {
             </Button>,
           ]}
         >
-          <TaskForm2 options={this.state.options} handleChange={this.handleChange}></TaskForm2>
+          <TaskForm2 options={this.state.options}  handleChange={this.handleChange}></TaskForm2>
         </Modal>
         <Modal
           title="Edit task"
