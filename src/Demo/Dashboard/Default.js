@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
 
 
             // for test 
-            const nnndate = res.data.data[0].dueDate;
+            const nnndate = res.data.data[0] ? res.data.data[0].dueDate : "";
            
             if (currentDate > nnndate) {
                 console.log("hellow")
