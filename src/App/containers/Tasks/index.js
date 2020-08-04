@@ -34,7 +34,8 @@ class Tasks extends React.Component {
       res: '',
       selected: null,
       status: false,
-      disable : false
+      disable : false,
+      options : null
     };
   }
   exportPDF = () => {
@@ -135,13 +136,16 @@ class Tasks extends React.Component {
     let CompletedData = []
     let upcomingData = []
 
-    await api
+    api
       .get('/matter/viewforuser/' + this.props.userId)
-      .then((res) => (response = res.data.data));
+      .then((res) =>{
+        response = res.data.data
         console.log(response);
         options = response.map((value, index) => {
       
       return <option>{value.matterDescription}</option>;
+      } );
+       
     });
 
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
@@ -536,7 +540,89 @@ class Tasks extends React.Component {
             </Button>,
           ]}
         >
-          <TaskForm2 options={this.state.options}  handleChange={this.handleChange}></TaskForm2>
+             <Form className="form-details">
+        <Form.Group controlId="taskName">
+          <Form.Label>Task Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Task Name"
+            defaultValue={this.state.name}
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="dueDate">
+          <Form.Label>Due Date</Form.Label>
+          <Form.Control
+            required
+            type="date"
+            placeholder="Due Date"
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            required
+            as="textarea"
+            rows="3"
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+      {/*
+        <Form.Group controlId="taskName">
+          <Form.Label>Assignee</Form.Label>
+          <div>
+            <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+          </div>
+        </Form.Group>
+      */
+      }
+
+        <Form.Group controlId="priority">
+          <Form.Label>Priority</Form.Label>
+          <Form.Control
+            as="select"
+            defaultValue="Normal"
+            required
+            onChange={this.handleChange}
+          >
+            <option>Low</option>
+            <option>Normal</option>
+            <option>High</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="matter">
+          <Form.Label>Matter</Form.Label>
+          <Form.Control
+            required
+            as="select"
+            onChange={this.handleChange}
+            name="matter"
+          >
+            <option>Select a matter</option>
+            {this.state.options}
+          </Form.Control>
+        </Form.Group>
+        <br />
+        {
+          /*
+            <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify me when the task is completed" />
+        </Form.Group>
+        <br />
+        <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify assignee via email" />
+        </Form.Group>
+        <br />
+          */
+
+        }
+       
+      </Form>
+   
         </Modal>
         <Modal
           title="Edit task"

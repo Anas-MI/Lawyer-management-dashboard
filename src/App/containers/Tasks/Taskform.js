@@ -29,7 +29,7 @@ class TaskForm extends React.Component{
   }
   
   componentDidMount(){
-    
+    /*
     if(this.props.editMode){
       api.get('/matter/view/'+ this.props.data.matter).then((res)=>{
         console.log(res)
@@ -49,7 +49,9 @@ class TaskForm extends React.Component{
         this.setState({matter : formData})
       })
     }
+    */
   }
+  
     render(){
       
         return <Form className="form-details">
