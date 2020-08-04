@@ -10,6 +10,8 @@ import {
 } from 'antd';
 import { useSelector, connect } from 'react-redux';
 import ExpenseForm from './Form/expenseForm';
+import EditExpense from './Form/expenseEdit'
+import EditTime from './Form/timeEdit'
 import TimeForm from './Form/timeForm';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -38,7 +40,8 @@ class Activity extends React.Component {
       expenseData: [],
       completeData: [],
       tableData: [],
-      editmode: false,
+      editTime: false,
+      EditExpense : false,
       record: '',
       touched: true,
     };
@@ -169,7 +172,7 @@ class Activity extends React.Component {
     } else if (this.state.data.rate === '') {
       notification.error({ message: 'Please provide rate' });
     } else {
-      if (this.state.editmode) {
+      if (this.state.editTime || this.state.EditExpense) {
         if (type === 'time') {
           let data = this.state.data;
           data.type = 'time';
@@ -302,7 +305,7 @@ class Activity extends React.Component {
     if (type === 'time') {
       this.setState({
         timeModal: false,
-        editmode: false,
+        editTime : false,
         data: {
           billable: true,
           nonBillable: false,
@@ -316,7 +319,7 @@ class Activity extends React.Component {
     } else if (type === 'expense') {
       this.setState({
         expenseModal: false,
-        editmode: false,
+        EditExpense: false,
         data: {
           billable: true,
           nonBillable: false,
@@ -337,13 +340,13 @@ class Activity extends React.Component {
     const handleEdit = (record) => {
       if (record.type === 'time') {
         this.setState({
-          editmode: true,
+          editTime: true,
           timeModal: true,
           data: record,
         });
       } else if (record.type === 'expense') {
         this.setState({
-          editmode: true,
+          EditExpense: true,
           expenseModal: true,
           data: record,
         });
@@ -687,11 +690,24 @@ class Activity extends React.Component {
         >
           <TimeForm
             touched={this.state.touched}
+            handleChange={handleChange}
+          ></TimeForm>
+        </Modal>
+        <Modal
+          title="Edit Time Entry"
+          visible={this.state.editTime}
+          onOk={() => this.handleOk('time')}
+          onCancel={() => this.handleCancel('time')}
+          afterClose={() => this.handleCancel('time')}
+        >
+          <EditTime 
+            touched={this.state.touched}
             time={this.state.data.time}
             record={this.state.data}
             editmode={this.state.editmode}
-            handleChange={handleChange}
-          ></TimeForm>
+            handleChange={handleChange}>
+          </EditTime>
+          
         </Modal>
         <Modal
           title="New Expense"
@@ -701,10 +717,22 @@ class Activity extends React.Component {
           afterClose={() => this.handleCancel('expense')}
         >
           <ExpenseForm
-            record={this.state.data}
-            editmode={this.state.editmode}
             handleChange={handleChange}
           ></ExpenseForm>
+        </Modal>
+        <Modal
+          title="Edit Expense"
+          visible={this.state.EditExpense}
+          onOk={() => this.handleOk('expense')}
+          onCancel={() => this.handleCancel('expense')}
+          afterClose={() => this.handleCancel('expense')}
+        >
+          <EditExpense
+          record={this.state.data}
+          editmode={this.state.editmode}
+          handleChange={handleChange}>
+
+          </EditExpense>
         </Modal>
       </div>
     );
