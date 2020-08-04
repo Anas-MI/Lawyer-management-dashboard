@@ -77,11 +77,11 @@ class Activity extends React.Component {
       let thisYear = [];
       res.data.data.map((val, index) => {
         const date = this.convertTime(val.date);
-        const temp = {
+        let temp = {
           key: index,
           type: val.type,
           id: val._id,
-          qty: val.qty,
+          qty : val.type === 'time' ? val.time : val.qty,
           time: val.time ? val.time : '',
           matter: val.matter ? val.matter : '-',
           description: val.description ? val.description : '-',
@@ -92,9 +92,11 @@ class Activity extends React.Component {
           //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
         };
         if (val.type === 'time') {
+
           timedata.push(temp);
         }
         if (val.type === 'expense') {
+   
           expenseData.push(temp);
         }
         if (
@@ -131,6 +133,7 @@ class Activity extends React.Component {
         today: today,
       });
     });
+    
     const time = window.localStorage.getItem('timer');
     let hours = Math.floor(time / 3600);
     let minutes = Math.floor(time / 60);
