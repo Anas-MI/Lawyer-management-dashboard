@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Table, Button, Input, Space, notification, Card , Popconfirm} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -10,11 +10,21 @@ import ExportExcel from './ExportExcel';
 
 import api from '../../../resources/api';
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  console.log(ref.current)
+  return ref.current;
+
+}
 const ContactsManage = (props) => {
+  console.log(props)
   const userId = useSelector((state) => state.user.token.user._id);
   const [type, setType] = useState('contact');
-  console.log('id', userId);
   const dispatch = useDispatch();
+  const prevLocation = usePrevious(props.location)
   const [companyData, setcompanyData] = useState([]);
   const [value, setValue] = useState('');
   const [contactData, setcontactData] = useState([]);
@@ -39,11 +49,11 @@ const ContactsManage = (props) => {
   useEffect(() => {
     dispatch(getBlogs());
   }, []); */
+  
   async function fetchEventData() {
     response = await api.get('/contact/viewforuser/' + userId);
     company = await api.get('/company/viewforuser/' + userId);
-    console.log(response);
-    console.log(company);
+ 
     setTable();
   }
   useEffect(() => {
@@ -80,7 +90,16 @@ const ContactsManage = (props) => {
       newtableData.push(data);
       setcompanyData(newtableData);
     });
-    setState({ tableData: contactData });
+    const nav = window.localStorage.getItem('company')
+    if(nav === "true"){
+      setState({ tableData: companyData });
+      setType('company')
+    }else{
+      setState({ tableData: contactData });
+      setType('contact')
+    }
+    window.localStorage.setItem('company', "false")
+    
   };
 
   //   const handleciSelect = (record) => {
@@ -112,7 +131,7 @@ const ContactsManage = (props) => {
 
   const handleEdit = (record) => {
     //   dispatch(selectBlog(record))
-    console.log(record);
+ 
     if (type === 'contact') {
       props.history.push('/edit/contact', record);
     } else if (type === 'company') {
@@ -121,7 +140,7 @@ const ContactsManage = (props) => {
   };
 
   const handleDelete = (record) => {
-    console.log(record);
+
     if (type === 'contact') {
       api
         .get('/contact/delete/' + record._id)
@@ -284,8 +303,6 @@ const ContactsManage = (props) => {
   ];
 
   const handleView = (i) => {
-    console.log(type);
-    console.log({ i });
     if (type === 'contact') {
       props.history.push('/view/contact', i._id);
     }

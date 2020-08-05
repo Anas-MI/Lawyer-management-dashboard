@@ -21,13 +21,14 @@ class Dashboard extends React.Component {
             draftCount : 0,
             draftAmount : 0,
             unPaidCount : 0,
-            unPaidAmount :0
+            unPaidAmount :0,
+            overDueCount : 0, 
+            overDueAmount : 0,
         }
     }
     componentDidMount(){
         api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
             let tcount = 0
-       
             res.data.data.map((val,index)=>{
                 if(val.status == false){
                     tcount++
@@ -50,11 +51,33 @@ class Dashboard extends React.Component {
             let draftAmount = 0
             let unPaidCount = 0
             let unPaidAmount =0
+            let overDueCount = 0
+            let overDueAmount = 0
+            const currentDate = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0]
+
+
+            // for test 
+            const nnndate = res.data.data[0] ? res.data.data[0].dueDate : "";
+           
+            if (currentDate > nnndate) {
+                console.log("hellow")
+            } else {
+                console.log("skadh")
+            }
+            console.log(currentDate)
+            console.log(nnndate)
+
+
             res.data.data.map((value , index)=>{
              
               if(value.status=="Unpaid"){
                 unPaidCount++
                 unPaidAmount = unPaidAmount + parseFloat(value.balance)
+
+                if (currentDate > value.dueDate) {
+                    overDueCount++
+                    overDueAmount += parseFloat(value.balance)
+                }
               }
               if(value.status=="draft"){
                 draftCount++
@@ -67,7 +90,9 @@ class Dashboard extends React.Component {
                 unPaidAmount : unPaidAmount,
                 unPaidCount : unPaidCount,
                 draftAmount : draftAmount,
-                draftCount : draftCount
+                draftCount : draftCount,
+                overDueCount : overDueCount,
+                overDueAmount : overDueAmount
             })
           })
     }
@@ -120,7 +145,7 @@ class Dashboard extends React.Component {
                         let dd = today.getDate();
                         let mm = today.getMonth()+1; 
                         let yyyy = today.getFullYear();
-                        let hours = today.getHours() > 12 ?  today.getHours() - 12 :  today.getHours() ;
+                        let hours = today.getHours() ;
                         let plusonehour = parseInt(hours) + 1
                         console.log(plusonehour)
                         let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()
@@ -134,7 +159,6 @@ class Dashboard extends React.Component {
                             if(mm<10) {
                                 mm = '0'+mm
                             } 
-*/
                         console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
                         console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
                         /*
@@ -166,12 +190,10 @@ class Dashboard extends React.Component {
                               });
                             console.log(value)
                             */
-                            
                         }
                         else{
                             console.log("i min passed")
-                        }
-                               
+                        }   
                     }
                     /*
                     const tableData={
@@ -182,13 +204,9 @@ class Dashboard extends React.Component {
                         Matter : value.matter ?  value.matter.matterDescription : "",
                         Email : value.email,
                         Notification : value.notification,
-                  
-        
                     }
                    */
                 })
-
-            
             })
 
         },60*1000)
@@ -253,6 +271,7 @@ class Dashboard extends React.Component {
 
         return (
             <Aux>
+                <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Today's Agenda</b></h6>  
                 <Row>
                     <Col md={6} xl={4}>
                         <Card>
@@ -285,161 +304,168 @@ class Dashboard extends React.Component {
                                             {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
                                             {this.state.eventCount}</h3>
                                     </div>
-
                                     <div className="col-8 text-right">
                                         <Button variant="info" onClick={()=>this.props.history.push('/calendar')}>Create Event</Button>
                                     </div>
                                 </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Draft bills</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                        {this.state.draftCount}</h3>
+                </Row>
+                    <Row>
+                        <Col md={5} xl={5}>
+                            <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Hourly Metrics</b></h6>
+                            <Card className='Recent-Users' style={{ "height": "370px"}}>
+                                <Card.Header>
+                                    <Card.Title as='h5'>Billable Hours Target</Card.Title>
+                                </Card.Header>
+                                <Card.Body className='px-0 py-2' style={{ "display": "flex", "justify-content": "center", "align-items": "center"}}>
+                                    <div>
+                                        <h6 className='mb-4 pl-2'><b>Billable Hours Target</b></h6>
+                                        <div>
+                                            <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>SET UP YOUR TARGET</Button>
+                                        </div>
                                     </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
 
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={8}>
-                        <Card className='Recent-Users'>
-                            <Card.Header>
-                                <Card.Title as='h5'>Billable Hours Target</Card.Title>
-                            </Card.Header>
-                            <Card.Body className='px-0 py-2'>
-                            <div className="text-center">
-                            <p><b>Billable Hours Target</b></p>
-                            </div>
-                                    <div className="col-8 text-right">
-                                        <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>SET UP YOUR TARGET</Button>
-                                    </div>
-                                
-                            </Card.Body>
-                        </Card>
-                   
-                   
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Total in draft</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                            ${this.state.draftAmount}</h3>
-                                    </div>
+                        <Col md={7} xl={7}>
+                            <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Billing Metrics for Firm</b></h6>
+                            <Row>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Draft bills</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0"><b>
+                                                    {this.state.draftCount}</b></h4>
+                                                </div>
 
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
-                        
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Unpaid bills</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                            {this.state.unPaidCount}</h3>
-                                    </div>
+                                                <div className="col-8 text-right">
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Total in draft</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
+                                                        {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                                       <b> ${this.state.draftAmount}</b></h4>
+                                                </div>
 
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Task</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
+                                                <div className="col-8 text-right">
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Unpaid bills</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
+                                                        {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                                        <b> {this.state.unPaidCount}</b></h4>
+                                                </div>
+                                                <div className="col-8 text-right">
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>  
+                                </Col>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Total unpaid bills</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
+                                                        {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
+                                                        <b> ${this.state.unPaidAmount}</b></h4>
+                                                </div>
+
+                                                <div className="col-8 text-right">
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Overdue bills</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
+                                                        {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
+                                                        <b>  {this.state.overDueCount} </b></h4>
+                                                </div>
+
+                                                <div className="col-8 text-right">
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>Create New Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                <Col md={12} xl={6}>
+                                    <Card>
+                                        <Card.Body style={{"padding": "1rem"}}>
+                                            <h6 className='mb-4'><b>Total overdue bills</b></h6>
+                                            <div className="row d-flex align-items-center">
+                                                <div className="col-4">
+                                                    <h4 className="f-w-300 d-flex align-items-center m-b-0">
+                                                        {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
+                                                        <b> ${this.state.overDueAmount}</b></h4>
+                                                </div>
+
+                                                <div className="col-8 text-right">
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>View Overdue Bills</Button>
+                                                </div>
+                                            </div>
+                                            {/* <div className="progress m-t-30" style={{height: '7px'}}>
+                                                <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
+                                            </div> */}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>                 
+                        </Col>
+                    </Row>
                     
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Total unpaid bills</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                            ${this.state.unPaidAmount}</h3>
-                                    </div>
-
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Task</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Overdue bills</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                             423</h3>
-                                    </div>
-
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg text-white rounded-pill f-14 f-w-400 ">Create Events</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Total overdue bills</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                            666</h3>
-                                    </div>
-
-                                    <div className="col-8 text-right">
-                                        <a href="#!" class="label theme-bg2 text-white rounded-pill f-14 f-w-400 ">Create Bills</a>
-                                    </div>
-                                </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                   <Row>   
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Header>

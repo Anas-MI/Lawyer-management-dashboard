@@ -17,14 +17,19 @@ const selectBefore = (
   </Select>
 );
 
+ 
 class TaskForm extends React.Component{
   constructor(){
     super()
     this.state = {
-      matter : ""
+      matter : "",
+      name : ""
     }
+  
   }
+  
   componentDidMount(){
+    /*
     if(this.props.editMode){
       api.get('/matter/view/'+ this.props.data.matter).then((res)=>{
         console.log(res)
@@ -44,16 +49,18 @@ class TaskForm extends React.Component{
         this.setState({matter : formData})
       })
     }
+    */
   }
+  
     render(){
-        
+      
         return <Form className="form-details">
         <Form.Group controlId="taskName">
           <Form.Label>Task Name</Form.Label>
           <Form.Control
-            required
             type="text"
             placeholder="Task Name"
+            defaultValue={this.state.name}
             onChange={this.props.handleChange}
           />
         </Form.Group>

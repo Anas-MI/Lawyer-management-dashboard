@@ -126,15 +126,31 @@ class AddCompany extends React.Component {
       );
       if(valid2){
         if (editMode) {
-          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
+          api
+          .post('/company/edit/' + this.props.location.state._id, data)
+          .then(() => {
+            this.openNotificationWithIcon('success')
+              window.localStorage.setItem('company', "true")
+          })
+          .catch((err) => this.openNotificationWithfailure('error'));
+          setTimeout(() => {
+            if (this.props.location != undefined) {
+              this.props.history.goBack();
+            }
+           }, 600);
         } else {
           api
             .post('company/create', data)
-            .then(() => this.openNotificationWithIcon('success'))
+            .then(() => {
+              this.openNotificationWithIcon('success')
+              window.localStorage.setItem('company', "true")
+            })
             .catch((err) => this.openNotificationWithfailure('error'));
+         setTimeout(() => {
           if (this.props.location != undefined) {
             this.props.history.goBack();
           }
+         }, 600);
         }
       }
       
@@ -875,7 +891,7 @@ class AddCompany extends React.Component {
                 }
                 <br></br>
                   <div className="form-add mb-4">
-                    <span onClick={()=>addFeild("employees")}>Add a employees</span>
+                    <span onClick={()=>addFeild("employees")}>Add employees</span>
                     </div>
                     
               <br></br>

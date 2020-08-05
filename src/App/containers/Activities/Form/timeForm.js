@@ -8,7 +8,9 @@ class ExpenseForm extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-         
+          data : {
+            time : ''
+          }
         }
     }
     componentDidMount(){
@@ -21,15 +23,23 @@ class ExpenseForm extends React.Component{
              this.setState({option : option})
          })
          
-    }
+         const time = window.localStorage.getItem('timer');
+            let hours = Math.floor(time / 3600);
+            let minutes = Math.floor(time / 60);
+            if (minutes >= 59) {
+            minutes = minutes % 60;
+            }
+
+            //   const Seconds = time % 60;
+            const data = this.state.data;
+            data.time = hours + ':' + minutes;
+            this.setState({ data: data, touched: true });
+       }
 
     render(){
-        console.log(this.props.record.billable)
+  
         let date = ""
-        if(this.props.editmode){
-            date = this.props.record.date.substring(0,10)
-            console.log(date)
-       }
+        
 
        const duration = this.props.touched ? <Form.Group controlId="duration">
                                                 <Form.Label>Duration</Form.Label>
@@ -37,7 +47,7 @@ class ExpenseForm extends React.Component{
                                                 type="text" 
                                                 name="time" 
                                                 placeholder="hh:mm" 
-                                                value = {this.props.time}
+                                                value = {this.state.time}
                                                 onChange={this.props.handleChange}/>
                                               </Form.Group>
                                               :
@@ -50,138 +60,7 @@ class ExpenseForm extends React.Component{
                                                 onChange={this.props.handleChange}/>
                                             </Form.Group>
  
-       return  this.props.editmode ? <Form >
-       <Row>
-           <Col>
-           <Form.Group controlId="duration">
-               <Form.Label>Duration</Form.Label>
-               <Form.Control 
-               type="text" 
-               name="time" 
-               defaultValue = {this.props.record.time}
-               onChange={this.props.handleChange}/>
-           </Form.Group>
-           </Col>
-           <Col>
-               <Timer setTime = {this.props.setTime} ></Timer>
-           </Col>
-       </Row>
-       
-       <Row>
-           <Col>
-           <Form.Group controlId="matter">
-               <Form.Label>Matter</Form.Label>
-               <Form.Control 
-                   as="select"
-                   name="matter" 
-                   defaultValue = {this.props.record.matter}
-                   onChange={this.props.handleChange}>
-               <option>Select a matter</option>
-               {this.state.option}
-               </Form.Control>
-            </Form.Group>
-           </Col>
-           <Col>
-           <Form.Group controlId="rate">
-               <Form.Label>Rate</Form.Label>
-               <Form.Control 
-               required
-               type="text" 
-               name="rate" 
-               defaultValue = {this.props.record.rate}
-               onChange={this.props.handleChange} />
-           </Form.Group>
-           </Col>
-
-       </Row>
-      
-           
-       <Row>
-           <Col>
-           <Form.Group controlId="Description">
-               <Form.Label>Description</Form.Label>
-               <Form.Control 
-               name="description" 
-               as="textarea" 
-               rows="3"
-               defaultValue = {this.props.record.description}
-               onChange={this.props.handleChange} />
-           </Form.Group>
-           </Col>
-
-       </Row>
-      
-       <Row>
-           <Col>
-           <Form.Group controlId="rate">
-               <Form.Label>Rate</Form.Label>
-               <Form.Control 
-               required
-               type="text" 
-               name="rate" 
-               defaultValue = {this.props.record.rate}
-               onChange={this.props.handleChange} />
-           </Form.Group>
-           </Col>
-           <Col>
-           <Form.Group controlId="date">
-               <Form.Label>Date</Form.Label>
-               <Form.Control 
-               required
-               type="date" 
-               name="date" 
-               defaultValue = {date}
-               onChange={this.props.handleChange}/>
-           </Form.Group>
-           </Col>
-           {/*
-                <Col>
-                <Form.Group controlId="invoiceStatus">
-                    <Form.Label>Invoice Status</Form.Label>
-                    <Form.Control 
-                        as="select"
-                        name="invoiceStatus"
-                        defaultValue = {this.props.record.invoiceStatus}
-                        onChange={this.props.handleChange} >
-                    <option>Unbilled</option>
-                    <option>Billed</option>
-                    </Form.Control>
-                 </Form.Group>
-                </Col>
-           */}
-          
-       </Row>
-           
-           <Row>
-               <Col>
-               <Form.Check 
-              type="checkbox"
-              id="billable"
-              name="billable"
-              label="Billable"
-              defaultChecked = {this.props.record.billable==="Yes"? true : false}
-              onChange={this.props.handleChange}
-          /><br></br>
-               </Col>
-           </Row>
-   
-           {
-               /*
-               <Form.Check 
-              type="checkbox"
-              id="nonBillable"
-              name="nonBillable"
-              label="Non-billable"
-              defaultChecked = {!this.props.record.billable}
-              onChange={this.props.handleChange}
-          />
-               */
-           }
-   </Form>
-
-
-   :
-   <Form >
+       return <Form >
         <Row>
             <Col>
                  {duration}

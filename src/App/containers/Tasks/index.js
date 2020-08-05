@@ -34,6 +34,8 @@ class Tasks extends React.Component {
       res: '',
       selected: null,
       status: false,
+      disable : false,
+      options : null
     };
   }
   exportPDF = () => {
@@ -134,17 +136,16 @@ class Tasks extends React.Component {
     let CompletedData = []
     let upcomingData = []
 
-    await api
+    api
       .get('/matter/viewforuser/' + this.props.userId)
-      .then((res) => (response = res.data.data));
+      .then((res) =>{
+        response = res.data.data
         console.log(response);
         options = response.map((value, index) => {
-      if (index == 0) {
-        let newdata = this.state;
-        newdata.Data.matter = value._id;
-        this.setState(newdata);
-      }
+      
       return <option>{value.matterDescription}</option>;
+      } );
+       
     });
 
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
@@ -152,7 +153,7 @@ class Tasks extends React.Component {
       res.data.data.map((value, index)=>{
         const newdata = value
         newdata.key = index 
-        newdata.dueDate = newdata.dueDate.substring(0,10) 
+        newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
           
           upcomingData.push(newdata)
@@ -298,29 +299,37 @@ class Tasks extends React.Component {
   handleOk = (e) => {
     e.preventDefault();
     notification.destroy();
+    let valid = true
+    console.log(this.state.Data.matter)
     if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
+      valid = false
       notification.warning({
         message: 'Please provide a taskName',
       });
     }
     if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
+      valid = false
       notification.warning({
         message: 'Please provide a description',
       });
     }
     if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
+      valid = false
       notification.warning({
           message: 'Please select a due date',
         });
     }
     if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
+      valid = false
       notification.warning({
         message: 'Please select a matter',
       });
       
-    } else {
+    } 
+    if(valid){
       this.setState({
         confirmLoading: true,
+        disable : true
       });
       const data = this.state.Data;
       data.userId = this.props.userId;
@@ -355,13 +364,14 @@ class Tasks extends React.Component {
           this.setState({
             visible: false,
             editMode : false,
+            disable : false,
             Data: { priority: 'Normal', matter: "" },
             confirmLoading: false,
           });
           //window.location.reload();
         }, 1000);
       }
-      }
+    }
       
   };
 
@@ -530,7 +540,89 @@ class Tasks extends React.Component {
             </Button>,
           ]}
         >
-          <TaskForm2 options={this.state.options} handleChange={this.handleChange}></TaskForm2>
+             <Form className="form-details">
+        <Form.Group controlId="taskName">
+          <Form.Label>Task Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Task Name"
+            defaultValue={this.state.name}
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="dueDate">
+          <Form.Label>Due Date</Form.Label>
+          <Form.Control
+            required
+            type="date"
+            placeholder="Due Date"
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            required
+            as="textarea"
+            rows="3"
+            onChange={this.handleChange}
+          />
+        </Form.Group>
+
+      {/*
+        <Form.Group controlId="taskName">
+          <Form.Label>Assignee</Form.Label>
+          <div>
+            <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+          </div>
+        </Form.Group>
+      */
+      }
+
+        <Form.Group controlId="priority">
+          <Form.Label>Priority</Form.Label>
+          <Form.Control
+            as="select"
+            defaultValue="Normal"
+            required
+            onChange={this.handleChange}
+          >
+            <option>Low</option>
+            <option>Normal</option>
+            <option>High</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="matter">
+          <Form.Label>Matter</Form.Label>
+          <Form.Control
+            required
+            as="select"
+            onChange={this.handleChange}
+            name="matter"
+          >
+            <option>Select a matter</option>
+            {this.state.options}
+          </Form.Control>
+        </Form.Group>
+        <br />
+        {
+          /*
+            <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify me when the task is completed" />
+        </Form.Group>
+        <br />
+        <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Notify assignee via email" />
+        </Form.Group>
+        <br />
+          */
+
+        }
+       
+      </Form>
+   
         </Modal>
         <Modal
           title="Edit task"

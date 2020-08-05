@@ -49,7 +49,7 @@ class editCompany extends React.Component {
       phone: [],
       website: [],
       editData: '',
-      employees: [""],
+      employees: [],
       optionsss : null
     };
   }
@@ -65,6 +65,7 @@ class editCompany extends React.Component {
         emailAddress: editData.data.data.emailAddress,
         address: editData.data.data.address,
         website: editData.data.data.website,
+        employees : editData.data.data.employees
       });
 
     })
@@ -129,23 +130,44 @@ class editCompany extends React.Component {
       const data = this.state;
       data.userId = this.props.userId;
       console.log(data);
-      if (editMode) {
-        api
-          .post('/company/edit/' + this.props.location.state._id, data)
-          .then(() => this.openNotificationWithIcon('success'))
-          .catch((err) => this.openNotificationWithfailure('error'));
-        if (this.props.location != undefined) {
-          this.props.history.push('/manage/contacts');
+      let valid2 = true
+      Object.values(this.state.employees).forEach(
+        (val) => { if(val == ""){
+          valid2 = false
+          notification.warning({message : "Please select a employee"})
         }
-      } else {
-        api
-          .post('company/create', data)
-          .then(() => this.openNotificationWithIcon('success'))
+        }
+      );
+      if(valid2){
+        if (editMode) {
+          api
+          .post('/company/edit/' + this.props.location.state._id, data)
+          .then(() => {
+            this.openNotificationWithIcon('success')
+              window.localStorage.setItem('company', "true")
+          })
           .catch((err) => this.openNotificationWithfailure('error'));
+          setTimeout(() => {
+            if (this.props.location != undefined) {
+              this.props.history.goBack();
+            }
+           }, 600);
+        } else {
+          api
+            .post('company/create', data)
+            .then(() => {
+              this.openNotificationWithIcon('success')
+              window.localStorage.setItem('company', "true")
+            })
+            .catch((err) => this.openNotificationWithfailure('error'));
+         setTimeout(() => {
+          if (this.props.location != undefined) {
+            this.props.history.goBack();
+          }
+         }, 600);
+        }
       }
-      if (this.props.location != undefined) {
-        this.props.history.push('/manage/contacts');
-      }
+      
     } else {
       return notification.warning({
         message: 'Please enter valid details',
@@ -432,7 +454,7 @@ class editCompany extends React.Component {
                             as="select"
                             name="type"
                             defaultValue={
-                              this.state.editData.address[index].type
+                              this.state.editData.address[index] ? this.state.editData.address[index].type : ""
                             }
                             onChange={HandleAddressChange}
                           >
@@ -449,7 +471,7 @@ class editCompany extends React.Component {
                             name="street"
                             type="text"
                             defaultValue={
-                              this.state.editData.address[index].street
+                              this.state.editData.address[index] ? this.state.editData.address[index].street : ""
                             }
                             onChange={HandleAddressChange}
                           />
@@ -467,7 +489,7 @@ class editCompany extends React.Component {
                             name="city"
                             type="text"
                             defaultValue={
-                              this.state.editData.address[index].city
+                              this.state.editData.address[index] ? this.state.editData.address[index].city : ""
                             }
                             onChange={HandleAddressChange}
                           />
@@ -483,7 +505,7 @@ class editCompany extends React.Component {
                             name="state"
                             type="text"
                             defaultValue={
-                              this.state.editData.address[index].state
+                              this.state.editData.address[index] ? this.state.editData.address[index].state : ""
                             }
                             onChange={HandleAddressChange}
                           />
@@ -501,7 +523,7 @@ class editCompany extends React.Component {
                             name="zipCode"
                             type="text"
                             defaultValue={
-                              this.state.editData.address[index].zipCode
+                              this.state.editData.address[index] ? this.state.editData.address[index].zipCode : ""
                             }
                             onChange={HandleAddressChange}
                           />
@@ -516,7 +538,7 @@ class editCompany extends React.Component {
                           <select
                             name="country"
                             defaultValue={
-                              this.state.editData.address[index].country
+                              this.state.editData.address[index] ? this.state.editData.address[index].country : ""
                             }
                             id={index}
                             onChange={HandleAddressChange}
@@ -899,7 +921,7 @@ class editCompany extends React.Component {
                 }
                 <br></br>
                  <div className="form-add mb-4">
-                    <span onClick={()=>addFeild("employees")}>Add a employees</span>
+                    <span onClick={()=>addFeild("employees")}>Add employees</span>
                     </div>
                     
               <br></br>
