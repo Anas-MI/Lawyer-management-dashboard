@@ -44,6 +44,8 @@ class Activity extends React.Component {
       EditExpense : false,
       record: '',
       touched: true,
+      disabletime : false,
+      disableExpense : false
     };
   }
   convertTime = (serverdate) => {
@@ -172,6 +174,10 @@ class Activity extends React.Component {
     } else if (this.state.data.rate === '') {
       notification.error({ message: 'Please provide rate' });
     } else {
+      this.setState({
+        disableExpense : true,
+        disabletime : true
+      })
       if (this.state.editTime || this.state.EditExpense) {
         if (type === 'time') {
           let data = this.state.data;
@@ -181,6 +187,10 @@ class Activity extends React.Component {
             .post('/activity/edit/' + this.state.data.id, data)
             .then((res) => {
               this.componentDidMount()
+              this.setState({
+                disableExpense : false,
+                disabletime : false
+              })
               notification.success({ message: 'Time entry Edited !' });
             })
             .catch((err) => {
@@ -211,6 +221,10 @@ class Activity extends React.Component {
             .post('/activity/edit/' + this.state.data.id, data)
             .then((res) => {
               this.componentDidMount()
+              this.setState({
+                disableExpense : false,
+                disabletime : false
+              })
               notification.success({ message: 'Expense Edited!' });
             })
             .catch((err) => {
@@ -243,6 +257,10 @@ class Activity extends React.Component {
             .post('/activity/create', data)
             .then((res) => {
               this.componentDidMount()
+              this.setState({
+                disableExpense : false,
+                disabletime : false
+              })
               notification.success({ message: 'Time entry Added !' });
             })
             .catch((err) => {
@@ -273,6 +291,10 @@ class Activity extends React.Component {
             .post('/activity/create', data)
             .then((res) => {
               this.componentDidMount()
+              this.setState({
+                disableExpense : false,
+                disabletime : false
+              })
               notification.success({ message: 'Expense Added !' });
             })
             .catch((err) => {
@@ -687,6 +709,14 @@ class Activity extends React.Component {
           onOk={() => this.handleOk('time')}
           onCancel={() => this.handleCancel('time')}
           afterClose={() => this.handleCancel('time')}
+          footer={[
+            <Button  onClick={() => this.handleCancel('time')}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disabletime} onClick={() => this.handleOk('time')}>
+              Add Entry
+            </Button>,
+          ]}
         >
           <TimeForm
             touched={this.state.touched}
@@ -699,6 +729,14 @@ class Activity extends React.Component {
           onOk={() => this.handleOk('time')}
           onCancel={() => this.handleCancel('time')}
           afterClose={() => this.handleCancel('time')}
+          footer={[
+            <Button  onClick={() => this.handleCancel('time')}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disabletime} onClick={() => this.handleOk('time')}>
+              Edit Entry
+            </Button>,
+          ]}
         >
           <EditTime 
             touched={this.state.touched}
@@ -715,6 +753,14 @@ class Activity extends React.Component {
           onOk={() => this.handleOk('expense')}
           onCancel={() => this.handleCancel('expense')}
           afterClose={() => this.handleCancel('expense')}
+          footer={[
+            <Button  onClick={() => this.handleCancel('expense')}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disableExpense} onClick={() => this.handleOk('expense')}>
+              Add Entry
+            </Button>
+          ]}
         >
           <ExpenseForm
             handleChange={handleChange}
@@ -726,6 +772,14 @@ class Activity extends React.Component {
           onOk={() => this.handleOk('expense')}
           onCancel={() => this.handleCancel('expense')}
           afterClose={() => this.handleCancel('expense')}
+          footer={[
+            <Button  onClick={() => this.handleCancel('expense')}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disableExpense} onClick={() => this.handleOk('expense')}>
+              Edit Entry
+            </Button>,
+          ]}
         >
           <EditExpense
           record={this.state.data}

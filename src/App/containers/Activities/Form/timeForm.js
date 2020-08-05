@@ -13,6 +13,21 @@ class ExpenseForm extends React.Component{
           }
         }
     }
+    setTimer = () => {
+       
+        const time = window.localStorage.getItem('timer');
+        let hours = Math.floor(time / 3600);
+        let minutes = Math.floor(time / 60);
+        if (minutes >= 59) {
+        minutes = minutes % 60;
+        }
+
+        //   const Seconds = time % 60;
+        const data = this.state.data;
+        data.time = hours + ':' + minutes;
+        this.setState({ data: data });
+        console.log(this.state.data)
+    }
     componentDidMount(){
         api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
             option = res.data.data.map((val, index)=>{
@@ -23,50 +38,50 @@ class ExpenseForm extends React.Component{
              this.setState({option : option})
          })
          
-         const time = window.localStorage.getItem('timer');
-            let hours = Math.floor(time / 3600);
-            let minutes = Math.floor(time / 60);
-            if (minutes >= 59) {
-            minutes = minutes % 60;
-            }
-
-            //   const Seconds = time % 60;
-            const data = this.state.data;
-            data.time = hours + ':' + minutes;
-            this.setState({ data: data, touched: true });
+        this.setTimer()
        }
 
     render(){
-  
+        
         let date = ""
+        /*
+        const time = window.localStorage.getItem('timer');
+        let hours = Math.floor(time / 3600);
+        let minutes = Math.floor(time / 60);
+        if (minutes >= 59) {
+        minutes = minutes % 60;
+        }
+
+        //   const Seconds = time % 60;
+        
+        const timeee = hours + ':' + minutes;
+        if(timeee != window.localStorage.getItem('timer') ){
+            const data = this.state.data
+            data.time = time
+            this.setState({
+                data : data
+            })
+        }
+        */
+
+                                        
         
 
-       const duration = this.props.touched ? <Form.Group controlId="duration">
-                                                <Form.Label>Duration</Form.Label>
-                                                <Form.Control 
-                                                type="text" 
-                                                name="time" 
-                                                placeholder="hh:mm" 
-                                                value = {this.state.time}
-                                                onChange={this.props.handleChange}/>
-                                              </Form.Group>
-                                              :
-                                              <Form.Group controlId="duration">
-                                                <Form.Label>Duration</Form.Label>
-                                                <Form.Control 
-                                                type="text" 
-                                                name="time" 
-                                                placeholder="hh:mm" 
-                                                onChange={this.props.handleChange}/>
-                                            </Form.Group>
- 
        return <Form >
         <Row>
             <Col>
-                 {duration}
+                <Form.Group controlId="duration">
+                     <Form.Label>Duration</Form.Label>
+                      <Form.Control 
+                        type="text" 
+                        name="time" 
+                        placeholder="hh:mm" 
+                        defaultValue = {this.state.data.time}
+                        onChange={this.props.handleChange}/>
+                </Form.Group>
             </Col>
             <Col>
-                <Timer setTime = {this.props.setTime} ></Timer>
+                <Timer setTimer = {this.setTimer} ></Timer>
             </Col>
         </Row>
         

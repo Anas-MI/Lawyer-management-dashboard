@@ -7,7 +7,7 @@ import { useSelector,useDispatch } from 'react-redux'
 const Timer = props => {
     const intervalId = useRef()
     const [started , setStarted] = useState(false)
-    const [timer,setTimer] = useState(0)
+    const [timer,setTimer] = useState(window.localStorage.getItem('timer'))
 /*
     const dispatch = useDispatch()
     const updateTimer = () => dispatch(updateTimer())
@@ -28,11 +28,11 @@ const Timer = props => {
   const editModal = false
   const toggleModal = ()=> {}
     const handleStart = e => {
-        localStorage.setItem('timer',0)
+      //  localStorage.setItem('timer',0)
         setStarted(true)
         intervalId.current = setInterval(()=>{
             setTimer(s=>{
-                var n = s+1
+                var n = parseInt(s) + 1
                 localStorage.setItem('timer',n)
                 return n
             })
@@ -42,7 +42,7 @@ const Timer = props => {
     const handlePause = e => {
         setStarted(false)
         clearInterval(intervalId.current) 
-        props.setTime()
+       // props.setTime()
     }
 
     const handleChange = e => {

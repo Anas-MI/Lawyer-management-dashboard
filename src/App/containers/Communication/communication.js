@@ -31,7 +31,8 @@ class Communication extends React.Component{
             phoneData : [],
             completeData : [],
             tableData : [],
-            editmode : false
+            editmode : false,
+            disable : false
         
         }
     }
@@ -61,8 +62,7 @@ class Communication extends React.Component{
         let completeData = [];
         
         res.data.data.map((val, index) => {
-          
-          const date = this.convertTime(val.date);
+        
           const temp = {
             key: index,
             logType: val.logType,
@@ -74,7 +74,7 @@ class Communication extends React.Component{
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
             subject: val.subject ? val.subject : '-',
             body: val.body,
-            date: date          
+            date: val.date ? val.date.substring(0,10) : "-"      
           };
           if (val.logType === 'email') {
             emailData.push(temp);
@@ -133,6 +133,9 @@ class Communication extends React.Component{
         if(this.state.data.body == ""){
             notification.error({message : "Please add a body"})
         }else{
+          this.setState({
+            disable : true
+          })
             if(this.state.editmode){
 
               let data = this.state.data
@@ -151,14 +154,10 @@ class Communication extends React.Component{
               .post('/communication/edit/'+this.state.data.id, data)
               .then((res) => {
                 console.log(res)
-                const newData = this.state.tableData
-                newData.push(res.data.data)
-                this.setState({tableData : newData, data : {
-                  subject : "",
-                  body : "",
-                  from : user.token.user._id
-              }})
                 this.componentDidMount()
+                this.setState({
+                  disable : false
+                })
                 notification.success({ message: 'Log Edited !' });
               })
               .catch((err) => {
@@ -203,10 +202,11 @@ class Communication extends React.Component{
               .post('/communication/create', data)
               .then((res) => {
                 console.log(res)
-                const newData = this.state.tableData
-                newData.push(res.data.data)
-                this.setState({tableData : newData})
+                this.setState({
+                  disable : false
+                })
                 this.componentDidMount()
+
                 notification.success({ message: 'Log Added !' });
               })
               .catch((err) => {
@@ -532,6 +532,14 @@ class Communication extends React.Component{
             visible={this.state.email}
             onOk={()=>this.handleOk("email")}
             onCancel={()=>this.handleCancel("email")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("email")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                Add Log
+              </Button>,
+            ]}
             >
             <Emailform from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></Emailform>
        {/*     <TimeForm  record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm> */}
@@ -541,6 +549,14 @@ class Communication extends React.Component{
             visible={this.state.phone}
             onOk={()=>this.handleOk("phone")}
             onCancel={()=>this.handleCancel("phone")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("phone")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                Add Log
+              </Button>,
+            ]}
             >
             <PhoneLog from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></PhoneLog>
         </Modal>

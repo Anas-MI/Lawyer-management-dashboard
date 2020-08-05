@@ -13,6 +13,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
 import api from '../../../resources/api';
+import { findLast } from 'lodash';
 const { Option } = Select;
 
 //matters={props.location.state.matters}
@@ -21,6 +22,7 @@ const { Option } = Select;
 
 const Documents = () => {
   const [docs, setDocs] = useState([]);
+  const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
   const [uploadData, setUploadData] = useState({
     document: '',
@@ -110,7 +112,7 @@ const Documents = () => {
           <Button
             className="btn-outline-primary "
             onClick={() => {
-              downloadHandler(record.id);
+              downloadHandler(record);
             }}
             icon={<DownloadOutlined />}
           >
@@ -155,6 +157,7 @@ const Documents = () => {
   const getDocuments = async () => {
     let tempDocs = [];
     await api.get(`/document/viewforuser/${userId}`).then((res) => {
+      console.log(res.data.data)
       res.data.data.map((item, index) => {
         tempDocs = [
           ...tempDocs,
@@ -209,7 +212,35 @@ const Documents = () => {
   };
 
   const handleSubmit = async () => {
-    var docFormData = new FormData();
+    
+    if(uploadData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(uploadData.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(uploadData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(uploadData.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(uploadData.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+      setDisable(true)
+      var docFormData = new FormData();
     docFormData.set('document', uploadData.document);
     docFormData.set('name', uploadData.name);
     docFormData.set('matter', uploadData.matter);
@@ -229,11 +260,14 @@ const Documents = () => {
       });
     setTimeout(() => {
       setViewUpload(false);
+      setDisable(false)
     }, 600);
+    }
+    
   };
 
-  const downloadHandler = async (docId) => {
-    window.open(docs.filter((item) => item.id === docId)[0].document);
+  const downloadHandler = async (record) => {
+    window.open(record.document);
   };
 
   const deleteHandler = async (docId) => {
@@ -248,18 +282,22 @@ const Documents = () => {
       });
   };
   const editHandler = async (docId) => {
+    
     setModalFor('Edit');
     setViewUpload(true);
     await api.get(`/document/view/${docId}`).then((response) => {
+      
       setUploadData(response.data.data);
     });
   };
 
   const handleEdit = async () => {
+    setDisable(true)
     await api
       .post(`/document/edit/${uploadData._id}`, uploadData)
       .then(function (response) {
         notification.success({ message: 'Document Uploaded.' });
+        setDisable(false)
         getDocuments();
       })
       .catch(function (response) {
@@ -287,6 +325,7 @@ const Documents = () => {
           key="submit"
           type="primary"
           htmlType="submit"
+          disabled={Disable}
           onClick={modalFor === 'Upload' ? handleSubmit : handleEdit}
         >
           Submit
