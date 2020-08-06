@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import TaskForm from './EditForm'
 import TaskForm2 from './Taskform'
 import { Input, Select } from 'antd';
+import ReactDOM from 'react-dom'
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 
@@ -297,7 +298,7 @@ class Tasks extends React.Component {
     this.setState({ selected: _id });
   }
   handleOk = (e) => {
-    e.preventDefault();
+    e.persist();
     notification.destroy();
     let valid = true
     console.log(this.state.Data.matter)
@@ -351,11 +352,14 @@ class Tasks extends React.Component {
           .then((res) => {
             console.log(res)
             this.openNotificationWithSucces('success')
+
             this.componentDidMount()
           })
           .catch(() => {
             this.openNotificationWithFailure('error');
-          });
+          }).then(()=>{
+            ReactDOM.findDOMNode(this.messageForm).reset()
+          })
       }
       if(this.props.location.state === "from dashboard"){
         this.props.history.goBack()
@@ -526,7 +530,7 @@ class Tasks extends React.Component {
           </TabPane>
         </Tabs>
         <Modal
-          title="Add to New Task"
+          title="Create New Task"
           visible={this.state.visible}
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleCancel}
@@ -540,7 +544,12 @@ class Tasks extends React.Component {
             </Button>,
           ]}
         >
-             <Form className="form-details">
+       <Form 
+       className="form-details" 
+       id='myForm'
+       className="form"
+       ref={ form => this.messageForm = form }
+       >
         <Form.Group controlId="taskName">
           <Form.Label>Task Name</Form.Label>
           <Form.Control

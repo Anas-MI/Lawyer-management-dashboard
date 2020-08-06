@@ -49,7 +49,8 @@ class AddCompany extends React.Component {
       phone: [],
       website: [],
       employees: [],
-      optionsss : null
+      optionsss : null,
+      disable : false
     };
   }
   
@@ -112,6 +113,9 @@ class AddCompany extends React.Component {
       return valid;
     };
     if (validateForm()) {
+      this.setState({
+        disable : true
+      })
       console.log('all good');
       const data = this.state;
       data.userId = this.props.userId;
@@ -120,16 +124,21 @@ class AddCompany extends React.Component {
       Object.values(this.state.employees).forEach(
         (val) => { if(val == ""){
           valid2 = false
+          this.setState({
+            disable : false
+          })
           notification.warning({message : "Please select a employee"})
         }
         }
       );
       if(valid2){
+        
         if (editMode) {
           api
           .post('/company/edit/' + this.props.location.state._id, data)
           .then(() => {
             this.openNotificationWithIcon('success')
+            
               window.localStorage.setItem('company', "true")
           })
           .catch((err) => this.openNotificationWithfailure('error'));
@@ -143,12 +152,16 @@ class AddCompany extends React.Component {
             .post('company/create', data)
             .then(() => {
               this.openNotificationWithIcon('success')
+              
               window.localStorage.setItem('company', "true")
             })
             .catch((err) => this.openNotificationWithfailure('error'));
          setTimeout(() => {
           if (this.props.location != undefined) {
             this.props.history.goBack();
+            this.setState({
+              disable : false
+            })
           }
          }, 600);
         }
@@ -947,7 +960,7 @@ class AddCompany extends React.Component {
               </Row>
 
 
-              <Button type="submit" className="btn btn-success">
+              <Button type="submit" disabled={this.state.disable} className="btn btn-success">
                 {editMode ? 'Update' : 'Create'}
               </Button>
               <Button onClick={() => this.props.history.goBack()}>

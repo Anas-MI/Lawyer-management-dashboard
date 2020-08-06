@@ -106,7 +106,6 @@ export default function Bills(props) {
             )}
             columns={columnsForBills}
           />
-          ;
         </TabPane>
         <TabPane tab="Paid" key="2">
           <Table
@@ -115,7 +114,6 @@ export default function Bills(props) {
             )}
             columns={columnsForBills}
           />
-          ;
         </TabPane>
         <TabPane tab="Unpaid" key="3">
           <Table
@@ -124,7 +122,6 @@ export default function Bills(props) {
             )}
             columns={columnsForBills}
           />
-          ;
         </TabPane>
         <TabPane tab="All" key="4">
           <Table dataSource={props.dataSource} columns={columnsForBills} />;

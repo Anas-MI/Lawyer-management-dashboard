@@ -64,6 +64,7 @@ class newPerson extends React.Component {
       valid: false,
       visible: false,
       fileList: [],
+      disable : false
     };
   }
 
@@ -152,6 +153,9 @@ class newPerson extends React.Component {
       return valid;
     };
     if (validateForm()) {
+      this.setState({
+        disable : true
+      })
       console.log('all good');
       const data = this.state;
       data.userId = this.props.userId;
@@ -199,6 +203,9 @@ class newPerson extends React.Component {
                   console.log({ res });
                 }
                 if (this.props.location != undefined) {
+                  this.setState({
+                    disable : false
+                  })
                   this.props.history.push('/manage/contacts');
                 }
               })
@@ -207,6 +214,9 @@ class newPerson extends React.Component {
               });
           } else {
             if (this.props.location != undefined) {
+              this.setState({
+                disable : false
+              })
               this.props.history.push('/manage/contacts');
             }
           }
@@ -1222,7 +1232,7 @@ class newPerson extends React.Component {
                 </Col>
               </Row>
 
-              <Button type="submit" className="btn btn-success">
+              <Button type="submit" disabled={this.state.disable} className="btn btn-success">
                 {editMode ? 'Update' : 'Create'}
               </Button>
               <Button onClick={() => this.props.history.goBack()}>
