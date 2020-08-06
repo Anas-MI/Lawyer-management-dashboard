@@ -8,7 +8,7 @@ class ListForm extends React.Component{
     this.state = {
      name : '',
      record : {
-
+      
      }
     
     }
@@ -63,13 +63,15 @@ class ListForm extends React.Component{
         onChange={this.props.handleChange}
         name="decription"/>
       </Form.Group>
-      <Form.Group controlId="exampleForm.ControlSelect1">
+      <Form.Group>
         <Form.Label>Practice Area</Form.Label>
         <Form.Control 
         as="select"
-        onChange={this.props.handleChange}
-        defaultValue = {this.state.record.practiseArea}
         name="practiseArea"
+        onChange={this.props.handleChange}
+        defaultValue = {this.props.record.practiseArea}
+        
+       
         >
             <option>Select a practice area</option>
             <option>Attorney</option>
