@@ -71,6 +71,7 @@ class newPerson extends React.Component {
           url: "http://www.baidu.com/xxx.png",
         },
       ],
+      disable: false
     };
   }
 
@@ -157,7 +158,10 @@ class newPerson extends React.Component {
       return valid;
     };
     if (validateForm()) {
-      console.log("all good");
+      this.setState({
+        disable : true
+      })
+      console.log('all good');
       const data = this.state;
       data.userId = this.props.userId;
       data.customFields = customData;
@@ -167,47 +171,76 @@ class newPerson extends React.Component {
       if (editMode) {
         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
       } else {
-        api.post("contact/create", data).then((result) => {
+        api.post('contact/create', data).then((result) => {
+          this.setState({
+            disable : false
+          })
+          notification.success({message : "Contact created"})
           this.setState({ visible: true });
-          const key = "updatingDetails";
+          const key = 'updatingDetails';
 
           const openMessage = () => {
-            message.loading({ content: "Uploading Files...", key, duration: 5 });
-          };
-          openMessage();
-          const formData = new FormData();
-          dataList.fileList.forEach((file) => {
-            formData.append("image", file);
-          });
-          console.log({ result });
-          api
-            .post("/contact/upload/"+result.data.data._id, formData)
-            .then((res) => {
-              console.log(res)
-              if (res.status === 200) {
-                setTimeout(() => {
-                  message.success({
-                    content: "Uploaded!",
-                    key,
-                    duration: 3,
-                  });
-                }, 1000);
-              } else {
-                console.log({ res });
-              }
-              if(this.props.location!=undefined){
-                this.props.history.goBack()    
-            }
-            })
-            .catch((err) => {
-              console.log({ err });
+            message.loading({
+              content: 'Uploading Files...',
+              key,
+              duration: 5,
             });
+          };
+
+          if(dataList.fileList != undefined){
+            if (dataList.fileList.length !== 0) {
+              openMessage();
+              const formData = new FormData();
+              dataList.fileList.forEach((file) => {
+                formData.append('image', file);
+              });
+              console.log({ result });
+              api
+                .post('/contact/upload/' + result.data.data._id, formData)
+                .then((res) => {
+                  this.setState({
+                    disable : false
+                  })
+                  console.log(res);
+                  if (res.status === 200) {
+                    setTimeout(() => {
+                      message.success({
+                        content: 'Uploaded!',
+                        key,
+                        duration: 3,
+                      });
+                    }, 1000);
+                  } else {
+                    console.log({ res });
+                  }
+                  if (this.props.location != undefined) {
+                    this.setState({
+                      disable : false
+                    })
+                    this.props.history.push('/manage/contacts');
+                  }
+                })
+                .catch((err) => {
+                  console.log({ err });
+                });
+            } else {
+              if (this.props.location != undefined) {
+                this.setState({
+                  disable : false
+                })
+                this.props.history.push('/manage/contacts');
+              }else{
+                this.setState({
+                  disable : false
+                })
+              }
+            }
+          }
         });
       }
-      
     } else {
       return notification.warning({
-        message: "Please enter valid details",
+        message: 'Please enter valid details',
       });
     }
   };
@@ -1123,7 +1156,7 @@ class newPerson extends React.Component {
               </p>
               {customFields}
 
-              <Button type="submit" className="btn btn-success">
+              <Button type="submit" disabled={this.state.disable} className="btn btn-success">
                 {editMode ? "Update" : "Create"}
               </Button>
             </Form>

@@ -34,6 +34,7 @@ class AddEditMatter extends React.Component{
       customFields : [{
       }],
       modal : false,
+      disable  : false
     }
 
   }
@@ -92,6 +93,9 @@ class AddEditMatter extends React.Component{
         message: "Please add a Contact",
       });
     }else{
+      this.setState({
+        disable : true
+      })
       console.log("all good")
        const data = this.state
         data.customFields = customData
@@ -106,6 +110,9 @@ class AddEditMatter extends React.Component{
 
        if(this.props.location!=undefined){
         this.props.history.goBack()
+        this.setState({
+          disable : false
+        })
        }
     }
   }
@@ -319,7 +326,7 @@ class AddEditMatter extends React.Component{
         </Panel>
       </Collapse>
 
-      <Button onClick={this.handleSubmit} className="btn btn-success" >ADD</Button>
+      <Button onClick={this.handleSubmit} disabled = {this.state.disable} className="btn btn-success" >ADD</Button>
       <Button onClick={()=>{this.props.history.goBack()}} >CANCEL</Button>
      <br></br>
       <Modal
