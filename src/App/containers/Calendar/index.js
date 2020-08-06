@@ -142,6 +142,12 @@ const CalendarContainer = props => {
     const DateTimeChange = (e) =>{
         const { value, id} = e.element
         let newData  = data
+        if(id==="startTime" ){
+            startTime = value
+        }
+        if(id==="endTime" ){
+            endTime = value
+        }
         if(id==="matter" && e.itemData!=null){
             newData[id]=options[e.itemData.value]._id
         }else{
@@ -204,12 +210,17 @@ const CalendarContainer = props => {
     
             let eventdata = data
             eventdata.userId = userId
-            eventdata.startTime = startTime
-            eventdata.endTime = endTime
-            console.log(data)
+            if(startTime !== "Invalid Date"){
+                console.log("not invalid")
+                eventdata.startTime = startTime
+                eventdata.endTime = endTime
+                
+            }
+    
             if(data.title == ""){
                     notification.warning({message : "Please provide a title" })
             }else{
+                console.log(eventdata)
             
                 api.post('/calendar/create', eventdata).then((res)=>{
                     console.log(res)
@@ -223,7 +234,7 @@ const CalendarContainer = props => {
                  setTimeout(()=>{
                     //window.location.reload()
                 },1500)
-            
+        
                  }
               
             }
@@ -234,7 +245,7 @@ const CalendarContainer = props => {
     const setInit = (args) =>{
         console.log(args)
     
-        if(args.StartTime != undefined){
+        if(args.StartTime != undefined && args.StartTime != "Invalid Date"){
             const props = args
             startTime = props.StartTime
             endTime = props.EndTime
@@ -348,7 +359,41 @@ const CalendarContainer = props => {
              */
         }      
     }
-   
+   const onClickButton2 = () =>{
+           
+    let eventdata = data
+    eventdata.userId = userId
+    if(startTime !== "Invalid Date"){
+      
+        eventdata.startTime = startTime
+        eventdata.endTime = endTime             
+    }
+    console.log(eventdata)
+    if(data.title == ""){
+            notification.warning({message : "Please provide a title" })
+    }else{
+       
+        api.post('/calendar/create', eventdata).then((res)=>{
+            console.log(res)
+            
+            notification.success({message : "Evented Added"})
+            let eventData = {
+                Id: '',
+                Subject: '',
+                StartTime: '',
+                EndTime: ''
+            };
+            SchedulerRef.current.openEditor(eventData, 'Add');
+         }).catch((err)=>{
+            console.log(err)
+            notification.error({message : "Failed!"})
+         })
+         //setData({})
+        
+
+         }
+
+   }
    
     return (        
         <div className="row">
@@ -361,7 +406,7 @@ const CalendarContainer = props => {
                         popupOpen={onPopupOpen}
                         eventSettings={{dataSource : state.tableData}}
                         
-                        editorTemplate={pr=><EditorTemplate {...pr} setInit = {setInit(pr)} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+                        editorTemplate={pr=><EditorTemplate {...pr} onClickButton2={onClickButton2} setInit = {setInit(pr)} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
                         <ViewsDirective>
                         <ViewDirective option='Day'/>
                             <ViewDirective option='Week'/>
