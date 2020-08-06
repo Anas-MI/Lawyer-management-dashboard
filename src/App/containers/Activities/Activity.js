@@ -17,11 +17,13 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Form, Col, Row } from 'react-bootstrap';
 import api from '../../../resources/api';
-import { min } from 'lodash';
+import ReactDOM from 'react-dom'
+import Timer from '../../components/Timer/index.js'
 
 let matters = {};
 let activity = {};
 let timeError = '';
+let option = null
 class Activity extends React.Component {
   constructor(props) {
     super(props);
@@ -56,10 +58,36 @@ class Activity extends React.Component {
     var locdat = new Date(toutc + ' UTC');
     return locdat;
   };
+  
+  setTimer = () => {
+    console.log("funtion called")
+    const time = window.localStorage.getItem('timer');
+    let hours = Math.floor(time / 3600);
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60
+   
+    if (minutes >= 59) {
+      minutes = minutes % 60;
+    }
+    if (seconds < 10) {
+      seconds = "0"+seconds
+    }
+
+    //   const Seconds = time % 60;
+    const data = this.state.data;
+    data.time = hours + ':' + minutes + ':' + seconds
+    this.setState({ data: data });
+    console.log(this.state.data)
+}
   componentDidMount() {
     api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
       matters = res;
-    });
+      option = res.data.data.map((val, index)=>{
+        return <option>{val.matterDescription}</option>
+    })
+    }).then(()=>{
+      this.setState({option : option})
+  })
     api.get('/activity/viewforuser/' + this.props.userId).then((res) => {
       activity = res.data.data;
       var now = new Date();
@@ -139,18 +167,8 @@ class Activity extends React.Component {
       });
     });
     
-    const time = window.localStorage.getItem('timer');
-    let hours = Math.floor(time / 3600);
-    let minutes = Math.floor(time / 60);
-    if (minutes >= 59) {
-      minutes = minutes % 60;
-    }
-
-    //   const Seconds = time % 60;
-    const data = this.state.data;
-    data.time = hours + ':' + minutes;
-    this.setState({ data: data, touched: true });
-    console.log(this.state);
+    this.setTimer()
+  
   }
   showModal = (type) => {
     if (type === 'time') {
@@ -165,7 +183,7 @@ class Activity extends React.Component {
   };
 
   handleOk = (type) => {
-    console.log(timeError);
+ 
     notification.destroy();
     if (timeError !== '') {
       notification.error({ message: 'Invalid time' });
@@ -197,6 +215,7 @@ class Activity extends React.Component {
               notification.error({ message: 'Failed' });
             })
             .then(() => {
+              ReactDOM.findDOMNode(this.messageForm).reset()
               this.setState({
                 timeModal: false,
                 editmode: false,
@@ -267,6 +286,7 @@ class Activity extends React.Component {
               notification.error({ message: 'Failed' });
             })
             .then(() => {
+              ReactDOM.findDOMNode(this.messageForm).reset()
               this.setState({
                 timeModal: false,
                 editmode: false,
@@ -301,6 +321,7 @@ class Activity extends React.Component {
               notification.error({ message: 'Failed' });
             })
             .then(() => {
+              ReactDOM.findDOMNode(this.messageForm).reset()
               this.setState({
                 expenseModal: false,
                 editmode: false,
@@ -337,7 +358,7 @@ class Activity extends React.Component {
           invoice: 'Unbilled',
         },
       });
-      console.log(this.state);
+
     } else if (type === 'expense') {
       this.setState({
         expenseModal: false,
@@ -351,7 +372,7 @@ class Activity extends React.Component {
           invoice: 'Unbilled',
         },
       });
-      console.log(this.state);
+
     }
     setTimeout(() => {
       //window.location.reload();
@@ -389,7 +410,9 @@ class Activity extends React.Component {
           notification.error({ message: 'Failed to delete' });
         });
     };
-
+    const handleReset = ( form ) =>{
+      this.messageForm = form
+    }
     const columns = [
       {
         title: 'Type',
@@ -538,12 +561,12 @@ class Activity extends React.Component {
       let data = this.state;
       data[name] = value;
       this.setState(data);
-      console.log(this.state);
+    
       if (this.state.From != undefined && this.state.To != undefined) {
-        console.log('will sort now');
+
         let customSort = [];
         activity.map((val, index) => {
-          console.log(val.date);
+      
           const temp = {
             type: val.type,
             id: val._id,
@@ -582,7 +605,8 @@ class Activity extends React.Component {
         } else {
           var sHours = timeValue.split(':')[0];
           var sMinutes = timeValue.split(':')[1];
-
+          var sSecs = timeValue.split(':')[2];
+          console.log(sSecs)
           if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
             timeError = 'Inavlid Time';
             console.log(timeError);
@@ -595,13 +619,17 @@ class Activity extends React.Component {
           } else if (parseInt(sMinutes) == 0) sMinutes = '00';
           else if (sMinutes < 10) sMinutes = '0' + sMinutes;
 
-          timeValue = sHours + ':' + sMinutes;
+          if (sSecs == '' || isNaN(sSecs) /*|| parseInt(sHours)>23 */) {
+            timeError = 'Inavlid Time';
+            console.log(timeError);
+          } else if (parseInt(sSecs) == 0) sSecs = '00';
+          else if (sSecs < 10) sSecs = '0' + sSecs;
+          timeValue = sHours + ':' + sMinutes +':' + sSecs;
         }
         newData[name] = timeValue;
         this.setState({ data: newData });
       } else if (name === 'nonBillable' || name === 'billable') {
         newData.billable = !newData.billable;
-        console.log(newData.billable);
       } else {
         newData[name] = value;
         this.setState({ data: newData });
@@ -713,15 +741,135 @@ class Activity extends React.Component {
             <Button  onClick={() => this.handleCancel('time')}>
               Cancel
             </Button>,
-            <Button type="primary" disabled = {this.state.disabletime} onClick={() => this.handleOk('time')}>
+            <Button type="primary" 
+            disabled = {this.state.disabletime} 
+            onClick={() => this.handleOk('time')}>
               Add Entry
             </Button>,
           ]}
         >
-          <TimeForm
-            touched={this.state.touched}
-            handleChange={handleChange}
-          ></TimeForm>
+              <Form 
+              id='myForm'
+              className="form"
+              ref={ form => this.messageForm = form } >
+                <Row>
+                    <Col>
+                        <Form.Group controlId="duration">
+                            <Form.Label>Duration</Form.Label>
+                              <Form.Control 
+                                type="text" 
+                                name="time" 
+                                placeholder="hh:mm:ss" 
+                                defaultValue = {this.state.data.time}
+                                onChange={handleChange}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Timer setTimer = {this.setTimer} ></Timer>
+                    </Col>
+                </Row>
+                
+                <Row>
+                    <Col>
+                    <Form.Group controlId="matter">
+                        <Form.Label>Matter</Form.Label>
+                        <Form.Control 
+                            as="select"
+                            name="matter" 
+                            placeholder="Matter"
+                            onChange={handleChange}>
+                        <option>Select a matter</option>
+                        {this.state.option}
+                        </Form.Control>
+                    </Form.Group>
+                    </Col>
+                    <Col>
+                    <Form.Group controlId="rate">
+                        <Form.Label>Rate</Form.Label>
+                        <Form.Control 
+                        required
+                        type="text" 
+                        name="rate" 
+                        placeholder="0.0 /h"
+                        onChange={handleChange} />
+                    </Form.Group>
+                    </Col>
+
+                </Row>
+              
+                    
+                <Row>
+                    <Col>
+                    <Form.Group controlId="Description">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control 
+                        name="description" 
+                        as="textarea" 
+                        rows="3"
+                        placeholder="Description"
+                        onChange={handleChange} />
+                    </Form.Group>
+                    </Col>
+
+                </Row>
+              
+                <Row>
+                    <Col>
+                    <Form.Group controlId="date">
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control 
+                        required
+                        type="date" 
+                        name="date" 
+                        placeholder="Date" 
+                        onChange={handleChange}/>
+                    </Form.Group>
+                    </Col>
+                    {
+                        /* 
+                        <Col>
+                    <Form.Group controlId="invoiceStatus">
+                        <Form.Label>Invoice Status</Form.Label>
+                        <Form.Control 
+                            as="select"
+                            name="invoiceStatus"
+                            onChange={handleChange} >
+                        <option>Unbilled</option>
+                        <option>Billed</option>
+                        </Form.Control>
+                    </Form.Group>
+                    </Col>
+                        */
+                    }
+                </Row>
+                    
+                    <Row>
+                        <Col>
+                        <Form.Check 
+                      type="checkbox"
+                      id="billable"
+                      name="billable"
+                      label="Billable"
+                    
+                      onChange={handleChange}
+                  /><br></br>
+                        </Col>
+                    </Row>
+            
+                    {
+                        /*
+                        <Form.Check 
+                      type="checkbox"
+                      id="nonBillable"
+                      name="nonBillable"
+                      label="Non-billable"
+                      defaultChecked = {!this.props.record.billable}
+                      onChange={handleChange}
+                  />
+                        */
+                    }
+            </Form>
+
         </Modal>
         <Modal
           title="Edit Time Entry"
@@ -762,9 +910,115 @@ class Activity extends React.Component {
             </Button>
           ]}
         >
-          <ExpenseForm
-            handleChange={handleChange}
-          ></ExpenseForm>
+            <Form 
+              id='myForm'
+              className="form"
+              ref={ form => this.messageForm = form } >
+                <Row>
+                    <Col>
+                        <Form.Group controlId="quantity">
+                            <Form.Label>Quantity</Form.Label>
+                            <Form.Control 
+                            type="text" 
+                            name="qty" 
+                            placeholder="1.0"
+                            onChange={handleChange}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="matter">
+                            <Form.Label>Matter</Form.Label>
+                            <Form.Control 
+                                as="select"
+                                name="matter" 
+                                placeholder="Matter"
+                                onChange={handleChange}>
+                            <option>Select a matter</option>
+                            {this.state.option}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="Description">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control 
+                            name="description" 
+                            as="textarea" 
+                            rows="3"
+                            placeholder="Description"
+                            onChange={handleChange} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+                
+                <Row>
+                    <Col>
+                        <Form.Group controlId="rate">
+                            <Form.Label>Rate</Form.Label>
+                            <Form.Control 
+                            required
+                            type="text" 
+                            name="rate" 
+                            placeholder="0.0 /h"
+                            onChange={handleChange} />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="date">
+                            <Form.Label>Date</Form.Label>
+                            <Form.Control 
+                            required
+                            type="date" 
+                            name="date" 
+                            placeholder="Date" 
+                            onChange={handleChange}/>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                
+                    {
+                        /*
+                            <Form.Group controlId="invoiceStatus">
+                    <Form.Label>Invoice Status</Form.Label>
+                    <Form.Control 
+                        as="select"
+                        name="invoiceStatus"
+                        onChange={handleChange} >
+                    <option>Unbilled</option>
+                    <option>Billed</option>
+                    </Form.Control>
+                </Form.Group>
+                        */
+                    }
+              
+                
+              
+                <Form.Check 
+                      type="checkbox"
+                      id="billable"
+                      name="billable"
+                      label="Billable"
+                      onChange={handleChange}
+                  /><br></br>
+            
+                    {
+                        /*
+                        <Form.Check 
+                      type="checkbox"
+                      id="nonBillable"
+                      name="nonBillable"
+                      label="Non-billable"
+                      defaultChecked = {!this.props.record.billable}
+                      onChange={handleChange}
+                  />
+                        */
+                    }
+                  
+
+          </Form>
+
         </Modal>
         <Modal
           title="Edit Expense"

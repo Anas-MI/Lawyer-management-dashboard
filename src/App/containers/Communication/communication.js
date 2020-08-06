@@ -3,14 +3,20 @@ import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'a
 import { useSelector, connect } from 'react-redux';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Emailform from './form/emailform'
-import PhoneLog from './form/phoneLog'
 import api from '../../../resources/api'
+import { Form, Col, Row } from 'react-bootstrap'
+import ReactDOM from 'react-dom'
+
 
 let timeError = "" ;
 let matters = {};
 let communication = {};
 let contact = {}
+let option = null
+let optns = null
+let matterkey = null
+let fromKey = null
+let toKey = null
 const user = JSON.parse(window.localStorage.getItem('Case.user'))
 const name = user.token.user.firstName + " " + user.token.user.lastName;
 console.log(user.token.user)
@@ -46,12 +52,23 @@ class Communication extends React.Component{
     };
     componentDidMount() {
 
-      api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
-        matters = res;
-      });
-      api.get('/contact/viewforuser/' + this.props.userId).then((res) => {
-        contact = res;
-      });
+     api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
+       matters = res
+            option = res.data.data.map((val, index)=>{
+                 return <option>{val.matterDescription}</option>
+             })
+         }).then(()=>{
+             console.log(option)
+             this.setState({option : option})
+         })
+
+      api.get('/contact/viewforuser/'+this.props.userId).then((res)=>{
+        contact = res
+          optns = res.data.data.map((value, index)=>{
+  
+              return <option id={index}>{value.firstName + " " + value.lastName}</option>
+             })
+       }).then(()=>{this.setState({contacts : optns})})
     
       api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
         communication = res.data.data;
@@ -70,8 +87,11 @@ class Communication extends React.Component{
             addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
             matter: val.matter ? val.matter.matterDescription : '-',
+            matterId : val.matter ? val.matter._id : "",
             from: val.from ? val.from.firstName + " " + val.from.lastName  : '-',
+            fromId : val.from ? val.from._id : "",
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
+            toId : val.to ? val.to._id : "",
             subject: val.subject ? val.subject : '-',
             body: val.body,
             date: val.date ? val.date.substring(0,10) : "-"      
@@ -136,10 +156,20 @@ class Communication extends React.Component{
           this.setState({
             disable : true
           })
+           
             if(this.state.editmode){
 
               let data = this.state.data
-              data.from = user.token.user._id
+              console.log(data)
+              if(matterkey == null){
+                data.matter = data.matterId
+              }
+              if(fromKey == null){
+                data.from = data.fromId
+              }
+              if(toKey == null){
+                data.to = data.toId
+              }
             if(type === "email"){
               data.logType = "email"
               this.setState({email : false})
@@ -151,7 +181,7 @@ class Communication extends React.Component{
             data.userId = this.props.userId;
             console.log(data)
             api
-              .post('/communication/edit/'+this.state.data.id, data)
+              .post('/communication/edit/'+ this.state.data.id, data)
               .then((res) => {
                 console.log(res)
                 this.componentDidMount()
@@ -164,7 +194,9 @@ class Communication extends React.Component{
                 notification.error({ message: 'Failed' });
               })
               .then(() => {
-              
+                matterkey = null
+                fromKey = null
+                toKey = null
                 /*
                 this.setState({
                   timeModal: false,
@@ -206,39 +238,24 @@ class Communication extends React.Component{
                   disable : false
                 })
                 this.componentDidMount()
-
                 notification.success({ message: 'Log Added !' });
               })
               .catch((err) => {
                 notification.error({ message: 'Failed' });
+              }).then(()=>{
+                ReactDOM.findDOMNode(this.messageForm).reset()
               })
-              .then(() => {
-              
-                /*
-                this.setState({
-                  timeModal: false,
-                  editmode: false,
-                  data: {
-                    billable: true,
-                    nonBillable: false,
-                    date: '',
-                    qty: '1.0',
-                    rate: '',
-                    invoice: 'Unbilled',
-                  },
-                });
-                */
-               
-                setTimeout(() => {
-                //  window.location.reload();
-                }, 1500)
-              });
+             
   
             }
         }   
       };
     
       handleCancel = type => {
+        ReactDOM.findDOMNode(this.messageForm).reset()
+        matterkey = null
+        fromKey = null
+        toKey = null
         if(type==="email"){
             this.setState({
                 email : false,
@@ -267,7 +284,7 @@ class Communication extends React.Component{
         }
         
         setTimeout(() => {
-          window.location.reload();
+        //  window.location.reload();
         }, 500);
         
        
@@ -282,8 +299,10 @@ class Communication extends React.Component{
         let newData = this.state.data;
 
         if (name === 'matter') {
+
           console.log("inside matter")
           if (selectedIndex >= 1) {
+            matterkey = ""
             console.log(matters.data.data[selectedIndex - 1]._id)
             newData[name] = matters.data.data[selectedIndex - 1]._id;
             console.log("inside matter > 1 ")
@@ -296,6 +315,7 @@ class Communication extends React.Component{
         if (name === 'to' || name === 'from') {
           console.log(matters)
           if (selectedIndex >= 1) {
+            name === 'to' ? toKey = "" : fromKey = ""
             newData[name] = contact.data.data[selectedIndex - 1]._id;
           } else {
             newData[name] = '';
@@ -363,7 +383,7 @@ class Communication extends React.Component{
                   data : record  
                 });
             }
-        
+            console.log(record)
                 
           }
             
@@ -528,7 +548,7 @@ class Communication extends React.Component{
         </Card>
        
         <Modal
-            title="New email log"
+            title={this.state.editmode ? "Edit email log" : "Add a email log"}
             visible={this.state.email}
             onOk={()=>this.handleOk("email")}
             onCancel={()=>this.handleCancel("email")}
@@ -537,15 +557,215 @@ class Communication extends React.Component{
                 Cancel
               </Button>,
               <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
-                Add Log
+                {this.state.editmode ? "Edit Log" : "Save Log"}
               </Button>,
             ]}
             >
-            <Emailform from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></Emailform>
-       {/*     <TimeForm  record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm> */}
+              {
+                  this.state.editmode ?
+                  <Form 
+                  id='myForm'
+                  className="form"
+                  ref={ form => this.messageForm = form }>
+                   <Row>
+                       
+                       <Col>
+                       <Form.Group>
+                   <Form.Label>Matter</Form.Label>
+                          <Form.Control 
+                              as="select"
+                              name="matter" 
+                              defaultValue = {this.state.data.matter}
+                              onChange={handleChange}>
+                          <option>Select a matter</option>
+                          {this.state.option}
+                          </Form.Control>
+                   </Form.Group>
+                       </Col>
+                   </Row>
+                 
+                  <Row>
+                      <Col >
+                      <Form.Group>
+                           <Form.Label>From</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="from" 
+                               defaultValue = {this.state.data.from}
+                               onChange={handleChange}>
+                               <option>Select a contact</option>    
+                           {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                      
+                      <Col>
+                      <Form.Group >
+                           <Form.Label>To</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="to" 
+                               defaultValue = {this.state.data.to}
+                               onChange={handleChange}>
+                               <option>Select a contact</option>
+                               {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                  </Row>
+                   <Row>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Time</Form.Label>
+                          <Form.Control 
+                          required
+                          type="time" 
+                          name="time" 
+                          defaultValue = {this.state.data.time}
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Date</Form.Label>
+                          <Form.Control 
+                          required
+                          type="date" 
+                          name="date" 
+                          defaultValue = {this.state.data.date} 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+           
+                   </Row>
+                 
+                  <Form.Group controlId="subject">
+                           <Form.Label>Subject</Form.Label>
+                           <Form.Control 
+                           name="subject" 
+                           rows="3"
+                           defaultValue = {this.state.data.subject}
+                           onChange={handleChange} />
+                       </Form.Group>  
+               
+                  
+                       <Form.Group controlId="body">
+                           <Form.Label>Body</Form.Label>
+                           <Form.Control 
+                           name="body" 
+                           as="textarea" 
+                           rows="3"
+                           defaultValue = {this.state.data.body}
+                           onChange={handleChange} />
+                       </Form.Group>
+                  
+               
+                 </Form>    
+              
+                  :
+                  <Form  
+                  id='myForm'
+                  className="form"
+                  ref={ form => this.messageForm = form }>
+                   <Row>
+                       
+                       <Col>
+                       <Form.Group>
+                   <Form.Label>Matter</Form.Label>
+                          <Form.Control 
+                              as="select"
+                              name="matter" 
+                              placeholder="Matter"
+                              onChange={handleChange}>
+                          <option>Select a matter</option>
+                          {this.state.option}
+                          </Form.Control>
+                   </Form.Group>
+                       </Col>
+                   </Row>
+                 
+                  <Row>
+                      <Col >
+                      <Form.Group>
+                           <Form.Label>From</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="from" 
+                               placeholder="Select a contact"
+                               onChange={handleChange}>
+                          <option>Select a contact</option>    
+                         {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                      
+                      <Col>
+                      <Form.Group >
+                           <Form.Label>To</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="to" 
+                               placeholder="Select a contact"
+                               onChange={handleChange}>
+                               <option>Select a contact</option>
+                               {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                  </Row>
+                   <Row>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Time</Form.Label>
+                          <Form.Control 
+                          required
+                          type="time" 
+                          name="time" 
+                          placeholder="Time" 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Date</Form.Label>
+                          <Form.Control 
+                          required
+                          type="date" 
+                          name="date" 
+                          placeholder="Date" 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+           
+                   </Row>
+                 
+                  <Form.Group controlId="subject">
+                           <Form.Label>Subject</Form.Label>
+                           <Form.Control 
+                           name="subject" 
+                           rows="3"
+                           placeholder="subject"
+                           onChange={handleChange} />
+                       </Form.Group>  
+               
+                  
+                       <Form.Group controlId="body">
+                           <Form.Label>Body</Form.Label>
+                           <Form.Control 
+                           name="body" 
+                           as="textarea" 
+                           rows="3"
+                           placeholder="body"
+                           onChange={handleChange} />
+                       </Form.Group>
+                  
+               
+              </Form>    
+               
+              }
         </Modal>
         <Modal
-            title="New phone log"
+            title={this.state.editmode ? "Edit phone log" : "Add a phone log"}
             visible={this.state.phone}
             onOk={()=>this.handleOk("phone")}
             onCancel={()=>this.handleCancel("phone")}
@@ -554,11 +774,230 @@ class Communication extends React.Component{
                 Cancel
               </Button>,
               <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
-                Add Log
+                {this.state.editmode ? "Edit Log" : "Save Log"}
               </Button>,
             ]}
             >
-            <PhoneLog from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></PhoneLog>
+            {
+              this.state.editmode ?
+              <Form 
+              id='myForm'
+              className="form"
+              ref={ form => this.messageForm = form }>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="duration">
+                      <Form.Label>Duration</Form.Label>
+                      <Form.Control 
+                      type="text" 
+                      name="addTime" 
+                      defaultValue = {this.state.data.addTime}
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group>
+               <Form.Label>Matter</Form.Label>
+                      <Form.Control 
+                          as="select"
+                          name="matter" 
+                          defaultValue = {this.state.data.matter}
+                          onChange={handleChange}>
+                      <option>Select a matter</option>
+                      {this.state.option}
+                      </Form.Control>
+               </Form.Group>
+                   </Col>
+               </Row>
+             
+              <Row>
+                  <Col >
+                  <Form.Group>
+                       <Form.Label>From</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="from" 
+                           defaultValue = {this.state.data.from}
+                           onChange={handleChange}>
+                           <option>Select a contact</option> 
+                       {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+                  
+                  <Col>
+                  <Form.Group >
+                       <Form.Label>To</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="to" 
+                           defaultValue = {this.state.data.to}
+                           onChange={handleChange}>
+                           <option>Select a contact</option>
+                           {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+              </Row>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Time</Form.Label>
+                      <Form.Control 
+                      required
+                      type="time" 
+                      name="time" 
+                      defaultValue = {this.state.data.time}
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control 
+                      required
+                      type="date" 
+                      name="date" 
+                      defaultValue = {this.state.data.date} 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+       
+               </Row>
+             
+              <Form.Group controlId="subject">
+                       <Form.Label>Subject</Form.Label>
+                       <Form.Control 
+                       name="subject" 
+                       rows="3"
+                       defaultValue = {this.state.data.subject}
+                       onChange={handleChange} />
+                   </Form.Group>  
+           
+              
+                   <Form.Group controlId="body">
+                       <Form.Label>Body</Form.Label>
+                       <Form.Control 
+                       name="body" 
+                       as="textarea" 
+                       rows="3"
+                       defaultValue = {this.state.data.body}
+                       onChange={handleChange} />
+                   </Form.Group>
+              
+           
+              </Form>    
+          
+              :
+              <Form 
+              id='myForm'
+                         className="form"
+                         ref={ form => this.messageForm = form }>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="duration">
+                      <Form.Label>Duration</Form.Label>
+                      <Form.Control 
+                      type="text" 
+                      name="addTime" 
+                      placeholder="hh:mm" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group>
+               <Form.Label>Matter</Form.Label>
+                      <Form.Control 
+                          as="select"
+                          name="matter" 
+                          placeholder="Matter"
+                          onChange={handleChange}>
+                      <option>Select a matter</option>
+                      {this.state.option}
+                      </Form.Control>
+               </Form.Group>
+                   </Col>
+               </Row>
+             
+              <Row>
+                  <Col >
+                  <Form.Group>
+                       <Form.Label>From</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="from" 
+                           placeholder="Select a contact"
+                           onChange={handleChange}>
+                      <option>Select a contact</option>     
+                     {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+                  
+                  <Col>
+                  <Form.Group >
+                       <Form.Label>To</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="to" 
+                           placeholder="Select a contact"
+                           onChange={handleChange}>
+                           <option>Select a contact</option>
+                           {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+              </Row>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Time</Form.Label>
+                      <Form.Control 
+                      required
+                      type="time" 
+                      name="time" 
+                      placeholder="Time" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control 
+                      required
+                      type="date" 
+                      name="date" 
+                      placeholder="Date" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+       
+               </Row>
+             
+              <Form.Group controlId="subject">
+                       <Form.Label>Subject</Form.Label>
+                       <Form.Control 
+                       name="subject" 
+                       rows="3"
+                       placeholder="subject"
+                       onChange={handleChange} />
+                   </Form.Group>  
+           
+              
+                   <Form.Group controlId="body">
+                       <Form.Label>Body</Form.Label>
+                       <Form.Control 
+                       name="body" 
+                       as="textarea" 
+                       rows="3"
+                       placeholder="body"
+                       onChange={handleChange} />
+                   </Form.Group>
+              
+           
+          </Form>    
+            }
+              
         </Modal>
     </div>
     }

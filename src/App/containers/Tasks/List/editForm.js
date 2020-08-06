@@ -42,7 +42,7 @@ class ListForm extends React.Component{
   }
     render(){
         
-      
+      console.log(this.state)
       return  <Form>
       <Form.Group controlId="formBasicEmail">
         <Form.Label>Name</Form.Label>

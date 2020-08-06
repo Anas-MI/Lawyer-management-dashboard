@@ -361,7 +361,6 @@ class editCompany extends React.Component{
           <div>
             <Form 
             className="form-details" 
-            className="form-details" 
             id='myForm'
             className="form"
             ref={ form => this.messageForm = form }
