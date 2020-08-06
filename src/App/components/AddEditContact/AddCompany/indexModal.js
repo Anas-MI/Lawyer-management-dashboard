@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import DynamicFeilds from '../DynamicFeilds/index'
 import api from '../../../../resources/api'
 import {connect} from "react-redux"
+import ReactDOM from 'react-dom'
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -44,8 +45,9 @@ class editCompany extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      address : [], emailAddress : [], phone : [], website:[],employees: [""],
-      optionsss : null
+      address : [], emailAddress : [], phone : [], website:[],employees: [],
+      optionsss : null,
+      disable : false
     }
   }
  componentDidMount() {
@@ -73,42 +75,97 @@ class editCompany extends React.Component{
   
   handleSubmit = (event) => {
     event.preventDefault();
-    notification.destroy()
-      const validateForm = () => {
-        let valid = true;
-        Object.values(error).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.Email).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.phone).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.state).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.Street).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.City).forEach((val) => val.length > 0 && (valid = false));
-        Object.values(errors.ZipCode).forEach((val) => val.length > 0 && (valid = false));
-        console.log(valid)
-        return valid;
-    
-      };
-      if (validateForm()) {
-        console.log("all good")
-        const data = this.state
-        data.userId = this.props.userId
-        console.log(data)
-        if(editMode){
-          //  dispatch(updateBlog({id:this.state._id,body:this.state}))
-       }else{
-
-          api.post('company/create', data).then(()=>this.openNotificationWithIcon('success')).catch(err=>this.openNotificationWithfailure('error'))
-          if(this.props.location!=undefined){
-            this.props.history.goBack()
-          }
-       }
+    notification.destroy();
+    const validateForm = () => {
+      let valid = true;
+      Object.values(error).forEach((val) => val.length > 0 && (valid = false));
+      Object.values(errors.Email).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      Object.values(errors.phone).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      Object.values(errors.state).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      Object.values(errors.Street).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      Object.values(errors.City).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
+      Object.values(errors.ZipCode).forEach(
+        (val) => val.length > 0 && (valid = false)
+      );
       
-      } else {
-        return notification.warning({
-          message: "Please enter valid details",
-        })
+      console.log(valid);
+      return valid;
+    };
+    if (validateForm()) {
+      this.setState({
+        disable : true
+      })
+      console.log('all good');
+      const data = this.state;
+      data.userId = this.props.userId;
+      console.log(data);
+      let valid2 = true
+      Object.values(this.state.employees).forEach(
+        (val) => { if(val == ""){
+          valid2 = false
+          this.setState({
+            disable : false
+          })
+          notification.warning({message : "Please select a employee"})
+        }
+        }
+      );
+      if(valid2){
+        
+        if (editMode) {
+          api
+          .post('/company/edit/' + this.props.location.state._id, data)
+          .then(() => {
+            this.openNotificationWithIcon('success')
+            
+              window.localStorage.setItem('company', "true")
+          })
+          .catch((err) => this.openNotificationWithfailure('error'));
+          setTimeout(() => {
+            if (this.props.location != undefined) {
+              this.props.history.goBack();
+            }
+           }, 600);
+        } else {
+          api
+            .post('company/create', data)
+            .then(() => {
+             // this.componentDidMount()
+              this.openNotificationWithIcon('success')
+              ReactDOM.findDOMNode(this.messageForm).reset()
+              this.setState({
+                disable : false
+              })
+        //      window.localStorage.setItem('company', "true")
+            })
+            .catch((err) => this.openNotificationWithfailure('error'));
+         setTimeout(() => {
+          if (this.props.location != undefined) {
+            this.props.history.goBack();
+            this.setState({
+              disable : false
+            })
+          }
+         }, 600);
+        }
       }
-    
-}
+      
+    } else {
+      return notification.warning({
+        message: 'Please enter valid details',
+      });
+    }
+  };
   
   render(){
     
@@ -302,7 +359,13 @@ class editCompany extends React.Component{
         <>
         <div>
           <div>
-            <Form className="form-details" onSubmit={this.handleSubmit}>
+            <Form 
+            className="form-details" 
+            className="form-details" 
+            id='myForm'
+            className="form"
+            ref={ form => this.messageForm = form }
+            onSubmit={this.handleSubmit}>
             <div className="form-header-container mb-4">
               <h3 className="form-header-text">Add company</h3>
             </div>
@@ -835,7 +898,7 @@ class editCompany extends React.Component{
               </Row>
 
           <div className="float-right" style={{marginTop : "7.5%"}}>
-          <Button type="submit"  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
+          <Button type="submit" disabled = {this.state.disable}  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
 
           </div>
 
