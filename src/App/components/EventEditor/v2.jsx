@@ -46,7 +46,8 @@ const EditorTemplate = props => {
   }
   console.log(props)
   return props !== undefined ? (
-    <table
+    <div>
+          <table
       className="custom-event-editor"
       style={{ width: "100%", cellpadding: "5" }}
     >
@@ -55,6 +56,7 @@ const EditorTemplate = props => {
           <td className="e-textlabel">Title</td>
           <td colSpan={4}>
             <input
+              required
               id="title"
               className="e-field e-input"
               type="text"
@@ -215,17 +217,16 @@ const EditorTemplate = props => {
                     />
                   </td>
                   
-                    
-                  
-                  
-                  
-         
-                  </tr>
+                 </tr>
           
                     */
                 }
                      </tbody>
     </table>
+      <div style={{}}>
+         <Button type="link" onClick={props.onClickButton2} danger><p style={{fontWeight : "500"}}>SAVE AND ADD NEW</p></Button>
+      </div>
+    </div>
   ) : (
     <div></div>
   );
