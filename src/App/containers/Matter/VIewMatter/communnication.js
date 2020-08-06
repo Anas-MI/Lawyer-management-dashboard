@@ -418,10 +418,6 @@ class Communication extends React.Component{
             doc.save("Activity.pdf")
           }
         return <div className='p-2 '>
-            
-        <br></br>
-        <br></br>
-        
         <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
             <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
             <Button onClick={()=>this.showModal("email")}>New email log</Button>
