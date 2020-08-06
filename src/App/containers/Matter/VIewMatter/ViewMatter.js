@@ -313,7 +313,7 @@ function CompanyView(props) {
           </div>
         </div>
       </Card>
-      <Tabs defaultActiveKey="1" onChange={callback}>
+      <Tabs defaultActiveKey="1" onChange={callback} >
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
             title="Financial"
