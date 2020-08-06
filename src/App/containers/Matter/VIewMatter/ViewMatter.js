@@ -10,6 +10,7 @@ import 'jspdf-autotable';
 import Bills from './Bills';
 import Documents from './Documents';
 import Calendar from './Calendar';
+import Notes from './Notes';
 
 const { TabPane } = Tabs;
 
@@ -450,11 +451,7 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Notes" key="6">
-          <Card
-            title="Notes"
-            extra={<a href="#"></a>}
-            className="form-width mb-4"
-          ></Card>
+          <Notes></Notes>
         </TabPane>
         <TabPane tab="Document" key="7">
           {console.log('matter in viw', props.location.state.matters)}
