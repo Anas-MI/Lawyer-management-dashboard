@@ -25,7 +25,7 @@ export const navigation = {
           title: 'Manage Subscriptions',
           type: 'item',
           icon: 'feather icon-users',
-          url: '/supscriptions',
+          url: '/manage/subscription',
         },
         {
           id: 'support',

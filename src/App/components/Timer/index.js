@@ -8,7 +8,7 @@ const Timer = props => {
 
     const intervalId = useRef()
     const [started , setStarted] = useState(false)
-    const [timer,setTimer] = useState(0)
+    const [timer,setTimer] = useState(window.localStorage.getItem('timer'))
 
     const dispatch = useDispatch()
     const updateTimer = () => dispatch(updateTimer())
@@ -28,10 +28,13 @@ const Timer = props => {
     
 
     const handleStart = e => {
+        if(timer != window.localStorage.getItem('timer')){
+            setTimer(window.localStorage.getItem('timer'))
+        }
         setStarted(true)
         intervalId.current = setInterval(()=>{
             setTimer(s=>{
-                var n = s+1
+                var n = parseInt(s) +1
                 localStorage.setItem('timer',n)
                 return n
             })
@@ -40,7 +43,10 @@ const Timer = props => {
 
     const handlePause = e => {
         setStarted(false)
-        clearInterval(intervalId.current) 
+        clearInterval(intervalId.current)
+        if(props.setTimer != undefined){
+            props.setTimer()
+        }
     }
 
     const handleChange = e => {
@@ -49,6 +55,9 @@ const Timer = props => {
         var S = e.seconds()
         setTimer(H+M+S)
         localStorage.setItem('timer',H+M+S)
+        if(props.setTimer != undefined){
+            props.setTimer()
+        }
         toggleModal()
     }
 

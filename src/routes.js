@@ -17,6 +17,7 @@ import Support from './App/containers/Support/Support';
 import HelpCenter from './App/containers/HelpCenter';
 import HelpForm from './App/containers/HelpCenter/HelpForm';
 import SupportManagement from './App/containers/SupportManagement';
+import SubscriptionManagement from './App/containers/SubscriptionManagement'
 
 // import Profile from './App/containers/Profile';
 
@@ -203,6 +204,12 @@ export const adminRoutes = [
     exact: true,
     name: 'Add Edit Plans',
     component: AddEditPlans,
+  },
+  {
+    path: '/manage/subscription',
+    exact: true,
+    name: 'Manage Subscription',
+    component: SubscriptionManagement,
   },
 
   // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
