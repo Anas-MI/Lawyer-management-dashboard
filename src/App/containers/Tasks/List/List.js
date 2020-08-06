@@ -1,8 +1,9 @@
 import { Modal, notification , Button, Popconfirm ,Table} from 'antd';
 import React from 'react';
-import Form from './Form'
+import { Form, Row, Col } from 'react-bootstrap';
 import api from '../../../../resources/api';
 import EditForm from './editForm'
+import ReactDOM from 'react-dom'
 import {connect} from 'react-redux'
 
 const user = JSON.parse(window.localStorage.getItem('Case.user'))
@@ -15,12 +16,12 @@ class AddList extends React.Component {
         userId : user.token.user._id,
         name : ''
       },
-      disable : false,
       tableData : [],
       ModalText: 'Content of the modal',
       visible: false,
       confirmLoading: false,
-      editMode : false
+      disabled : false,
+      editMode : false,
     }
   }
   componentDidMount(){
@@ -56,9 +57,13 @@ class AddList extends React.Component {
   handleOk = () => {
     
     if(this.state.data.name == ''){
-      notification.warning("Please provide name for the list")
+      notification.warning({message : "Please provide name for the list"})
     }else{
-      this.setState({disable : true})
+      let newstate = this.state
+      newstate.disabled = true
+      this.setState(newstate)
+      console.log(newstate)
+      console.log(this.state.disabled)
       if(this.state.editMode){
         const data = this.state.data
         api.post('/tasks/list/edit/'+data.id,data).then((res)=>{
@@ -77,11 +82,11 @@ class AddList extends React.Component {
         this.setState({
           ModalText: 'The modal will be closed after two seconds',
           confirmLoading: true,
-          disable : false
+    
         });
   
       }else {
-        this.setState({disable : true})
+
         api.post('/tasks/list/create',this.state.data).then((res)=>{
           this.setState({
             data : {
@@ -94,11 +99,13 @@ class AddList extends React.Component {
         }).catch((err)=>{
           console.log(err)
           notification.error({message : "Failed"})
+        }).then(()=>{
+          ReactDOM.findDOMNode(this.messageForm).reset()
         })
         this.setState({
           ModalText: 'The modal will be closed after two seconds',
           confirmLoading: true,
-          disable : false
+        
         });
     
       }
@@ -107,12 +114,13 @@ class AddList extends React.Component {
         //window.location.reload()
         this.setState({
           visible: false,
+          disabled : false,
           confirmLoading: false,
-          disable : false
         });
       }, 1200);
-  
+      console.log(this.state.disabled)
     }
+   
   };
 
   handleCancel = () => {
@@ -241,12 +249,62 @@ class AddList extends React.Component {
             <Button  onClick={this.handleCancel}>
               Cancel
             </Button>,
-            <Button type="primary" disabled={this.state.disable} onClick={this.handleOk}>
+            <Button type="primary" disabled={this.state.disabled} onClick={this.handleOk}>
               Create List
             </Button>,
           ]}
         >
-          <Form handleChange = {handleChange} ></Form>
+            <Form
+            id='myForm'
+            className="form"
+            ref={ form => this.messageForm = form }>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control 
+                  type="text" 
+                  placeholder="Name"
+                  name="name"
+                  onChange={handleChange} />
+                </Form.Group>
+            
+                <Form.Group controlId="formBasicPassword">
+                  <Form.Label>Descripton</Form.Label>
+                  <Form.Control 
+                  type="text" 
+                  placeholder="Description" 
+                  onChange={handleChange}
+                  name="decription"/>
+                </Form.Group>
+                <Form.Group controlId="exampleForm.ControlSelect1">
+                  <Form.Label>Practice Area</Form.Label>
+                  <Form.Control 
+                  as="select"
+                  onChange={handleChange}
+                  name="practiseArea"
+                  >
+                      <option>Select a practice area</option>
+                      <option>Attorney</option>
+                      <option>Administrative</option>
+                      <option>Bankruptcy</option>
+                      <option>Business</option>
+                      <option>Builder's Liens</option>
+                      <option>Civil Litigation</option>
+                      <option>Commercial</option>
+                      <option>Conveyance (Purchase)</option>
+                      <option>Conveyance (Sale)</option>
+                      <option>Corporate</option>
+                      <option>Criminal</option>
+                      <option>Employment</option>
+                      <option>Estates</option>
+                      <option>Family</option>
+                      <option>Immigration</option>
+                      <option>Insurance</option>
+                      <option>Personal Injury</option>
+                      <option>Tax</option>
+                      <option>Wills</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
         </Modal>
         <Modal
           title="Edit List"
@@ -258,7 +316,7 @@ class AddList extends React.Component {
             <Button  onClick={this.handleCancel}>
               Cancel
             </Button>,
-            <Button type="primary" disabled = {this.state.disable} onClick={this.handleOk}>
+            <Button type="primary" onClick={this.handleOk}>
               Update List
             </Button>,
           ]}

@@ -332,8 +332,22 @@ class AddEditMatter extends React.Component{
       <Modal
         centered
         visible={this.state.modal}
-        onOk={() => this.setState({modal :false})}
-        onCancel={() => this.setState({modal :false})}
+        onOk={() => {
+          this.setState({modal :false})
+          this.componentDidMount()
+        }}
+        onCancel={() => {
+          this.setState({modal :false})
+          this.componentDidMount()
+        }}
+        footer={[
+          <Button onClick={() => {
+            this.setState({ modal: false })
+            this.componentDidMount()
+          }}>
+            Cancel
+          </Button>
+        ]}
       >
       <AddPerson></AddPerson>
 

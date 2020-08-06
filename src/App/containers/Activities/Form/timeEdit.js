@@ -9,8 +9,9 @@ class ExpenseForm extends React.Component{
     constructor(props){
         super(props)
         this.state = {
+         data : {
+         },
          record : {
-
          },
          loading : true
         }
@@ -24,6 +25,28 @@ class ExpenseForm extends React.Component{
           this.setState({record : nextProps.record})
         }
       
+    }
+    setTimer = () => {
+       
+        const time = window.localStorage.getItem('timer');
+        let hours = Math.floor(time / 3600);
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60
+       
+        if (minutes >= 59) {
+          minutes = minutes % 60;
+        }
+        if (seconds < 10) {
+          seconds = "0"+seconds
+        }
+        console.log("Secounds  " + seconds)
+    
+        //   const Seconds = time % 60;
+        const data = this.state.data;
+        data.time = hours + ':' + minutes + ':' + seconds
+        this.setState({ data: data });
+        console.log(this.state.data)
+
     }
     componentDidMount(){
         this.setState({record : this.props.record})
@@ -51,7 +74,10 @@ class ExpenseForm extends React.Component{
              console.log(this.state.matter)
             })
          })
-         
+         const data = this.state.data;
+        data.time = this.props.time
+        this.setState({ data: data });
+        console.log(this.state.data)
     }
 
     render(){
@@ -61,14 +87,14 @@ class ExpenseForm extends React.Component{
             date = this.props.record.date.substring(0,10)
             console.log(date)
        }
-
+/*
        const duration = this.props.touched ? <Form.Group controlId="duration">
                                                 <Form.Label>Duration</Form.Label>
                                                 <Form.Control 
                                                 type="text" 
                                                 name="time" 
                                                 placeholder="hh:mm" 
-                                                value = {this.props.time}
+                                                value = {this.state.data.time}
                                                 onChange={this.props.handleChange}/>
                                               </Form.Group>
                                               :
@@ -80,9 +106,9 @@ class ExpenseForm extends React.Component{
                                                 placeholder="hh:mm" 
                                                 onChange={this.props.handleChange}/>
                                             </Form.Group>
- 
+ */
        return  <Spin spinning={this.state.loading} size="large">
-                <Form >
+        <Form >
             <Row>
                 <Col>
                 <Form.Group controlId="duration">
@@ -90,12 +116,12 @@ class ExpenseForm extends React.Component{
                     <Form.Control 
                     type="text" 
                     name="time" 
-                    defaultValue = {this.state.record.time}
+                    defaultValue = {this.state.data.time}
                     onChange={this.props.handleChange}/>
                 </Form.Group>
                 </Col>
                 <Col>
-                    <Timer setTime = {this.props.setTime} ></Timer>
+                    <Timer setTimer = {this.setTimer} ></Timer>
                 </Col>
             </Row>
             

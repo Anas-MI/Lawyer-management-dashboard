@@ -439,6 +439,7 @@ class newPerson extends React.Component {
     const AddCompanyHandler = () => {
       // api.post('/company/create', {companyData})
       this.setState({ modal: false });
+      this.componentDidMount()
     };
     const handleDelete = (e) => {
       e.persist();
@@ -1246,9 +1247,12 @@ class newPerson extends React.Component {
               onOk={AddCompanyHandler}
               onCancel={() => this.setState({ modal: false })}
               footer={[
-                <Button onClick={() => this.setState({ modal: false })}>
+                <Button onClick={() => {
+                  this.setState({ modal: false })
+                  this.componentDidMount()
+                }}>
                   Cancel
-                </Button>,
+                </Button>
               ]}
             >
               <AddCompany modal={true}></AddCompany>

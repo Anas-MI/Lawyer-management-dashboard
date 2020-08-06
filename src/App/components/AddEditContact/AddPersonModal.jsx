@@ -7,6 +7,7 @@ import api from "../../../resources/api";
 import AddCompany from "./AddCompany/indexModal.js";
 import { connect } from "react-redux";
 import { Button as AntdButton } from "antd";
+import ReactDOM from 'react-dom'
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -172,6 +173,7 @@ class newPerson extends React.Component {
         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
       } else {
         api.post('contact/create', data).then((result) => {
+          ReactDOM.findDOMNode(this.messageForm).reset()
           this.setState({
             disable : false
           })
@@ -557,7 +559,13 @@ class newPerson extends React.Component {
       <>
         <div>
           <div>
-            <Form className="form-details" onSubmit={this.handleSubmit}>
+            <Form 
+            className="form-details" 
+            onSubmit={this.handleSubmit}
+            className="form-details" 
+            id='myForm'
+            className="form"
+            ref={ form => this.messageForm = form }>
               <div className="form-header-container mb-4">
                 <h3 className="form-header-text">Add New Person</h3>
               </div>
@@ -1155,10 +1163,10 @@ class newPerson extends React.Component {
                 </Button>
               </p>
               {customFields}
-
-              <Button type="submit" disabled={this.state.disable} className="btn btn-success">
-                {editMode ? "Update" : "Create"}
-              </Button>
+              <div className="float-right" style={{marginTop : "7.5%"}}>
+                 <Button type="submit" disabled = {this.state.disable}  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
+               </div>
+              
             </Form>
 
             <Modal

@@ -18,13 +18,19 @@ class ExpenseForm extends React.Component{
         const time = window.localStorage.getItem('timer');
         let hours = Math.floor(time / 3600);
         let minutes = Math.floor(time / 60);
+        let seconds = time % 60
+       
         if (minutes >= 59) {
-        minutes = minutes % 60;
+          minutes = minutes % 60;
         }
-
+        if (seconds < 10) {
+          seconds = "0"+seconds
+        }
+        console.log("Secounds  " + seconds)
+    
         //   const Seconds = time % 60;
         const data = this.state.data;
-        data.time = hours + ':' + minutes;
+        data.time = hours + ':' + minutes + ':' + seconds
         this.setState({ data: data });
         console.log(this.state.data)
     }
@@ -67,7 +73,10 @@ class ExpenseForm extends React.Component{
                                         
         
 
-       return <Form >
+       return <Form 
+       id='myForm'
+       className="form"
+       ref={ form => this.props.handleReset(form) } >
         <Row>
             <Col>
                 <Form.Group controlId="duration">
@@ -75,7 +84,7 @@ class ExpenseForm extends React.Component{
                       <Form.Control 
                         type="text" 
                         name="time" 
-                        placeholder="hh:mm" 
+                        placeholder="hh:mm:ss" 
                         defaultValue = {this.state.data.time}
                         onChange={this.props.handleChange}/>
                 </Form.Group>
