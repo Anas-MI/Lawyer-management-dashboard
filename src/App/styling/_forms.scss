@@ -80,12 +80,14 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 .ant-tabs-nav {
     background: #fff;
     border: 1px solid #f0f0f0;
-    padding-left: 12px;
 }
 .ant-tabs-tab {
     margin: 0px !important;
     padding: 10px 18px !important;
     border-right: 1px solid #f0f0f0 !important;
+}
+.ant-tabs-tab.ant-tabs-tab-active {
+    background: #f4f7f9 !important;
 }
 
 .table-span-light{
