@@ -46,6 +46,7 @@ const EditorTemplate = props => {
   }
   console.log(props)
   return props !== undefined ? (
+    <>
     <div>
           <table
       className="custom-event-editor"
@@ -156,12 +157,12 @@ const EditorTemplate = props => {
               className="e-field e-input"
               name="Description"
               data-name="Description"
-              rows={3}
+              rows={5}
               cols={50}
               style={{
                 width: "100%",
-                height: "60px !important",
-                resize: "vertical",
+                height: "100px !important",
+                resize: "none",
               }}
             ></textarea>
           </td>
@@ -223,10 +224,9 @@ const EditorTemplate = props => {
                 }
                      </tbody>
     </table>
-      <div style={{}}>
-         <Button type="link" onClick={props.onClickButton2} danger><p style={{fontWeight : "500"}}>SAVE AND ADD NEW</p></Button>
-      </div>
     </div>
+    <Button type="link" onClick={props.onClickButton2} danger style={{ "z-index": "1009","bottom": "-6px"}}><p style={{fontWeight : "500"}}>SAVE AND ADD NEW</p></Button>
+</>
   ) : (
     <div></div>
   );
