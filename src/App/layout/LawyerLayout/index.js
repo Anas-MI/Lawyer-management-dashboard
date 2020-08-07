@@ -37,9 +37,11 @@ class LawyerLayout extends Component {
             this.props.onComponentWillMount();
         }
     }
-
+    
     render() {
-
+        const handleNavigation=(path, value)=>{
+            this.props.history.push(path, value)
+        }
         /* full screen exit call */
         document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
         document.addEventListener('webkitfullscreenchange', this.fullScreenExitHandler);
@@ -63,7 +65,7 @@ class LawyerLayout extends Component {
             <Aux>
                 <Fullscreen enabled={this.props.isFullScreen}>
                     <Navigation />
-                    <NavBar />
+                    <NavBar handleNavigation={handleNavigation} />
                     <div className="pcoded-main-container" style={{"background": "#FCFDFF"}} onClick={() => this.mobileOutClickHandler}>
                         <div className="pcoded-wrapper" >
                             <div className="pcoded-content">

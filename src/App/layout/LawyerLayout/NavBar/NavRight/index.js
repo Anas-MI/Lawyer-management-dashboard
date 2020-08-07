@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Dropdown} from 'react-bootstrap';
-
+import { Menu, Dropdown, Button } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
@@ -12,15 +12,61 @@ import Timer from '../../../../components/Timer';
 import { Link } from 'react-router-dom';
 
 class NavRight extends Component {
-    state = {
-        listOpen: false
-    };
+    constructor(){
+        super()
+        this.state = {
+            listOpen: false
+        };
+    }
+   
 
     render() {
-
+        console.log(this.props)
+        const menu = (
+            <Menu>
+              <Menu.Item  onClick={()=>this.props.handleNavigation('/manage/activity', "time")} key="0">
+                <span>Time entry</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/activity', "expense")} key="1">
+                <span >Expense entry</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/tasks', "from dashboard")} key="2">
+                <span >Task</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/contacts/add/Person', "")} key="3">
+                <span >Contact</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/Matter/add', "")} key="5">
+                <span >Matter</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/billing/record', "")} key="6">
+                <span >Record payment</span>
+              </Menu.Item>
+              <Menu.Item key="7">
+                <span>Trust request</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/communication', "phone")} key="4">
+                <span >Phone log</span>
+              </Menu.Item>
+              <Menu.Item  onClick={()=>this.props.handleNavigation('/manage/communication', "email")} key="8">
+                <span>Email log</span>
+              </Menu.Item>
+              <Menu.Item key="9">
+                <span>Secure message</span>
+              </Menu.Item>
+              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/Matter/add')} key="10">
+                <span>events</span>
+              </Menu.Item>
+            </Menu>
+          );
         return (
             <Aux>
-                <ul className="navbar-nav ml-auto">
+               <ul className="navbar-nav ml-auto">
+               <li>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <Button type="primary" className="ant-dropdown-link" onClick={e => e.preventDefault()}> Create new <DownOutlined /></Button>
+                    </Dropdown>
+                </li>
                 <li><Timer/></li>
                     {/* <li>
                         <Dropdown alignRight={!this.props.rtlLayout}>

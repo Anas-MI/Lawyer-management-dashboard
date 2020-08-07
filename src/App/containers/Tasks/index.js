@@ -132,6 +132,10 @@ class Tasks extends React.Component {
   async componentDidMount() {
     if(this.props.location.state === "from dashboard"){
       this.showModal()
+    }else{
+      this.setState({
+        visible : false
+      })
     }
     let tableData = [];
     let CompletedData = []
@@ -361,9 +365,7 @@ class Tasks extends React.Component {
             ReactDOM.findDOMNode(this.messageForm).reset()
           })
       }
-      if(this.props.location.state === "from dashboard"){
-        this.props.history.goBack()
-      }else{
+      
         setTimeout(() => {
           this.setState({
             visible: false,
@@ -374,7 +376,7 @@ class Tasks extends React.Component {
           });
           //window.location.reload();
         }, 1000);
-      }
+      
     }
       
   };
