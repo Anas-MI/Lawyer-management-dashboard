@@ -18,7 +18,7 @@ class NavBar extends Component {
         if (this.props.collapseMenu) {
             toggleClass = [...toggleClass, 'on'];
         }
-
+    
         return (
             <Aux>
                 <header className={headerClass.join(' ')}>
@@ -34,7 +34,7 @@ class NavBar extends Component {
                     <a className="mobile-menu" id="mobile-header" href={DEMO.BLANK_LINK}><i className="feather icon-more-horizontal"/></a>
                     <div className="collapse navbar-collapse">
                         <NavLeft/>
-                        <NavRight rtlLayout={this.props.rtlLayout} />
+                        <NavRight handleNavigation={this.props.handleNavigation} rtlLayout={this.props.rtlLayout} />
                     </div>
                 </header>
             </Aux>

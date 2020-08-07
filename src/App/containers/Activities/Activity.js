@@ -80,6 +80,24 @@ class Activity extends React.Component {
     console.log(this.state.data)
 }
   componentDidMount() {
+    if(this.props.location.state === "time"){
+      this.setState({
+        timeModal : true
+      })
+    }else{
+      this.setState({
+        timeModal : false
+      })
+    }
+    if(this.props.location.state === "expense"){
+      this.setState({
+        expenseModal : true
+      })
+    }else{
+      this.setState({
+        expenseModal : false
+      })
+    }
     api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
       matters = res;
       option = res.data.data.map((val, index)=>{
