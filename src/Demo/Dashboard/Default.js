@@ -273,43 +273,49 @@ class Dashboard extends React.Component {
             <Aux>
                 <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Today's Agenda</b></h6>  
                 <Row>
-                    <Col md={6} xl={4}>
+                    <Col md={6} xl={6}>
                         <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Total task due</h6>
+                            <Card.Body style={{ "padding": "0px 0.6rem"}}>
                                 <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                        {this.state.taskCount}</h3>
+                                    <div className="col-6" style={{ "border-right": "1px solid #d7dee2", "padding-right": "0px"}}>
+                                        <div className="d-flex" style={{"padding": "1rem 0", "align-items": "center", "justify-content": "space-around"}}> 
+                                            <h5 className="dashboard-taskmargin"><b>{this.state.taskCount}</b></h5>
+                                            <div className="dashboard-taskmargin">
+                                                <p className="dashboard-totaltask"><b>Total task due</b></p>
+                                                <span style={{"font-size": "9px"}}>Updated 16 minutes ago.</span>
+                                            </div>
+                                            <div className="form-add" onClick={()=>this.props.history.push('/tasks' , "from dashboard")}></div>
+                                        </div>
                                     </div>
 
-                                    <div className="col-8 text-right">
-                                        <Button variant="success" onClick={()=>this.props.history.push('/tasks' , "from dashboard")}>Create Task</Button>
+                                    <div className="col-6">
+                                        <p className="dashboard-tasktoday">You have no tasks due today</p>
                                     </div>
+
                                 </div>
-                                {/* <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div> */}
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col md={6} xl={4}>
+                    <Col md={6} xl={6}>
                         <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Total calendar Events</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                            {this.state.eventCount}</h3>
+                                <Card.Body style={{ "padding": "0px 0.6rem"}}>
+                                    <div className="row d-flex align-items-center">
+                                        <div className="col-6" style={{ "border-right": "1px solid #d7dee2", "padding-right": "0px"}}>
+                                            <div className="d-flex" style={{"padding": "1rem 0", "align-items": "center",  "justify-content": "space-around"}}> 
+                                                <h5 className="dashboard-taskmargin"><b>{this.state.eventCount}</b></h5>
+                                                <div className="dashboard-taskmargin">
+                                                    <p className="dashboard-totaltask"><b>Total calendar Events</b></p>
+                                                    <span style={{"font-size": "9px"}}>Updated 16 minutes ago.</span>
+                                                </div>
+                                                <div className="form-add" onClick={()=>this.props.history.push('/calendar')}></div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <p className="dashboard-tasktoday">You have no events scheduled for today</p>
+                                        </div>
                                     </div>
-                                    <div className="col-8 text-right">
-                                        <Button variant="info" onClick={()=>this.props.history.push('/calendar')}>Create Event</Button>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
+                                </Card.Body>
+                            </Card>
                     </Col>
                 </Row>
                     <Row>
