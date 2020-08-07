@@ -54,7 +54,7 @@ class NavRight extends Component {
               <Menu.Item key="9">
                 <span>Secure message</span>
               </Menu.Item>
-              <Menu.Item onClick={()=>this.props.handleNavigation('/manage/Matter/add')} key="10">
+              <Menu.Item onClick={()=>this.props.handleNavigation('/calendar', "openNow")} key="10">
                 <span>events</span>
               </Menu.Item>
             </Menu>
