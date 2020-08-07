@@ -51,7 +51,24 @@ class Communication extends React.Component{
       return locdat;
     };
     componentDidMount() {
-
+     if(this.props.location.state === "phone"){
+        this.setState({
+          phone : true
+        })
+     }else{
+      this.setState({
+        phone : false
+      })
+     }
+     if(this.props.location.state === "email"){
+      this.setState({
+        email : true
+      })
+   }else{
+    this.setState({
+      email : false
+    })
+   }
      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
        matters = res
             option = res.data.data.map((val, index)=>{
