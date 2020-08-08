@@ -60,7 +60,7 @@ const CalendarContainer = props => {
     let instance = new Internationalization();
 
     async function fetchEventData(){
-        console.log("Set event")
+ 
         res =  await api.get('/calendar/viewforuser/'+userId)
         response =  await api.get('matter/viewforuser/'+userId)
         setListEvent(res.data.data)
@@ -166,7 +166,7 @@ const CalendarContainer = props => {
           message: 'Failure'});
       };
     const handleSubmit = (e) =>{
-        console.log(e)
+        console.log(e.requestType)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
             api.get('/calendar/delete/'+id).then(()=>{
@@ -180,7 +180,7 @@ const CalendarContainer = props => {
             },1500)
         }
         if(e.requestType==="eventChanged"){
-            console.log(e)
+
             let eventdata = data
             let id = e.changedRecords[0].id
             /*
@@ -211,17 +211,17 @@ const CalendarContainer = props => {
             let eventdata = data
             eventdata.userId = userId
             if(startTime !== "Invalid Date"){
-                console.log("not invalid")
+    
                 eventdata.startTime = startTime
                 eventdata.endTime = endTime
                 
             }
     
-            if(data.title == ""){
+            if(data.title == "" || data.title == undefined  ){
                     notification.warning({message : "Please provide a title" })
             }else{
                 console.log(eventdata)
-            
+                
                 api.post('/calendar/create', eventdata).then((res)=>{
                     console.log(res)
                     fetchEventData()
@@ -234,7 +234,7 @@ const CalendarContainer = props => {
                  setTimeout(()=>{
                     //window.location.reload()
                 },1500)
-        
+    
                  }
               
             }
@@ -243,7 +243,7 @@ const CalendarContainer = props => {
     
     
     const setInit = (args) =>{
-        console.log(args)
+    
     
         if(args.StartTime != undefined && args.StartTime != "Invalid Date"){
             const props = args
@@ -269,8 +269,6 @@ const CalendarContainer = props => {
             startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '
             endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '
 
-            console.log(startTime)
-            console.log(endTime)
 
              /*
              if((startTime.toLocaleString()).includes("AM") || (startTime.toLocaleString()).includes("PM")){
@@ -368,14 +366,14 @@ const CalendarContainer = props => {
         eventdata.startTime = startTime
         eventdata.endTime = endTime             
     }
-    console.log(eventdata)
+  
     if(data.title == ""){
             notification.warning({message : "Please provide a title" })
     }else{
        
         api.post('/calendar/create', eventdata).then((res)=>{
             console.log(res)
-            
+            //fetchEventData()
             notification.success({message : "Evented Added"})
             let eventData = {
                 Id: '',
@@ -383,12 +381,13 @@ const CalendarContainer = props => {
                 StartTime: '',
                 EndTime: ''
             };
+            setData({})
             SchedulerRef.current.openEditor(eventData, 'Add');
          }).catch((err)=>{
             console.log(err)
             notification.error({message : "Failed!"})
          })
-         //setData({})
+        
         
 
          }
