@@ -142,7 +142,7 @@ class Dashboard extends React.Component {
                     if(value.notification == true){
 
                         const alertdate =  this.convertTime(value.startTime)
-                        console.log(alertdate)
+                       
                         let ddd = alertdate.getDate();
                         let mmm = alertdate.getMonth()+1; 
                         let yyyyy = alertdate.getFullYear();
@@ -166,12 +166,14 @@ class Dashboard extends React.Component {
                         let dd = today.getDate();
                         let mm = today.getMonth()+1; 
                         let yyyy = today.getFullYear();
-                        let hours = today.getHours() ;
+                        let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours() ;
                         let plusonehour = parseInt(hours) + 1
                         console.log(plusonehour)
                         let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()
                         let plusmins = parseInt(mins + 0)
-
+                       
+                        console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
+                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
                         /*
                             if(dd<10) {
                                 dd = '0'+dd
@@ -206,10 +208,14 @@ class Dashboard extends React.Component {
                             }
 
                             if(data == null){
-                                window.localStorage.setItem('notification', [notificationtoshow])
+                                window.localStorage.setItem('notification', JSON.stringify([{ 
+                                    description: Description,
+                                    matter : matter,
+                                    startTime : StartTime
+                                }]))
                             }else{
                                 data.push(notificationtoshow)
-                                window.localStorage.setItem('notification', data)
+                                window.localStorage.setItem('notification', JSON.stringify(data))
                             }
                             
                            /*

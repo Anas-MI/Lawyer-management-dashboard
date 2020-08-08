@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Communication from './Views/Communication'
 import Bills from './Views/bills'
 import Documents from './Views/docs'
+import Notes from './Views/Notes';
 const { TabPane } = Tabs;
 
 
@@ -204,11 +205,7 @@ function CompanyView(props) {
         </TabPane>
         
         <TabPane tab="Notes" key="6">
-          <Card
-            title="Notes"
-            extra={<a href="#"></a>}
-            className="form-width mb-4"
-          ></Card>
+          <Notes  id = {cId} />
         </TabPane>
         <TabPane tab="Document" key="7">
 

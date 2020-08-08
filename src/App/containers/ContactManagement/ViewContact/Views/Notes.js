@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm  } from 'antd';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import api from '../../../../resources/api';
+import api from '../../../../../resources/api';
 import ReactDOM from 'react-dom'
 
 const Notes = (props) => {
@@ -54,7 +54,6 @@ const Notes = (props) => {
             });
           }
         if(valid){
-            setdisable(true)
             let notess = data;
             notess.userId = userId
             notess.matter = props.id
@@ -66,12 +65,11 @@ const Notes = (props) => {
                 }).catch((err)=>{
                     notification.error({message : "Failure"})
                 }).then(() => {
-                 //   ReactDOM.findDOMNode(messageForm).reset()
+                    ReactDOM.findDOMNode(this.messageForm).reset()
                     seteditMode(false)
                     seteditModal(false)
                     setdata({})
                     setrecord({})
-                    setdisable(false)
                  });
             }else{
                 api.post('/notes/create', notess).then((res)=>{
@@ -81,11 +79,10 @@ const Notes = (props) => {
                 }).catch((err)=>{
                     notification.error({message : "Failure"})
                 }).then(() => {
-                  //  ReactDOM.findDOMNode(messageForm).reset()
+                    ReactDOM.findDOMNode(this.messageForm).reset()
                     setVisible(false)
                     setdata({})
                     setrecord({})
-                    setdisable(false)
                  });
             }
 
@@ -112,7 +109,6 @@ const Notes = (props) => {
 
       const handleEdit = (record) => {
         seteditMode(true)
-        seteditModal(true)
         setrecord(record)
       };
 
@@ -143,7 +139,7 @@ const Notes = (props) => {
             key: '5',
             render:(_,record)=>{
                 return (
-                    <Button onClick = {handleEdit} variant='danger'>
+                    <Button variant='danger'>
                         Edit
                     </Button>
                 )
@@ -214,7 +210,7 @@ const Notes = (props) => {
                 <Form
                  id='myForm'
                  className="form"
-                // ref={ form => messageForm = form } 
+                 ref={ form => this.messageForm = form } 
                  className="form-details">
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>
@@ -247,7 +243,7 @@ const Notes = (props) => {
                 <Form 
                   id='myForm'
                   className="form"
-                 // ref={ form => messageForm = form }
+                  ref={ form => this.messageForm = form }
                   className="form-details">
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>

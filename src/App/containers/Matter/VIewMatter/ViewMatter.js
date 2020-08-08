@@ -102,7 +102,7 @@ function CompanyView(props) {
             const sHours = parseInt(val.time.split(':')[0]);
             const sMinutes = parseInt(val.time.split(':')[1]);
             console.log(sHours + "  " + sMinutes)
-            total = (total + rate * sHours + ((rate/60)*sMinutes)).toFixed('2')
+            total = total + rate * sHours + ((rate/60)*sMinutes)
           }
           if(val.type ==="expense"){ 
               total = total + rate * parseInt(val.qty)
@@ -451,7 +451,7 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Notes" key="6">
-          <Notes></Notes>
+          <Notes id={props.location.state.id}></Notes>
         </TabPane>
         <TabPane tab="Document" key="7">
           {console.log('matter in viw', props.location.state.matters)}

@@ -47,7 +47,8 @@ class Activity extends React.Component {
       record: '',
       touched: true,
       disabletime : false,
-      disableExpense : false
+      disableExpense : false,
+      today :[]
     };
   }
   convertTime = (serverdate) => {
@@ -117,7 +118,7 @@ class Activity extends React.Component {
       end_of_week.setMinutes(59);
       end_of_week.setSeconds(59);
 
-      var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
+     // var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
 
       let timedata = [];
       let expenseData = [];
@@ -142,6 +143,9 @@ class Activity extends React.Component {
           invoiceStatus: 'Unbilled',
           //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
         };
+        console.log(now)
+        console.log(date)
+        console.log("sepeaaot")
         if (val.type === 'time') {
 
           timedata.push(temp);
@@ -151,14 +155,14 @@ class Activity extends React.Component {
           expenseData.push(temp);
         }
         if (
-          date.getDate() === now.getDate() &&
-          date.getMonth() === now.getMonth() &&
-          date.getFullYear() === now.getFullYear()
+          date.getDate() == now.getDate() &&
+          date.getMonth() == now.getMonth() &&
+          date.getFullYear() == now.getFullYear()
         ) {
-          // between now and end of week
+          
           today.push(temp);
         }
-        if (date >= start_of_week && date <= end_of_week) {
+        if (date >= now && date <= end_of_week) {
           // between now and end of week
           thisWeek.push(temp);
         }
@@ -173,6 +177,7 @@ class Activity extends React.Component {
         }
         completeData.push(temp);
       });
+      console.log(today)
       this.setState({
         completeData: completeData,
         expenseData: expenseData,
