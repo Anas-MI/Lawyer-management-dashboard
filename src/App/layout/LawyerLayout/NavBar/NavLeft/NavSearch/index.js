@@ -254,7 +254,9 @@ class NavSearch extends Component {
             return (
               <span>
                 {title}
-                <a
+                {
+                  /* 
+                  <a
                   style={{ float: 'right' }}
                   href="https://www.google.com/search?q=antd"
                   target="_blank"
@@ -262,6 +264,8 @@ class NavSearch extends Component {
                 >
                   more
                 </a>
+                  */
+                }
               </span>
             );
           };
@@ -311,7 +315,8 @@ class NavSearch extends Component {
                 searchedDocs : [], 
                 searchedEvents : [], 
                 searchedLog : [], 
-                searchedTask : []
+                searchedTask : [],
+                options : []
             })
             const value = e.target.value
             console.log(value)
@@ -338,8 +343,10 @@ class NavSearch extends Component {
                         label: renderTitle('Contact'),
                         options: cop,
                       }  
+                     // const options = [optionforContact]
                       this.setState({
-                        contactSeach : optionforContact
+                        contactSeach : optionforContact,
+                       // options : options
                     });
                   }
                 
@@ -374,6 +381,7 @@ class NavSearch extends Component {
                             label: renderTitle('Company'),
                             options: cop2,
                           }  
+                        
                           this.setState({
                             companySearch : optionforCompany
                         });
@@ -578,15 +586,23 @@ class NavSearch extends Component {
                      });
                      */
                     }
-             /*
             
-            const newoption = []
+             
+            /*
+            let newoption = []
             if(this.state.contactSeach.length != 0){
-                newoption.push(this.state.contactData)
+                newoption = [
+                  this.state.contactSeach
+                ]
             }
             if(this.state.companySearch.length != 0){
-                newoption.push(this.state.companyData)
+              newoption = [
+                newoption,
+                this.state.companyData
+              ]
+               // newoption.push(this.state.companyData)
             }
+          
             if(this.state.seachedMatters.length != 0){
                 newoption.push(this.state.seachedMatters)
             }
@@ -610,19 +626,8 @@ class NavSearch extends Component {
             })
             */
             
-            if(this.state.companySearch == [] &&
-                this.state.contactSeach == [] &&
-                this.state.seachedMatters  == [] &&
-                this.state.searchedAct == [] &&
-                this.state.searchedDocs == [] && 
-                this.state.searchedEvents == [] && 
-                this.state.searchedLog == [] && 
-                this.state.searchedTask){
-                    this.setState({
-                        options : []
-                    })
-                }else{
-                    this.setState({
+           
+              this.setState({
                         options : [
                             this.state.companySearch ,
                             this.state.contactSeach,
@@ -634,8 +639,60 @@ class NavSearch extends Component {
                             this.state.searchedTask
                           ]
                     })
-                }
-          //  console.log(this.state.companySearch)
+                    /*
+             let newoptions = this.state.options
+              if(this.state.seachedMatters.length == 0){
+                console.log("matter nahi he")
+             
+                  newoptions.splice(2,1)
+                 
+              }
+              if(this.state.companySearch.length == 0){
+                console.log("company nahi he")
+                
+                  
+                  newoptions.splice(0,1)
+                 
+            }
+            if(this.state.companySearch.length == 0){
+              console.log("contacts nahi he")
+                
+                newoptions.splice(1,1)
+               
+             }
+             if(this.state.searchedTask.length == 0){
+              console.log("tasks nahi he")
+                
+                newoptions.splice(7,1)
+               
+             }
+             if(this.state.searchedEvents.length == 0){
+              console.log("evnts nahi he")
+                
+                newoptions.splice(5,1)
+               
+             }
+             if(this.state.searchedAct.length == 0){
+              console.log("activity nahi he")
+                
+                newoptions.splice(3,1)
+               
+             }
+             if(this.state.searchedDocs.length == 0){
+              console.log("docs nahi he")
+                
+                newoptions.splice(4,1)
+               
+             }
+             if(this.state.searchedLog.length == 0){
+              console.log("log nahi he")
+                
+                newoptions.splice(6,1)
+               
+             }
+            
+              
+            console.log(newoptions)*/
             console.log(this.state.options)
         }
         return (
@@ -644,7 +701,7 @@ class NavSearch extends Component {
                 <AutoComplete
                     dropdownClassName="certain-category-search-dropdown"
                     dropdownMatchSelectWidth={500}
-                    style={{ width: 500 }}
+                    style={{ width: "200%" }}
                     options={this.state.options}
                 >
                     <Input.Search size="large" onChange={handleSearch} placeholder="input here" />

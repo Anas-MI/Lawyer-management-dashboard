@@ -4,7 +4,8 @@ import { DownOutlined } from '@ant-design/icons';
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
-
+import { BellTwoTone } from '@ant-design/icons'
+import { Drawer } from 'antd'
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
 import Avatar3 from '../../../../../assets/images/user/avatar-3.jpg';
@@ -15,12 +16,15 @@ class NavRight extends Component {
     constructor(){
         super()
         this.state = {
-            listOpen: false
+            listOpen: false,
+            visible : false
         };
     }
    
 
     render() {
+      
+    
         console.log(this.props)
         const menu = (
             <Menu>
@@ -62,12 +66,15 @@ class NavRight extends Component {
         return (
             <Aux>
                <ul className="navbar-nav ml-auto">
-               <li>
+               <li >
+                    <div style ={{position : 'relative' , top: "-4px"}}>
                     <Dropdown overlay={menu} trigger={['click']}>
                         <Button type="primary" className="ant-dropdown-link" onClick={e => e.preventDefault()}> Create new <DownOutlined /></Button>
                     </Dropdown>
+                    </div>
                 </li>
                 <li><Timer/></li>
+                <li onClick={()=>this.setState({visible : true})} style={{"position": "relative" , "top" : "-4px"}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
                     {/* <li>
                         <Dropdown alignRight={!this.props.rtlLayout}>
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -151,6 +158,18 @@ class NavRight extends Component {
                         </Dropdown>
                     </li> */}
                 </ul>
+                <Drawer
+                    title="Notifications"
+                    placement="right"
+                    closable={false}
+                    onClose={()=>this.setState({visible : false})}
+                    visible={this.state.visible}
+                    width = "350px"
+                >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Drawer>
                 <ChatList listOpen={this.state.listOpen} closed={() => {this.setState({listOpen: false});}} />
             </Aux>
         );
