@@ -17,6 +17,8 @@ class Dashboard extends React.Component {
         this.state = {
             time : "",
             taskCount : 0,
+            taskduetoday : 0,
+            eventduetoday : 0,
             eventCount : 0,
             draftCount : 0,
             draftAmount : 0,
@@ -27,23 +29,41 @@ class Dashboard extends React.Component {
         }
     }
     componentDidMount(){
+        var now = new Date();
         api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
             let tcount = 0
+            let today = 0
             res.data.data.map((val,index)=>{
                 if(val.status == false){
                     tcount++
+                    var date = new Date(Date.parse(val.dueDate));
+                    if(date.getDate() === now.getDate() &&
+                    date.getMonth() === now.getMonth() &&
+                    date.getFullYear() === now.getFullYear()){
+                        today++
+                    }
                 }
+                
+                
+            
             })
-            this.setState({taskCount : tcount})
+            this.setState({taskCount : tcount, taskduetoday :today})
         })
 
         api.get('/calendar/viewforuser/'+this.props.userId).then((res)=>{
             let Ecount = 0
-        
+            let eventsToday = 0
             res.data.data.map((val,index)=>{
                 Ecount++
+                var date = new Date(Date.parse(val.startTime));
+                if(date.getDate() === now.getDate() &&
+                date.getMonth() === now.getMonth() &&
+                date.getFullYear() === now.getFullYear()){
+                    eventsToday++
+                }
             })
-            this.setState({eventCount : Ecount})
+            
+            this.setState({eventCount : Ecount, eventduetoday : eventsToday})
         })
 
         api.get('/billing/bill/viewforuser/'+this.props.userId).then((res)=>{
@@ -106,9 +126,10 @@ class Dashboard extends React.Component {
       };
     
     render() {
-        
+      
+   
         setInterval(()=>{
-         
+            let data = window.localStorage.getItem('notifications')
             api.get('/calendar/viewforuser/'+this.props.userId).then(res=>{
            
                 res.data.data.map((value, index)=>{
@@ -178,6 +199,19 @@ class Dashboard extends React.Component {
                         */
                         if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss &&  minss == mins  ){
                             alert("Event : " + Description + "\n" + 'Event assosiated to matter ' + matter + 'starts at ' + StartTime )
+                            const notificationtoshow =  {
+                                description: Description,
+                                matter : matter,
+                                startTime : StartTime
+                            }
+
+                            if(data == null){
+                                window.localStorage.setItem('notification', [notificationtoshow])
+                            }else{
+                                data.push(notificationtoshow)
+                                window.localStorage.setItem('notification', data)
+                            }
+                            
                            /*
                             notification.open({
                                 message: Description,
@@ -282,14 +316,14 @@ class Dashboard extends React.Component {
                                             <h5 className="dashboard-taskmargin"><b>{this.state.taskCount}</b></h5>
                                             <div className="dashboard-taskmargin">
                                                 <p className="dashboard-totaltask"><b>Total task due</b></p>
-                                                <span style={{"font-size": "9px"}}>Updated 16 minutes ago.</span>
+                                                <span style={{"font-size": "9px"}}>Updated just now.</span>
                                             </div>
                                             <div className="form-add" onClick={()=>this.props.history.push('/tasks' , "from dashboard")}></div>
                                         </div>
                                     </div>
 
                                     <div className="col-6">
-                                        <p className="dashboard-tasktoday">You have no tasks due today</p>
+                                        <p className="dashboard-tasktoday">You have {this.state.taskduetoday} tasks due today</p>
                                     </div>
 
                                 </div>
@@ -305,13 +339,13 @@ class Dashboard extends React.Component {
                                                 <h5 className="dashboard-taskmargin"><b>{this.state.eventCount}</b></h5>
                                                 <div className="dashboard-taskmargin">
                                                     <p className="dashboard-totaltask"><b>Total calendar Events</b></p>
-                                                    <span style={{"font-size": "9px"}}>Updated 16 minutes ago.</span>
+                                                    <span style={{"font-size": "9px"}}>Updated just now.</span>
                                                 </div>
                                                 <div className="form-add" onClick={()=>this.props.history.push('/calendar')}></div>
                                             </div>
                                         </div>
                                         <div className="col-6">
-                                            <p className="dashboard-tasktoday">You have no events scheduled for today</p>
+                                            <p className="dashboard-tasktoday">You have {this.state.eventduetoday} events scheduled for today</p>
                                         </div>
                                     </div>
                                 </Card.Body>
@@ -350,7 +384,7 @@ class Dashboard extends React.Component {
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -371,7 +405,7 @@ class Dashboard extends React.Component {
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -393,7 +427,7 @@ class Dashboard extends React.Component {
                                                         <b> {this.state.unPaidCount}</b></h4>
                                                 </div>
                                                 <div className="col-8 text-right">
-                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -414,7 +448,7 @@ class Dashboard extends React.Component {
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>Create New Bills</Button>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -437,7 +471,7 @@ class Dashboard extends React.Component {
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>Create New Bills</Button>
+                                                    <Button variant="success" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>Create New Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -458,7 +492,7 @@ class Dashboard extends React.Component {
                                                 </div>
 
                                                 <div className="col-8 text-right">
-                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/billing')}>View Overdue Bills</Button>
+                                                    <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/manage/billing')}>View Overdue Bills</Button>
                                                 </div>
                                             </div>
                                             {/* <div className="progress m-t-30" style={{height: '7px'}}>
@@ -470,8 +504,9 @@ class Dashboard extends React.Component {
                             </Row>                 
                         </Col>
                     </Row>
-                    
-                   <Row>   
+                    {
+                        /* 
+                         <Row>   
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Header>
@@ -544,7 +579,10 @@ class Dashboard extends React.Component {
                         </Tabs>
                     </Col>
                 </Row>
-            </Aux>
+
+                        */
+                    }
+                </Aux>
         );
     }
 }

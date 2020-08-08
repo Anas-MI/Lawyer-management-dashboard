@@ -225,7 +225,7 @@ const EditorTemplate = props => {
                      </tbody>
     </table>
     </div>
-    <Button type="link" onClick={props.onClickButton2} danger style={{ "z-index": "1009","bottom": "-6px"}}><p style={{fontWeight : "500"}}>SAVE AND ADD NEW</p></Button>
+    <Button type="link" onClick={props.onClickButton2} danger style={{ "z-index": "1009","bottom": "-6px"}}><p style={{fontWeight : "500"}}>SAVE AND CREATE NEW</p></Button>
 </>
   ) : (
     <div></div>
