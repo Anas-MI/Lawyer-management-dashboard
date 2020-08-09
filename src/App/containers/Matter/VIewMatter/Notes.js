@@ -1,9 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm  } from 'antd';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../../resources/api';
 import ReactDOM from 'react-dom'
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import ExportExcel from './ExportExcel';
+
 
 const Notes = (props) => {
     const [visible, setVisible] = useState(false)
@@ -14,9 +18,10 @@ const Notes = (props) => {
     const [editMode, seteditMode] = useState(false)
     const [record, setrecord] = useState({})
     const [editModal, seteditModal] = useState(false)
+    const formRef = useRef(null)
   
     const fetchNotes = ( ) => {
-        api.get('/activity/viewformatter/'+userId+'/'+ props.id).then((res)=>{
+        api.get('/notes/viewforuser/'+userId).then((res)=>{
             console.log(res)
             let notes = []
             res.data.data.map((value , index)=>{
@@ -25,7 +30,7 @@ const Notes = (props) => {
                     key : index,
                     notes : value.notes,
                     subject : value.subject,
-                    date : value.date
+                    date : value.date ? value.date.substring(0,10) : "-"
                 }
                 notes.push(temp)
             })
@@ -47,7 +52,7 @@ const Notes = (props) => {
             message: 'Please provide a Subject',
           });
         }
-        if(data.note === '' || data.note === undefined ){
+        if(data.notes === '' || data.notes === undefined ){
             valid = false
             notification.warning({
               message: 'Please provide a Note',
@@ -66,7 +71,7 @@ const Notes = (props) => {
                 }).catch((err)=>{
                     notification.error({message : "Failure"})
                 }).then(() => {
-                 //   ReactDOM.findDOMNode(messageForm).reset()
+                    ReactDOM.findDOMNode(formRef.current).reset()
                     seteditMode(false)
                     seteditModal(false)
                     setdata({})
@@ -81,7 +86,7 @@ const Notes = (props) => {
                 }).catch((err)=>{
                     notification.error({message : "Failure"})
                 }).then(() => {
-                  //  ReactDOM.findDOMNode(messageForm).reset()
+                    ReactDOM.findDOMNode(formRef.current).reset()
                     setVisible(false)
                     setdata({})
                     setrecord({})
@@ -93,13 +98,16 @@ const Notes = (props) => {
     }
 
     const handleCancel = (e) =>{
+        
         seteditMode(false)
         seteditModal(false)
         setVisible(false);
+        ReactDOM.findDOMNode(formRef.current).reset()
     }
 
     const handleDelete = record => {
-        api.get('/notes/delete/' + record.id).then((res)=>{
+        api.get('/notes/delete/' + record._id).then((res)=>{
+        console.log(res)
           fetchNotes()
           notification.success({message : "Note Deleted !"})
         
@@ -114,6 +122,8 @@ const Notes = (props) => {
         seteditMode(true)
         seteditModal(true)
         setrecord(record)
+        setdata(record)
+        console.log(record)
       };
 
     const columnsNotes = [
@@ -134,7 +144,7 @@ const Notes = (props) => {
         },
         {
             title: 'Note',
-            dataIndex: 'note',
+            dataIndex: 'notes',
             key: '4',
         },
         {
@@ -143,7 +153,7 @@ const Notes = (props) => {
             key: '5',
             render:(_,record)=>{
                 return (
-                    <Button onClick = {handleEdit} variant='danger'>
+                    <Button onClick = {()=>handleEdit(record)} >
                         Edit
                     </Button>
                 )
@@ -161,7 +171,7 @@ const Notes = (props) => {
                     okText="Yes"
                     cancelText="No"
                   >
-                    <Button variant='danger'>
+                    <Button danger>
                         Delete
                     </Button>
                   </Popconfirm>
@@ -180,7 +190,35 @@ const Notes = (props) => {
         console.log(data)
     }
     
+    const exportPDF = () => {
+        const unit = 'pt';
+        const size = 'A4'; // Use A1, A2, A3 or A4
+        const orientation = 'portrait'; // portrait or landscape
     
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+    
+        doc.setFontSize(15);
+    
+        const title = 'Notes';
+        const headers = [['Subject', 'Note', 'Date']];
+    
+        let data = [];
+        tableData.map((val, index) => {
+          const td = [val.subject, val.note , val.date];
+          data.push(td);
+        });
+    
+        let content = {
+          startY: 50,
+          head: headers,
+          body: data,
+        };
+    
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save('notes.pdf');
+      };
 
     return(
         <div>
@@ -188,11 +226,23 @@ const Notes = (props) => {
                 title="Notes"
                 className="mb-4"
                 extra={
-                    <span style={{ float: 'right' }}>
-                        <Button onClick={()=> setVisible(true)}>
-                            New Notes
-                        </Button>
-                    </span> 
+                    <div className="d-flex justify-content-center">
+                    <button
+                        className="ml-auto btn  btn-outline-primary   btn-sm"
+                        onClick={exportPDF}
+                    >
+                        Export to Pdf
+                    </button>
+                    <ExportExcel dataSource={tableData || []} />
+                    <button
+                        className="ml-auto btn  btn-outline-primary   btn-sm"
+                        onClick={()=> setVisible(true)}
+                    >
+                        Add Notes
+                    </button>
+                
+                    </div>
+                 
                 }
             >
                 <Table dataSource={tableData}  columns={columnsNotes}/>
@@ -214,7 +264,7 @@ const Notes = (props) => {
                 <Form
                  id='myForm'
                  className="form"
-                // ref={ form => messageForm = form } 
+                 ref={ formRef } 
                  className="form-details">
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>
@@ -247,7 +297,7 @@ const Notes = (props) => {
                 <Form 
                   id='myForm'
                   className="form"
-                 // ref={ form => messageForm = form }
+                  ref={ formRef }
                   className="form-details">
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>
