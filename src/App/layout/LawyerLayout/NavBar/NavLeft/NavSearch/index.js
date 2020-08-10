@@ -36,7 +36,16 @@ class NavSearch extends Component {
         searchedAct : [],
         docs : [],
         searchedDocs : [],
-        options : []
+        options : [],
+        optionfortask : {},
+        optionforCompany : {},
+        optionfordocs : {},
+        optionforActivity :{},
+        optionforContact : {},
+        optionforlogs : {},
+        optionformatter : {},
+        optionforEvent : {}
+        
     };
 
     componentDidMount(){
@@ -316,12 +325,21 @@ class NavSearch extends Component {
                 searchedEvents : [], 
                 searchedLog : [], 
                 searchedTask : [],
-                options : []
+                options : [],
+                optionfortask : {},
+                optionforCompany : {},
+                optionfordocs : {},
+                optionforActivity :{},
+                optionforContact : {},
+                optionforlogs : {},
+                optionformatter : {},
+                optionforEvent : {}
             })
             const value = e.target.value
             console.log(value)
             let contactData;
             console.log(this.state.contacts)
+            let optionsforAll = []
               //  setValue(value);
           
                 if (value.length !== 0 || value === '') {
@@ -344,9 +362,10 @@ class NavSearch extends Component {
                         options: cop,
                       }  
                      // const options = [optionforContact]
+                     optionsforAll.push(optionforContact)
                       this.setState({
-                        contactSeach : optionforContact,
-                       // options : options
+                        optionforContact : optionforContact,
+                  
                     });
                   }
                 
@@ -381,7 +400,7 @@ class NavSearch extends Component {
                             label: renderTitle('Company'),
                             options: cop2,
                           }  
-                        
+                          optionsforAll.push(optionforCompany)
                           this.setState({
                             companySearch : optionforCompany
                         });
@@ -415,6 +434,8 @@ class NavSearch extends Component {
                        label: renderTitle('Matters'),
                        options: mop,
                      }  
+                     optionsforAll.push(optionformatter)
+
                      this.setState({
                        seachedMatters : optionformatter
                    });
@@ -449,6 +470,9 @@ class NavSearch extends Component {
                        label: renderTitle('Tasks'),
                        options: top,
                      }  
+
+                     optionsforAll.push(optionfortask)
+
                      this.setState({
                        searchedTask : optionfortask
                    });
@@ -483,6 +507,7 @@ class NavSearch extends Component {
                        label: renderTitle('Events'),
                        options: eop,
                      }  
+                     optionsforAll.push(optionforEvent)
                      this.setState({
                        searchedEvents : optionforEvent
                    });
@@ -510,10 +535,14 @@ class NavSearch extends Component {
                            
                            lop.push(renderItem(item.subject,  "log"+id))                         
                          })
+
                        const optionforlogs = {
                            label: renderTitle('Logs'),
                            options: lop,
                          }  
+
+                         optionsforAll.push(optionforlogs)
+
                          this.setState({
                            searchedLog : optionforlogs
                        });
@@ -544,6 +573,9 @@ class NavSearch extends Component {
                            label: renderTitle('Activities'),
                            options: aop,
                          }  
+
+                        optionsforAll.push(optionforActivity) 
+
                          this.setState({
                            searchedAct : optionforActivity
                        });
@@ -575,6 +607,9 @@ class NavSearch extends Component {
                            label: renderTitle('Documents'),
                            options: dop,
                          }  
+
+                         optionsforAll.push(optionfordocs)
+
                          this.setState({
                            searchedDocs : optionfordocs
                        });
@@ -587,114 +622,10 @@ class NavSearch extends Component {
                      */
                     }
             
-             
-            /*
-            let newoption = []
-            if(this.state.contactSeach.length != 0){
-                newoption = [
-                  this.state.contactSeach
-                ]
-            }
-            if(this.state.companySearch.length != 0){
-              newoption = [
-                newoption,
-                this.state.companyData
-              ]
-               // newoption.push(this.state.companyData)
-            }
-          
-            if(this.state.seachedMatters.length != 0){
-                newoption.push(this.state.seachedMatters)
-            }
-            if(this.state.searchedAct.length != 0){
-                newoption.push(this.state.searchedAct)
-            }
-            if(this.state.searchedTask.length != 0){
-                newoption.push(this.state.searchedTask)
-            }
-            if(this.state.searchedEvents.length != 0){
-                newoption.push(this.state.searchedEvents)
-            }
-            if(this.state.searchedLog.length != 0){
-                newoption.push(this.state.searchedLog)
-            }
-            if(this.state.searchedDocs.length != 0){
-                newoption.push(this.state.searchedDocs)
-            }
             this.setState({
-                options : newoption
+              options : optionsforAll
             })
-            */
-            
-           
-              this.setState({
-                        options : [
-                            this.state.companySearch ,
-                            this.state.contactSeach,
-                            this.state.seachedMatters , 
-                            this.state.searchedAct, 
-                            this.state.searchedDocs, 
-                            this.state.searchedEvents, 
-                            this.state.searchedLog, 
-                            this.state.searchedTask
-                          ]
-                    })
-                    /*
-             let newoptions = this.state.options
-              if(this.state.seachedMatters.length == 0){
-                console.log("matter nahi he")
-             
-                  newoptions.splice(2,1)
-                 
-              }
-              if(this.state.companySearch.length == 0){
-                console.log("company nahi he")
-                
-                  
-                  newoptions.splice(0,1)
-                 
-            }
-            if(this.state.companySearch.length == 0){
-              console.log("contacts nahi he")
-                
-                newoptions.splice(1,1)
-               
-             }
-             if(this.state.searchedTask.length == 0){
-              console.log("tasks nahi he")
-                
-                newoptions.splice(7,1)
-               
-             }
-             if(this.state.searchedEvents.length == 0){
-              console.log("evnts nahi he")
-                
-                newoptions.splice(5,1)
-               
-             }
-             if(this.state.searchedAct.length == 0){
-              console.log("activity nahi he")
-                
-                newoptions.splice(3,1)
-               
-             }
-             if(this.state.searchedDocs.length == 0){
-              console.log("docs nahi he")
-                
-                newoptions.splice(4,1)
-               
-             }
-             if(this.state.searchedLog.length == 0){
-              console.log("log nahi he")
-                
-                newoptions.splice(6,1)
-               
-             }
-            
-              
-            console.log(newoptions)*/
-            console.log(this.state.options)
-        }
+      }
         return (
        
             <Aux>
