@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from  'react'
+import { useSelector } from 'react-redux'
 import { Form, Col, Button} from 'react-bootstrap'
 import { Card, message, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +12,9 @@ const validNameRegex = RegExp(
 const EditAccount = (props) =>{
 
     const history = useHistory()
+    const userId = useSelector((state) => state.user.token.user._id);
     const [state, setState] = useState({
+        userId : userId,
         type: "",
         accountName: "",
         accountHolder: "",

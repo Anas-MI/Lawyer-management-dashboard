@@ -2,14 +2,16 @@ import React, {useState, useEffect} from  'react'
 import { Table, notification, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
+import { useSelector } from 'react-redux'
 
 const Accounts = () => {
     const history = useHistory()
     const [state, setState] = useState([])
+    const userId = useSelector((state) => state.user.token.user._id);
     
     useEffect(() => {
       api
-      .get("/account/showall")
+      .get('/account/viewforuser/' + userId)
       .then((res) => {
         setState([...state, ...res.data.data])
       })
