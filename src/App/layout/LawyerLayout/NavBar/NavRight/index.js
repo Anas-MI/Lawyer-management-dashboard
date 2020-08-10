@@ -5,7 +5,7 @@ import { Card } from 'react-bootstrap'
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
-import { BellTwoTone } from '@ant-design/icons'
+import { BellTwoTone,CheckCircleTwoTone } from '@ant-design/icons'
 import { Drawer } from 'antd'
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
@@ -27,6 +27,20 @@ class NavRight extends Component {
         const view = JSON.parse(window.localStorage.getItem('notification'))
         console.log(view)
         let cardForNotification = []
+        cardForNotification.push(
+            <div style={{"position" : "relative"}}>
+                 <div style={{"position" : "absolute","left" : "15%"}}>
+                 <span className="align-top">__________________   </span>  
+                 <span className="align-baseline"><CheckCircleTwoTone style={{fontSize: "40px"}} twoToneColor="#52c41a" /></span>
+                 <span className="align-top">   __________________</span>
+                 <div style={{"textAlign" : "center"}}>
+                  <p style={{"fontSize" : "20px", "fontWeight" : "bold","marginTop" : "3%"}}>All clear!</p>
+                  <p style={{"marginTop" : "-7%"}}>You are all caught up.</p>
+                 </div>
+                
+            </div>
+            </div>
+            ) 
        
         const handleRemove = ( index  ) =>{
             cardForNotification.splice(index , 1)
@@ -38,6 +52,7 @@ class NavRight extends Component {
         }
 
         if(view != null ){
+            console.log("we are not there")
             view.map((value, index)=>{
                 cardForNotification.push(
                     <Card key={index}>
@@ -90,11 +105,8 @@ class NavRight extends Component {
                 )
             })
             
-        }else{
-            cardForNotification = <div>
-                            
-            </div>
         }
+       
                         
                         
                         
