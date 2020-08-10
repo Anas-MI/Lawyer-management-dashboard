@@ -76,7 +76,7 @@ class ExpenseForm extends React.Component{
                 <Form.Group controlId="quantity">
                     <Form.Label>Quantity</Form.Label>
                     <Form.Control 
-                    type="text" 
+                    type="number" 
                     name="qty" 
                     defaultValue = {this.state.record.qty}
                     onChange={this.props.handleChange}/>

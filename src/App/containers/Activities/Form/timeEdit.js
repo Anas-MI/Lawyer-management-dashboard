@@ -57,7 +57,7 @@ class ExpenseForm extends React.Component{
          }).then(()=>{
              console.log(option)
              this.setState({option : option})
-             api.get('/matter/view/'+ this.props.record.matter).then((res)=>{
+             api.get('/matter/view/'+ this.props.record.matter._id).then((res)=>{
                 console.log(res)
                 const matter = <Form.Group controlId="matter">
                                     <Form.Label>Matter</Form.Label>

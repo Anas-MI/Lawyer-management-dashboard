@@ -23,7 +23,7 @@ class ExpenseForm extends React.Component{
          })
 
         if(this.props.editmode){
-            api.get('/matter/view/'+ this.props.record.matter).then((res)=>{
+            api.get('/matter/view/'+ this.props.record.matter._id).then((res)=>{
                 console.log(res)
              this.setState({matter : res.data.data.matterDescription })
              console.log(this.state.matter)
