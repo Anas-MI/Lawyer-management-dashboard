@@ -19,6 +19,7 @@ const Notes = (props) => {
     const [record, setrecord] = useState({})
     const [editModal, seteditModal] = useState(false)
     const formRef = useRef(null)
+    let timeError = ""
   
     const fetchNotes = ( ) => {
         api.get('/notes/viewforuser/'+userId).then((res)=>{
@@ -30,6 +31,7 @@ const Notes = (props) => {
                     key : index,
                     notes : value.notes,
                     subject : value.subject,
+                    hours : value.hours ? value.hours : "-",
                     date : value.date ? value.date.substring(0,10) : "-"
                 }
                 notes.push(temp)
@@ -45,19 +47,23 @@ const Notes = (props) => {
         e.persist();
         notification.destroy();
         let valid = true
-      
+        if (timeError !== '') {
+            valid = false
+            notification.error({ message: 'Invalid time' });
+          }else
         if(data.subject === '' || data.subject === undefined ){
           valid = false
           notification.warning({
             message: 'Please provide a Subject',
           });
-        }
+        }else
         if(data.notes === '' || data.notes === undefined ){
             valid = false
             notification.warning({
               message: 'Please provide a Note',
             });
           }
+
         if(valid){
             setdisable(true)
             let notess = data;
@@ -185,7 +191,42 @@ const Notes = (props) => {
         e.persist()
         const { name, id, value , selectedIndex} = e.target
         let newData = data
-        newData[name] = value
+        if (name === 'hours') {
+            timeError = '';
+            var timeValue = value;
+            if (timeValue == '' || timeValue.indexOf(':') < 0) {
+              timeError = 'Inavlid Time';
+              console.log(timeError);
+            } else {
+              var sHours = timeValue.split(':')[0];
+              var sMinutes = timeValue.split(':')[1];
+              var sSecs = timeValue.split(':')[2];
+              console.log(sSecs)
+              if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sHours) == 0) sHours = '00';
+              else if (sHours < 10) sHours = '0' + sHours;
+    
+              if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sMinutes) == 0) sMinutes = '00';
+              else if (sMinutes < 10) sMinutes = '0' + sMinutes;
+    
+              if (sSecs == '' || isNaN(sSecs) /*|| parseInt(sHours)>23 */) {
+                timeError = 'Inavlid Time';
+                console.log(timeError);
+              } else if (parseInt(sSecs) == 0) sSecs = '00';
+              else if (sSecs < 10) sSecs = '0' + sSecs;
+              timeValue = sHours + ':' + sMinutes +':' + sSecs;
+            }
+            newData[name] = timeValue;
+            
+          }else{
+            newData[name] = value
+          }
+       
         setdata(newData)
         console.log(data)
     }
@@ -266,17 +307,38 @@ const Notes = (props) => {
                  className="form"
                  ref={ formRef } 
                  className="form-details">
+                     <Form.Group controlId="duration">
+                        <Form.Label>Hours</Form.Label>
+                        <Form.Control 
+                        type="text" 
+                        name="hours" 
+                        placeholder = "hh:mm:ss"
+                        //defaultValue = {this.state.data.time}
+                        onChange={handleChange}/>
+                     </Form.Group>   
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>
-                        <Form.Control name="subject" type="text" onChange={handleChange}/>
+                        <Form.Control
+                         name="subject" 
+                         type="text"
+                         placeholder = "Subject"
+                         onChange={handleChange}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Note</Form.Label>
-                        <Form.Control name="notes" as="textarea" rows="4" onChange={handleChange} />
+                        <Form.Control 
+                        name="notes" 
+                        as="textarea" 
+                        rows="4"
+                        placeholder = "Note"
+                        onChange={handleChange} />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Date</Form.Label>
-                        <Form.Control name="date" type="date" onChange={handleChange} />
+                        <Form.Control 
+                        name="date" 
+                        type="date" 
+                        onChange={handleChange} />
                     </Form.Group>
                 </Form>
             </Modal>
@@ -299,9 +361,21 @@ const Notes = (props) => {
                   className="form"
                   ref={ formRef }
                   className="form-details">
+                      <Form.Group controlId="duration">
+                        <Form.Label>Duration</Form.Label>
+                        <Form.Control 
+                        type="text" 
+                        name="hours" 
+                        defaultValue = {record.hours}
+                        onChange={handleChange}/>
+                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Subject</Form.Label>
-                        <Form.Control name="subject" type="text" defaultValue = {record.subject} onChange={handleChange}/>
+                        <Form.Control 
+                        name="subject" 
+                        type="text" 
+                        defaultValue = {record.subject} 
+                        onChange={handleChange}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Note</Form.Label>
