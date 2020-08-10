@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Form } from 'react-bootstrap'
-import {Button , Table , notification, Popconfirm} from 'antd'
+import {Button , Table , notification, Popconfirm, Modal} from 'antd'
 import {connect} from 'react-redux'
 import api from '../../../../resources/api';
 
@@ -19,6 +19,10 @@ class CreateBill extends React.Component{
                 rate : "",
                 invoice : "Unbilled",
             },
+            dates : {
+                issueDate : "",
+                dueDate : ""
+            },
     
             tableData : [],
     
@@ -26,7 +30,10 @@ class CreateBill extends React.Component{
             name : "",
             Matter : "",
             LName : "",
-            touched : true
+            touched : true,
+            selected : [],
+            visible : false,
+            disable : false
     }
   }
     componentDidMount(){
@@ -48,39 +55,46 @@ class CreateBill extends React.Component{
         let expenseData = [];
         let completeData = [];
         let tableData = []
+        let selected = []
        // let today = [];
        // let thisWeek = [];
        // let thisMonth = [];
        // let thisYear = [];
         res.data.data.map((val, index) => {
           //const date = this.convertTime(val.date);
-          let sHours = ""
-          let sMinutes = ""
-          let rate = val.rate
-            if(rate.includes("$")){
-              rate = rate.substring(0, rate.length - 1)
-            }
-            if(val.type === "time" && val.time !=undefined ){
+          if(val.billed == false){
+            selected.push(false)
+            this.setState({
+              selected : selected
+            })
+            let sHours = ""
+            let sMinutes = ""
+            let rate = val.rate
+              if(rate.includes("$")){
+                rate = rate.substring(0, rate.length - 1)
+              }
+              if(val.type === "time" && val.time !=undefined ){
+             
+                sHours = val.time.split(':')[0];
+                sMinutes = val.time.split(':')[1];
+              }
+            let temp = {
+              key: index,
+              type: val.type,
+              id: val._id,
+              hours : val.type === 'time' ? val.time : val.qty,
+              client : val.matter,
+              rate: val.rate,
+              billable: val.billable ? 'Yes' : 'No',
+              invoiceStatus: 'Unbilled',
+              amount :  val.type === 'time' ? (rate * sHours + ((rate/60)*sMinutes)).toFixed(2) : (rate * val.qty).toFixed(2),
+              trustAmount : "$0.00"
+              //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
+            };
            
-              sHours = val.time.split(':')[0];
-              sMinutes = val.time.split(':')[1];
-            }
-          let temp = {
-            key: index,
-            type: val.type,
-            id: val._id,
-            hours : val.type === 'time' ? val.time : val.qty,
-            client : val.matter,
-            rate: val.rate,
-            billable: val.billable ? 'Yes' : 'No',
-            invoiceStatus: 'Unbilled',
-            amount :  val.type === 'time' ? (rate * sHours + ((rate/60)*sMinutes)).toFixed(2) : (rate * val.qty).toFixed(2),
-            trustAmount : "$0.00"
-            //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
-          };
-         
-          
-          tableData.push(temp);
+            
+            tableData.push(temp);
+          }
         });
         this.setState({
           completeData: completeData,
@@ -102,9 +116,16 @@ class CreateBill extends React.Component{
       console.log(this.state);
     }
     render(){
+      
         const handelAction = (record) => {
-            
-          }
+          let selectedActivities = this.state.selected
+          selectedActivities[record.key] = !selectedActivities[record.key]
+          this.setState({
+            selected : selectedActivities
+          })
+          console.log(this.state.selected)
+        }
+
         const column = [
             {
                 title: 'Action',
@@ -112,15 +133,8 @@ class CreateBill extends React.Component{
                 key: 'action',
                 render: (_, record) => {
                   return (
-                    <Popconfirm
-                      title="Generate bill"
-                      onConfirm={() => handelAction(record)}
-                      onCancel={this.cancel}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <Form.Check type="checkbox"  />
-                    </Popconfirm>
+                    <Form.Check type="checkbox" onChange={()=>handelAction(record)}  />
+                   
                   );
                 },
               },
@@ -145,6 +159,104 @@ class CreateBill extends React.Component{
                 key :"trustAmount"
             }
         ]
+
+        const handleCancel = ( ) =>{
+          this.setState({visible: false})
+        }
+
+        const handleChange = (e) =>{
+          const { value, name } = e.target
+          let dates = this.state.dates
+          dates[name] = value
+          this.setState({
+            dates : dates
+          })
+
+        }
+        const handleModal = ( ) => {
+          let billSelected = []
+            this.state.tableData.map((item, index)=>{
+             if( this.state.selected[index] ){
+                billSelected.push(item)
+             }
+            })
+
+          if(billSelected.length == 0){
+            notification.warning({message : "Please select a activity to bill"})
+          }else{
+            this.setState({visible: true})
+          }
+        }
+
+        const handleSubmit = ( ) =>{
+          
+         
+          let valid = true
+          
+          if(this.state.dates.issueDate === ""){
+            valid = false
+            notification.warning({message : "Please select a issue date."})
+          }else
+          if(this.state.dates.dueDate === ""){
+            valid = false
+            notification.warning({message : "Please select a due date."})
+          }
+
+          if(valid){
+            this.setState({
+              disable : true
+            })
+            
+            let billSelected = []
+            this.state.tableData.map((item, index)=>{
+             if( this.state.selected[index] ){
+                billSelected.push(item)
+             }
+            })
+
+           billSelected.map((value, index)=>{
+            const data = {
+              userId : this.props.userId,
+              status : "draft",
+            //  invoiceId: this.state.invoiceId,
+            //    client : thisMatter.data.data.client._id,
+            //  matter : ,
+              issueDate : this.state.dates.issueDate,
+              dueDate : this.state.dates.dueDate,
+              balance : value.amount,
+            //  from : thisMatter.data.data.client ,
+            //  to : this.state.to         
+            }
+            api.post('/billing/bill/create', data).then((res=>{
+              value.billed = true
+              console.log(res)
+                api
+              .post('/activity/edit/' + value.id, value )
+              .then((activity) => {
+                console.log(activity)
+                this.setState({
+                  disableExpense : false,
+                  disabletime : false
+                })
+               
+              })
+              
+              notification.success({message : "Bill Generated!"})
+              this.setState({
+                visible : false,
+                disable: false
+              })
+              this.props.history.goBack()
+            })).catch((err)=>{
+              notification.error({message : "Failure"})
+            })
+           })
+           
+           
+          }
+          
+
+        }
         return <div>
                 <Card style={{widht : "110%"}}>
                     <Card.Header>
@@ -157,14 +269,54 @@ class CreateBill extends React.Component{
                         Select billable clients to generate new bills
                         </h4>
                     </Card.Header>
-                    <Card.Body>
-                        
-                    </Card.Body>
+                    
                     <Card.Footer>
                          <Table dataSource={this.state.tableData} columns={column}></Table>
                     </Card.Footer>
                 </Card>
-                
+                <Button type="primary" onClick={handleModal}>Generate</Button>
+                <Modal
+                  title="Add details"
+                  visible={this.state.visible}
+                  onOk={handleSubmit}
+                  onCancel={handleCancel}
+                  afterClose={handleCancel}
+                  footer={[
+                    <Button  onClick={handleCancel}>
+                      Cancel
+                    </Button>,
+                    <Button type="primary" 
+                    disabled = {this.state.disable} 
+                    onClick={handleSubmit}>
+                      Submit
+                    </Button>,
+                  ]}
+                >
+                      <Form 
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form } >
+                         <Form.Group controlId="issueDate">
+                              <Form.Label>Issue Date</Form.Label>
+                              <Form.Control 
+                              required
+                              type="date" 
+                              name="issueDate" 
+                              defaultValue = {this.state.dates.issueDate}
+                              onChange={handleChange}/>
+                          </Form.Group>
+                        <Form.Group controlId="dueDate">
+                              <Form.Label>Due Date</Form.Label>
+                              <Form.Control 
+                              required
+                              type="date" 
+                              name="dueDate" 
+                              placeholder = "Select a date" 
+                              onChange={handleChange}/>
+                          </Form.Group>
+                    </Form>
+
+                </Modal>
 
             </div>
     }
