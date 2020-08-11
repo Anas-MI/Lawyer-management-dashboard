@@ -101,8 +101,9 @@ function CompanyView(props) {
 
             const sHours = parseInt(val.time.split(':')[0]);
             const sMinutes = parseInt(val.time.split(':')[1]);
+            const sSecs =  parseFloat(val.time.split(':')[2])
             console.log(sHours + "  " + sMinutes)
-            total = (total + rate * sHours + ((rate/60)*sMinutes)).toFixed('2')
+            total = total + rate * sHours + ((rate/60)*sMinutes) +  ((rate/3600)*sSecs)
           }
           if(val.type ==="expense"){ 
               total = total + rate * parseInt(val.qty)
@@ -332,7 +333,7 @@ function CompanyView(props) {
                   <p>
                     <b>Outstanding Amount</b>
                   </p>
-                     <span>{total}</span>
+                     <span>{parseFloat(total).toFixed('2')}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p>
@@ -451,7 +452,7 @@ function CompanyView(props) {
           ></Card>
         </TabPane>
         <TabPane tab="Notes" key="6">
-          <Notes></Notes>
+          <Notes id={props.location.state.id}></Notes>
         </TabPane>
         <TabPane tab="Document" key="7">
           {console.log('matter in viw', props.location.state.matters)}

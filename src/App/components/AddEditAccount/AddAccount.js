@@ -3,6 +3,7 @@ import { Form, Col, Button} from 'react-bootstrap'
 import { Card, message, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
+import { useSelector } from 'react-redux'
 
 const validNameRegex = RegExp(
     /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
@@ -11,7 +12,9 @@ const validNameRegex = RegExp(
 const AddAccount = () =>{
 
     const history = useHistory()
+    const userId = useSelector((state) => state.user.token.user._id);
     const [state, setState] = useState({
+        userId : userId,
         type: "",
         accountName: "",
         accountHolder: "",

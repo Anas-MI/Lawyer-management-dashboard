@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Menu, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined , CloseOutlined} from '@ant-design/icons';
+import { Card } from 'react-bootstrap'
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
-import { BellTwoTone } from '@ant-design/icons'
+import { BellTwoTone,CheckCircleTwoTone } from '@ant-design/icons'
 import { Drawer } from 'antd'
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
@@ -17,14 +18,106 @@ class NavRight extends Component {
         super()
         this.state = {
             listOpen: false,
-            visible : false
+            visible : false,
+            cards : []
         };
     }
    
+    componentDidMount(){
+        const view = JSON.parse(window.localStorage.getItem('notification'))
+        console.log(view)
+        let cardForNotification = []
+        cardForNotification.push(
+            <div style={{"position" : "relative"}}>
+                 <div style={{"position" : "absolute","left" : "15%"}}>
+                 <span className="align-top">__________________   </span>  
+                 <span className="align-baseline"><CheckCircleTwoTone style={{fontSize: "40px"}} twoToneColor="#52c41a" /></span>
+                 <span className="align-top">   __________________</span>
+                 <div style={{"textAlign" : "center"}}>
+                  <p style={{"fontSize" : "20px", "fontWeight" : "bold","marginTop" : "3%"}}>All clear!</p>
+                  <p style={{"marginTop" : "-7%"}}>You are all caught up.</p>
+                 </div>
+                
+            </div>
+            </div>
+            ) 
+       
+        const handleRemove = ( index  ) =>{
+            cardForNotification.splice(index , 1)
+            view.splice(index, 1)
+            window.localStorage.setItem('notification' , JSON.stringify(view))
+            this.setState({
+                cards: cardForNotification
+            })
+        }
+
+        if(view != null ){
+            console.log("we are not there")
+            view.map((value, index)=>{
+                cardForNotification.push(
+                    <Card key={index}>
+                    <Card.Header>
+                    <div className="d-flex mb-3 example-parent">
+                        <div className="mr-auto p-2 col-example"> <h4>Event Notification</h4> </div>
+                        <div className="p-2 col-example" onClick={()=>handleRemove(index)} className="float-right">
+                          <CloseOutlined />
+                        </div>
+                       
+                    </div>
+                       
+                        
+                       
+                    </Card.Header>
+                    <Card.Body>
+                        <table>
+                            <tr>
+                                <th>
+                                    Event : 
+                                </th>
+                                <th>
+                                    {value.description}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Starting Time : 
+                                </th>
+                                <th>
+                                    {value.startTime}
+                                </th>
+                            </tr>
+                            {
+                                /* 
+                                 <tr>
+                                <th>
+                                    Assosiated matter : 
+                                </th>
+                                <th>
+                                    {value.matter}
+                                </th>
+                            </tr>
+                                */
+                            }
+                           
+                        </table>
+                    </Card.Body>
+                </Card>
+                )
+            })
+            
+        }
+       
+                        
+                        
+                        
+        this.setState({
+            cards : cardForNotification
+        })  
+    }
 
     render() {
       
-    
+       
         console.log(this.props)
         const menu = (
             <Menu>
@@ -161,14 +254,20 @@ class NavRight extends Component {
                 <Drawer
                     title="Notifications"
                     placement="right"
-                    closable={false}
+                    closable={true}
                     onClose={()=>this.setState({visible : false})}
                     visible={this.state.visible}
-                    width = "350px"
+                    width = "400px"
+                    footer={[
+                        <Button className="float-right" type="primary" onClick={()=>this.setState({visible : false})}>
+                          Return
+                        </Button>,
+                        
+                      ]}
                 >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+                   {
+                        this.state.cards
+                   }
                 </Drawer>
                 <ChatList listOpen={this.state.listOpen} closed={() => {this.setState({listOpen: false});}} />
             </Aux>

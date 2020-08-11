@@ -6,13 +6,14 @@ import { connect } from 'react-redux'
 
 let optns = null
 let contacts = {}
+let accounts = {}
 class Record extends React.Component{
    constructor(props){
        super(props)
        this.state = {
            data : {
                client : "",
-            //   destination : "",
+               destination : "",
                paymentDate : "" , 
                source : "" ,
                userId : this.props.userId
@@ -25,10 +26,12 @@ class Record extends React.Component{
            payment :[],
            total : 0,
            fromTotal  : true,
+           optionforAcoount : null
 
        }
    }
    componentDidMount(){
+    let optionforAcoount = null
      api.get('/contact/viewforuser/'+this.props.userId).then((res)=>{
          contacts = res.data.data
          optns = res.data.data.map((value, index)=>{
@@ -37,7 +40,16 @@ class Record extends React.Component{
      }).then(()=>{
          this.setState({options : optns})
         })
-    
+        
+        api.get('/account/viewforuser/'+this.props.userId).then((res)=>{
+            console.log(res)
+            accounts = res.data.data
+            optionforAcoount = res.data.data.map((value, index)=>{
+             return <option id={index}>{value.accountName}</option>
+              })
+        }).then(()=>{
+            this.setState({ optionforAcoount : optionforAcoount})
+           })
     
    }
     render(){
@@ -143,9 +155,9 @@ class Record extends React.Component{
                 notification.error({message : "Please select a client"})
             }else if(this.state.data.source === "" || this.state.data.source ===  "Select a Source"){
                 notification.error({message : "Please select a source"})
-            } /* else if(this.state.data.destination === "" || this.state.data.destination === "Select a Destination"){
+            }else if(this.state.data.destination === "" || this.state.data.destination === "Select a Destination"){
                 notification.error({message : "Please select a destination"})
-            }*/else if(this.state.data.paymentDate === ""){
+            }else if(this.state.data.paymentDate === ""){
                 notification.error({message : "Please select a payment date"})
             }else{
                 this.state.clientData.map((value,id)=>{
@@ -348,7 +360,7 @@ class Record extends React.Component{
                             as="select"
                             onChange = { handleChange }>
                                 <option>Select a Destination</option>
-                                <option>Destination</option>
+                                {this.state.optionforAcoount}
                             </Form.Control>
                         </Form.Group>
                     </Col>

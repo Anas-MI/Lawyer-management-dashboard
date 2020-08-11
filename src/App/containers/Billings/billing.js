@@ -47,11 +47,11 @@ class billing extends React.Component {
           lastSeen : value.lastSeen ? value.lastSeen.substring(0,10) : "-",
           status : value.status,
           dueDate : value.dueDate.substring(0,10),
-          id : value.invoiceId,
+          id : value.invoiceId ? value.invoiceId : '-' ,
           client : value.client ? value.client.firstName + " " + value.client.lastName : "-",
-          matter : value.matter.matterDescription,
+          matter : value.matter ? value.matter.matterDescription : "-",
           issueDate : value.issueDate.substring(0,10) ,
-          balance : value.balance
+          balance : parseFloat(value.balance).toFixed('2')
         }
         if(value.status=="Paid"){
           paidBills.push(temp)
@@ -72,6 +72,8 @@ class billing extends React.Component {
     const callback = () => {};
     const handelAction = (record, type) => {
       const data = record
+      delete data.matter
+      delete data.client
       if(type === "fromDraft"){
         data.status = "Unpaid"
         
@@ -94,8 +96,8 @@ class billing extends React.Component {
 
         notification.success({message : "Success"})
         setTimeout(()=>{
-          window.location.reload()
-
+        //  window.location.reload()
+          this.componentDidMount()
         },1000)
 
       }).catch((err)=>{

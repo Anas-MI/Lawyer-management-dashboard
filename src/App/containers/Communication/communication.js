@@ -37,7 +37,8 @@ class Communication extends React.Component{
             phoneData : [],
             completeData : [],
             tableData : [],
-            editmode : false,
+            editEmail : false,
+            editPhone : false,
             disable : false
         
         }
@@ -174,7 +175,7 @@ class Communication extends React.Component{
             disable : true
           })
            
-            if(this.state.editmode){
+            if(this.state.editEmail || this.state.editPhone){
 
               let data = this.state.data
               console.log(data)
@@ -211,13 +212,15 @@ class Communication extends React.Component{
                 notification.error({ message: 'Failed' });
               })
               .then(() => {
+                ReactDOM.findDOMNode(this.messageForm).reset()
                 matterkey = null
                 fromKey = null
                 toKey = null
-                /*
+                
                 this.setState({
-                  timeModal: false,
-                  editmode: false,
+                  editPhone : false,
+                  editEmail: false,
+                  disable : false,
                   data: {
                     billable: true,
                     nonBillable: false,
@@ -227,7 +230,7 @@ class Communication extends React.Component{
                     invoice: 'Unbilled',
                   },
                 });
-                */
+                
                
                 setTimeout(() => {
                   //window.location.reload();
@@ -260,6 +263,7 @@ class Communication extends React.Component{
               .catch((err) => {
                 notification.error({ message: 'Failed' });
               }).then(()=>{
+                
                 ReactDOM.findDOMNode(this.messageForm).reset()
               })
              
@@ -276,7 +280,7 @@ class Communication extends React.Component{
         if(type==="email"){
             this.setState({
                 email : false,
-                editmode: false,
+                editEmail: false,
                 data : {
                   subject : "",
                   body : "",
@@ -289,7 +293,7 @@ class Communication extends React.Component{
         if(type==="phone"){
             this.setState({
                 phone : false,
-                editmode: false,
+                editPhone: false,
                 data : {
                   subject : "",
                   body : "",
@@ -339,42 +343,39 @@ class Communication extends React.Component{
           }
 
         } else 
-        if (name === 'addTime') {
-            timeError = '';
-            var timeValue = value;
-            if (timeValue == '' || timeValue.indexOf(':') < 0) {
+         if (name === 'addTime') {
+          timeError = '';
+          var timeValue = value;
+          if (timeValue == '' || timeValue.indexOf(':') < 0) {
+            timeError = 'Inavlid Time';
+            console.log(timeError);
+          } else {
+            var sHours = timeValue.split(':')[0];
+            var sMinutes = timeValue.split(':')[1];
+            var sSecs = timeValue.split(':')[2];
+            console.log(sSecs)
+            if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
               timeError = 'Inavlid Time';
               console.log(timeError);
-            } else {
-              var sHours = timeValue.split(':')[0];
-              var sMinutes = timeValue.split(':')[1];
-              var sSeconds = timeValue.split(':')[1];
-
-              
-    
-              if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
-                timeError = 'Inavlid Time';
-                console.log(timeError);
-              } else if (parseInt(sHours) == 0) sHours = '00';
-              else if (sHours < 10) sHours = '0' + sHours;
-    
-              if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
-                timeError = 'Inavlid Time';
-                console.log(timeError);
-              } else if (parseInt(sMinutes) == 0) sMinutes = '00';
-              else if (sMinutes < 10) sMinutes = '0' + sMinutes;
-
-              if (sSeconds == '' || isNaN(sSeconds) || parseInt(sSeconds) > 59) {
-                timeError = 'Inavlid Time';
-                console.log(timeError);
-              } /*else if (parseInt(sSeconds) == 0) sSeconds = '00';
-              else if (sSeconds < 10) sSeconds = '0' + sSeconds;
-    
-              timeValue = sHours + ':' + sMinutes + ':' + sSeconds;*/
-            }
-            newData[name] = timeValue;
-            this.setState({ data: newData });
-          } 
+            } else if (parseInt(sHours) == 0) sHours = '00';
+            else if (sHours < 10) sHours = '0' + sHours;
+  
+            if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
+              timeError = 'Inavlid Time';
+              console.log(timeError);
+            } else if (parseInt(sMinutes) == 0) sMinutes = '00';
+            else if (sMinutes < 10) sMinutes = '0' + sMinutes;
+  
+            if (sSecs == '' || isNaN(sSecs) /*|| parseInt(sHours)>23 */) {
+              timeError = 'Inavlid Time';
+              console.log(timeError);
+            } else if (parseInt(sSecs) == 0) sSecs = '00';
+            else if (sSecs < 10) sSecs = '0' + sSecs;
+            timeValue = sHours + ':' + sMinutes +':' + sSecs;
+          }
+          newData[name] = timeValue;
+          this.setState({ data: newData });
+        } 
         else 
         {
             console.log("inside last")
@@ -388,15 +389,13 @@ class Communication extends React.Component{
             
             if(record.logType==="email"){
               this.setState({
-                editmode : true,
-                  email : true,
+                editEmail : true,
                   data : record ,
                 });
             }else
             if(record.logType==="phone"){
               this.setState({
-                editmode : true,
-                  phone : true,
+                editPhone : true,
                   data : record  
                 });
             }
@@ -565,8 +564,8 @@ class Communication extends React.Component{
         </Card>
        
         <Modal
-            title={this.state.editmode ? "Edit email log" : "Add a email log"}
-            visible={this.state.email}
+            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+            visible={this.state.editEmail}
             onOk={()=>this.handleOk("email")}
             onCancel={()=>this.handleCancel("email")}
             footer={[
@@ -574,12 +573,12 @@ class Communication extends React.Component{
                 Cancel
               </Button>,
               <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
-                {this.state.editmode ? "Edit Log" : "Save Log"}
+                {this.state.editEmail ? "Edit Log" : "Save Log"}
               </Button>,
             ]}
             >
               {
-                  this.state.editmode ?
+                  this.state.editEmail ?
                   <Form 
                   id='myForm'
                   className="form"
@@ -680,6 +679,25 @@ class Communication extends React.Component{
                  </Form>    
               
                   :
+                  null
+              }
+        </Modal>
+        <Modal
+            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+            visible={this.state.email}
+            onOk={()=>this.handleOk("email")}
+            onCancel={()=>this.handleCancel("email")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("email")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                {this.state.editEmail ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
+            >
+              {           
+    
                   <Form  
                   id='myForm'
                   className="form"
@@ -782,8 +800,8 @@ class Communication extends React.Component{
               }
         </Modal>
         <Modal
-            title={this.state.editmode ? "Edit phone log" : "Add a phone log"}
-            visible={this.state.phone}
+            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
+            visible={this.state.editPhone}
             onOk={()=>this.handleOk("phone")}
             onCancel={()=>this.handleCancel("phone")}
             footer={[
@@ -791,12 +809,12 @@ class Communication extends React.Component{
                 Cancel
               </Button>,
               <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
-                {this.state.editmode ? "Edit Log" : "Save Log"}
+                {this.state.editPhone ? "Edit Log" : "Save Log"}
               </Button>,
             ]}
             >
             {
-              this.state.editmode ?
+            
               <Form 
               id='myForm'
               className="form"
@@ -905,7 +923,26 @@ class Communication extends React.Component{
            
               </Form>    
           
-              :
+           
+            }
+              
+        </Modal>
+        <Modal
+            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
+            visible={this.state.phone}
+            onOk={()=>this.handleOk("phone")}
+            onCancel={()=>this.handleCancel("phone")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("phone")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                {this.state.editPhone ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
+            >
+            {
+             
               <Form 
               id='myForm'
                          className="form"
@@ -917,7 +954,7 @@ class Communication extends React.Component{
                       <Form.Control 
                       type="text" 
                       name="addTime" 
-                      placeholder="hh:mm" 
+                      placeholder="hh:mm:ss" 
                       onChange={handleChange}/>
                   </Form.Group>
                    </Col>
