@@ -56,17 +56,18 @@ class CreateBill extends React.Component{
         let completeData = [];
         let tableData = []
         let selected = []
+        let id = 0
+
        // let today = [];
        // let thisWeek = [];
        // let thisMonth = [];
        // let thisYear = [];
         res.data.data.map((val, index) => {
           //const date = this.convertTime(val.date);
+          
           if(val.billed == false){
             selected.push(false)
-            this.setState({
-              selected : selected
-            })
+           
             let sHours = ""
             let sMinutes = ""
             let rate = val.rate
@@ -79,11 +80,13 @@ class CreateBill extends React.Component{
                 sMinutes = val.time.split(':')[1];
               }
             let temp = {
-              key: index,
+              key: id,
+              index : index,
               type: val.type,
               id: val._id,
               hours : val.type === 'time' ? val.time : val.qty,
-              client : val.matter,
+              client : val.matter.client.firstName + " " + val.matter.client.lastName ,
+              matter : val.matter,
               rate: val.rate,
               billable: val.billable ? 'Yes' : 'No',
               invoiceStatus: 'Unbilled',
@@ -91,14 +94,14 @@ class CreateBill extends React.Component{
               trustAmount : "$0.00"
               //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
             };
-           
-            
+            id++
             tableData.push(temp);
           }
         });
         this.setState({
           completeData: completeData,
           tableData: tableData,
+          selected : selected
         });
       });
       
@@ -118,6 +121,7 @@ class CreateBill extends React.Component{
     render(){
       
         const handelAction = (record) => {
+          console.log(record.key)
           let selectedActivities = this.state.selected
           selectedActivities[record.key] = !selectedActivities[record.key]
           this.setState({
@@ -219,8 +223,8 @@ class CreateBill extends React.Component{
               userId : this.props.userId,
               status : "draft",
             //  invoiceId: this.state.invoiceId,
-            //    client : thisMatter.data.data.client._id,
-            //  matter : ,
+              client : activity[value.index].matter.client._id,
+              matter : value.matter._id ,
               issueDate : this.state.dates.issueDate,
               dueDate : this.state.dates.dueDate,
               balance : value.amount,

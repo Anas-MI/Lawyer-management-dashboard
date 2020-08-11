@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from  'react'
-import { Table, notification, Button } from 'antd';
+import { Table, notification, Button, Popconfirm } from 'antd';
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
 import { useSelector } from 'react-redux'
@@ -9,24 +9,42 @@ const Accounts = () => {
     const [state, setState] = useState([])
     const userId = useSelector((state) => state.user.token.user._id);
     
-    useEffect(() => {
+    const fetchAccount = ( ) =>{
       api
       .get('/account/viewforuser/' + userId)
       .then((res) => {
-        setState([...state, ...res.data.data])
+        console.log(res)
+        const tableData = []
+        res.data.data.map((value, index) => {
+          console.log(value.defaultAccount)
+          const data = {
+            _id : value._id,
+            key : index,
+            accountName : value.accountName,
+            currency : value.currency,
+            openingBalance : value.openingBalance,
+            type :  value.defaultAccount ? "Yes" : "No"
+          }
+          tableData.push(data)
+        })
+        setState(tableData)
       })
       .catch((err) => {
         console.log(err); 
       });
+    }
+    useEffect(() => {
+      fetchAccount()
     }, []);
 
     const handleDelete = (record) =>{
         console.log(record)
         api.get('/account/delete/'+record._id)
         .then((res)=>{
+          fetchAccount()
           notification.success({message : "Account Deleted !"})
           setTimeout(() => {
-            window.location.reload()
+           // window.location.reload()
           }, 1000);
         })
         .catch((err)=>{
@@ -58,9 +76,18 @@ const Accounts = () => {
           key: "_id",
           render:(_,record)=>{
               return (
-                  <Button variant='danger' onClick={()=>handleDelete(record)}>
+                <Popconfirm
+                    title="Are you sure delete this Account?"
+                    onConfirm={()=>handleDelete(record)}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button  danger>
                       Delete
                   </Button>
+                  </Popconfirm>
+                  
                   )
               }
         },
@@ -70,7 +97,7 @@ const Accounts = () => {
             key: "_id",
             render:(_,record)=>{
                 return (
-                    <Button variant='danger' onClick={() => { history.push('/edit/accounts', record._id)}} >
+                    <Button  onClick={() => { history.push('/edit/accounts', record._id)}} >
                         Edit
                     </Button>
                 )

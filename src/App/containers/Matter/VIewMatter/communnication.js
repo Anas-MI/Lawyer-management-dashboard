@@ -3,14 +3,23 @@ import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'a
 import { useSelector, connect } from 'react-redux';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Emailform from '../../Communication/form/emailform'
 import api from '../../../../resources/api'
+import { Form, Col, Row } from 'react-bootstrap'
+import ReactDOM from 'react-dom'
+
 
 let timeError = "" ;
 let matters = {};
 let communication = {};
+let contact = {}
+let option = null
+let optns = null
+let matterkey = null
+let fromKey = null
+let toKey = null
 const user = JSON.parse(window.localStorage.getItem('Case.user'))
 const name = user.token.user.firstName + " " + user.token.user.lastName;
+console.log(user.token.user)
 
 class Communication extends React.Component{
     constructor(props){
@@ -22,13 +31,15 @@ class Communication extends React.Component{
             data : {
                 subject : "",
                 body : "",
-                from : name
+                from : user.token.user._id
             },
             emailData : [],
             phoneData : [],
             completeData : [],
             tableData : [],
-            editmode : false
+            editEmail : false,
+            editPhone : false,
+            disable : false
         
         }
     }
@@ -41,33 +52,50 @@ class Communication extends React.Component{
       return locdat;
     };
     componentDidMount() {
+     
+     api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
+       matters = res
+            option = res.data.data.map((val, index)=>{
+                 return <option>{val.matterDescription}</option>
+             })
+         }).then(()=>{
+             console.log(option)
+             this.setState({option : option})
+         })
 
-      api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
-        matters = res;
-      });
+      api.get('/contact/viewforuser/'+this.props.userId).then((res)=>{
+        contact = res
+          optns = res.data.data.map((value, index)=>{
+  
+              return <option id={index}>{value.firstName + " " + value.lastName}</option>
+             })
+       }).then(()=>{this.setState({contacts : optns})})
     
       api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
         communication = res.data.data;
-       
+       console.log(communication)
 
         let emailData = [];
         let phoneData = [];
         let completeData = [];
         
         res.data.data.map((val, index) => {
-          const date = this.convertTime(val.date);
+        
           const temp = {
             key: index,
-            type: val.logType,
+            logType: val.logType,
             id: val._id,
-            addTime: val.addTime ? val.addTime : '',
+            addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
             matter: val.matter ? val.matter.matterDescription : '-',
-            from: val.from ? val.to.firstName + " " + val.to.lastName : '-',
+            matterId : val.matter ? val.matter._id : "",
+            from: val.from ? val.from.firstName + " " + val.from.lastName  : '-',
+            fromId : val.from ? val.from._id : "",
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
+            toId : val.to ? val.to._id : "",
             subject: val.subject ? val.subject : '-',
             body: val.body,
-            date: date          
+            date: val.date ? val.date.substring(0,10) : "-"      
           };
           if (val.logType === 'email') {
             emailData.push(temp);
@@ -124,31 +152,58 @@ class Communication extends React.Component{
             notification.error({message : "Please add a subject"})
         }else
         if(this.state.data.body == ""){
-            notification.error({message : "Please add a subject"})
+            notification.error({message : "Please add a body"})
         }else{
-          let data = this.state.data
+          this.setState({
+            disable : true
+          })
+           
+            if(this.state.editEmail || this.state.editPhone){
+
+              let data = this.state.data
+              console.log(data)
+              if(matterkey == null){
+                data.matter = data.matterId
+              }
+              if(fromKey == null){
+                data.from = data.fromId
+              }
+              if(toKey == null){
+                data.to = data.toId
+              }
             if(type === "email"){
               data.logType = "email"
               this.setState({email : false})
             }else
             if(type === "phone"){
               data.logType = "phone"
-              this.setState({email : false})
+              this.setState({phone : false})
             }
             data.userId = this.props.userId;
+            console.log(data)
             api
-              .post('/communication/create', data)
+              .post('/communication/edit/'+ this.state.data.id, data)
               .then((res) => {
-                notification.success({ message: 'Log Added !' });
+                console.log(res)
+                this.componentDidMount()
+                this.setState({
+                  disable : false
+                })
+                notification.success({ message: 'Log Edited !' });
               })
               .catch((err) => {
                 notification.error({ message: 'Failed' });
               })
               .then(() => {
-                /*
+                ReactDOM.findDOMNode(this.messageForm).reset()
+                matterkey = null
+                fromKey = null
+                toKey = null
+                
                 this.setState({
-                  timeModal: false,
-                  editmode: false,
+                  editPhone : false,
+                  editEmail: false,
+                  disable : false,
                   data: {
                     billable: true,
                     nonBillable: false,
@@ -158,21 +213,57 @@ class Communication extends React.Component{
                     invoice: 'Unbilled',
                   },
                 });
-                */
-               /*
+                
+               
                 setTimeout(() => {
-                  window.location.reload();
-                }, 1500);*/
+                  //window.location.reload();
+                }, 1500)
               });
   
+
+            }else{
+              let data = this.state.data
+            if(type === "email"){
+              data.logType = "email"
+              this.setState({email : false})
+            }else
+            if(type === "phone"){
+              data.logType = "phone"
+              this.setState({phone : false})
+            }
+            data.userId = this.props.userId;
+            console.log(data)
+            api
+              .post('/communication/create', data)
+              .then((res) => {
+                console.log(res)
+                this.setState({
+                  disable : false
+                })
+                this.componentDidMount()
+                notification.success({ message: 'Log Added !' });
+              })
+              .catch((err) => {
+                notification.error({ message: 'Failed' });
+              }).then(()=>{
+                
+                ReactDOM.findDOMNode(this.messageForm).reset()
+              })
+             
+  
+            }
         }   
       };
     
       handleCancel = type => {
+        ReactDOM.findDOMNode(this.messageForm).reset()
+        matterkey = null
+        fromKey = null
+        toKey = null
         if(type==="email"){
             this.setState({
                 email : false,
-                editmode: false,
+                editEmail: false,
                 data : {
                   subject : "",
                   body : "",
@@ -185,20 +276,21 @@ class Communication extends React.Component{
         if(type==="phone"){
             this.setState({
                 phone : false,
-                editmode: false,
+                editPhone: false,
                 data : {
                   subject : "",
                   body : "",
                   from : name
               },
               });
-              console.log(this.state)     
+              console.log(this.state)
+        
         }
-        /*
+        
         setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        */
+        //  window.location.reload();
+        }, 500);
+        
        
       
       };
@@ -209,14 +301,32 @@ class Communication extends React.Component{
         this.setState({ touched: false });
         const { name, id, value, selectedIndex } = e.target;
         let newData = this.state.data;
+
         if (name === 'matter') {
+
+          console.log("inside matter")
+          if (selectedIndex >= 1) {
+            matterkey = ""
+            console.log(matters.data.data[selectedIndex - 1]._id)
+            newData[name] = matters.data.data[selectedIndex - 1]._id;
+            console.log("inside matter > 1 ")
+          } else {
+            newData[name] = '';
+            console.log("inside matte.....r")
+          }
+
+        }else
+        if (name === 'to' || name === 'from') {
           console.log(matters)
           if (selectedIndex >= 1) {
-            newData[name] = matters.data.data[selectedIndex - 1];
+            name === 'to' ? toKey = "" : fromKey = ""
+            newData[name] = contact.data.data[selectedIndex - 1]._id;
           } else {
             newData[name] = '';
           }
-        } else if (name === 'addTime') {
+
+        } else 
+         if (name === 'addTime') {
           timeError = '';
           var timeValue = value;
           if (timeValue == '' || timeValue.indexOf(':') < 0) {
@@ -225,10 +335,8 @@ class Communication extends React.Component{
           } else {
             var sHours = timeValue.split(':')[0];
             var sMinutes = timeValue.split(':')[1];
-            var sSeconds = timeValue.split(':')[1];
-
-            
-  
+            var sSecs = timeValue.split(':')[2];
+            console.log(sSecs)
             if (sHours == '' || isNaN(sHours) /*|| parseInt(sHours)>23 */) {
               timeError = 'Inavlid Time';
               console.log(timeError);
@@ -240,52 +348,51 @@ class Communication extends React.Component{
               console.log(timeError);
             } else if (parseInt(sMinutes) == 0) sMinutes = '00';
             else if (sMinutes < 10) sMinutes = '0' + sMinutes;
-
-            if (sSeconds == '' || isNaN(sSeconds) || parseInt(sSeconds) > 59) {
+  
+            if (sSecs == '' || isNaN(sSecs) /*|| parseInt(sHours)>23 */) {
               timeError = 'Inavlid Time';
               console.log(timeError);
-            } else if (parseInt(sSeconds) == 0) sSeconds = '00';
-            else if (sSeconds < 10) sSeconds = '0' + sSeconds;
-  
-            timeValue = sHours + ':' + sMinutes + ':' + sSeconds;
+            } else if (parseInt(sSecs) == 0) sSecs = '00';
+            else if (sSecs < 10) sSecs = '0' + sSecs;
+            timeValue = sHours + ':' + sMinutes +':' + sSecs;
           }
           newData[name] = timeValue;
           this.setState({ data: newData });
         } 
-        else {
-          newData[name] = value;
-          this.setState({ data: newData });
-        }
-  
+        else 
+        {
+            console.log("inside last")
+            newData[name] = value;
+            this.setState({ data: newData });
+          }
+    
         console.log(this.state);
       };
         const handleEdit = record => {
             
-            if(record.type==="email"){
+            if(record.logType==="email"){
               this.setState({
-                editmode : true,
-                  email : true,
+                editEmail : true,
                   data : record ,
                 });
-          }else
-          if(record.type==="phone"){
+            }else
+            if(record.logType==="phone"){
               this.setState({
-                editmode : true,
-                  phone : true,
+                editPhone : true,
                   data : record  
                 });
-          }
-        
-                
             }
+            console.log(record)
+                
+          }
             
             const handleDelete = record => {
             
               api.get('/communication/delete/'+record.id).then((res)=>{
-  
+                this.componentDidMount()
                 notification.success({message : "Log Deleted !"})
                 setTimeout(()=>{
-                  window.location.reload()
+                  //window.location.reload()
                 },1500)
               }).catch((err)=>{
     
@@ -418,6 +525,10 @@ class Communication extends React.Component{
             doc.save("Activity.pdf")
           }
         return <div className='p-2 '>
+            
+        <br></br>
+        <br></br>
+        
         <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
             <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
             <Button onClick={()=>this.showModal("email")}>New email log</Button>
@@ -436,21 +547,494 @@ class Communication extends React.Component{
         </Card>
        
         <Modal
-            title="New email log"
+            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+            visible={this.state.editEmail}
+            onOk={()=>this.handleOk("email")}
+            onCancel={()=>this.handleCancel("email")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("email")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                {this.state.editEmail ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
+            >
+              {
+                  this.state.editEmail ?
+                  <Form 
+                  id='myForm'
+                  className="form"
+                  ref={ form => this.messageForm = form }>
+                   <Row>
+                       
+                       <Col>
+                       <Form.Group>
+                   <Form.Label>Matter</Form.Label>
+                          <Form.Control 
+                              as="select"
+                              name="matter" 
+                              defaultValue = {this.state.data.matter}
+                              onChange={handleChange}>
+                          <option>Select a matter</option>
+                          {this.state.option}
+                          </Form.Control>
+                   </Form.Group>
+                       </Col>
+                   </Row>
+                 
+                  <Row>
+                      <Col >
+                      <Form.Group>
+                           <Form.Label>From</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="from" 
+                               defaultValue = {this.state.data.from}
+                               onChange={handleChange}>
+                               <option>Select a contact</option>    
+                           {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                      
+                      <Col>
+                      <Form.Group >
+                           <Form.Label>To</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="to" 
+                               defaultValue = {this.state.data.to}
+                               onChange={handleChange}>
+                               <option>Select a contact</option>
+                               {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                  </Row>
+                   <Row>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Time</Form.Label>
+                          <Form.Control 
+                          required
+                          type="time" 
+                          name="time" 
+                          defaultValue = {this.state.data.time}
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Date</Form.Label>
+                          <Form.Control 
+                          required
+                          type="date" 
+                          name="date" 
+                          defaultValue = {this.state.data.date} 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+           
+                   </Row>
+                 
+                  <Form.Group controlId="subject">
+                           <Form.Label>Subject</Form.Label>
+                           <Form.Control 
+                           name="subject" 
+                           rows="3"
+                           defaultValue = {this.state.data.subject}
+                           onChange={handleChange} />
+                       </Form.Group>  
+               
+                  
+                       <Form.Group controlId="body">
+                           <Form.Label>Body</Form.Label>
+                           <Form.Control 
+                           name="body" 
+                           as="textarea" 
+                           rows="3"
+                           defaultValue = {this.state.data.body}
+                           onChange={handleChange} />
+                       </Form.Group>
+                  
+               
+                 </Form>    
+              
+                  :
+                  null
+              }
+        </Modal>
+        <Modal
+            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
             visible={this.state.email}
             onOk={()=>this.handleOk("email")}
             onCancel={()=>this.handleCancel("email")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("email")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                {this.state.editEmail ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
             >
-            <Emailform from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></Emailform>
-       {/*     <TimeForm  record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></TimeForm> */}
+              {           
+    
+                  <Form  
+                  id='myForm'
+                  className="form"
+                  ref={ form => this.messageForm = form }>
+                   <Row>
+                       
+                       <Col>
+                       <Form.Group>
+                   <Form.Label>Matter</Form.Label>
+                          <Form.Control 
+                              as="select"
+                              name="matter" 
+                              placeholder="Matter"
+                              onChange={handleChange}>
+                          <option>Select a matter</option>
+                          {this.state.option}
+                          </Form.Control>
+                   </Form.Group>
+                       </Col>
+                   </Row>
+                 
+                  <Row>
+                      <Col >
+                      <Form.Group>
+                           <Form.Label>From</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="from" 
+                               placeholder="Select a contact"
+                               onChange={handleChange}>
+                          <option>Select a contact</option>    
+                         {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                      
+                      <Col>
+                      <Form.Group >
+                           <Form.Label>To</Form.Label>
+                           <Form.Control 
+                               as="select"
+                               name="to" 
+                               placeholder="Select a contact"
+                               onChange={handleChange}>
+                               <option>Select a contact</option>
+                               {this.state.contacts}
+                           </Form.Control>
+                           </Form.Group>
+                      </Col>
+                  </Row>
+                   <Row>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Time</Form.Label>
+                          <Form.Control 
+                          required
+                          type="time" 
+                          name="time" 
+                          placeholder="Time" 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+                       <Col>
+                       <Form.Group controlId="date">
+                          <Form.Label>Date</Form.Label>
+                          <Form.Control 
+                          required
+                          type="date" 
+                          name="date" 
+                          placeholder="Date" 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
+           
+                   </Row>
+                 
+                  <Form.Group controlId="subject">
+                           <Form.Label>Subject</Form.Label>
+                           <Form.Control 
+                           name="subject" 
+                           rows="3"
+                           placeholder="subject"
+                           onChange={handleChange} />
+                       </Form.Group>  
+               
+                  
+                       <Form.Group controlId="body">
+                           <Form.Label>Body</Form.Label>
+                           <Form.Control 
+                           name="body" 
+                           as="textarea" 
+                           rows="3"
+                           placeholder="body"
+                           onChange={handleChange} />
+                       </Form.Group>
+                  
+               
+              </Form>    
+               
+              }
         </Modal>
         <Modal
-            title="New phone log"
+            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
+            visible={this.state.editPhone}
+            onOk={()=>this.handleOk("phone")}
+            onCancel={()=>this.handleCancel("phone")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("phone")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                {this.state.editPhone ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
+            >
+            {
+            
+              <Form 
+              id='myForm'
+              className="form"
+              ref={ form => this.messageForm = form }>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="duration">
+                      <Form.Label>Duration</Form.Label>
+                      <Form.Control 
+                      type="text" 
+                      name="addTime" 
+                      defaultValue = {this.state.data.addTime}
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group>
+               <Form.Label>Matter</Form.Label>
+                      <Form.Control 
+                          as="select"
+                          name="matter" 
+                          defaultValue = {this.state.data.matter}
+                          onChange={handleChange}>
+                      <option>Select a matter</option>
+                      {this.state.option}
+                      </Form.Control>
+               </Form.Group>
+                   </Col>
+               </Row>
+             
+              <Row>
+                  <Col >
+                  <Form.Group>
+                       <Form.Label>From</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="from" 
+                           defaultValue = {this.state.data.from}
+                           onChange={handleChange}>
+                           <option>Select a contact</option> 
+                       {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+                  
+                  <Col>
+                  <Form.Group >
+                       <Form.Label>To</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="to" 
+                           defaultValue = {this.state.data.to}
+                           onChange={handleChange}>
+                           <option>Select a contact</option>
+                           {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+              </Row>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Time</Form.Label>
+                      <Form.Control 
+                      required
+                      type="time" 
+                      name="time" 
+                      defaultValue = {this.state.data.time}
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control 
+                      required
+                      type="date" 
+                      name="date" 
+                      defaultValue = {this.state.data.date} 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+       
+               </Row>
+             
+              <Form.Group controlId="subject">
+                       <Form.Label>Subject</Form.Label>
+                       <Form.Control 
+                       name="subject" 
+                       rows="3"
+                       defaultValue = {this.state.data.subject}
+                       onChange={handleChange} />
+                   </Form.Group>  
+           
+              
+                   <Form.Group controlId="body">
+                       <Form.Label>Body</Form.Label>
+                       <Form.Control 
+                       name="body" 
+                       as="textarea" 
+                       rows="3"
+                       defaultValue = {this.state.data.body}
+                       onChange={handleChange} />
+                   </Form.Group>
+              
+           
+              </Form>    
+          
+           
+            }
+              
+        </Modal>
+        <Modal
+            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
             visible={this.state.phone}
             onOk={()=>this.handleOk("phone")}
             onCancel={()=>this.handleCancel("phone")}
+            footer={[
+              <Button  onClick={()=>this.handleCancel("phone")}>
+                Cancel
+              </Button>,
+              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                {this.state.editPhone ? "Edit Log" : "Save Log"}
+              </Button>,
+            ]}
             >
-            <Emailform from={name} record={this.state.data} editmode={this.state.editmode} handleChange={handleChange}></Emailform>
+            {
+             
+              <Form 
+              id='myForm'
+                         className="form"
+                         ref={ form => this.messageForm = form }>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="duration">
+                      <Form.Label>Duration</Form.Label>
+                      <Form.Control 
+                      type="text" 
+                      name="addTime" 
+                      placeholder="hh:mm:ss" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group>
+               <Form.Label>Matter</Form.Label>
+                      <Form.Control 
+                          as="select"
+                          name="matter" 
+                          placeholder="Matter"
+                          onChange={handleChange}>
+                      <option>Select a matter</option>
+                      {this.state.option}
+                      </Form.Control>
+               </Form.Group>
+                   </Col>
+               </Row>
+             
+              <Row>
+                  <Col >
+                  <Form.Group>
+                       <Form.Label>From</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="from" 
+                           placeholder="Select a contact"
+                           onChange={handleChange}>
+                      <option>Select a contact</option>     
+                     {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+                  
+                  <Col>
+                  <Form.Group >
+                       <Form.Label>To</Form.Label>
+                       <Form.Control 
+                           as="select"
+                           name="to" 
+                           placeholder="Select a contact"
+                           onChange={handleChange}>
+                           <option>Select a contact</option>
+                           {this.state.contacts}
+                       </Form.Control>
+                       </Form.Group>
+                  </Col>
+              </Row>
+               <Row>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Time</Form.Label>
+                      <Form.Control 
+                      required
+                      type="time" 
+                      name="time" 
+                      placeholder="Time" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+                   <Col>
+                   <Form.Group controlId="date">
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control 
+                      required
+                      type="date" 
+                      name="date" 
+                      placeholder="Date" 
+                      onChange={handleChange}/>
+                  </Form.Group>
+                   </Col>
+       
+               </Row>
+             
+              <Form.Group controlId="subject">
+                       <Form.Label>Subject</Form.Label>
+                       <Form.Control 
+                       name="subject" 
+                       rows="3"
+                       placeholder="subject"
+                       onChange={handleChange} />
+                   </Form.Group>  
+           
+              
+                   <Form.Group controlId="body">
+                       <Form.Label>Body</Form.Label>
+                       <Form.Control 
+                       name="body" 
+                       as="textarea" 
+                       rows="3"
+                       placeholder="body"
+                       onChange={handleChange} />
+                   </Form.Group>
+              
+           
+          </Form>    
+            }
+              
         </Modal>
     </div>
     }
