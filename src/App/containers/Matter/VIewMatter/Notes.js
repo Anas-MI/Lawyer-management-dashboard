@@ -22,7 +22,8 @@ const Notes = (props) => {
     let timeError = ""
   
     const fetchNotes = ( ) => {
-        api.get('/notes/viewforuser/'+userId).then((res)=>{
+  
+        api.get('/notes/viewformatter/'+userId + '/' + props.id).then((res)=>{
             console.log(res)
             let notes = []
             res.data.data.map((value , index)=>{
