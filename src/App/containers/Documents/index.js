@@ -8,6 +8,7 @@ import {
   Input,
   Form,
   Select,
+  Popconfirm
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -92,14 +93,20 @@ const Documents = () => {
       key: '7',
       render: (_, record) => {
         return (
-          <Button
-            className=" btn-outline-danger "
-            onClick={() => {
-              deleteHandler(record._id);
-            }}
-          >
-            Delete
-          </Button>
+          <Popconfirm
+                    title="Are you sure delete this Account?"
+                    onConfirm={()=>deleteHandler(record._id)}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button
+                      className=" btn-outline-danger "
+                    >
+                      Delete
+                    </Button>
+                  </Popconfirm>
+          
         );
       },
     },
@@ -131,6 +138,8 @@ const Documents = () => {
     },
   };
   const handleInput = (item) => (e) => {
+    console.log(item)
+    console.log(e)
     if (item === 'document') {
       setUploadData({ ...uploadData, document: e.target.files[0] });
     } else {
@@ -143,6 +152,7 @@ const Documents = () => {
         setUploadData({ ...uploadData });
       }
     }
+    console.log(uploadData)
   };
   const getISTDate = (dateInUTC) => {
     var localDate = new Date(dateInUTC);

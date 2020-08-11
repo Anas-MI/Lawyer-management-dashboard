@@ -442,15 +442,20 @@ function CompanyView(props) {
           />
         </TabPane>
         <TabPane tab="Communication" key="4">
-          <Communication></Communication>
+          <Communication id={props.location.state.id}></Communication>
         </TabPane>
-        <TabPane tab="Phone Log" key="5">
+        {
+          /*
+          <TabPane tab="Phone Log" key="5">
           <Card
             title="Phone Log"
             extra={<a href="#"></a>}
             className="form-width mb-4"
           ></Card>
-        </TabPane>
+             </TabPane>
+          */
+        }
+     
         <TabPane tab="Notes" key="6">
           <Notes id={props.location.state.id}></Notes>
         </TabPane>
