@@ -176,12 +176,13 @@ const AddAccount = () =>{
             .post("/account/create", state)
             .then((res) => {
                 console.log(res)
+                history.goBack();
             })
             .catch((err) => {
                 console.log(err); 
               });
         }
-        history.goBack();
+        
       }
 
     return(

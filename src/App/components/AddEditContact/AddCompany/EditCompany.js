@@ -144,28 +144,25 @@ class editCompany extends React.Component {
           .post('/company/edit/' + this.props.location.state._id, data)
           .then(() => {
             this.openNotificationWithIcon('success')
-              window.localStorage.setItem('company', "true")
-          })
-          .catch((err) => this.openNotificationWithfailure('error'));
-          setTimeout(() => {
             if (this.props.location != undefined) {
               this.props.history.goBack();
             }
-           }, 600);
+              window.localStorage.setItem('company', "true")
+          })
+          .catch((err) => this.openNotificationWithfailure('error'));
+         
         } else {
           api
             .post('company/create', data)
             .then(() => {
               this.openNotificationWithIcon('success')
+              if (this.props.location != undefined) {
+                this.props.history.goBack();
+              }
               window.localStorage.setItem('company', "true")
             })
             .catch((err) => this.openNotificationWithfailure('error'));
-         setTimeout(() => {
-          if (this.props.location != undefined) {
-            this.props.history.goBack();
           }
-         }, 600);
-        }
       }
       
     } else {

@@ -152,17 +152,18 @@ class AddCompany extends React.Component {
             .post('company/create', data)
             .then(() => {
               this.openNotificationWithIcon('success')
-              
               window.localStorage.setItem('company', "true")
+              this.setState({
+                disable : false
+              })
+              if (this.props.location != undefined) {
+                this.props.history.goBack();
+                
+              }
             })
             .catch((err) => this.openNotificationWithfailure('error'));
          setTimeout(() => {
-          if (this.props.location != undefined) {
-            this.props.history.goBack();
-            this.setState({
-              disable : false
-            })
-          }
+          
          }, 600);
         }
       }

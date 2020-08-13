@@ -169,7 +169,13 @@ class AddEditMatter extends React.Component{
        if(editMode){
         api.post('/matter/edit/'+this.props.location.state, data).then((res)=>{
             console.log(res)
-            this.openNotificationWithIcon('success')}).catch(()=>this.openNotificationWithfailure('error'))
+            this.openNotificationWithIcon('success')
+            if(this.props.location!=undefined){
+              this.props.history.goBack()
+             }
+          }).catch(()=>{
+            this.openNotificationWithfailure('error')
+          })
             /*
              if(this.props.location!=undefined){
                this.props.history.goBack()
@@ -181,9 +187,7 @@ class AddEditMatter extends React.Component{
          
        }
 
-       if(this.props.location!=undefined){
-        this.props.history.goBack()
-       }
+       
     }
   }
   
