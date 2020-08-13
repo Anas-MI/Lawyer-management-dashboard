@@ -13,14 +13,38 @@ class AdminDashboard extends React.Component {
 
     constructor(){
         super()
-        this.state={
-            totalLawyers:0
+        this.state = {
+            totalLawyers : 0,
+            totalMatters : 0,
+            totalContacts : 0,
+
         }
     }
     componentDidMount(){
+    
         api.get("/user/count").then(data => {if(data.data.status){
             this.setState({totalLawyers: data.data.data})
         }})
+
+        let mattersCount = 0
+        api.get("/matter/showall").then((res)=>{
+            console.log(res)
+            mattersCount = res.data.data.length
+           
+            this.setState({
+                totalMatters : mattersCount
+            })
+        })
+
+        let contactsCount 
+        api.get("/contact/showall").then((res)=>{
+            console.log(res)
+            contactsCount = res.data.data.length
+           
+            this.setState({
+                totalContacts : contactsCount
+            })
+        })
     }
 
     render() {
@@ -116,7 +140,7 @@ class AdminDashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                             314</h3>
+                                            {this.state.totalMatters}</h3>
                                     </div>
 
                                     {/* <div className="col-8 text-right">
@@ -137,7 +161,7 @@ class AdminDashboard extends React.Component {
                                     <div className="col-4">
                                         <h3 className="f-w-300 d-flex align-items-center m-b-0">
                                             {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                            453</h3>
+                                            {this.state.totalContacts}</h3>
                                     </div>
 
                                     {/* <div className="col-8 text-right">

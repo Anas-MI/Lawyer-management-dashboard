@@ -1,14 +1,15 @@
 import React from 'react'
 import { Table, Tag, Space } from 'antd';
+import { Card } from 'react-bootstrap'
 
-const Support = () =>{
+const Support = (props) =>{
 
     const columns = [
         {
           title: 'Requested By',
           dataIndex: 'name',
           key: 'name',
-          render: text => <a>{text}</a>,
+          render: text => <a style={{"color" : "blue"}}>{text}</a>,
         },
         {
           title: 'ID',
@@ -77,15 +78,34 @@ const Support = () =>{
           tags: ['open'],
         },
       ];
-
+    
+      const handleView = (record) => {
+        props.history.push('/view/ticket', record._id);
+      };
 
 
     return (
         <>
-        <div className="mb-4">
-            <h3>ALL Tickets</h3>
-        </div>
-        <Table columns={columns} dataSource={data} />
+        <Card>
+          <Card.Header>
+            <div className="mb-4">
+                <h3>ALL TICKETS</h3>
+            </div>
+          </Card.Header>
+          <Card.Body>
+             <Table 
+             columns={columns} 
+             dataSource={data} 
+             onRow={(record, rowIndex) => {
+              return {
+                onDoubleClick: () => handleView(record), // double click row
+                onContextMenu: (event) => {}, // right button click row
+                onMouseEnter: (event) => {}, // mouse enter row
+                onMouseLeave: (event) => {}, // mouse leave row
+              };
+            }}/>
+          </Card.Body>
+        </Card>
         </>
     );
 }

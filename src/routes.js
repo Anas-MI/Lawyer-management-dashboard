@@ -127,6 +127,12 @@ const EditAccount = React.lazy(() =>
 const profile = React.lazy(() =>
   import('./App/containers/Settings/profile/index')
 );
+const viewTicket = React.lazy(() =>
+  import('./App/containers/SupportManagement/ViewTicket/view')
+);
+
+const viewSubscription = React.lazy(()=>import('./App/containers/SubscriptionManagement/ViewTicket/view'))
+
 
 const Target = React.lazy(() => import('./App/containers/Target'));
 
@@ -210,6 +216,18 @@ export const adminRoutes = [
     exact: true,
     name: 'Manage Subscription',
     component: SubscriptionManagement,
+  },
+  {
+    path: '/view/subscription',
+    exact: true,
+    name: 'view Subscription',
+    component: viewSubscription,
+  },
+  {
+    path: '/view/ticket',
+    exact: true,
+    name: 'view ticket',
+    component: viewTicket,
   },
 
   // { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
