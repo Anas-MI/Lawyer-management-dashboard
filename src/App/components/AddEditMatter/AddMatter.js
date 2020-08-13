@@ -104,16 +104,22 @@ class AddEditMatter extends React.Component{
        if(this.state.editMode){
           //  dispatch(updateBlog({id:state._id,body:state}))
        }else{
-         api.post('matter/create', data).then(res=>console.log(res)).then(()=>this.openNotificationWithIcon('success')).catch(()=>this.openNotificationWithfailure('error'))
+         api.post('matter/create', data).then((res)=>{
+          console.log(res)
+          this.openNotificationWithIcon('success')
+          this.setState({
+            disable : false
+          })
+          if(this.props.location != undefined){
+            this.props.history.goBack()
+           }
+         }).catch(()=>{
+          this.openNotificationWithfailure('error')
+         })
          
        }
 
-       if(this.props.location!=undefined){
-        this.props.history.goBack()
-        this.setState({
-          disable : false
-        })
-       }
+       
     }
   }
   

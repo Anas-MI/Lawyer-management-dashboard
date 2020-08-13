@@ -407,7 +407,7 @@ class Dashboard extends React.Component {
                                                 <div className="col-4">
                                                     <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                                       <b> ${this.state.draftAmount}</b></h4>
+                                                       <b> ${this.state.draftAmount.toFixed('2')}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
@@ -450,7 +450,7 @@ class Dashboard extends React.Component {
                                                 <div className="col-4">
                                                     <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                                        <b> ${this.state.unPaidAmount}</b></h4>
+                                                        <b> ${this.state.unPaidAmount.toFixed('2')}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">
@@ -494,7 +494,7 @@ class Dashboard extends React.Component {
                                                 <div className="col-4">
                                                     <h4 className="f-w-300 d-flex align-items-center m-b-0">
                                                         {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                                        <b> ${this.state.overDueAmount}</b></h4>
+                                                        <b> ${this.state.overDueAmount.toFixed('2')}</b></h4>
                                                 </div>
 
                                                 <div className="col-8 text-right">

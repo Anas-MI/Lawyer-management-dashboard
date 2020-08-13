@@ -216,7 +216,7 @@ const CalendarContainer = props => {
                 eventdata.endTime = endTime
                 
             }
-    
+            console.log(data)
             if(data.title == "" || data.title == undefined  ){
                     notification.warning({message : "Please provide a title" })
             }else{

@@ -127,23 +127,62 @@ const AddAccount = () =>{
     
       // Check the Fields are Empty 
       function checkValidity() {
-        if (!Object.keys(state).every((k) => state[k] !== "")) {
-          setDisplay(true)
-          return notification.warning({
-            message: "Fields Should Not Be Empty",
-          });
-        } else {
+
+        if(state.type === ""){
+            return notification.warning({
+                message: "Please select a type" ,
+              });
+        }else
+        if(state.accountHolder === ""){
+            return notification.warning({
+                message: "Please provide a Account holder" ,
+              });
+        }else if(state.accountName === ""){
+            return notification.warning({
+                message: "Please provide a Account Name" ,
+              });
+        }else  if(state.accountNumber === ""){
+            return notification.warning({
+                message: "Please provide a Account Number" ,
+              });
+        }else if(state.currency === ""){
+            return notification.warning({
+                message: "Please provide a currency" ,
+              });
+        }else if(state.domicileBranch === ""){
+            return notification.warning({
+                message: "Please provide a Domicile Branch" ,
+              });
+        }else if(state.institution === ""){
+            return notification.warning({
+                message: "Please provide a insitiution" ,
+              });
+        }else  if(state.openingBalance === ""){
+            return notification.warning({
+                message: "Please provide a opening balance" ,
+              });
+        }else  if(state.swiftCode === ""){
+            return notification.warning({
+                message: "Please provide a swift code" ,
+              });
+        }else  if(state.transitNumber === ""){
+            return notification.warning({
+                message: "Please provide a transit number" ,
+              });
+        }
+        else {
             // if form is valid then do something
             api
             .post("/account/create", state)
             .then((res) => {
                 console.log(res)
+                history.goBack();
             })
             .catch((err) => {
                 console.log(err); 
               });
         }
-        history.goBack();
+        
       }
 
     return(

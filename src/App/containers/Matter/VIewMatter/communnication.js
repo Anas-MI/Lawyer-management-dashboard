@@ -70,8 +70,8 @@ class Communication extends React.Component{
               return <option id={index}>{value.firstName + " " + value.lastName}</option>
              })
        }).then(()=>{this.setState({contacts : optns})})
-    
-      api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
+
+      api.get('/communication/viewformatter/' + this.props.userId + '/' + this.props.id).then((res) => {
         communication = res.data.data;
        console.log(communication)
 

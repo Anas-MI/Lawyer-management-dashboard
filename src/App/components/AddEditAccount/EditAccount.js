@@ -150,9 +150,10 @@ const EditAccount = (props) =>{
             api.post("/account/edit/"+props.location.state, state)
                 .then((res) => {
                     console.log(res)
+                    history.goBack();
                 })
         }
-        history.goBack();
+        
       }
 
     return(

@@ -22,7 +22,8 @@ const Notes = (props) => {
     let timeError = ""
   
     const fetchNotes = ( ) => {
-        api.get('/notes/viewforuser/'+userId).then((res)=>{
+        console.log(props)
+        api.get('/notes/viewforcontact/'+userId + '/' + props.id).then((res)=>{
             console.log(res)
             let notes = []
             res.data.data.map((value , index)=>{
@@ -68,7 +69,7 @@ const Notes = (props) => {
             setdisable(true)
             let notess = data;
             notess.userId = userId
-            notess.matter = props.id
+            notess.contact = [props.id]
             if(editMode){
                 api.post('/notes/edit/' + record._id , notess).then((res)=>{
                     console.log(res)

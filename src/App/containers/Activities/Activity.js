@@ -795,7 +795,7 @@ class Activity extends React.Component {
                                 onChange={handleChange}/>
                         </Form.Group>
                     </Col>
-                    <Col>
+                    <Col className = "activityTimer">
                         <Timer setTimer = {this.setTimer} ></Timer>
                     </Col>
                 </Row>
@@ -932,7 +932,7 @@ class Activity extends React.Component {
                     onChange={handleChange}/>
                 </Form.Group>
                 </Col>
-                <Col>
+                <Col className = "activityTimer" >
                     <Timer setTimer = {this.setTimer} ></Timer>
                 </Col>
             </Row>

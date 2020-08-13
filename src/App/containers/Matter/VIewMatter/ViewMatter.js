@@ -432,7 +432,7 @@ function CompanyView(props) {
             </Form>
           </Modal>
         </TabPane>
-        <TabPane tab="Acitivites" key="2">
+        <TabPane tab="Activities" key="2">
           <Activity id={props.location.state.id}></Activity>
         </TabPane>
         <TabPane tab="Calendar" key="3">

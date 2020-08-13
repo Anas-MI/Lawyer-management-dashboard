@@ -106,6 +106,21 @@ class billing extends React.Component {
       })
       
     }
+    const handleDelete = (record) => {
+      api
+        .get('/billing/bill/delete/' + record._id)
+        .then((res) => {
+          console.log(res)
+          this.componentDidMount()
+          notification.success({ message: 'Bills Deleted !' });
+          setTimeout(() => {
+            //window.location.reload();
+          }, 1500);
+        })
+        .catch((err) => {
+          notification.error({ message: 'Failed to delete' });
+        });
+    };
 
     const columnsforDraft = [
       {
@@ -166,6 +181,26 @@ class billing extends React.Component {
         dataIndex: 'balance',
         key: 'balance',
       },
+      {
+        title: 'Delete',
+        dataIndex: 'Delete',
+        key: 'Delete',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure you want to delete this bill ?"
+              onConfirm={() => handleDelete(record)}
+              onCancel={this.cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>
+                Delete
+              </Button>
+            </Popconfirm>
+          );
+        },
+      }
     ];
 
     const unpaidColumns= [
@@ -228,6 +263,26 @@ class billing extends React.Component {
         dataIndex: 'balance',
         key: 'balance',
       },
+      {
+        title: 'Delete',
+        dataIndex: 'Delete',
+        key: 'Delete',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure you want to delete this bill ?"
+              onConfirm={() => handleDelete(record)}
+              onCancel={this.cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>
+                Delete
+              </Button>
+            </Popconfirm>
+          );
+        },
+      }
      
     ];
     const paidColumns= [
@@ -272,6 +327,26 @@ class billing extends React.Component {
         dataIndex: 'balance',
         key: 'balance',
       },
+      {
+        title: 'Delete',
+        dataIndex: 'Delete',
+        key: 'Delete',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure you want to delete this bill ?"
+              onConfirm={() => handleDelete(record)}
+              onCancel={this.cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>
+                Delete
+              </Button>
+            </Popconfirm>
+          );
+        },
+      }
      
     ];
 
