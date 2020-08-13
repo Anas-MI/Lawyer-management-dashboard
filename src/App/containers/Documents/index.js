@@ -138,15 +138,17 @@ const Documents = () => {
     },
   };
   const handleInput = (item) => (e) => {
-    console.log(item)
+    console.log(uploadData)
     console.log(e)
     if (item === 'document') {
       setUploadData({ ...uploadData, document: e.target.files[0] });
     } else {
       if (item === 'matter') {
-        uploadData[`${item}`] = e;
+        api.get(`/matter/view/${e}`).then((res) => {
+        uploadData[`${item}`] = res.data.data ;
         setUploadData({ ...uploadData });
         getMatterById(e);
+        });
       } else {
         uploadData[`${item}`] = e.target.value;
         setUploadData({ ...uploadData });
