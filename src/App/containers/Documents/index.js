@@ -138,17 +138,25 @@ const Documents = () => {
     },
   };
   const handleInput = (item) => (e) => {
-    console.log(uploadData)
+    console.log(item)
     console.log(e)
     if (item === 'document') {
       setUploadData({ ...uploadData, document: e.target.files[0] });
     } else {
       if (item === 'matter') {
-        api.get(`/matter/view/${e}`).then((res) => {
-        uploadData[`${item}`] = res.data.data ;
-        setUploadData({ ...uploadData });
-        getMatterById(e);
-        });
+        if(modalFor === "Upload"){
+          console.log("from the uploads")
+          uploadData[`${item}`] = e;
+          setUploadData({ ...uploadData });
+          getMatterById(e);
+        }else{
+          console.log("from the edits")
+          api.get(`/matter/view/${e}`).then((res) => {
+            uploadData[`${item}`] = res.data.data ;
+            setUploadData({ ...uploadData });
+            getMatterById(e);
+            });
+        }
       } else {
         uploadData[`${item}`] = e.target.value;
         setUploadData({ ...uploadData });
@@ -308,7 +316,7 @@ const Documents = () => {
     await api
       .post(`/document/edit/${uploadData._id}`, uploadData)
       .then(function (response) {
-        notification.success({ message: 'Document Edited.' });
+        notification.success({ message: 'Document edited.' });
         setDisable(false)
         getDocuments();
       })
