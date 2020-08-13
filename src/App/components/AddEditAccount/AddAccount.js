@@ -176,10 +176,12 @@ const AddAccount = () =>{
             .post("/account/create", state)
             .then((res) => {
                 console.log(res)
+                notification.success({message : "Account Added."})
                 history.goBack();
             })
             .catch((err) => {
                 console.log(err); 
+                notification.error({message : "Failed to add account."})
               });
         }
         

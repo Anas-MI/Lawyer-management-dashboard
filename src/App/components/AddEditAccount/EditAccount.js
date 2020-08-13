@@ -150,8 +150,12 @@ const EditAccount = (props) =>{
             api.post("/account/edit/"+props.location.state, state)
                 .then((res) => {
                     console.log(res)
+                    notification.success({message : "Account Edited."})
                     history.goBack();
-                })
+                }).catch((err) => {
+                    console.log(err); 
+                    notification.error({message : "Failed to edit account."})
+                  });
         }
         
       }

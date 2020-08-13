@@ -308,7 +308,7 @@ const Documents = () => {
     await api
       .post(`/document/edit/${uploadData._id}`, uploadData)
       .then(function (response) {
-        notification.success({ message: 'Document Uploaded.' });
+        notification.success({ message: 'Document Edited.' });
         setDisable(false)
         getDocuments();
       })
