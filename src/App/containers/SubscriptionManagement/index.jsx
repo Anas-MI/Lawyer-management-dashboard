@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space, notification } from "antd";
+import { Table,Button,Input, Space, notification} from "antd";
+import { Card } from 'react-bootstrap'
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 import api from "../../../resources/api"
 
-const SubscriptionManagement = () => {
+const SubscriptionManagement = (props) => {
 
     //Search Related 
     const [state,setState] = useState({})
@@ -94,6 +95,7 @@ const SubscriptionManagement = () => {
             title: "Name",
             dataIndex: "name",
             key: "_id",
+            //render: text => <a style={{"color" : "blue"}}>{text}</a>,
             ...getColumnSearchProps('name'),
             sorter: (a, b ,c) => ( 
                 c==='ascend'
@@ -170,12 +172,35 @@ const SubscriptionManagement = () => {
           },
       ];
 
+      const handleView = (record) => {
+        props.history.push('/view/subscription', record._id);
+      };
+
     return (
+      
         <div>
-            <div className="mb-4">
-                <h3>ALL Subscriptions</h3>
-            </div>
-            <Table dataSource={data} columns={columns}></Table>
+          <Card>
+            <Card.Header>
+                <div className="mb-4">
+                    <h3>SUBSCRIPTIONS</h3>
+                </div>
+            </Card.Header>
+            <Card.Body>
+                 <Table
+                  dataSource={data}
+                   columns={columns}
+                   onRow={(record, rowIndex) => {
+                    return {
+                      onDoubleClick: () => handleView(record), // double click row
+                      onContextMenu: (event) => {}, // right button click row
+                      onMouseEnter: (event) => {}, // mouse enter row
+                      onMouseLeave: (event) => {}, // mouse leave row
+                    };
+                  }}></Table>
+            </Card.Body>
+          </Card>
+            
+           
         </div>
     )
 }

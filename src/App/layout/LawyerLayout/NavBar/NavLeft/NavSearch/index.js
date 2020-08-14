@@ -13,43 +13,58 @@ import api from '../../../../../../resources/api'
 
 const { Search } = Input;
 
-
+let id = ""
+function getUserID(){
+  const user = JSON.parse(window.localStorage.getItem('Case.user'))
+  console.log(user.token.user._id)
+  user.token == null ? id = "" : id = user.token.user._id
+  console.log(id)
+}
 class NavSearch extends Component {
-    state = {
-        searchWidth: (this.props.windowWidth < 992) ? 90 : 0,
-        searchString: (this.props.windowWidth < 992) ? '90px' : '',
-        isOpen: (this.props.windowWidth < 992),
-        searchValue:'',
-        contacts : [],
-        contactSeach : [],
-        companys : [],
-        companySearch : [],
-        matters : [],
-        seachedMatters : [],
-        tasks : [],
-        searchedTask : [],
-        Events : [],
-        searchedEvents : [],
-        logs : [],
-        searchedLog : [],
-        act : [],
-        searchedAct : [],
-        docs : [],
-        searchedDocs : [],
-        options : [],
-        optionfortask : {},
-        optionforCompany : {},
-        optionfordocs : {},
-        optionforActivity :{},
-        optionforContact : {},
-        optionforlogs : {},
-        optionformatter : {},
-        optionforEvent : {}
-        
-    };
+  constructor(){
+    super()
+    this.state = {
+     // searchWidth: (this.props.windowWidth < 992) ? 90 : 0,
+     // searchString: (this.props.windowWidth < 992) ? '90px' : '',
+     // isOpen: (this.props.windowWidth < 992),
+      searchValue:'',
+      contacts : [],
+      contactSeach : [],
+      companys : [],
+      companySearch : [],
+      matters : [],
+      seachedMatters : [],
+      tasks : [],
+      searchedTask : [],
+      Events : [],
+      searchedEvents : [],
+      logs : [],
+      searchedLog : [],
+      act : [],
+      searchedAct : [],
+      docs : [],
+      searchedDocs : [],
+      options : [],
+      optionfortask : {},
+      optionforCompany : {},
+      optionfordocs : {},
+      optionforActivity :{},
+      optionforContact : {},
+      optionforlogs : {},
+      optionformatter : {},
+      optionforEvent : {},
+      userId : ""
+      
+  };
+   getUserID()
+  }
+    
 
     componentDidMount(){
-        api.get('/contact/viewforuser/' + this.props.userId).then((res)=>{
+       
+       
+
+        api.get('/contact/viewforuser/' + id).then((res)=>{
             console.log(res)
             console.log('contacts')
             let contactData = []
@@ -68,7 +83,7 @@ class NavSearch extends Component {
               });
         })
 
-        api.get('/company/viewforuser/' + this.props.userId).then((res)=>{
+        api.get('/company/viewforuser/' + id).then((res)=>{
             let companyData = []
             res.data.data.map((value, id) => {
       
@@ -86,7 +101,7 @@ class NavSearch extends Component {
         })
 
         api
-        .get('/matter/viewforuser/' + this.props.userId)
+        .get('/matter/viewforuser/' + id)
         .then((res) => {
             let matters = [];
             res.data.data.map((value, index) => {
@@ -105,7 +120,7 @@ class NavSearch extends Component {
 
         });
 
-        api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
+        api.get('/tasks/viewforuser/' + id).then((res) => {
             let taskData = []
             console.log(res.data.data)
             res.data.data.map((value, index)=>{
@@ -122,7 +137,7 @@ class NavSearch extends Component {
             });
         });
 
-        api.get('/calendar/viewforuser/'+this.props.userId).then((res)=>{
+        api.get('/calendar/viewforuser/'+id).then((res)=>{
             let newTableData = []
             res.data.data.map((value, index)=>{
             
@@ -139,7 +154,7 @@ class NavSearch extends Component {
 
         })
 
-        api.get('/communication/viewforuser/' + this.props.userId).then((res) => {
+        api.get('/communication/viewforuser/' + id).then((res) => {
             
             let completeData = [];
             
@@ -161,7 +176,7 @@ class NavSearch extends Component {
             });
           });
 
-          api.get('/activity/viewforuser/' + this.props.userId).then((res) => {
+          api.get('/activity/viewforuser/' + id).then((res) => {
             let actData = []
             res.data.data.map((val, index) => {
               
@@ -180,7 +195,7 @@ class NavSearch extends Component {
             });
           });
 
-          api.get(`/document/viewforuser/${this.props.userId}`).then((res) => {
+          api.get(`/document/viewforuser/${id}`).then((res) => {
             let docx = []
         
             res.data.data.map((item, index) => {
@@ -642,8 +657,10 @@ class NavSearch extends Component {
         );
     }
 }
-
+/*
 const mapStateToProps = (state) => ({
   userId: state.user.token.user._id,
 });
 export default connect(mapStateToProps)(NavSearch);
+*/
+export default NavSearch
