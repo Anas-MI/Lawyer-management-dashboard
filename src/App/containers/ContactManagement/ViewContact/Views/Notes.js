@@ -233,6 +233,10 @@ const Notes = (props) => {
     }
     
     const exportPDF = () => {
+      console.log(tableData.length)
+      if(tableData.length == 0 ){
+        notification.warning({message : "Please add notes before exporting"})
+      }else{
         const unit = 'pt';
         const size = 'A4'; // Use A1, A2, A3 or A4
         const orientation = 'portrait'; // portrait or landscape
@@ -260,7 +264,8 @@ const Notes = (props) => {
         doc.text(title, marginLeft, 40);
         doc.autoTable(content);
         doc.save('notes.pdf');
-      };
+      }
+    };
 
     return(
         <div>

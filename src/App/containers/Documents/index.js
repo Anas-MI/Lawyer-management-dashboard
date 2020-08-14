@@ -94,7 +94,7 @@ const Documents = () => {
       render: (_, record) => {
         return (
           <Popconfirm
-                    title="Are you sure delete this Account?"
+                    title="Are you sure delete this Document?"
                     onConfirm={()=>deleteHandler(record._id)}
                     onCancel={()=>{}}
                     okText="Yes"
@@ -302,13 +302,41 @@ const Documents = () => {
       });
   };
   const editHandler = async (docId) => {
-    
-    setModalFor('Edit');
-    setViewUpload(true);
-    await api.get(`/document/view/${docId}`).then((response) => {
-      
-      setUploadData(response.data.data);
-    });
+    if(uploadData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(uploadData.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(uploadData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(uploadData.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(uploadData.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+      setModalFor('Edit');
+      setViewUpload(true);
+      await api.get(`/document/view/${docId}`).then((response) => {
+        
+        setUploadData(response.data.data);
+      });
+    }
+
+   
   };
 
   const handleEdit = async () => {
@@ -441,7 +469,7 @@ const Documents = () => {
             <Input
               type="file"
               onChange={handleInput('document')}
-              value={uploadData.document}
+             // value={uploadData.document}
             />
           </Form.Item>
         )}
