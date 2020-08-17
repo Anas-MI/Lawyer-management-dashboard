@@ -233,7 +233,7 @@ class Activity extends React.Component {
                 timeModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -267,7 +267,7 @@ class Activity extends React.Component {
                 expenseModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   rate: '',
@@ -304,7 +304,7 @@ class Activity extends React.Component {
                 timeModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -339,7 +339,7 @@ class Activity extends React.Component {
                 expenseModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -363,7 +363,7 @@ class Activity extends React.Component {
         timeModal: false,
         editTime : false,
         data: {
-          billable: true,
+          billable: false,
           nonBillable: false,
           date: '',
           qty: '1.0',
@@ -377,7 +377,7 @@ class Activity extends React.Component {
         expenseModal: false,
         EditExpense: false,
         data: {
-          billable: true,
+          billable: false,
           nonBillable: false,
           date: '',
           qty: '1.0',
