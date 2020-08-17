@@ -251,7 +251,7 @@ class Activity extends React.Component {
                 timeModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -285,7 +285,7 @@ class Activity extends React.Component {
                 expenseModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   rate: '',
@@ -322,7 +322,7 @@ class Activity extends React.Component {
                 timeModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -357,7 +357,7 @@ class Activity extends React.Component {
                 expenseModal: false,
                 editmode: false,
                 data: {
-                  billable: true,
+                  billable: false,
                   nonBillable: false,
                   date: '',
                   qty: '1.0',
@@ -381,7 +381,7 @@ class Activity extends React.Component {
         timeModal: false,
         editTime : false,
         data: {
-          billable: true,
+          billable: false,
           nonBillable: false,
           date: '',
           qty: '1.0',
@@ -395,7 +395,7 @@ class Activity extends React.Component {
         expenseModal: false,
         EditExpense: false,
         data: {
-          billable: true,
+          billable: false,
           nonBillable: false,
           date: '',
           qty: '1.0',
@@ -823,7 +823,7 @@ class Activity extends React.Component {
                         <Form.Label>Rate</Form.Label>
                         <Form.Control 
                         required
-                        type="text" 
+                        type="number" 
                         name="rate" 
                         placeholder="0.0 /h"
                         onChange={handleChange} />
@@ -961,7 +961,7 @@ class Activity extends React.Component {
                     <Form.Label>Rate</Form.Label>
                     <Form.Control 
                     required
-                    type="text" 
+                    type="number" 
                     name="rate" 
                     defaultValue = {this.state.data.rate}
                     onChange={handleChange} />
@@ -987,17 +987,7 @@ class Activity extends React.Component {
             </Row>
             
             <Row>
-                <Col>
-                <Form.Group controlId="rate">
-                    <Form.Label>Rate</Form.Label>
-                    <Form.Control 
-                    required
-                    type="text" 
-                    name="rate" 
-                    defaultValue = {this.state.data.rate}
-                    onChange={handleChange} />
-                </Form.Group>
-                </Col>
+                
                 <Col>
                 <Form.Group controlId="date">
                     <Form.Label>Date</Form.Label>
@@ -1095,7 +1085,7 @@ class Activity extends React.Component {
                             <Form.Label>Rate</Form.Label>
                             <Form.Control 
                             required
-                            type="text" 
+                            type="number" 
                             name="rate" 
                             placeholder="0.0 /h"
                             onChange={handleChange} />
@@ -1229,7 +1219,7 @@ class Activity extends React.Component {
                 <Form.Label>Rate</Form.Label>
                 <Form.Control 
                 required
-                type="text" 
+                type="number" 
                 name="rate" 
                 defaultValue = {this.state.data.rate}
                 onChange={handleChange} />

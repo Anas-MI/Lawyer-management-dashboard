@@ -741,7 +741,7 @@ class Activity extends React.Component{
                         <Form.Label>Rate</Form.Label>
                         <Form.Control 
                         required
-                        type="text" 
+                        type="number" 
                         name="rate" 
                         placeholder="0.0 /h"
                         onChange={handleChange} />
@@ -862,7 +862,7 @@ class Activity extends React.Component{
                                 <Form.Label>Rate</Form.Label>
                                 <Form.Control 
                                 required
-                                type="text" 
+                                type="number" 
                                 name="rate" 
                                 placeholder="0.0 /h"
                                 onChange={handleChange} />

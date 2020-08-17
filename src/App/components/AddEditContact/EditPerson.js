@@ -603,7 +603,7 @@ class editPerson extends React.Component {
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
               <div className="form-header-container mb-4">
-                <h3 className="form-header-text">Add New Person</h3>
+                <h3 className="form-header-text">Update Contact</h3>
               </div>
               <h4>Personal Details</h4>
               <div className="form-header-container mb-4">

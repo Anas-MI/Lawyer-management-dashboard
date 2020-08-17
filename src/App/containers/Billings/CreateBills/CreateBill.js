@@ -65,7 +65,7 @@ class CreateBill extends React.Component{
         res.data.data.map((val, index) => {
           //const date = this.convertTime(val.date);
           
-          if(val.billed == false){
+          if(val.billed == false && val.billable == true){
             selected.push(false)
            
             let sHours = ""
