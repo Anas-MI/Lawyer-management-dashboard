@@ -805,7 +805,7 @@ class Activity extends React.Component {
                         <Form.Label>Rate</Form.Label>
                         <Form.Control 
                         required
-                        type="text" 
+                        type="number" 
                         name="rate" 
                         placeholder="0.0 /h"
                         onChange={handleChange} />
@@ -943,7 +943,7 @@ class Activity extends React.Component {
                     <Form.Label>Rate</Form.Label>
                     <Form.Control 
                     required
-                    type="text" 
+                    type="number" 
                     name="rate" 
                     defaultValue = {this.state.data.rate}
                     onChange={handleChange} />
@@ -969,17 +969,7 @@ class Activity extends React.Component {
             </Row>
             
             <Row>
-                <Col>
-                <Form.Group controlId="rate">
-                    <Form.Label>Rate</Form.Label>
-                    <Form.Control 
-                    required
-                    type="text" 
-                    name="rate" 
-                    defaultValue = {this.state.data.rate}
-                    onChange={handleChange} />
-                </Form.Group>
-                </Col>
+                
                 <Col>
                 <Form.Group controlId="date">
                     <Form.Label>Date</Form.Label>
@@ -1077,7 +1067,7 @@ class Activity extends React.Component {
                             <Form.Label>Rate</Form.Label>
                             <Form.Control 
                             required
-                            type="text" 
+                            type="number" 
                             name="rate" 
                             placeholder="0.0 /h"
                             onChange={handleChange} />
@@ -1211,7 +1201,7 @@ class Activity extends React.Component {
                 <Form.Label>Rate</Form.Label>
                 <Form.Control 
                 required
-                type="text" 
+                type="number" 
                 name="rate" 
                 defaultValue = {this.state.data.rate}
                 onChange={handleChange} />
