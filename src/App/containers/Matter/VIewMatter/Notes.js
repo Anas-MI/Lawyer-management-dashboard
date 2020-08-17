@@ -357,7 +357,7 @@ const Notes = (props) => {
                       Cancel
                     </Button>,
                     <Button type="primary" disabled = {disable} onClick={handleOk}>
-                      Edit
+                      Save 
                     </Button>,
                   ]}
             >
