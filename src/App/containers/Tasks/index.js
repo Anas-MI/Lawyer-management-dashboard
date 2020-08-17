@@ -4,7 +4,7 @@ import UpcomingTasks from './UpcomingTasks/upcomingTasks';
 import CompletedTask from './CompletedTasks/CompletedTasks';
 import List from './List/List';
 import api from '../../../resources/api';
-import { Button, Modal, notification, Popconfirm, message } from 'antd';
+import { Button, Modal, notification, Popconfirm, message, Space, Spin } from 'antd';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import jsPDF from 'jspdf';
@@ -36,6 +36,7 @@ class Tasks extends React.Component {
       selected: null,
       status: false,
       disable : false,
+      spinning : true,
       options : null
     };
   }
@@ -170,7 +171,13 @@ class Tasks extends React.Component {
         tableData.push(newdata)
         
       })
-      this.setState({ CompletedData, tableData, options , upcomingData });
+      this.setState({ 
+         CompletedData, 
+         tableData,
+         options ,
+         upcomingData,
+        spinning: false
+       });
       // res.data.data.map((item, index) => {
       //   tableData = [
       //     ...tableData,
@@ -508,7 +515,8 @@ class Tasks extends React.Component {
     }
 
     return (
-      <div>
+      <Spin size="large" spinning={this.state.spinning} >
+        <div>
         <Tabs
           defaultActiveKey="1"
           tabBarExtraContent={operations}
@@ -653,7 +661,9 @@ class Tasks extends React.Component {
           <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
         </Modal>
       </div>
-    );
+    
+      </Spin>
+      );
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Card, Table, Button, Popconfirm, message, notification } from 'antd';
+import { Tabs, Card, Table, Button, Popconfirm, message, notification, Spin } from 'antd';
 import { Form } from 'react-bootstrap';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -15,7 +15,8 @@ class billing extends React.Component {
       draftBills : [],
       unpaidBills : [],
       paidBills : [],
-      status : false
+      status : false,
+      loading : true
     }
   }
   handelBills = (type) => {
@@ -64,7 +65,12 @@ class billing extends React.Component {
         }
         tableData.push(temp)
       })
-      this.setState({tableData :  tableData, paidBills : paidBills , unpaidBills : unpaidBills, draftBills: draftBills})
+      this.setState({
+        tableData :  tableData,
+         paidBills : paidBills ,
+          unpaidBills : unpaidBills,
+           draftBills: draftBills,
+            loading : false})
     })
   }
 
@@ -394,7 +400,8 @@ class billing extends React.Component {
     };
 
     return (
-      <div className="p-2 ">
+      <Spin size= "large" spinning = {this.state.loading}>
+        <div className="p-2 ">
         <Card
           title="Billing"
           extra={
@@ -430,7 +437,9 @@ class billing extends React.Component {
           </Tabs>
         </Card>
       </div>
-    );
+    
+      </Spin>
+      );
   }
 }
 

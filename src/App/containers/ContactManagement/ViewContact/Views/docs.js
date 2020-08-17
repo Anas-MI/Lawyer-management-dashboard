@@ -8,6 +8,7 @@ import {
   Input,
   Form,
   Select,
+  Spin
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -21,6 +22,7 @@ const { Option } = Select;
 const Documents = (props) => {
   const [docs, setDocs] = useState([]);
   const [viewUpload, setViewUpload] = useState(false);
+  const [Loading, setLoading] = useState(true)
   const [uploadData, setUploadData] = useState({
     document: '',
     _id: '',
@@ -168,6 +170,7 @@ const Documents = (props) => {
       });
     });
     setDocs(tempDocs);
+    setLoading(false)
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
@@ -389,7 +392,8 @@ const Documents = (props) => {
     </Modal>
   );
   return (
-    <Card
+    <Spin spinning={Loading} size = "large">
+      <Card
       title="Document"
       extra={
         <span style={{ float: 'right' }} className="">
@@ -415,7 +419,9 @@ const Documents = (props) => {
       {uploadForm()}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
-  );
+  
+    </Spin>
+    );
 };
 
 export default Documents;

@@ -8,7 +8,8 @@ import {
   Input,
   Form,
   Select,
-  Popconfirm
+  Popconfirm,
+  Spin
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -25,6 +26,7 @@ const Documents = () => {
   const [docs, setDocs] = useState([]);
   const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
+  const [Loading, setLoading] = useState(true)
   const [uploadData, setUploadData] = useState({
     document: '',
     _id: '',
@@ -192,6 +194,7 @@ const Documents = () => {
       });
     });
     setDocs(tempDocs);
+    setLoading(false)
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
@@ -477,7 +480,8 @@ const Documents = () => {
     </Modal>
   );
   return (
-    <Card
+    <Spin size = "large" spinning={Loading}>
+      <Card
       title="Document"
       extra={
         <span style={{ float: 'right' }} className="">
@@ -503,7 +507,9 @@ const Documents = () => {
       {uploadForm()}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
-  );
+ 
+    </Spin>
+     );
 };
 
 export default Documents;

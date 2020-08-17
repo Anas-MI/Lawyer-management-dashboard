@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
+import { Table , Button, Modal , Card, notification, Space, Popconfirm, Spin } from 'antd'
 import { useSelector , connect} from 'react-redux'
 import AddressForm from './AddressForm/Form'
 import ExpenseForm from '../../Activities/Form/expenseForm'
@@ -31,6 +31,7 @@ class Activity extends React.Component{
                 invoice : "Unbilled",
 
             },
+            loading : true,
             to : {
               type : "Work"
             },
@@ -170,8 +171,14 @@ class Activity extends React.Component{
         })
         const localData = JSON.parse(window.localStorage.getItem("Case.user"))
         const Lname = localData.token.user.firstName + " " +localData.token.user.firstName
-        this.setState({ expenseData : expenseData , timeData : timedata, total : total , LName : Lname })
+        this.setState({ 
+          expenseData : expenseData ,
+           timeData : timedata,
+            total : total , 
+            loading : false,
+            LName : Lname })
       })
+      
     }
     showModal = (type) => {
         if(type==="time"){
@@ -585,7 +592,8 @@ class Activity extends React.Component{
         const today = new Date()
         const issueDate = today.getDate() + "/" + today.getMonth() + "/" + today.getFullYear()
         
-        return <div className='p-2 '>
+        return <Spin spinning={this.state.loading} size = "large">
+         <div className='p-2 '>
             
             <Card title="New Quick Bill" className="overflow-auto mb-3">
               <div className="d-flex justify-content-between">
@@ -917,7 +925,9 @@ class Activity extends React.Component{
             </Modal>
          
         </div>
-    }
+     
+        </Spin>
+        }
 }
 
 const mapStateToProps = state => ({

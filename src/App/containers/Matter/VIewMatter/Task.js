@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import UpcomingTasks from '../../Tasks/UpcomingTasks/upcomingTasks';
 import CompletedTask from '../../Tasks/CompletedTasks/CompletedTasks';
 import api from '../../../../resources/api';
-import { Button, Modal, notification, Popconfirm, message } from 'antd';
+import { Button, Modal, notification, Popconfirm, message, Spin } from 'antd';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import jsPDF from 'jspdf';
@@ -32,6 +32,7 @@ class Tasks extends React.Component {
       loading: false,
       Data: { priority: 'Normal', matter: "" },
       editMode: false,
+      spinning : true,
       res: '',
       selected: null,
       status: false,
@@ -130,6 +131,7 @@ class Tasks extends React.Component {
     this.props.history.push('/tasks/view/list', record)
   };
   async componentDidMount() {
+    /*
     if(this.props.location.state === "from dashboard"){
       this.showModal()
     }else{
@@ -137,6 +139,7 @@ class Tasks extends React.Component {
         visible : false
       })
     }
+    */
     let tableData = [];
     let CompletedData = []
     let upcomingData = []
@@ -170,7 +173,13 @@ class Tasks extends React.Component {
         tableData.push(newdata)
         
       })
-      this.setState({ CompletedData, tableData, options , upcomingData });
+      this.setState({ 
+        CompletedData, 
+        tableData, 
+        options ,
+        upcomingData,
+        spinning : false
+      });
       // res.data.data.map((item, index) => {
       //   tableData = [
       //     ...tableData,
@@ -508,7 +517,8 @@ class Tasks extends React.Component {
     }
 
     return (
-      <div>
+      <Spin size="large" spinning = {this.state.spinning}>
+        <div>
         <Tabs
           defaultActiveKey="1"
           tabBarExtraContent={operations}
@@ -657,7 +667,9 @@ class Tasks extends React.Component {
           <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
         </Modal>
       </div>
-    );
+    
+      </Spin>
+      );
   }
 }
 

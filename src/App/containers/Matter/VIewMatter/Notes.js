@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm  } from 'antd';
+import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm , Spin  } from 'antd';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../../resources/api';
@@ -11,6 +11,7 @@ import ExportExcel from './ExportExcel';
 
 const Notes = (props) => {
     const [visible, setVisible] = useState(false)
+    const [Loading, setLoading] = useState(true)
     const [data, setdata] = useState({})
     const [disable, setdisable] = useState(false)
     const userId = useSelector((state) => state.user.token.user._id);
@@ -38,6 +39,7 @@ const Notes = (props) => {
                 notes.push(temp)
             })
             settableData(notes)
+            setLoading(false)
         })
     }
     useEffect(() => {
@@ -267,6 +269,7 @@ const Notes = (props) => {
   };
 
     return(
+      <Spin spinning={Loading} size = "large">
         <div>
             <Card
                 title="Notes"
@@ -393,6 +396,8 @@ const Notes = (props) => {
                 </Form>
             </Modal>
         </div>
-    )
+    
+      </Spin>
+        )
 }
 export default Notes

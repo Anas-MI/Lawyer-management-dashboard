@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
-import { Card, Button, Tabs } from 'antd';
+import { Card, Button, Tabs, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Communication from './Views/Communication'
 import Bills from './Views/bills'
@@ -13,6 +13,7 @@ function CompanyView(props) {
   let response = {};
   let data = null;
   const [url, setUrl] = useState('');
+  const [Loading, setLoading] = useState(true)
   const userId = useSelector((state) => state.user.token.user._id);
   const [address, setAddress] = useState();
   const [Title, setTitle] = useState();
@@ -91,10 +92,12 @@ function CompanyView(props) {
     setNumber(Num);
     setWebsite(Web);
     setcId(response._id)
+    setLoading(false)
   };
 
   return (
     <>
+      <Spin size="large" spinning={Loading}>
       <Tabs defaultActiveKey="1">
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <div className="d-flex flex-wrap mb-3">
@@ -224,6 +227,8 @@ function CompanyView(props) {
               
         <TabPane tab="Transactions" key="10"></TabPane>
       </Tabs>
+    
+      </Spin>
     </>
   );
 }

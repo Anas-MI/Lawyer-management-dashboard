@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm  } from 'antd';
+import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm, Spin  } from 'antd';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../../../resources/api';
@@ -19,6 +19,7 @@ const Notes = (props) => {
     const [record, setrecord] = useState({})
     const [editModal, seteditModal] = useState(false)
     const formRef = useRef(null)
+    const [Loading, setLoading] = useState(true)
     let timeError = ""
   
     const fetchNotes = ( ) => {
@@ -38,6 +39,7 @@ const Notes = (props) => {
                 notes.push(temp)
             })
             settableData(notes)
+            setLoading(false)
         })
     }
     useEffect(() => {
@@ -268,6 +270,7 @@ const Notes = (props) => {
     };
 
     return(
+      <Spin spinning={Loading} size = "large">
         <div>
             <Card
                 title="Notes"
@@ -394,6 +397,8 @@ const Notes = (props) => {
                 </Form>
             </Modal>
         </div>
-    )
+   
+      </Spin>
+         )
 }
 export default Notes

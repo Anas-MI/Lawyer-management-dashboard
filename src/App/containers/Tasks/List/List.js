@@ -1,4 +1,4 @@
-import { Modal, notification , Button, Popconfirm ,Table} from 'antd';
+import { Modal, notification , Button, Popconfirm ,Table, Spin} from 'antd';
 import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import api from '../../../../resources/api';
@@ -22,6 +22,7 @@ class AddList extends React.Component {
       confirmLoading: false,
       disabled : false,
       editMode : false,
+      spinning : true
     }
   }
   componentDidMount(){
@@ -39,7 +40,11 @@ class AddList extends React.Component {
     
         tableData.push(temp)
       })
-      this.setState({tableData : tableData})
+      this.setState({
+        tableData : tableData,
+        spinning : false
+      
+      })
       console.log(this.state.tableData)
     })
     
@@ -230,7 +235,8 @@ class AddList extends React.Component {
     
 
     return (
-      <div >
+      <Spin size="large" spinning = {this.state.spinning}>
+        <div >
         <div>
           <Button
             onClick={this.showModal}
@@ -338,7 +344,9 @@ class AddList extends React.Component {
         }}
       ></Table>
       </div>
-    );
+    
+      </Spin>
+      );
   }
 }
 
