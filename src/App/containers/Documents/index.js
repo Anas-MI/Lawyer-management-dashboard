@@ -305,6 +305,19 @@ const Documents = () => {
       });
   };
   const editHandler = async (docId) => {
+    
+      setModalFor('Edit');
+      setViewUpload(true);
+      await api.get(`/document/view/${docId}`).then((response) => {
+        
+        setUploadData(response.data.data);
+      });
+  
+
+   
+  };
+
+  const handleEdit = async () => {
     if(uploadData.category === ''){
       notification.warning({
         message : "Please provide a category."
@@ -331,18 +344,6 @@ const Documents = () => {
       })
     }
     else{
-      setModalFor('Edit');
-      setViewUpload(true);
-      await api.get(`/document/view/${docId}`).then((response) => {
-        
-        setUploadData(response.data.data);
-      });
-    }
-
-   
-  };
-
-  const handleEdit = async () => {
     setDisable(true)
     await api
       .post(`/document/edit/${uploadData._id}`, uploadData)
@@ -357,6 +358,7 @@ const Documents = () => {
     setTimeout(() => {
       setViewUpload(false);
     }, 600);
+  }
   };
 
   useEffect(() => {
