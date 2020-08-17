@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Table, Button, Input, Space, notification, Card , Popconfirm} from 'antd';
+import { Table, Button, Input, Space, notification, Card , Popconfirm , Spin} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
@@ -27,6 +27,7 @@ const ContactsManage = (props) => {
   const prevLocation = usePrevious(props.location)
   const [companyData, setcompanyData] = useState([]);
   const [value, setValue] = useState('');
+  const [Loading, setLoading] = useState(true)
   const [contactData, setcontactData] = useState([]);
   const [showNameInput, setShowNameInput] = useState(false);
   const [showEmailInput, setShowEmailInput] = useState(false);
@@ -98,6 +99,7 @@ const ContactsManage = (props) => {
       setState({ tableData: contactData });
       setType('contact')
     }
+    setLoading(false)
     window.localStorage.setItem('company', "false")
     
   };
@@ -340,7 +342,8 @@ const ContactsManage = (props) => {
     doc.save('contact.pdf');
   };
   return (
-    <Card
+    <Spin size = "large" spinning={Loading}>
+      <Card
       title="Contacts"
       extra={
         <div className="d-flex justify-content-center">
@@ -401,7 +404,9 @@ const ContactsManage = (props) => {
         }}
       ></Table>
     </Card>
-  );
+  
+    </Spin>
+    );
 };
 
 export default ContactsManage;

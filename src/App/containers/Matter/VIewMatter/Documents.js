@@ -8,6 +8,7 @@ import {
   Input,
   Form,
   Select,
+  Spin
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
@@ -26,6 +27,7 @@ const Documents = (props) => {
     category: '',
   });
   const [modalFor, setModalFor] = useState('Upload');
+  const [Loading, setLoading] = useState(true)
 
   const columnsForDocuments = [
     {
@@ -165,6 +167,7 @@ const Documents = (props) => {
         });
       });
     setDocs(tempDocs);
+    setLoading(false)
   };
 
   const handleSubmit = async () => {
@@ -350,7 +353,8 @@ const Documents = (props) => {
     </Modal>
   );
   return (
-    <Card
+    <Spin spinning={Loading} size = "large">
+      <Card
       title="Document"
       extra={
         <span style={{ float: 'right' }} className="">
@@ -377,7 +381,9 @@ const Documents = (props) => {
       {console.log(docs)}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
-  );
+  
+    </Spin>
+    );
 };
 
 export default Documents;

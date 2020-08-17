@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
-import { Card, Button } from 'antd';
+import { Card, Button, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { values } from 'lodash';
 
@@ -8,6 +8,7 @@ function CompanyView(props) {
   let response = {};
   let data = null;
   const userId = useSelector((state) => state.user.token.user._id);
+  const [Loading, setLoading] = useState(true)
   const [address, setAddress] = useState();
   const [Title, setTitle] = useState();
   const [ID, setID] = useState();
@@ -82,10 +83,13 @@ function CompanyView(props) {
     setEmail(mail);
     setNumber(Num);
     setWebsite(Web);
+    setLoading(false)
   };
 
   return (
-    <>
+     <Spin size="large" spinning={Loading}>
+       <>
+      <Card>
       <div className="d-flex flex-wrap mb-3">
         <div>
           <h3>{Title}</h3>
@@ -94,6 +98,7 @@ function CompanyView(props) {
           <p>Company</p>
         </div>
       </div>
+      </Card>
       <div className="d-flex flex-wrap">
         <Card
           extra={
@@ -176,6 +181,8 @@ function CompanyView(props) {
         </Card>
       </div>
     </>
-  );
+  
+     </Spin>
+    );
 }
 export default CompanyView;

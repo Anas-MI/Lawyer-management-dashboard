@@ -7,6 +7,7 @@ import {
   notification,
   Popconfirm,
   Card,
+  Spin
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -31,6 +32,7 @@ class matterManage extends React.Component {
       showSearchClient: false,
       showSearchPractise: false,
       value: '',
+      loading : true,
       finalData: [],
     };
     this.filterByMatterInput = this.filterByMatterInput.bind(this);
@@ -72,6 +74,7 @@ class matterManage extends React.Component {
         closed: closed,
         pending: pending,
         all: data,
+        loading : false
       });
     }
   }
@@ -408,7 +411,8 @@ class matterManage extends React.Component {
       </div>
     );
     return (
-      <Card title="Matter" extra={Add}>
+      <Spin size = "large" spinning = {this.state.loading}>
+        <Card title="Matter" extra={Add}>
         <div>
           <span className="ml-auto"></span>
           <Button
@@ -459,7 +463,9 @@ class matterManage extends React.Component {
           }}
         ></Table>
       </Card>
-    );
+    
+      </Spin>
+      );
   }
 }
 

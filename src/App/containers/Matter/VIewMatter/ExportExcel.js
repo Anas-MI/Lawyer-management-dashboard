@@ -14,6 +14,7 @@ export class ExportExcel extends Component {
         <table id="emp" className="d-none">
           <thead>
             <tr>
+              <th>Hours</th>
               <th>Subject</th>
               <th>Note</th>
               <th>Date</th>
@@ -25,8 +26,8 @@ export class ExportExcel extends Component {
               
               return (
                 <tr key={index}>
+                  <td>{p.hours}</td>
                   <td>{p.subject}</td>
-
                   <td>{p.notes}</td>
                   <td>{p.date}</td>
                 </tr>
@@ -38,7 +39,7 @@ export class ExportExcel extends Component {
         <ReactHTMLTableToExcel
           className="btn btn-outline-primary btn-sm ml-auto"
           table="emp"
-          filename="contacts"
+          filename="Notes"
           sheet="Sheet"
           buttonText="Export to Excel"
         />

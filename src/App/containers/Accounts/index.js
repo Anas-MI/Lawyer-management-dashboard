@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from  'react'
-import { Table, notification, Button, Popconfirm } from 'antd';
+import { Table, notification, Button, Popconfirm, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
 import { useSelector } from 'react-redux'
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 const Accounts = () => {
     const history = useHistory()
     const [state, setState] = useState([])
+    const [Loading, setLoading] = useState(true)
     const userId = useSelector((state) => state.user.token.user._id);
     
     const fetchAccount = ( ) =>{
@@ -28,6 +29,7 @@ const Accounts = () => {
           tableData.push(data)
         })
         setState(tableData)
+        setLoading(false)
       })
       .catch((err) => {
         console.log(err); 
@@ -107,11 +109,14 @@ const Accounts = () => {
 
     return(
         <>
-            <div className='p-2 '>
+        <Spin size = "large" spinning={Loading}>
+          <div className='p-2 '>
                 <Button className='ml-auto' color='success'>Export</Button>
                 <Button className='ml-auto' color='success' style={{float : "right"}} onClick={() => { history.push('/add/accounts')}} >Add</Button>
             </div>
             <Table columns={columns} dataSource={state}/>
+        </Spin>
+            
         </>
     )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table , Button, Modal , Card, notification, Space, Popconfirm } from 'antd'
+import { Table , Button, Modal , Card, notification, Space, Popconfirm, Spin } from 'antd'
 import { useSelector, connect } from 'react-redux';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -33,6 +33,7 @@ class Communication extends React.Component{
                 body : "",
                 from : user.token.user._id
             },
+            loading : true,
             emailData : [],
             phoneData : [],
             completeData : [],
@@ -128,6 +129,7 @@ class Communication extends React.Component{
           phoneData: phoneData,
           emailData: emailData,
           tableData: completeData,
+          loading : false
         });
       });
       /*
@@ -541,50 +543,296 @@ class Communication extends React.Component{
             doc.autoTable(content);
             doc.save("Activity.pdf")
           }
-        return <div className='p-2 '>
+        return <Spin size = "large" spinning={this.state.loading}>
+          <div className='p-2 '>
             
-        <br></br>
-        <br></br>
+            <br></br>
+            <br></br>
+            
+            <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
+                <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
+                <Button onClick={()=>this.showModal("email")}>New email log</Button>
+                <Button onClick={()=>this.showModal("phone")}>New phone log</Button>
+                </span>}>
+                <div style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
+                  <div className="mb-2">
+                  <Button  onClick={()=>setTableData("all")}>All</Button>
+                  <Button onClick={()=>setTableData("email")}>Email</Button>
+                  <Button onClick={()=>setTableData("phone")}>Phone</Button>
+                  </div>
+                </div>
+            </Card>
+            <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
+              <Table columns={columns} dataSource={this.state.tableData}  />
+            </Card>
+           
+            <Modal
+                title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+                visible={this.state.editEmail}
+                onOk={()=>this.handleOk("email")}
+                onCancel={()=>this.handleCancel("email")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("email")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                    {this.state.editEmail ? "Edit Log" : "Save Log"}
+                  </Button>,
+                ]}
+                >
+                  {
+                      this.state.editEmail ?
+                      <Form 
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form }>
+                       <Row>
+                           
+                           <Col>
+                           <Form.Group>
+                       <Form.Label>Matter</Form.Label>
+                              <Form.Control 
+                                  as="select"
+                                  name="matter" 
+                                  defaultValue = {this.state.data.matter}
+                                  onChange={handleChange}>
+                              <option>Select a matter</option>
+                              {this.state.option}
+                              </Form.Control>
+                       </Form.Group>
+                           </Col>
+                       </Row>
+                     
+                      <Row>
+                          <Col >
+                          <Form.Group>
+                               <Form.Label>From</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="from" 
+                                   defaultValue = {this.state.data.from}
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>    
+                               {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                          
+                          <Col>
+                          <Form.Group >
+                               <Form.Label>To</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="to" 
+                                   defaultValue = {this.state.data.to}
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>
+                                   {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                      </Row>
+                       <Row>
+                           <Col>
+                           <Form.Group controlId="date">
+                              <Form.Label>Time</Form.Label>
+                              <Form.Control 
+                              required
+                              type="time" 
+                              name="time" 
+                              defaultValue = {this.state.data.time}
+                              onChange={handleChange}/>
+                          </Form.Group>
+                           </Col>
+                           <Col>
+                           <Form.Group controlId="date">
+                              <Form.Label>Date</Form.Label>
+                              <Form.Control 
+                              required
+                              type="date" 
+                              name="date" 
+                              defaultValue = {this.state.data.date} 
+                              onChange={handleChange}/>
+                          </Form.Group>
+                           </Col>
+               
+                       </Row>
+                     
+                      <Form.Group controlId="subject">
+                               <Form.Label>Subject</Form.Label>
+                               <Form.Control 
+                               name="subject" 
+                               rows="3"
+                               defaultValue = {this.state.data.subject}
+                               onChange={handleChange} />
+                           </Form.Group>  
+                   
+                      
+                           <Form.Group controlId="body">
+                               <Form.Label>Body</Form.Label>
+                               <Form.Control 
+                               name="body" 
+                               as="textarea" 
+                               rows="3"
+                               defaultValue = {this.state.data.body}
+                               onChange={handleChange} />
+                           </Form.Group>
+                      
+                   
+                     </Form>    
+                  
+                      :
+                      null
+                  }
+            </Modal>
+            <Modal
+                title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+                visible={this.state.email}
+                onOk={()=>this.handleOk("email")}
+                onCancel={()=>this.handleCancel("email")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("email")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
+                    {this.state.editEmail ? "Edit Log" : "Save Log"}
+                  </Button>,
+                ]}
+                >
+                  {           
         
-        <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
-            <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
-            <Button onClick={()=>this.showModal("email")}>New email log</Button>
-            <Button onClick={()=>this.showModal("phone")}>New phone log</Button>
-            </span>}>
-            <div style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
-              <div className="mb-2">
-              <Button  onClick={()=>setTableData("all")}>All</Button>
-              <Button onClick={()=>setTableData("email")}>Email</Button>
-              <Button onClick={()=>setTableData("phone")}>Phone</Button>
-              </div>
-            </div>
-        </Card>
-        <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
-          <Table columns={columns} dataSource={this.state.tableData}  />
-        </Card>
-       
-        <Modal
-            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
-            visible={this.state.editEmail}
-            onOk={()=>this.handleOk("email")}
-            onCancel={()=>this.handleCancel("email")}
-            footer={[
-              <Button  onClick={()=>this.handleCancel("email")}>
-                Cancel
-              </Button>,
-              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
-                {this.state.editEmail ? "Edit Log" : "Save Log"}
-              </Button>,
-            ]}
-            >
-              {
-                  this.state.editEmail ?
+                      <Form  
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form }>
+                       <Row>
+                           
+                           <Col>
+                           <Form.Group>
+                       <Form.Label>Matter</Form.Label>
+                              <Form.Control 
+                                  as="select"
+                                  name="matter" 
+                                  placeholder="Matter"
+                                  onChange={handleChange}>
+                              <option>Select a matter</option>
+                              {this.state.option}
+                              </Form.Control>
+                       </Form.Group>
+                           </Col>
+                       </Row>
+                     
+                      <Row>
+                          <Col >
+                          <Form.Group>
+                               <Form.Label>From</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="from" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                              <option>Select a contact</option>    
+                             {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                          
+                          <Col>
+                          <Form.Group >
+                               <Form.Label>To</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="to" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>
+                                   {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                      </Row>
+                       <Row>
+                           <Col>
+                           <Form.Group controlId="date">
+                              <Form.Label>Time</Form.Label>
+                              <Form.Control 
+                              required
+                              type="time" 
+                              name="time" 
+                              placeholder="Time" 
+                              onChange={handleChange}/>
+                          </Form.Group>
+                           </Col>
+                           <Col>
+                           <Form.Group controlId="date">
+                              <Form.Label>Date</Form.Label>
+                              <Form.Control 
+                              required
+                              type="date" 
+                              name="date" 
+                              placeholder="Date" 
+                              onChange={handleChange}/>
+                          </Form.Group>
+                           </Col>
+               
+                       </Row>
+                     
+                      <Form.Group controlId="subject">
+                               <Form.Label>Subject</Form.Label>
+                               <Form.Control 
+                               name="subject" 
+                               rows="3"
+                               placeholder="subject"
+                               onChange={handleChange} />
+                           </Form.Group>  
+                   
+                      
+                           <Form.Group controlId="body">
+                               <Form.Label>Body</Form.Label>
+                               <Form.Control 
+                               name="body" 
+                               as="textarea" 
+                               rows="3"
+                               placeholder="body"
+                               onChange={handleChange} />
+                           </Form.Group>
+                      
+                   
+                  </Form>    
+                   
+                  }
+            </Modal>
+            <Modal
+                title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
+                visible={this.state.editPhone}
+                onOk={()=>this.handleOk("phone")}
+                onCancel={()=>this.handleCancel("phone")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("phone")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                    {this.state.editPhone ? "Edit Log" : "Save Log"}
+                  </Button>,
+                ]}
+                >
+                {
+                
                   <Form 
                   id='myForm'
                   className="form"
                   ref={ form => this.messageForm = form }>
                    <Row>
-                       
+                       <Col>
+                       <Form.Group controlId="duration">
+                          <Form.Label>Duration</Form.Label>
+                          <Form.Control 
+                          type="text" 
+                          name="addTime" 
+                          defaultValue = {this.state.data.addTime}
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
                        <Col>
                        <Form.Group>
                    <Form.Label>Matter</Form.Label>
@@ -609,7 +857,7 @@ class Communication extends React.Component{
                                name="from" 
                                defaultValue = {this.state.data.from}
                                onChange={handleChange}>
-                               <option>Select a contact</option>    
+                               <option>Select a contact</option> 
                            {this.state.contacts}
                            </Form.Control>
                            </Form.Group>
@@ -676,34 +924,43 @@ class Communication extends React.Component{
                        </Form.Group>
                   
                
-                 </Form>    
+                  </Form>    
               
-                  :
-                  null
-              }
-        </Modal>
-        <Modal
-            title={this.state.editEmail ? "Edit email log" : "Add a email log"}
-            visible={this.state.email}
-            onOk={()=>this.handleOk("email")}
-            onCancel={()=>this.handleCancel("email")}
-            footer={[
-              <Button  onClick={()=>this.handleCancel("email")}>
-                Cancel
-              </Button>,
-              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
-                {this.state.editEmail ? "Edit Log" : "Save Log"}
-              </Button>,
-            ]}
-            >
-              {           
-    
-                  <Form  
+               
+                }
+                  
+            </Modal>
+            <Modal
+                title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
+                visible={this.state.phone}
+                onOk={()=>this.handleOk("phone")}
+                onCancel={()=>this.handleCancel("phone")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("phone")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
+                    {this.state.editPhone ? "Edit Log" : "Save Log"}
+                  </Button>,
+                ]}
+                >
+                {
+                 
+                  <Form 
                   id='myForm'
-                  className="form"
-                  ref={ form => this.messageForm = form }>
+                             className="form"
+                             ref={ form => this.messageForm = form }>
                    <Row>
-                       
+                       <Col>
+                       <Form.Group controlId="duration">
+                          <Form.Label>Duration</Form.Label>
+                          <Form.Control 
+                          type="text" 
+                          name="addTime" 
+                          placeholder="hh:mm:ss" 
+                          onChange={handleChange}/>
+                      </Form.Group>
+                       </Col>
                        <Col>
                        <Form.Group>
                    <Form.Label>Matter</Form.Label>
@@ -728,7 +985,7 @@ class Communication extends React.Component{
                                name="from" 
                                placeholder="Select a contact"
                                onChange={handleChange}>
-                          <option>Select a contact</option>    
+                          <option>Select a contact</option>     
                          {this.state.contacts}
                            </Form.Control>
                            </Form.Group>
@@ -796,265 +1053,13 @@ class Communication extends React.Component{
                   
                
               </Form>    
-               
-              }
-        </Modal>
-        <Modal
-            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
-            visible={this.state.editPhone}
-            onOk={()=>this.handleOk("phone")}
-            onCancel={()=>this.handleCancel("phone")}
-            footer={[
-              <Button  onClick={()=>this.handleCancel("phone")}>
-                Cancel
-              </Button>,
-              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
-                {this.state.editPhone ? "Edit Log" : "Save Log"}
-              </Button>,
-            ]}
-            >
-            {
-            
-              <Form 
-              id='myForm'
-              className="form"
-              ref={ form => this.messageForm = form }>
-               <Row>
-                   <Col>
-                   <Form.Group controlId="duration">
-                      <Form.Label>Duration</Form.Label>
-                      <Form.Control 
-                      type="text" 
-                      name="addTime" 
-                      defaultValue = {this.state.data.addTime}
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-                   <Col>
-                   <Form.Group>
-               <Form.Label>Matter</Form.Label>
-                      <Form.Control 
-                          as="select"
-                          name="matter" 
-                          defaultValue = {this.state.data.matter}
-                          onChange={handleChange}>
-                      <option>Select a matter</option>
-                      {this.state.option}
-                      </Form.Control>
-               </Form.Group>
-                   </Col>
-               </Row>
-             
-              <Row>
-                  <Col >
-                  <Form.Group>
-                       <Form.Label>From</Form.Label>
-                       <Form.Control 
-                           as="select"
-                           name="from" 
-                           defaultValue = {this.state.data.from}
-                           onChange={handleChange}>
-                           <option>Select a contact</option> 
-                       {this.state.contacts}
-                       </Form.Control>
-                       </Form.Group>
-                  </Col>
+                }
                   
-                  <Col>
-                  <Form.Group >
-                       <Form.Label>To</Form.Label>
-                       <Form.Control 
-                           as="select"
-                           name="to" 
-                           defaultValue = {this.state.data.to}
-                           onChange={handleChange}>
-                           <option>Select a contact</option>
-                           {this.state.contacts}
-                       </Form.Control>
-                       </Form.Group>
-                  </Col>
-              </Row>
-               <Row>
-                   <Col>
-                   <Form.Group controlId="date">
-                      <Form.Label>Time</Form.Label>
-                      <Form.Control 
-                      required
-                      type="time" 
-                      name="time" 
-                      defaultValue = {this.state.data.time}
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-                   <Col>
-                   <Form.Group controlId="date">
-                      <Form.Label>Date</Form.Label>
-                      <Form.Control 
-                      required
-                      type="date" 
-                      name="date" 
-                      defaultValue = {this.state.data.date} 
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-       
-               </Row>
-             
-              <Form.Group controlId="subject">
-                       <Form.Label>Subject</Form.Label>
-                       <Form.Control 
-                       name="subject" 
-                       rows="3"
-                       defaultValue = {this.state.data.subject}
-                       onChange={handleChange} />
-                   </Form.Group>  
-           
-              
-                   <Form.Group controlId="body">
-                       <Form.Label>Body</Form.Label>
-                       <Form.Control 
-                       name="body" 
-                       as="textarea" 
-                       rows="3"
-                       defaultValue = {this.state.data.body}
-                       onChange={handleChange} />
-                   </Form.Group>
-              
-           
-              </Form>    
-          
-           
-            }
-              
-        </Modal>
-        <Modal
-            title={this.state.editPhone ? "Edit phone log" : "Add a phone log"}
-            visible={this.state.phone}
-            onOk={()=>this.handleOk("phone")}
-            onCancel={()=>this.handleCancel("phone")}
-            footer={[
-              <Button  onClick={()=>this.handleCancel("phone")}>
-                Cancel
-              </Button>,
-              <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
-                {this.state.editPhone ? "Edit Log" : "Save Log"}
-              </Button>,
-            ]}
-            >
-            {
-             
-              <Form 
-              id='myForm'
-                         className="form"
-                         ref={ form => this.messageForm = form }>
-               <Row>
-                   <Col>
-                   <Form.Group controlId="duration">
-                      <Form.Label>Duration</Form.Label>
-                      <Form.Control 
-                      type="text" 
-                      name="addTime" 
-                      placeholder="hh:mm:ss" 
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-                   <Col>
-                   <Form.Group>
-               <Form.Label>Matter</Form.Label>
-                      <Form.Control 
-                          as="select"
-                          name="matter" 
-                          placeholder="Matter"
-                          onChange={handleChange}>
-                      <option>Select a matter</option>
-                      {this.state.option}
-                      </Form.Control>
-               </Form.Group>
-                   </Col>
-               </Row>
-             
-              <Row>
-                  <Col >
-                  <Form.Group>
-                       <Form.Label>From</Form.Label>
-                       <Form.Control 
-                           as="select"
-                           name="from" 
-                           placeholder="Select a contact"
-                           onChange={handleChange}>
-                      <option>Select a contact</option>     
-                     {this.state.contacts}
-                       </Form.Control>
-                       </Form.Group>
-                  </Col>
-                  
-                  <Col>
-                  <Form.Group >
-                       <Form.Label>To</Form.Label>
-                       <Form.Control 
-                           as="select"
-                           name="to" 
-                           placeholder="Select a contact"
-                           onChange={handleChange}>
-                           <option>Select a contact</option>
-                           {this.state.contacts}
-                       </Form.Control>
-                       </Form.Group>
-                  </Col>
-              </Row>
-               <Row>
-                   <Col>
-                   <Form.Group controlId="date">
-                      <Form.Label>Time</Form.Label>
-                      <Form.Control 
-                      required
-                      type="time" 
-                      name="time" 
-                      placeholder="Time" 
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-                   <Col>
-                   <Form.Group controlId="date">
-                      <Form.Label>Date</Form.Label>
-                      <Form.Control 
-                      required
-                      type="date" 
-                      name="date" 
-                      placeholder="Date" 
-                      onChange={handleChange}/>
-                  </Form.Group>
-                   </Col>
-       
-               </Row>
-             
-              <Form.Group controlId="subject">
-                       <Form.Label>Subject</Form.Label>
-                       <Form.Control 
-                       name="subject" 
-                       rows="3"
-                       placeholder="subject"
-                       onChange={handleChange} />
-                   </Form.Group>  
-           
-              
-                   <Form.Group controlId="body">
-                       <Form.Label>Body</Form.Label>
-                       <Form.Control 
-                       name="body" 
-                       as="textarea" 
-                       rows="3"
-                       placeholder="body"
-                       onChange={handleChange} />
-                   </Form.Group>
-              
-           
-          </Form>    
-            }
-              
-        </Modal>
-    </div>
-    }
+            </Modal>
+        </div>
+        
+        </Spin>
+        }
 }
 
 const mapStateToProps = (state) => ({

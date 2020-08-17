@@ -8,7 +8,8 @@ import {
   Input,
   Form,
   Select,
-  Popconfirm
+  Popconfirm,
+  Spin
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -25,6 +26,7 @@ const Documents = () => {
   const [docs, setDocs] = useState([]);
   const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
+  const [Loading, setLoading] = useState(true)
   const [uploadData, setUploadData] = useState({
     document: '',
     _id: '',
@@ -94,7 +96,7 @@ const Documents = () => {
       render: (_, record) => {
         return (
           <Popconfirm
-                    title="Are you sure delete this Account?"
+                    title="Are you sure delete this Document?"
                     onConfirm={()=>deleteHandler(record._id)}
                     onCancel={()=>{}}
                     okText="Yes"
@@ -192,6 +194,7 @@ const Documents = () => {
       });
     });
     setDocs(tempDocs);
+    setLoading(false)
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
@@ -302,13 +305,41 @@ const Documents = () => {
       });
   };
   const editHandler = async (docId) => {
-    
-    setModalFor('Edit');
-    setViewUpload(true);
-    await api.get(`/document/view/${docId}`).then((response) => {
-      
-      setUploadData(response.data.data);
-    });
+    if(uploadData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(uploadData.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(uploadData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(uploadData.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(uploadData.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+      setModalFor('Edit');
+      setViewUpload(true);
+      await api.get(`/document/view/${docId}`).then((response) => {
+        
+        setUploadData(response.data.data);
+      });
+    }
+
+   
   };
 
   const handleEdit = async () => {
@@ -441,7 +472,7 @@ const Documents = () => {
             <Input
               type="file"
               onChange={handleInput('document')}
-              value={uploadData.document}
+             // value={uploadData.document}
             />
           </Form.Item>
         )}
@@ -449,7 +480,8 @@ const Documents = () => {
     </Modal>
   );
   return (
-    <Card
+    <Spin size = "large" spinning={Loading}>
+      <Card
       title="Document"
       extra={
         <span style={{ float: 'right' }} className="">
@@ -475,7 +507,9 @@ const Documents = () => {
       {uploadForm()}
       <Table dataSource={docs} columns={columnsForDocuments} />
     </Card>
-  );
+ 
+    </Spin>
+     );
 };
 
 export default Documents;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm  } from 'antd';
+import { Card, Button, Tabs, Table, Modal, notification, Space, Popconfirm, Spin  } from 'antd';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../../../resources/api';
@@ -19,6 +19,7 @@ const Notes = (props) => {
     const [record, setrecord] = useState({})
     const [editModal, seteditModal] = useState(false)
     const formRef = useRef(null)
+    const [Loading, setLoading] = useState(true)
     let timeError = ""
   
     const fetchNotes = ( ) => {
@@ -38,6 +39,7 @@ const Notes = (props) => {
                 notes.push(temp)
             })
             settableData(notes)
+            setLoading(false)
         })
     }
     useEffect(() => {
@@ -233,6 +235,10 @@ const Notes = (props) => {
     }
     
     const exportPDF = () => {
+      console.log(tableData.length)
+      if(tableData.length == 0 ){
+        notification.warning({message : "Please add notes before exporting"})
+      }else{
         const unit = 'pt';
         const size = 'A4'; // Use A1, A2, A3 or A4
         const orientation = 'portrait'; // portrait or landscape
@@ -260,9 +266,11 @@ const Notes = (props) => {
         doc.text(title, marginLeft, 40);
         doc.autoTable(content);
         doc.save('notes.pdf');
-      };
+      }
+    };
 
     return(
+      <Spin spinning={Loading} size = "large">
         <div>
             <Card
                 title="Notes"
@@ -353,7 +361,7 @@ const Notes = (props) => {
                       Cancel
                     </Button>,
                     <Button type="primary" disabled = {disable} onClick={handleOk}>
-                      Edit
+                      Save
                     </Button>,
                   ]}
             >
@@ -389,6 +397,8 @@ const Notes = (props) => {
                 </Form>
             </Modal>
         </div>
-    )
+   
+      </Spin>
+         )
 }
 export default Notes

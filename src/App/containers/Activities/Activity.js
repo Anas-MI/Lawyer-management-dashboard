@@ -7,6 +7,7 @@ import {
   notification,
   Space,
   Popconfirm,
+  Spin
 } from 'antd';
 import { useSelector, connect } from 'react-redux';
 import ExpenseForm from './Form/expenseForm';
@@ -39,6 +40,7 @@ class Activity extends React.Component {
         time: '',
         billed : false
       },
+      loading : true,
       timeData: [],
       expenseData: [],
       completeData: [],
@@ -188,6 +190,7 @@ class Activity extends React.Component {
         thisMonth: thisMonth,
         thisYear: thisYear,
         today: today,
+        loading : false
       });
     });
     
@@ -684,7 +687,8 @@ class Activity extends React.Component {
       }
     };
     return (
-      <div className="p-2 ">
+      <Spin size = "large" spinning={this.state.loading}>
+        <div className="p-2 ">
         <br></br>
         <br></br>
 
@@ -1248,7 +1252,9 @@ class Activity extends React.Component {
     
         </Modal>
       </div>
-    );
+   
+      </Spin>
+       );
   }
 }
 

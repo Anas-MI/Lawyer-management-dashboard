@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
-import { Card, Tabs, Button, Modal, Table, Upload, notification } from 'antd';
+import { Card, Tabs, Button, Modal, Table, Upload, notification, Spin} from 'antd';
 import { number } from 'prop-types';
 import { Form, Row, Col } from 'react-bootstrap';
 import Communication from './communnication';
@@ -17,6 +17,7 @@ const { TabPane } = Tabs;
 function CompanyView(props) {
   let response = {};
   const [desc, setdesc] = useState('');
+  const [Loading, setLoading] = useState(true)
   const [total, settotal] = useState("0")
   const [Client, setClient] = useState('');
   const [Amount, setAmount] = useState('0');
@@ -220,6 +221,7 @@ function CompanyView(props) {
     setfirstName(fNAme);
     setEmail(mail);
     setNumber(Num);
+    setLoading(false)
   };
   function callback(key) {
     console.log(key);
@@ -276,7 +278,8 @@ function CompanyView(props) {
     props.history.push('/view/matter/bills', props.location.state.id);
   };
   return (
-    <div>
+    <Spin size="large" spinning = {Loading}>
+      <div>
       <Card style={{ height: '110px' }}>
         <div className="d-flex mb-3 example-parent">
           <div className="mr-auto p-2 col-example">
@@ -475,6 +478,8 @@ function CompanyView(props) {
         </TabPane>
       </Tabs>
     </div>
-  );
+  
+    </Spin>
+    );
 }
 export default CompanyView;
