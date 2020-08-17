@@ -8,6 +8,7 @@ export class ExportExcel extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div>
         <table id="matter" className="d-none">
@@ -28,8 +29,8 @@ export class ExportExcel extends Component {
                   <td>{index + 1}</td>
                   <td>{value.matterDescription}</td>
                   <td>{value.Client}</td>
-                  <th>{value.practiseArea?  value.practiseArea : "-"}</th>
-                  <th>{ value.openDate ? value.openDate : "-"}</th>
+                  <th>{value.PractiseArea?  value.PractiseArea : "-"}</th>
+                  <th>{ value.OpenDate ? value.OpenDate : "-"}</th>
                 </tr>
               );
             })}

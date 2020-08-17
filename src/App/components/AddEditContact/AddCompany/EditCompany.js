@@ -351,7 +351,7 @@ class editCompany extends React.Component {
           <div className="card p-4">
             <Form className="form-details" onSubmit={this.handleSubmit}>
               <div className="form-header-container mb-4">
-                <h3 className="form-header-text">Add company</h3>
+                <h3 className="form-header-text">Update company</h3>
               </div>
               <Upload {...imageHandler} onChange={handleImageChange}>
                 <antdButton className="form-upload-button">
