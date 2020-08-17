@@ -252,7 +252,7 @@ const Notes = (props) => {
   
       let data = [];
       tableData.map((val, index) => {
-        const td = [val.hours, val.subject, val.note , val.date];
+        const td = [val.hours, val.subject, val.notes , val.date];
         data.push(td);
       });
   
