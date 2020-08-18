@@ -212,8 +212,14 @@ class customFeilds extends React.Component {
     const operations = <Button onClick={() => this.setState({visible : true})}>Add</Button>
     return (
       <Card>
-      
-      <Tabs>
+      <Tabs tabBarExtraContent={operations}>
+             <TabPane tab="Custom Feild" key="1">
+                <Table columns={columns} dataSource={this.state.tableData} />
+              </TabPane>
+              
+        </Tabs>
+        {/* 
+        <Tabs>
              <TabPane tab="Matter Custom Feild" key="1">
                 <Tabs tabBarExtraContent={operations}>
                   <TabPane tab="Individual Feild" key="1">
@@ -239,6 +245,7 @@ class customFeilds extends React.Component {
                 </Tabs>
              </TabPane>
         </Tabs>
+        */}
         <Modal
           title="Add Custom Feild"
           centered
