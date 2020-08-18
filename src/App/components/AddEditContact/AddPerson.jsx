@@ -64,7 +64,9 @@ class newPerson extends React.Component {
       valid: false,
       visible: false,
       fileList: [],
-      disable : false
+      billingPaymentProfile : "default",
+      disable : false,
+      user: ""
     };
   }
 
@@ -74,6 +76,12 @@ class newPerson extends React.Component {
     customData[id] = { [name]: value };
   }
   async componentDidMount() {
+    let user = JSON.parse(window.localStorage.getItem('Case.user'))
+    user = user.token.user
+    console.log(user)
+    this.setState({
+      user : user.firstName + " " + user.lastName
+    })
     response = await api.get('/company/viewforuser/' + this.props.userId);
 
     options = response.data.data.map((value, id) => {
@@ -167,6 +175,7 @@ class newPerson extends React.Component {
         //  dispatch(updateBlog({id:this.state._id,body:this.state}))
       } else {
         api.post('contact/create', data).then((result) => {
+          console.log(result)
           notification.success({message : "Contact created"})
           this.setState({ visible: true });
           const key = 'updatingDetails';
@@ -1191,9 +1200,10 @@ class newPerson extends React.Component {
                     <Form.Label>Payment profile</Form.Label>
                     <Form.Control
                       as="select"
+                      name = "billingPaymentProfile"
                       name="Payment profile"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
+                      onChange={handleChange}
                     >
                       <option>default</option>
                     </Form.Control>
@@ -1205,18 +1215,26 @@ class newPerson extends React.Component {
               <Row>
                 <Col md="3">
                   <Form.Group>
-                    <Form.Label>Firm user or group</Form.Label>
+                    <Form.Label>Firm user</Form.Label>
                     <Form.Control
+                      name = "billingPaymentProfile"
                       as="select"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
-                    ></Form.Control>
+                      onChange={handleChange}
+                    >
+                      <option>{this.state.user}</option>
+
+                    </Form.Control>
                   </Form.Group>
                 </Col>
                 <Col md="3">
                   <Form.Group>
                     <Form.Label>Rate</Form.Label>
-                    <Form.Control name="rate" type="text" placeholder="$0.0" />
+                    <Form.Control 
+                      name="billingCustomRate" 
+                      type="number" 
+                      onChange={handleChange}
+                      placeholder="$0.0" />
                   </Form.Group>
                 </Col>
               </Row>
@@ -1225,9 +1243,10 @@ class newPerson extends React.Component {
                   <Form.Group>
                     <Form.Label>ClientID</Form.Label>
                     <Form.Control
-                      name="clientId"
+                      name="billingClientId"
                       type="text"
                       placeholder="ClientID"
+                      onChange={handleChange}
                     />
                   </Form.Group>
                 </Col>

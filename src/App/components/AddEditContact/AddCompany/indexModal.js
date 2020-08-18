@@ -47,10 +47,17 @@ class editCompany extends React.Component{
     this.state={
       address : [], emailAddress : [], phone : [], website:[],employees: [],
       optionsss : null,
-      disable : false
+      disable : false,
+      billingPaymentProfile : "default"
     }
   }
  componentDidMount() {
+    let user = JSON.parse(window.localStorage.getItem('Case.user'))
+    user = user.token.user
+    console.log(user)
+    this.setState({
+      user : user.firstName + " " + user.lastName
+    })
     let optionsss = null
     api.get('contact/viewforuser/'+this.props.userId).then((res)=>{
       console.log(res.data.data)
@@ -847,16 +854,16 @@ class editCompany extends React.Component{
               <br></br>
               </div>
              
-            <h4>Billing preferences</h4>
+              <h4>Billing preferences</h4>
               <Row>
-                <Col>
+                <Col md="6">
                   <Form.Group>
                     <Form.Label>Payment profile</Form.Label>
                     <Form.Control
                       as="select"
                       name="Payment profile"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
+                      onChange={handleChange}
                     >
                       <option>default</option>
                     </Form.Control>
@@ -866,31 +873,40 @@ class editCompany extends React.Component{
 
               <p>Hourly billing</p>
               <Row>
-                <Col>
+                <Col md="3">
                   <Form.Group>
-                    <Form.Label>Firm user or group</Form.Label>
+                    <Form.Label>Firm user</Form.Label>
                     <Form.Control
+                      name = "billingPaymentProfile"
                       as="select"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
-                    ></Form.Control>
+                      onChange={handleChange}
+                    >
+                      <option>{this.state.user}</option>
+
+                    </Form.Control>
                   </Form.Group>
                 </Col>
-                <Col >
+                <Col md="3">
                   <Form.Group>
                     <Form.Label>Rate</Form.Label>
-                    <Form.Control name="rate" type="text" placeholder="$0.0" />
+                    <Form.Control 
+                      name="billingCustomRate" 
+                      type="number" 
+                      onChange={handleChange}
+                      placeholder="$0.0" />
                   </Form.Group>
                 </Col>
               </Row>
               <Row>
-                <Col >
+                <Col md="6">
                   <Form.Group>
                     <Form.Label>ClientID</Form.Label>
                     <Form.Control
-                      name="clientId"
+                      name="billingClientId"
                       type="text"
                       placeholder="ClientID"
+                      onChange={handleChange}
                     />
                   </Form.Group>
                 </Col>

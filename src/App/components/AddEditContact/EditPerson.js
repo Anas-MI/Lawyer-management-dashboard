@@ -67,7 +67,8 @@ class editPerson extends React.Component {
       editData: '',
       fileList: [],
       prefixx : "",
-      companyy : ""
+      companyy : "",
+      billingPaymentProfile : "default"
     };
   }
 
@@ -99,6 +100,12 @@ class editPerson extends React.Component {
     }
   };
    componentDidMount() {
+    let user = JSON.parse(window.localStorage.getItem('Case.user'))
+    user = user.token.user
+    console.log(user)
+    this.setState({
+      user : user.firstName + " " + user.lastName
+    })
    api.get(
       '/contact/view/' + this.props.location.state._id
     ).then((editData)=>{
@@ -1224,7 +1231,7 @@ class editPerson extends React.Component {
                       as="select"
                       name="Payment profile"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
+                      onChange={handleChange}
                     >
                       <option>default</option>
                     </Form.Control>
@@ -1236,18 +1243,26 @@ class editPerson extends React.Component {
               <Row>
                 <Col md="3">
                   <Form.Group>
-                    <Form.Label>Firm user or group</Form.Label>
+                    <Form.Label>Firm user</Form.Label>
                     <Form.Control
+                      name = "billingPaymentProfile"
                       as="select"
                       //defaultValue={this.props.record[idx]}
-                      //onChange={this.props.change}
-                    ></Form.Control>
+                      onChange={handleChange}
+                    >
+                      <option>{this.state.user}</option>
+
+                    </Form.Control>
                   </Form.Group>
                 </Col>
                 <Col md="3">
                   <Form.Group>
                     <Form.Label>Rate</Form.Label>
-                    <Form.Control name="rate" type="text" placeholder="$0.0" />
+                    <Form.Control 
+                      name="billingCustomRate" 
+                      type="number" 
+                      onChange={handleChange}
+                      placeholder="$0.0" />
                   </Form.Group>
                 </Col>
               </Row>
@@ -1256,13 +1271,15 @@ class editPerson extends React.Component {
                   <Form.Group>
                     <Form.Label>ClientID</Form.Label>
                     <Form.Control
-                      name="clientId"
+                      name="billingClientId"
                       type="text"
                       placeholder="ClientID"
+                      onChange={handleChange}
                     />
                   </Form.Group>
                 </Col>
               </Row>
+
 
               <Button type="submit" className="btn btn-success">
                 {editMode ? 'Update' : 'Create'}
