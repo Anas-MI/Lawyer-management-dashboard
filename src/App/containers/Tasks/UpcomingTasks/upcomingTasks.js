@@ -19,10 +19,11 @@ const UpcomingTasks = (props) => {
     return (
       <Tabs defaultActiveKey="1">
         <TabPane tab="All" key="1">
-          <Table dataSource={props.tableData} columns={props.columns} />
+          <Table className="table-responsive" dataSource={props.tableData} columns={props.columns} />
         </TabPane>
         <TabPane tab="Due Today" key="3">
           <Table
+          className="table-responsive"
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
               return (
@@ -36,6 +37,7 @@ const UpcomingTasks = (props) => {
         </TabPane>
         <TabPane tab="Due this Week" key="2">
           <Table
+          className="table-responsive"
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
               return date < end_of_week && date > start_of_week || (date.getDate() === now.getDate() &&
@@ -48,6 +50,7 @@ const UpcomingTasks = (props) => {
 
         <TabPane tab="Due Tomorow" key="4">
           <Table
+          className="table-responsive"
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
               return (
@@ -61,6 +64,7 @@ const UpcomingTasks = (props) => {
         </TabPane>
         <TabPane tab="Overdue" key="5">
           <Table
+            className="table-responsive"
             dataSource={props.tableData.filter((item) => {
               var date = new Date(Date.parse(item.dueDate));
               return date <= yesterday

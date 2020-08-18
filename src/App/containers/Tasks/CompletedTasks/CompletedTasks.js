@@ -20,7 +20,7 @@ function CompletedTask(props) {
 
   return (
     <div>
-      <Table columns={props.columns} dataSource={props.tableData} />
+      <Table className="table-responsive" columns={props.columns} dataSource={props.tableData} />
     </div>
   );
 }

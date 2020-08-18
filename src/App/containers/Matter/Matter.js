@@ -448,6 +448,7 @@ class matterManage extends React.Component {
         <br></br>
 
         <Table
+        className="table-responsive"
           dataSource={
             this.state.finalData.length === 0 && this.state.value.length === 0
               ? this.state.tableData
