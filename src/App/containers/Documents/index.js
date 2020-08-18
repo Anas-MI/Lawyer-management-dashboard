@@ -9,7 +9,8 @@ import {
   Form,
   Select,
   Popconfirm,
-  Spin
+  Spin,
+  Tabs
 } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -17,6 +18,7 @@ import { useSelector } from 'react-redux';
 import api from '../../../resources/api';
 import { findLast } from 'lodash';
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 //matters={props.location.state.matters}
 // userId={props.location.state.userId}
@@ -40,6 +42,117 @@ const Documents = () => {
   const [matters, setMatters] = useState([]);
 
   const columnsForDocuments = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: '0',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: '1',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.name.length - b.name.length,
+      render: (_ , record) => {
+        return (
+          record.type ==="File" ?
+          record.name
+          :
+          <a style={{color : "blue"}} >{record.name}</a>
+        );
+      },
+
+    },
+    {
+      title: 'Matter',
+      dataIndex: 'matter',
+      key: '2',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: '3',
+    },
+    {
+      title: 'Received Date',
+      dataIndex: 'receivedDate',
+      key: '4',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.receivedDate > b.receivedDate,
+    },
+    {
+      title: 'Last Edit',
+      dataIndex: 'lastEdit',
+      key: '5',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.lastEdit > b.lastEdit,
+    },
+
+    {
+      title: 'Edit',
+      dataIndex: 'edit',
+      key: '6',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-info "
+            onClick={() => {
+              editHandler(record._id);
+            }}
+          >
+            Edit
+          </Button>
+        );
+      },
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Popconfirm
+                    title="Are you sure delete this Document?"
+                    onConfirm={()=>deleteHandler(record._id)}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button
+                      className=" btn-outline-danger "
+                    >
+                      Delete
+                    </Button>
+                  </Popconfirm>
+          
+        );
+      },
+    },
+    {
+      title: 'Download',
+      dataIndex: 'download',
+      key: '8',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-primary "
+            onClick={() => {
+              downloadHandler(record);
+            }}
+            icon={<DownloadOutlined />}
+          >
+            Download
+          </Button>
+        );
+      },
+    },
+  ];
+  const columnsForTemplate = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: '0',
+    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -131,6 +244,57 @@ const Documents = () => {
       },
     },
   ];
+  const columnsForCatagory = [
+    
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: '1',
+    },
+    
+
+    {
+      title: 'Edit',
+      dataIndex: 'edit',
+      key: '6',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-info "
+            onClick={() => {
+              editHandler(record._id);
+            }}
+          >
+            Edit
+          </Button>
+        );
+      },
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: '7',
+      render: (_, record) => {
+        return (
+          <Popconfirm
+                    title="Are you sure delete this Document?"
+                    onConfirm={()=>deleteHandler(record._id)}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button
+                      className=" btn-outline-danger "
+                    >
+                      Delete
+                    </Button>
+                  </Popconfirm>
+          
+        );
+      },
+    },
+    
+  ];
   const layout = {
     labelCol: {
       span: 8,
@@ -185,6 +349,7 @@ const Documents = () => {
           ...tempDocs,
           {
             ...item,
+            type : "File",
             key: item._id,
             matter: item.matter !== null ? item.matter.matterDescription : '-',
             receivedDate: getISTDate(item.receivedDate),
@@ -481,12 +646,39 @@ const Documents = () => {
       </Form>
     </Modal>
   );
-  return (
-    <Spin size = "large" spinning={Loading}>
-      <Card
-      title="Document"
-      extra={
-        <span style={{ float: 'right' }} className="">
+  const ButtonForDocument = (
+    <div className="d-flex justify-content-center">
+           <Button
+            onClick={() => {
+              setUploadData({
+                document: '',
+                _id: '',
+                name: '',
+                matter: '',
+                category: '',
+              }); //todo
+
+              setViewUpload(true);
+              setModalFor('Upload');
+            }}
+          >
+            Upload 
+          </Button>
+      </div>
+  
+  );
+  const ButtonForCatagory = (
+    <div className="d-flex justify-content-center">
+           <Button
+            onClick={() => {}}
+          >
+            Add Catagory
+          </Button>
+      </div>
+  
+  );
+  const ButtonForTemplate = (
+    <div className="d-flex justify-content-center">
           <Button
             onClick={() => {
               setUploadData({
@@ -501,14 +693,47 @@ const Documents = () => {
               setModalFor('Upload');
             }}
           >
-            Upload
+            Upload 
           </Button>
-        </span>
-      }
-    >
-      {uploadForm()}
-      <Table dataSource={docs} columns={columnsForDocuments} />
-    </Card>
+      </div>
+  
+  );
+  
+  const [operations, setoperations] = useState(ButtonForDocument)
+  const callback = ( key ) => {
+    console.log(key);
+    if(key == 1){
+      setoperations(ButtonForDocument)
+    }else if(key == 2){
+      setoperations(ButtonForCatagory)
+    }if(key == 3){
+      setoperations(ButtonForTemplate)
+    }
+    
+    
+  }
+  return (
+    <Spin size = "large" spinning={Loading}>
+      
+      <Tabs
+          defaultActiveKey="1"
+          tabBarExtraContent={operations}
+          onChange={callback}
+          className="card p-4 overflow-auto"
+        >
+          <TabPane tab="Document" key="1">
+            
+            <Table dataSource={docs} columns={columnsForDocuments} />
+          </TabPane>
+          <TabPane tab="Category" key="2">
+           <Table dataSource={docs} columns={columnsForCatagory} />
+          </TabPane>
+          <TabPane tab="Template" key="3">
+            {uploadForm()}
+            <Table dataSource={docs} columns={columnsForTemplate} />
+          </TabPane>
+      </Tabs>
+     
  
     </Spin>
      );

@@ -5,7 +5,7 @@ import { Button } from 'antd';
 export class ExportExcel extends Component {
   constructor(props) {
     super(props);
-    console.log('data in excel', props.dataSource);
+  
   }
 
   render() {
@@ -29,7 +29,7 @@ export class ExportExcel extends Component {
 
                   <td>{p.firstName}</td>
                   <td>{p.emailAddress.map((value) => {
-                    console.log(value)
+                
                         return value;
                       })}</td>
                 </tr>

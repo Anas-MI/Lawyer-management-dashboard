@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import TaskForm from './EditForm'
 import TaskForm2 from './Taskform'
 import { Input, Select } from 'antd';
+import ExportExcel from './ExcelExport'
 import ReactDOM from 'react-dom'
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -52,15 +53,18 @@ class Tasks extends React.Component {
       ['S.No', 'Task Name', 'Description', 'Matter', 'Due Date'],
     ];
     let data = [];
+    let count = 0
     this.state.tableData.map((val, index) => {
-      const td = [
-        index + 1,
-        val.taskName,
-        val.description,
-        val.matter,
-        this.getISTDate(val.dueDate),
-      ];
-      data.push(td);
+      if(!val.status){
+        const td = [
+          count,
+          val.taskName,
+          val.description,
+          val.matter,
+          val.dueDate.substring(0,10),
+        ];
+        data.push(td);
+      }
     });
     let content = {
       startY: 50,
@@ -502,12 +506,22 @@ class Tasks extends React.Component {
   render() {
     console.log(this.state.tableData)
     const operations = (
-      <span>
-        <Button className="ml-auto" color="success" onClick={this.exportPDF}>
-          Export
-        </Button>
-        <Button onClick={this.showModal}>ADD</Button>
-      </span>
+      <div className="d-flex justify-content-center">
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={this.exportPDF}
+              >
+                  Export to Pdf
+              </button>
+              <ExportExcel dataSource={this.state.tableData || []} />
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={this.showModal}
+              >
+                  ADD TASK
+              </button>
+        </div>
+    
     );
     const { TabPane } = Tabs;
     function callback(key) {

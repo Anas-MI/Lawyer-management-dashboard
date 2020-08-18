@@ -15,10 +15,12 @@ export class ExportExcel extends Component {
           <thead>
             <tr>
               <th>S.No</th>
-              <th>Matter</th>
-              <th>Client</th>
-              <th>Practice Area</th>
-              <th>Open date</th>
+              <th>Qty</th>
+              <th>Description</th>
+              <th>Billable</th>
+              <th>Rate</th>
+              <th>Date</th>
+              <th>Invoice Status</th>
             </tr>
           </thead>
 
@@ -27,10 +29,12 @@ export class ExportExcel extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{value.matterDescription}</td>
-                  <td>{value.Client}</td>
-                  <th>{value.PractiseArea?  value.PractiseArea : "-"}</th>
-                  <th>{ value.OpenDate ? value.OpenDate : "-"}</th>
+                  <td>{value.qty}</td>
+                  <td>{value.description}</td>
+                  <th>{value.billable}</th>
+                  <th>{ value.rate }</th>
+                  <th>{value.date}</th>
+                  <th>{value.invoiceStatus}</th>
                 </tr>
               );
             })}
@@ -40,7 +44,7 @@ export class ExportExcel extends Component {
         <ReactHTMLTableToExcel
           className="btn btn-outline-primary btn-sm ml-auto"
           table="matter"
-          filename="matters"
+          filename="Acitivity"
           sheet="Sheet"
           buttonText="Export to Excel"
         />

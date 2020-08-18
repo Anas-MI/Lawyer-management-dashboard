@@ -6,6 +6,7 @@ import "jspdf-autotable";
 import api from '../../../resources/api'
 import { Form, Col, Row } from 'react-bootstrap'
 import ReactDOM from 'react-dom'
+import ExportExcel from './ExcelExport'
 
 
 let timeError = "" ;
@@ -522,15 +523,24 @@ class Communication extends React.Component{
         
             doc.setFontSize(15);
         
-            const title = "Activity";
-            const headers = [["Hours", "Type","Date and time","Attachment","Matter","From", "To"] ];
+            const title = "communication";
+            const headers = [["Hours", "Type","Time","Date","Subject","Matter","From", "To"] ];
            
             let data = []
-            /*
+            
+          
             this.state.tableData.map((val, index)=>{
-              const td= [val.type , val.qty, val.description , val.billable, val.rate, val.date, val.invoiceStatus]
+              const td = [
+                val.addTime,
+                val.logType , 
+                val.time ,
+                val.Date,
+                 val.subject, 
+                 val.matter, 
+                 val.from, 
+                 val.to]
               data.push(td)
-            })*/
+            })
           
         
             let content = {
@@ -541,7 +551,7 @@ class Communication extends React.Component{
         
             doc.text(title, marginLeft, 40);
             doc.autoTable(content);
-            doc.save("Activity.pdf")
+            doc.save("communications.pdf")
           }
         return <Spin size = "large" spinning={this.state.loading}>
           <div className='p-2 '>
@@ -549,11 +559,32 @@ class Communication extends React.Component{
             <br></br>
             <br></br>
             
-            <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}extra={<span style={{float : "right"}}>
-                <Button className='ml-auto' color='success' onClick={exportPDF}>Export</Button>
-                <Button onClick={()=>this.showModal("email")}>New email log</Button>
-                <Button onClick={()=>this.showModal("phone")}>New phone log</Button>
-                </span>}>
+            <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}
+            extra={
+              <div className="d-flex justify-content-center">
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={exportPDF}
+              >
+                  Export to Pdf
+              </button>
+              <ExportExcel dataSource={this.state.tableData || []} />
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={()=>this.showModal("email")}
+              >
+                  New Email Log
+              </button>
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={()=>this.showModal("phone")}
+              >
+                  New Phone Log
+              </button>
+          
+              </div>
+           
+              }>
                 <div style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
                   <div className="mb-2">
                   <Button  onClick={()=>setTableData("all")}>All</Button>

@@ -64,6 +64,7 @@ class newPerson extends React.Component {
       modal: false,
       valid: false,
       visible: false,
+      billingPaymentProfile : "default",
       fileList: [
         {
           uid: "-1",
@@ -82,6 +83,12 @@ class newPerson extends React.Component {
     customData[id] = { [name]: value };
   }
   async componentDidMount() {
+    let user = JSON.parse(window.localStorage.getItem('Case.user'))
+    user = user.token.user
+    console.log(user)
+    this.setState({
+      user : user.firstName + " " + user.lastName
+    })
     response = await api.get("/company/viewforuser/" + this.props.userId);
 
     options = response.data.data.map((value, id) => {
@@ -1163,6 +1170,65 @@ class newPerson extends React.Component {
                 </Button>
               </p>
               {customFields}
+
+              <h4>Billing preferences</h4>
+              <Row>
+                <Col md="6">
+                  <Form.Group>
+                    <Form.Label>Payment profile</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="Payment profile"
+                      //defaultValue={this.props.record[idx]}
+                      onChange={handleChange}
+                    >
+                      <option>default</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <p>Hourly billing</p>
+              <Row>
+                <Col md="3">
+                  <Form.Group>
+                    <Form.Label>Firm user</Form.Label>
+                    <Form.Control
+                      name = "billingPaymentProfile"
+                      as="select"
+                      //defaultValue={this.props.record[idx]}
+                      onChange={handleChange}
+                    >
+                      <option>{this.state.user}</option>
+
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col md="3">
+                  <Form.Group>
+                    <Form.Label>Rate</Form.Label>
+                    <Form.Control 
+                      name="billingCustomRate" 
+                      type="number" 
+                      onChange={handleChange}
+                      placeholder="$0.0" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="6">
+                  <Form.Group>
+                    <Form.Label>ClientID</Form.Label>
+                    <Form.Control
+                      name="billingClientId"
+                      type="text"
+                      placeholder="ClientID"
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
               <div className="float-right" style={{marginTop : "7.5%"}}>
                  <Button type="submit" disabled = {this.state.disable}  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
                </div>

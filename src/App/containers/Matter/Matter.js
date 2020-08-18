@@ -372,13 +372,14 @@ class matterManage extends React.Component {
       ];
 
       let data = [];
+      console.log(this.state.tableData)
       this.state.tableData.map((value, index) => {
         const td = [
           index + 1,
           value.matterDescription,
           value.Client,
-          value.practiseArea ? value.practiseArea : '-',
-          value.openDate ? value.openDate : '-',
+          value.PractiseArea ? value.PractiseArea : '-',
+          value.OpenDate ? value.OpenDate : '-',
         ];
         data.push(td);
       });
@@ -447,6 +448,7 @@ class matterManage extends React.Component {
         <br></br>
 
         <Table
+        className="table-responsive"
           dataSource={
             this.state.finalData.length === 0 && this.state.value.length === 0
               ? this.state.tableData

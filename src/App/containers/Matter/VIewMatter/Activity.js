@@ -425,6 +425,51 @@ class Activity extends React.Component {
           notification.error({ message: 'Failed to delete' });
         });
     };
+    const handleDublicate = (record) => {
+
+      if (record.type === 'time') {
+        record.type = 'time';
+        record.userId = this.props.userId;
+        record.billable = record.billable === "Yes" ? true : false
+       
+      } else if (record.type === 'expense') {
+        record.type = 'expense';
+        record.userId = this.props.userId;
+        record.billable = record.billable === "Yes" ? true : false       
+      }
+      console.log(record)
+      api
+      .post('/activity/create', record)
+      .then((res) => {
+        this.componentDidMount()
+        this.setState({
+          disableExpense : false,
+          disabletime : false
+        })
+        notification.success({ message: 'Acitivity dublicated !' });
+      })
+      .catch((err) => {
+        notification.error({ message: 'Failed' });
+      })
+      .then(() => {
+    //    ReactDOM.findDOMNode(this.messageForm).reset()
+        this.setState({
+          timeModal: false,
+          editmode: false,
+          data: {
+            billable: false,
+            nonBillable: false,
+            date: '',
+            qty: '1.0',
+            rate: '',
+            invoice: 'Unbilled',
+          },
+        });
+        setTimeout(() => {
+          //window.location.reload();
+        }, 1500);
+      });
+    }
     const handleReset = ( form ) =>{
       this.messageForm = form
     }
@@ -483,6 +528,18 @@ class Activity extends React.Component {
           return (
             <Button variant="danger" onClick={() => handleEdit(record)}>
               Edit
+            </Button>
+          );
+        },
+      },
+      {
+        title: 'Dublicate',
+        dataIndex: 'Dublicate',
+        key: '_id',
+        render: (_, record) => {
+          return (
+            <Button onClick={() => handleDublicate(record)}>
+              Dublicate
             </Button>
           );
         },
