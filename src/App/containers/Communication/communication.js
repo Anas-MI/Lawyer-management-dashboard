@@ -205,9 +205,10 @@ class Communication extends React.Component{
               .post('/communication/edit/'+ this.state.data.id, data)
               .then((res) => {
                 console.log(res)
-                this.componentDidMount()
+                this.componentDidMount()            
                 this.setState({
                   disable : false
+                  
                 })
                 notification.success({ message: 'Log Edited !' });
               })
@@ -228,6 +229,7 @@ class Communication extends React.Component{
                     billable: true,
                     nonBillable: false,
                     date: '',
+
                     qty: '1.0',
                     rate: '',
                     invoice: 'Unbilled',
@@ -283,6 +285,8 @@ class Communication extends React.Component{
         if(type==="email"){
             this.setState({
                 email : false,
+                phone : false,
+                disable : false,
                 editEmail: false,
                 data : {
                   subject : "",
@@ -296,7 +300,9 @@ class Communication extends React.Component{
         if(type==="phone"){
             this.setState({
                 phone : false,
+                email : false,
                 editPhone: false,
+                disable : false,
                 data : {
                   subject : "",
                   body : "",

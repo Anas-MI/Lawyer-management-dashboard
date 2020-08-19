@@ -44,7 +44,8 @@ const Documents = (props) => {
   const [TemplateData, setTemplateData] = useState({
       name : "",
       userId : userId,
-      document : ""
+      document : "",
+      category : ""
   })
   const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
@@ -74,6 +75,7 @@ const Documents = (props) => {
       dataIndex: 'type',
       key: '0',
     },
+    
     {
       title: 'Name',
       dataIndex: 'name',
@@ -200,23 +202,36 @@ const Documents = (props) => {
 
   const getDocuments = async () => {
     let tempDocs = [];
+    let template = []
     await api.get(`/document/viewforuser/${userId}`).then((res) => {
       console.log(res.data.data)
       res.data.data.map((item, index) => {
-        tempDocs = [
-          ...tempDocs,
-          {
-            ...item,
-            type : "File",
-            key: item._id,
-            matter: item.matter !== null ? item.matter.matterDescription : '-',
-            receivedDate: getISTDate(item.receivedDate),
-            lastEdit: getISTDate(item.lastEdit),
-          },
-        ];
+        if(item.matter == undefined){
+          const data = {
+            _id : item._id,
+            key : index,
+            category : item.category,
+            name : item.name,
+          }
+          template.push(data)
+        }
+        else{
+          tempDocs = [
+            ...tempDocs,
+            {
+              ...item,
+              type : "File",
+              key: item._id,
+              matter: item.matter !== null ? item.matter.matterDescription : '-',
+              receivedDate: getISTDate(item.receivedDate),
+              lastEdit: getISTDate(item.lastEdit),
+            },
+          ];
+        }
       });
     });
     setDocs(tempDocs);
+    setTemplateTable(template)
     setLoading(false)
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
@@ -320,6 +335,7 @@ const Documents = (props) => {
     await api
       .get(`/document/delete/${docId}`)
       .then((res) => {
+        console.log(res)
         notification.success({ message: 'Document Deleted SuccessFully.' });
         getDocuments();
       })
@@ -475,6 +491,12 @@ const deleteTemplate = async (docId) => {
     });
 };
  const EditTemplate = async () => {
+  if(TemplateData.name === '' ){
+    notification.warning({
+      message : "Please provide a name."
+    })
+  
+  }else
       if(TemplateData.category === ''){
         notification.warning({
           message : "Please provide a category."
@@ -513,12 +535,20 @@ const deleteTemplate = async (docId) => {
     if(item === "category"){
       TemplateData[`${item}`] = e;
       setTemplateData({ ...TemplateData });
+    }else{
+      TemplateData[`${item}`] = e.target.value;
+      setTemplateData({ ...TemplateData });
     }
     
     console.log(TemplateData)
   };
   const submitTemplate = async () => {
+    if(TemplateData.name === '' ){
+      notification.warning({
+        message : "Please provide a name."
+      })
     
+    }else
     if(TemplateData.category === ''){
       notification.warning({
         message : "Please provide a category."
@@ -534,6 +564,7 @@ const deleteTemplate = async (docId) => {
       var docFormData = new FormData();
     docFormData.set('document', TemplateData.document);
     docFormData.set('category', TemplateData.category);
+    docFormData.set('name' , TemplateData.name)
     docFormData.set('userId', userId);
     api
       .post('/document/upload/934894383948u43', docFormData, {
@@ -1091,6 +1122,11 @@ const deleteTemplate = async (docId) => {
             value:
               modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
           }, //todo
+          {
+  
+            name: ['document'],
+           // value: uploadData.document,
+          }
         ]}
       >
         <Form.Item
@@ -1164,7 +1200,7 @@ const deleteTemplate = async (docId) => {
           </Select>
         
         </Form.Item>
-        {modalFor === 'Upload' && (
+      
           <Form.Item
             key="document"
             label="Document"
@@ -1182,7 +1218,6 @@ const deleteTemplate = async (docId) => {
              // value={uploadData.document}
             />
           </Form.Item>
-        )}
       </Form>
     </Modal>
   );
@@ -1210,7 +1245,10 @@ const deleteTemplate = async (docId) => {
         {...layout}
         name="basic"
         fields={[
-        
+          {
+            name: ['name'],
+            value: TemplateData.name,
+          },
           {
             name: ['category'],
             value: TemplateData.category,
@@ -1218,6 +1256,19 @@ const deleteTemplate = async (docId) => {
          
         ]}
       >
+         <Form.Item
+          key="name"
+          label="Name"
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: 'Please input name!',
+            },
+          ]}
+        >
+          <Input onChange={handleTemplate('name')} value={TemplateData.name} />
+        </Form.Item>
         <Form.Item
           key="category"
           label="Category"
