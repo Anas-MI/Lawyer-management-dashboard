@@ -31,12 +31,20 @@ const Documents = (props) => {
   
   const [docs, setDocs] = useState([]);
   const userId = useSelector((state) => state.user.token.user._id);
+
   const [FolderModal, setFolderModal] = useState(false)
   const [FolderTable, setFolderTable] = useState([])
   const [FolderData, setFolderData] = useState({
     name : "",
     userId : "",
     documents : []
+  })
+  const [TemplateTable, setTemplateTable] = useState([])
+  const [TemplateModal, setTemplateModal] = useState(false)
+  const [TemplateData, setTemplateData] = useState({
+      name : "",
+      userId : userId,
+      document : ""
   })
   const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
@@ -399,7 +407,7 @@ const Documents = (props) => {
           <Button
             className="btn-outline-info "
             onClick={() => {
-              editHandler(record._id);
+              editTemplate(record);
             }}
           >
             Edit
@@ -414,8 +422,8 @@ const Documents = (props) => {
       render: (_, record) => {
         return (
           <Popconfirm
-                    title="Are you sure delete this Document?"
-                    onConfirm={()=>deleteHandler(record._id)}
+                    title="Are you sure delete this Template?"
+                    onConfirm={()=>deleteTemplate(record._id)}
                     onCancel={()=>{}}
                     okText="Yes"
                     cancelText="No"
@@ -449,6 +457,102 @@ const Documents = (props) => {
       },
     },
   ];
+  const editTemplate = async (record) => {   
+    setModalFor('Edit');
+    setTemplateModal(true)
+    setTemplateData(record)
+};
+
+const deleteTemplate = async (docId) => {
+  await api
+    .get(`/document/delete/${docId}`)
+    .then((res) => {
+      notification.success({ message: 'Template Deleted SuccessFully.' });
+      getDocuments();
+    })
+    .catch((res) => {
+      notification.error({ message: 'Template Deletion Failed.' });
+    });
+};
+ const EditTemplate = async () => {
+      if(TemplateData.category === ''){
+        notification.warning({
+          message : "Please provide a category."
+        })
+      }else
+      
+      if(TemplateData.document === '' ){
+        notification.warning({
+          message : "Please provide a document."
+        })
+      
+      }
+      else{
+      setDisable(true)
+      await api
+        .post(`/document/edit/${TemplateData._id}`, TemplateData)
+        .then(function (response) {
+          notification.success({ message: 'Template edited.' });
+          setDisable(false)
+          getDocuments();
+        })
+        .catch(function (response) {
+          notification.error({ message: 'Template Upload Failed.' });
+        });
+      setTimeout(() => {
+        setTemplateModal(false);
+      }, 600);
+    }
+};
+  const handleTemplate = (item) => (e) => {
+    console.log(item)
+    console.log(e)
+    if (item === 'document') {
+      setTemplateData({ ...TemplateData, document: e.target.files[0] });
+    } else
+    if(item === "category"){
+      TemplateData[`${item}`] = e;
+      setTemplateData({ ...TemplateData });
+    }
+    
+    console.log(TemplateData)
+  };
+  const submitTemplate = async () => {
+    
+    if(TemplateData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(TemplateData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }
+    else{
+      setDisable(true)
+      var docFormData = new FormData();
+    docFormData.set('document', TemplateData.document);
+    docFormData.set('category', TemplateData.category);
+    docFormData.set('userId', userId);
+    api
+      .post('/document/upload/934894383948u43', docFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then(function (response) {
+        notification.success({ message: 'Template Uploaded.' });
+        getDocuments();
+      })
+      .catch(function (response) {
+        notification.error({ message: 'Template Upload Failed.' });
+      });
+    setTimeout(() => {
+      setTemplateModal(false);
+      setDisable(false)
+    }, 600);
+    }
+    
+  };
 
   //funtions for category
   const columnsForCatagory = [
@@ -502,6 +606,7 @@ const Documents = (props) => {
     },
     
   ];
+  
   const handleCategory = (item) => (e) => {
     console.log("chnage")
     console.log(item)
@@ -739,6 +844,24 @@ const Documents = (props) => {
         );
       },
     },
+    {
+      title: 'Download',
+      dataIndex: 'download',
+      key: '8',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-primary "
+            onClick={() => {
+              
+            }}
+            icon={<DownloadOutlined />}
+          >
+            Download
+          </Button>
+        );
+      },
+    }
     
   ];
 
@@ -1063,6 +1186,89 @@ const Documents = (props) => {
       </Form>
     </Modal>
   );
+  const uploadTemplate = () => (
+    <Modal
+      title={` ${modalFor} Template`}
+      visible={TemplateModal}
+      onCancel={() => setTemplateModal(false)}
+      footer={[
+        <Button key="back" onClick={() => setTemplateModal(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          disabled={Disable}
+          onClick={modalFor === 'Upload' ? submitTemplate : EditTemplate}
+        >
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        {...layout}
+        name="basic"
+        fields={[
+        
+          {
+            name: ['category'],
+            value: TemplateData.category,
+          },
+         
+        ]}
+      >
+        <Form.Item
+          key="category"
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: 'Please input category',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Catagory"
+            optionFilterProp="children"
+            onChange={handleTemplate('category')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {Category.map((item, index) => (
+              <Option key={index} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        
+        </Form.Item>
+        {modalFor === 'Upload' && (
+          <Form.Item
+            key="document"
+            label="Document"
+            name="document"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your File!',
+              },
+            ]}
+          >
+            <Input
+              type="file"
+              onChange={handleTemplate('document')}
+             // value={uploadData.document}
+            />
+          </Form.Item>
+        )}
+      </Form>
+    </Modal>
+  );
 
  
   
@@ -1129,15 +1335,13 @@ const Documents = (props) => {
     <div className="d-flex justify-content-center">
           <Button
             onClick={() => {
-              setUploadData({
+              setTemplateData({
                 document: '',
-                _id: '',
-                name: '',
-                matter: '',
+                userId : userId,
                 category: '',
               }); //todo
 
-              setViewUpload(true);
+              setTemplateModal(true);
               setModalFor('Upload');
             }}
           >
@@ -1174,16 +1378,26 @@ const Documents = (props) => {
             {
               uploadFolder()
             }
-             <Table dataSource={FolderTable} columns={columnsForFolder} />
-            <Table dataSource={docs} columns={columnsForDocuments} />
+             <Table 
+             onRow={(record, rowIndex) => {
+              return {
+                onDoubleClick: () => { props.history.push('/documents/view' , record)}, // double click row
+              };
+            }}
+             dataSource={FolderTable} 
+             columns={columnsForFolder} />
+
+            <Table 
+            dataSource={docs} 
+            columns={columnsForDocuments} />
           </TabPane>
           <TabPane tab="Category" key="2">
             {CatagoryForm()}
            <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
           </TabPane>
           <TabPane tab="Template" key="3">
-            {uploadForm()}
-            <Table dataSource={docs} columns={columnsForTemplate} />
+            {uploadTemplate()}
+            <Table dataSource={TemplateTable} columns={columnsForTemplate} />
           </TabPane>
       </Tabs>
      
