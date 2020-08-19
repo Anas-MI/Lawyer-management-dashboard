@@ -28,16 +28,25 @@ const { TabPane } = Tabs;
 // matterId={props.location.state.id}
 
 const Documents = (props) => {
-    console.log(props)
   const [docs, setDocs] = useState([]);
-  const record = props.location.state
+  const [record, setrecord] = useState(props.location.state)
+  const [Stack, setStack] = useState([props.location.state])
   const userId = useSelector((state) => state.user.token.user._id);
   const [FolderModal, setFolderModal] = useState(false)
   const [FolderTable, setFolderTable] = useState([])
   const [FolderData, setFolderData] = useState({
     name : "",
     userId : "",
-    documents : []
+    folder : [],
+    documents : [],
+    type : "folder"
+  })
+  const [TemplateTable, setTemplateTable] = useState([])
+  const [TemplateModal, setTemplateModal] = useState(false)
+  const [TemplateData, setTemplateData] = useState({
+      name : "",
+      userId : userId,
+      document : ""
   })
   const [Disable, setDisable] = useState(false)
   const [viewUpload, setViewUpload] = useState(false);
@@ -194,8 +203,9 @@ const Documents = (props) => {
   const getDocuments = async () => {
 
     let tempDocs = [];
+    console.log(record)
     await api.get(`/document/folder/view/${record._id}`).then((res) => {
-      console.log(res.data.data)
+      console.log(res)
       res.data.data.documents.map((item, index) => {
         tempDocs = [
           ...tempDocs,
@@ -211,7 +221,7 @@ const Documents = (props) => {
       });
     });
     setDocs(tempDocs);
-    setLoading(false)
+   
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
@@ -283,6 +293,7 @@ const Documents = (props) => {
       var docFormData = new FormData();
     docFormData.set('document', uploadData.document);
     docFormData.set('name', uploadData.name);
+    docFormData.set('type', "folder");
     docFormData.set('matter', uploadData.matter);
     docFormData.set('contact', uploadData.contact);
     docFormData.set('category', uploadData.category);
@@ -393,7 +404,9 @@ const Documents = (props) => {
   };
 
   //funtions for template
-  const columnsForTemplate = [
+  {
+    /*
+    const columnsForTemplate = [
     
     {
       title: 'Name',
@@ -418,7 +431,7 @@ const Documents = (props) => {
           <Button
             className="btn-outline-info "
             onClick={() => {
-              editHandler(record._id);
+              editTemplate(record);
             }}
           >
             Edit
@@ -433,9 +446,9 @@ const Documents = (props) => {
       render: (_, record) => {
         return (
           <Popconfirm
-                    title="Are you sure delete this Document?"
-                    onConfirm={()=>deleteHandler(record._id)}
-                    onCancel={()=>{}}
+                  title="Are you sure delete this Template?"
+                  onConfirm={()=>deleteTemplate(record._id)}
+                  onCancel={()=>{}}
                     okText="Yes"
                     cancelText="No"
                   >
@@ -468,6 +481,103 @@ const Documents = (props) => {
       },
     },
   ];
+  const editTemplate = async (record) => {   
+    setModalFor('Edit');
+    setTemplateModal(true)
+    setTemplateData(record)
+};
+
+const deleteTemplate = async (docId) => {
+  await api
+    .get(`/document/delete/${docId}`)
+    .then((res) => {
+      notification.success({ message: 'Template Deleted SuccessFully.' });
+      getDocuments();
+    })
+    .catch((res) => {
+      notification.error({ message: 'Template Deletion Failed.' });
+    });
+};
+ const EditTemplate = async () => {
+      if(TemplateData.category === ''){
+        notification.warning({
+          message : "Please provide a category."
+        })
+      }else
+      
+      if(TemplateData.document === '' ){
+        notification.warning({
+          message : "Please provide a document."
+        })
+      
+      }
+      else{
+      setDisable(true)
+      await api
+        .post(`/document/edit/${TemplateData._id}`, TemplateData)
+        .then(function (response) {
+          notification.success({ message: 'Template edited.' });
+          setDisable(false)
+          getDocuments();
+        })
+        .catch(function (response) {
+          notification.error({ message: 'Template Upload Failed.' });
+        });
+      setTimeout(() => {
+        setTemplateModal(false);
+      }, 600);
+    }
+};
+  const handleTemplate = (item) => (e) => {
+    console.log(item)
+    console.log(e)
+    if (item === 'document') {
+      setTemplateData({ ...TemplateData, document: e.target.files[0] });
+    } else
+    if(item === "category"){
+      TemplateData[`${item}`] = e;
+      setTemplateData({ ...TemplateData });
+    }
+    
+    console.log(TemplateData)
+  };
+  const submitTemplate = async () => {
+    
+    if(TemplateData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(TemplateData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }
+    else{
+      setDisable(true)
+      var docFormData = new FormData();
+    docFormData.set('document', TemplateData.document);
+    docFormData.set('category', TemplateData.category);
+    docFormData.set('userId', userId);
+    api
+      .post('/document/upload/934894383948u43', docFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then(function (response) {
+        notification.success({ message: 'Template Uploaded.' });
+        getDocuments();
+      })
+      .catch(function (response) {
+        notification.error({ message: 'Template Upload Failed.' });
+      });
+    setTimeout(() => {
+      setTemplateModal(false);
+      setDisable(false)
+    }, 600);
+    }
+    
+  };
+
 
   //funtions for category
   const columnsForCatagory = [
@@ -680,6 +790,140 @@ const Documents = (props) => {
     </Modal>
   );
 
+  const ButtonForCatagory = (
+    <div className="d-flex justify-content-center">
+           <Button
+            onClick={()=>setcataoryModal(true)}
+          >
+            Add Category
+          </Button>
+      </div>
+  
+  );
+  const ButtonForTemplate = (
+    <div className="d-flex justify-content-center">
+          <Button
+            onClick={() => {
+              setTemplateData({
+                document: '',
+                userId : userId,
+                category: '',
+              }); //todo
+
+              setTemplateModal(true);
+              setModalFor('Upload');
+            }}
+          >
+            Upload 
+          </Button>
+      </div>
+  
+  );
+  const uploadTemplate = () => (
+    <Modal
+      title={` ${modalFor} Template`}
+      visible={TemplateModal}
+      onCancel={() => setTemplateModal(false)}
+      footer={[
+        <Button key="back" onClick={() => setTemplateModal(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          disabled={Disable}
+          onClick={modalFor === 'Upload' ? submitTemplate : EditTemplate}
+        >
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        {...layout}
+        name="basic"
+        fields={[
+        
+          {
+            name: ['category'],
+            value: TemplateData.category,
+          },
+         
+        ]}
+      >
+        <Form.Item
+          key="category"
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: 'Please input category',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Catagory"
+            optionFilterProp="children"
+            onChange={handleTemplate('category')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {Category.map((item, index) => (
+              <Option key={index} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        
+        </Form.Item>
+        {modalFor === 'Upload' && (
+          <Form.Item
+            key="document"
+            label="Document"
+            name="document"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your File!',
+              },
+            ]}
+          >
+            <Input
+              type="file"
+              onChange={handleTemplate('document')}
+             // value={uploadData.document}
+            />
+          </Form.Item>
+        )}
+      </Form>
+    </Modal>
+  );
+    */
+  }
+  const getCategory = ( ) =>{
+    let tempCatagory = [];
+    api.get(`/document/category/viewforuser/${userId}`).then((res) => {
+        setCategory(res.data.data)
+      console.log(res)
+      res.data.data.map((item, index) => {
+        const data = {
+          name : item.name,
+          key : index,
+          _id : item._id,
+          userId :userId
+        }
+        tempCatagory.push(data)
+      });
+      setCatagoryTable(tempCatagory);
+    });
+  
+   
+    //setLoading(false)
+  }
   //funtions for folder
   const columnsForFolder = [
     {
@@ -704,12 +948,20 @@ const Documents = (props) => {
       title: 'Open',
       dataIndex: 'open',
       key: '6',
-      render: (_, record) => {
+      render: (_, r) => {
         return (
           <Button
             className="btn-outline-info "
             onClick={() => {
-              props.history.push('/documents/view' , record)
+              setLoading(true)
+              let stack = Stack
+              console.log(Stack)
+              stack.push(r)
+              setStack(stack)
+              setrecord(r)
+              console.log(Stack)
+              props.history.push('/documents/view' , r)
+              
             }}
           >
             Open
@@ -758,6 +1010,25 @@ const Documents = (props) => {
         );
       },
     },
+    {
+      title: 'Download',
+      dataIndex: 'download',
+      key: '8',
+      render: (_, record) => {
+        return (
+          <Button
+            className="btn-outline-primary "
+            onClick={() => {
+              
+            }}
+            icon={<DownloadOutlined />}
+          >
+            Download
+          </Button>
+        );
+      },
+    }
+    
     
   ];
 
@@ -785,14 +1056,34 @@ const Documents = (props) => {
   };
 
   const getFolder = ( ) =>{
-    
-      /*
+    /*
+    let tempDocs = [];
+    await api.get(`/document/folder/view/${record._id}`).then((res) => {
+      console.log(res.data.data)
+      res.data.data.documents.map((item, index) => {
+        tempDocs = [
+          ...tempDocs,
+          {
+            ...item,
+            type : "File",
+            key: item._id,
+            matter: item.matter !== null ? item.matter.matterDescription : '-',
+            receivedDate: getISTDate(item.receivedDate),
+            lastEdit: getISTDate(item.lastEdit),
+          },
+        ];
+      });
+    });
+    setDocs(tempDocs);
+      */
     let tempFolder = [];
-    api.get(`/document/folder/viewforuser/${userId}`).then((res) => {
+    api.get(`/document/folder/view/${record._id}`).then((res) => {
       console.log(res)
-      res.data.data.map((item, index) => {
+      
+      res.data.data.folder.map((item, index) => {
         const data = {
           type: "Folder",
+          folder : [],
           name : item.name,
           key : index,
           documents : item.documents,
@@ -803,12 +1094,13 @@ const Documents = (props) => {
       });
       setFolderTable(tempFolder);
       console.log(FolderTable)
+      setLoading(false)
       //getDocuments()
     });
   
    
     //setLoading(false)
-    */
+  
   }
 
   const addFolder = ( ) =>{
@@ -824,17 +1116,25 @@ const Documents = (props) => {
       .post('/document/folder/create' , FolderData)
       .then(function (response) {
         console.log(response)
-        getFolder()
-        notification.success({ message: 'Folder created.' });
+         let folderData = record
+         folderData.folder.push(response.data.data._id)
+         api
+            .post('/document/folder/edit/' + folderData._id , folderData)
+            .then(function (response) {
+              console.log(response)
+              getFolder()
+              setFolderModal(false)
+              setDisable(false)
+              notification.success({ message: 'Folder Created.' });
 
-        //getDocuments();
+              //getDocuments();
+            })
+            .catch(function (response) {
+              notification.error({ message: 'Failed.' });
+            });
       })
-      .catch(function (response) {
-        notification.error({ message: 'Failed.' });
-      });
     setTimeout(() => {
-      setcataoryModal(false)
-      setDisable(false)
+      
     }, 600);
     }
     
@@ -875,8 +1175,9 @@ const Documents = (props) => {
   }
 
   const uploadFolder = () => (
+  
     <Modal
-      title={` ${modalFor} Folder`}
+      title={` ${modalFor === "Upload" ? "Create" : "Update"} Folder`}
       visible={FolderModal}
       onCancel={() => setFolderModal(false)}
       footer={[
@@ -951,7 +1252,8 @@ const Documents = (props) => {
     getDocuments();
     getCategory()
     getFolder()
-  }, []);
+    console.log(record)
+  }, [record._id]);
 
   const uploadForm = () => (
     <Modal
@@ -1088,6 +1390,7 @@ const Documents = (props) => {
 
  
   
+
   
   const menu = (
     <Menu>
@@ -1112,18 +1415,19 @@ const Documents = (props) => {
       onClick = {()=>{
         setFolderData({
           name : "",
-          userId : "",
+          userId : userId,
+          folder : [],
           documents : []
         })
         setFolderModal(true)
         setModalFor('Upload');
       }}
        key="1">
-        <span>Upload Folder</span>
+        <span>Create Folder</span>
       </Menu.Item>
 
       <Menu.Divider />
-      <Menu.Item key="3">Template</Menu.Item>
+      <Menu.Item key="3">Document from Template</Menu.Item>
     </Menu>
   );
   
@@ -1137,41 +1441,13 @@ const Documents = (props) => {
     </div>
   
   );
-  const ButtonForCatagory = (
-    <div className="d-flex justify-content-center">
-           <Button
-            onClick={()=>setcataoryModal(true)}
-          >
-            Add Category
-          </Button>
-      </div>
   
-  );
-  const ButtonForTemplate = (
-    <div className="d-flex justify-content-center">
-          <Button
-            onClick={() => {
-              setUploadData({
-                document: '',
-                _id: '',
-                name: '',
-                matter: '',
-                category: '',
-              }); //todo
-
-              setViewUpload(true);
-              setModalFor('Upload');
-            }}
-          >
-            Upload 
-          </Button>
-      </div>
-  
-  );
   
   const [operations, setoperations] = useState(ButtonForDocument)
   const callback = ( key ) => {
     console.log(key);
+    setoperations(ButtonForDocument)
+    /*
     if(key == 1){
       setoperations(ButtonForDocument)
     }else if(key == 2){
@@ -1179,10 +1455,30 @@ const Documents = (props) => {
     }if(key == 3){
       setoperations(ButtonForTemplate)
     }
+    */
+  }
+  const handleGOBACK = ( ) =>{
+    setLoading(true)
+    console.log(record)
+    let stack = Stack
+      console.log(stack.length)
+      stack.splice(stack.length - 1 , 1)
+      const r = stack[stack.length - 1]
+      setStack(stack)
+
+    if(Stack.length == 0){
+      props.history.push('/documents')
+    }else{  
+      setrecord(r)
+
+    }
+    console.log(record)
   }
   return (
     <Spin size = "large" spinning={Loading}>
-      
+      <Card extra = {<Button type = "link" onClick={handleGOBACK}>GO BACK</Button>}>
+
+      </Card>
       <Tabs
           defaultActiveKey="1"
           tabBarExtraContent={operations}
@@ -1197,18 +1493,40 @@ const Documents = (props) => {
             {
               uploadFolder()
             }
-             <Table dataSource={FolderTable} columns={columnsForFolder} />
-            <Table dataSource={docs} columns={columnsForDocuments} />
+             <Table 
+             onRow={(r, rowIndex) => {
+              return {
+                onDoubleClick: () => { 
+                  setLoading(true)
+                  let stack = Stack
+                  console.log(Stack)
+                  stack.push(r)
+                  setStack(stack)
+                  setrecord(r)
+                  console.log(Stack)
+                  props.history.push('/documents/view' , r)
+                }, // double click row
+              };
+            }}
+             dataSource={FolderTable} 
+             columns={columnsForFolder} />
+
+            <Table 
+            dataSource={docs} 
+            columns={columnsForDocuments} />
           </TabPane>
+         {/*
           <TabPane tab="Category" key="2">
             
             {CatagoryForm()}
            <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
           </TabPane>
           <TabPane tab="Template" key="3">
-            {uploadForm()}
-            <Table dataSource={docs} columns={columnsForTemplate} />
-          </TabPane>
+          {uploadTemplate()}
+            <Table dataSource={TemplateTable} columns={columnsForTemplate} />
+         </TabPane>
+         */
+         }
       </Tabs>
      
  

@@ -215,7 +215,8 @@ const Documents = (props) => {
           }
           template.push(data)
         }
-        else{
+        else
+        if(item.type != "folder"){
           tempDocs = [
             ...tempDocs,
             {
@@ -924,15 +925,18 @@ const deleteTemplate = async (docId) => {
     api.get(`/document/folder/viewforuser/${userId}`).then((res) => {
       console.log(res)
       res.data.data.map((item, index) => {
-        const data = {
-          type: "Folder",
-          name : item.name,
-          documents : item.documents,
-          key : index,
-          _id : item._id,
-          userId :userId
+        if(item.type != "folder"){
+          const data = {
+            type: "Folder",
+            name : item.name,
+            documents : item.documents,
+            folder : item.folder,
+            key : index,
+            _id : item._id,
+            userId :userId
+          }
+          tempFolder.push(data)
         }
-        tempFolder.push(data)
       });
       setFolderTable(tempFolder);
       console.log(FolderTable)
@@ -1008,7 +1012,7 @@ const deleteTemplate = async (docId) => {
 
   const uploadFolder = () => (
     <Modal
-      title={` ${modalFor} Folder`}
+      title={`${modalFor === "Upload" ? "Create" : "Update"} Folder`}
       visible={FolderModal}
       onCancel={() => setFolderModal(false)}
       footer={[
@@ -1354,11 +1358,11 @@ const deleteTemplate = async (docId) => {
         setModalFor('Upload');
       }}
        key="1">
-        <span>Upload Folder</span>
+        <span>Create Folder</span>
       </Menu.Item>
 
       <Menu.Divider />
-      <Menu.Item key="3">Template</Menu.Item>
+      <Menu.Item key="3">Document from Template</Menu.Item>
     </Menu>
   );
   
