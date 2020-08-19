@@ -130,6 +130,9 @@ const profile = React.lazy(() =>
 const viewTicket = React.lazy(() =>
   import('./App/containers/SupportManagement/ViewTicket/view')
 );
+const viewFolder = React.lazy(() =>
+  import('./App/containers/Documents/ViewFolder')
+);
 
 const viewSubscription = React.lazy(()=>import('./App/containers/SubscriptionManagement/ViewTicket/view'))
 
@@ -264,6 +267,12 @@ const routes = [
     exact: true,
     name: 'Basic Badges',
     component: UIBasicBadges,
+  },
+  {
+    path: '/documents/view',
+    exact: true,
+    name: 'View Folder',
+    component: viewFolder,
   },
   {
     path: '/basic/breadcrumb-paging',

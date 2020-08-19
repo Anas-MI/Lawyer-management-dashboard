@@ -28,8 +28,9 @@ const { TabPane } = Tabs;
 // matterId={props.location.state.id}
 
 const Documents = (props) => {
-  
+    console.log(props)
   const [docs, setDocs] = useState([]);
+  const record = props.location.state
   const userId = useSelector((state) => state.user.token.user._id);
   const [FolderModal, setFolderModal] = useState(false)
   const [FolderTable, setFolderTable] = useState([])
@@ -191,10 +192,11 @@ const Documents = (props) => {
   };
 
   const getDocuments = async () => {
+
     let tempDocs = [];
-    await api.get(`/document/viewforuser/${userId}`).then((res) => {
+    await api.get(`/document/folder/view/${record._id}`).then((res) => {
       console.log(res.data.data)
-      res.data.data.map((item, index) => {
+      res.data.data.documents.map((item, index) => {
         tempDocs = [
           ...tempDocs,
           {
@@ -290,12 +292,29 @@ const Documents = (props) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
-        notification.success({ message: 'Document Uploaded.' });
-        getDocuments();
+          let docs = record
+          docs.documents.push(response.data.data._id)
+            api
+                .post('/document/folder/edit/' + docs._id , docs)
+                .then(function (response) {
+                    console.log(response)
+                    getFolder()
+                    notification.success({ message: 'Document Uploaded.' });
+                    getDocuments();
+
+                    //getDocuments();
+                })
+                .catch(function (response) {
+                    notification.error({ message: 'Failed.' });
+                });
+                setTimeout(() => {
+                setFolderModal(false)
+                setDisable(false)
+                console.log(CatagoryTable)
+                }, 600);
+
+        
       })
-      .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
-      });
     setTimeout(() => {
       setViewUpload(false);
       setDisable(false)
@@ -538,7 +557,7 @@ const Documents = (props) => {
   const getCategory = ( ) =>{
     let tempCatagory = [];
     api.get(`/document/category/viewforuser/${userId}`).then((res) => {
-      setCategory(res.data.data)
+        setCategory(res.data.data)
       console.log(res)
       res.data.data.map((item, index) => {
         const data = {
@@ -766,6 +785,8 @@ const Documents = (props) => {
   };
 
   const getFolder = ( ) =>{
+    
+      /*
     let tempFolder = [];
     api.get(`/document/folder/viewforuser/${userId}`).then((res) => {
       console.log(res)
@@ -773,8 +794,8 @@ const Documents = (props) => {
         const data = {
           type: "Folder",
           name : item.name,
-          documents : item.documents,
           key : index,
+          documents : item.documents,
           _id : item._id,
           userId :userId
         }
@@ -787,6 +808,7 @@ const Documents = (props) => {
   
    
     //setLoading(false)
+    */
   }
 
   const addFolder = ( ) =>{
@@ -1168,6 +1190,7 @@ const Documents = (props) => {
           className="card p-4 overflow-auto"
         >
           <TabPane tab="Document" key="1">
+         
             {
               uploadForm()
             }
@@ -1178,6 +1201,7 @@ const Documents = (props) => {
             <Table dataSource={docs} columns={columnsForDocuments} />
           </TabPane>
           <TabPane tab="Category" key="2">
+            
             {CatagoryForm()}
            <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
           </TabPane>
