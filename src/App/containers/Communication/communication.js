@@ -732,7 +732,7 @@ class Communication extends React.Component{
                     Cancel
                   </Button>,
                   <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("email")}>
-                    {this.state.editEmail ? "Edit Log" : "Save Log"}
+                    {this.state.editEmail ? "Update Log" : "Save Log"}
                   </Button>,
                 ]}
                 >
@@ -977,7 +977,7 @@ class Communication extends React.Component{
                     Cancel
                   </Button>,
                   <Button type="primary" disabled = {this.state.disable} onClick={()=>this.handleOk("phone")}>
-                    {this.state.editPhone ? "Edit Log" : "Save Log"}
+                    {this.state.editPhone ? "Update Log" : "Save Log"}
                   </Button>,
                 ]}
                 >

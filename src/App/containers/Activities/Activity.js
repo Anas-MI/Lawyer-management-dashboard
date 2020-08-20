@@ -65,7 +65,7 @@ class Activity extends React.Component {
   };
   
   setTimer = () => {
-    console.log("funtion called")
+
     const time = window.localStorage.getItem('timer');
     let hours = Math.floor(time / 3600);
     let minutes = Math.floor(time / 60);
@@ -82,7 +82,6 @@ class Activity extends React.Component {
     const data = this.state.data;
     data.time = hours + ':' + minutes + ':' + seconds
     this.setState({ data: data });
-    console.log(this.state.data)
 }
   componentDidMount() {
     if(this.props.location.state === "time"){
@@ -106,7 +105,7 @@ class Activity extends React.Component {
     api.get('/matter/viewforuser/' + this.props.userId).then((res) => {
       matters = res;
       option = res.data.data.map((val, index)=>{
-        return <option>{val.matterDescription}</option>
+        return <option key={index} value={val.matterDescription}>{val.matterDescription}</option>
     })
     }).then(()=>{
       this.setState({option : option})
@@ -382,58 +381,57 @@ class Activity extends React.Component {
 
   handleCancel = (type) => {
     ReactDOM.findDOMNode(this.messageForm).reset()
+    console.log("Handle Cancel")
+    let newState = this.state
+    newState.data = {
+      billable: false,
+      nonBillable: false,
+      matter : {},
+      date: '',
+      qty: '1.0',
+      rate: '',
+      invoice: 'Unbilled',
+    }
+    this.setState(newState)
+
+
     if (type === 'time') {
       this.setState({
         timeModal: false,
         editTime : false,
-        data: {
-          billable: false,
-          nonBillable: false,
-          matter : "",
-          date: '',
-          qty: '1.0',
-          rate: '',
-          invoice: 'Unbilled',
-        },
+       
       });
 
     } else if (type === 'expense') {
       this.setState({
         expenseModal: false,
-        EditExpense: false,
-        data: {
-          billable: false,
-          nonBillable: false,
-          matter : "",
-          date: '',
-          qty: '1.0',
-          rate: '',
-          invoice: 'Unbilled',
-        },
+        EditExpense: false, 
       });
-
+      
     }
+    console.log(this.state.data)
     this.setTimer()
-    setTimeout(() => {
-      //window.location.reload();
-    }, 1000);
+    
   };
 
   render() {
     const handleEdit = (record) => {
      // ReactDOM.findDOMNode(this.messageForm).reset()
+      let newState = this.state
+      newState.data = record
+      this.setState(newState)
       if (record.type === 'time') {
         this.setState({
           editTime: true,
-          data: record,
+   
         });
       } else if (record.type === 'expense') {
         this.setState({
           EditExpense: true,
-          data: record,
+
         });
       }
-      console.log(record)
+      console.log(this.state.data)
     };
 
     const handleDelete = (record) => {
@@ -995,7 +993,7 @@ class Activity extends React.Component {
               Cancel
             </Button>,
             <Button type="primary" disabled = {this.state.disabletime} onClick={() => this.handleOk('time')}>
-              Edit Entry
+              Update Entry
             </Button>,
           ]}
         >
@@ -1026,7 +1024,7 @@ class Activity extends React.Component {
                                     <Form.Control 
                                         as="select"
                                         name="matter" 
-                                        defaultValue = {this.state.data.matter ? this.state.data.matter.matterDescription : ""}
+                                        value = {this.state.data.matter ? this.state.data.matter.matterDescription : ""}
 
                                         onChange={handleChange}>
                                     <option>Select a matter</option>
@@ -1235,7 +1233,7 @@ class Activity extends React.Component {
               Cancel
             </Button>,
             <Button type="primary" disabled = {this.state.disableExpense} onClick={() => this.handleOk('expense')}>
-              Edit Entry
+              Update Entry
             </Button>,
           ]}
         >
@@ -1259,7 +1257,7 @@ class Activity extends React.Component {
                                     <Form.Control 
                                         as="select"
                                         name="matter" 
-                                        defaultValue = {this.state.data.matter ? this.state.data.matter.matterDescription : ""}
+                                        value = {this.state.data.matter ? this.state.data.matter.matterDescription : ""}
                                         onChange={handleChange}>
                                     <option>Select a matter</option>
                                     {this.state.option}
