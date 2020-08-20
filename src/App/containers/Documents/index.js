@@ -55,6 +55,16 @@ const Documents = (props) => {
     name : '',
     userId : userId
   })
+  const [tempDocxModal, settempDocxModal] = useState(false)
+  const [tempDocx, settempDocx] = useState({
+    document: '',
+    _id: '',
+    name: '',
+    matter: '',
+    contact: '',
+    category: '',
+    userId : userId
+  });
   const [CatagoryTable, setCatagoryTable] = useState([])
   const [cataoryModal, setcataoryModal] = useState(false)
   const [uploadData, setUploadData] = useState({
@@ -200,6 +210,40 @@ const Documents = (props) => {
     console.log(uploadData)
   };
 
+  const handleViaTemplate = (item) => (e) => {
+    console.log(item)
+    console.log(e)
+    if(item === "category" || item ==="document"){
+      tempDocx[`${item}`] = e;
+      settempDocx({ ...tempDocx });
+    }else
+    if(item === "category" || item ==="document"){
+      tempDocx[`${item}`] = e;
+      settempDocx({ ...tempDocx });
+    }
+    else {
+      if (item === 'matter') {
+        if(modalFor === "Upload"){
+          console.log("from the uploads")
+          tempDocx[`${item}`] = e;
+          settempDocx({ ...tempDocx });
+          getMatterById(e);
+        }else{
+          console.log("from the edits")
+          api.get(`/matter/view/${e}`).then((res) => {
+            tempDocx[`${item}`] = res.data.data ;
+            settempDocx({ ...tempDocx });
+            getMatterById(e);
+            });
+        }
+      } else {
+        tempDocx[`${item}`] = e.target.value;
+        settempDocx({ ...tempDocx });
+      }
+    }
+    console.log(tempDocx)
+  };
+
   const getDocuments = async () => {
     let tempDocs = [];
     let template = []
@@ -210,6 +254,7 @@ const Documents = (props) => {
           const data = {
             _id : item._id,
             key : index,
+            document : item.document,
             category : item.category,
             name : item.name,
           }
@@ -321,6 +366,54 @@ const Documents = (props) => {
         notification.error({ message: 'Document Upload Failed.' });
       });
     setTimeout(() => {
+      setViewUpload(false);
+      setDisable(false)
+    }, 600);
+    }
+    
+  };
+  const SubmitViaTemplate = async () => {
+    
+    if(tempDocx.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(tempDocx.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(tempDocx.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(tempDocx.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(tempDocx.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+      console.log(userId)
+      setDisable(true)
+    api
+      .post('/document/uploadtemplate/934894383948u43', tempDocx)
+      .then(function (response) {
+        console.log(response)
+        notification.success({ message: 'Document Uploaded.' });
+        getDocuments();
+      })
+      .catch(function (response) {
+        notification.error({ message: 'Document Upload Failed.' });
+      });
+    setTimeout(() => {
+      settempDocxModal(false)
       setViewUpload(false);
       setDisable(false)
     }, 600);
@@ -1225,6 +1318,155 @@ const deleteTemplate = async (docId) => {
       </Form>
     </Modal>
   );
+  const uploadTempDoc = () => (
+    <Modal
+      title={` ${modalFor} Document`}
+      visible={tempDocxModal}
+      onCancel={() => settempDocxModal(false)}
+      footer={[
+        <Button key="back" onClick={() => settempDocxModal(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          disabled={Disable}
+          onClick={modalFor === 'Upload' ? SubmitViaTemplate : handleEdit}
+        >
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        {...layout}
+        name="basic"
+        fields={[
+          {
+            name: ['name'],
+            value: tempDocx.name,
+          },
+          {
+            name: ['category'],
+            value: tempDocx.category,
+          },
+          {
+            name: ['matter'],
+            value:
+              modalFor === 'Edit' ? tempDocx.matter._id : tempDocx.matter,
+          }, //todo
+          {
+  
+            name: ['document'],
+            //value: uploadData.document,
+          }
+        ]}
+      >
+        <Form.Item
+          key="name"
+          label="Name"
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: 'Please input name!',
+            },
+          ]}
+        >
+          <Input onChange={handleViaTemplate('name')} value={tempDocx.name} />
+        </Form.Item>
+
+        <Form.Item
+          key="matter"
+          label="Matter"
+          name="matter"
+          rules={[
+            {
+              required: true,
+              message: 'Please input matter',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Matter"
+            optionFilterProp="children"
+            onChange={handleViaTemplate('matter')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {matters.map((item, index) => (
+              <Option key={index} value={item._id}>
+                {item.matterDescription}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          key="category"
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: 'Please input category',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Catagory"
+            optionFilterProp="children"
+            onChange={handleViaTemplate('category')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {Category.map((item, index) => (
+              <Option key={index} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        
+        </Form.Item>
+      
+        <Form.Item
+          key="document"
+          label="Document"
+          name="document"
+          rules={[
+            {
+              required: true,
+              message: 'Please input document',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a document"
+            optionFilterProp="children"
+            onChange={handleViaTemplate('document')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {TemplateTable.map((item, index) => (
+              <Option key={index} value={item.document}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        
+        </Form.Item>
+      
+      </Form>
+    </Modal>
+  );
   const uploadTemplate = () => (
     <Modal
       title={` ${modalFor} Template`}
@@ -1362,7 +1604,21 @@ const deleteTemplate = async (docId) => {
       </Menu.Item>
 
       <Menu.Divider />
-      <Menu.Item key="3">Document from Template</Menu.Item>
+      <Menu.Item 
+      onClick={() => {
+        settempDocx({
+          document: '',
+          _id: '',
+          name: '',
+          matter: '',
+          category: '',
+          userId : userId
+        }); //todo
+
+        settempDocxModal(true);
+        setModalFor('Upload');
+      }}
+      key="3">Document from Template</Menu.Item>
     </Menu>
   );
   
@@ -1432,6 +1688,9 @@ const deleteTemplate = async (docId) => {
             }
             {
               uploadFolder()
+            }
+            {
+              uploadTempDoc()
             }
              <Table 
              onRow={(record, rowIndex) => {

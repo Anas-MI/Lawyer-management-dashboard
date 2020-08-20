@@ -1475,62 +1475,64 @@ const deleteTemplate = async (docId) => {
     console.log(record)
   }
   return (
-    <Spin size = "large" spinning={Loading}>
-      <Card extra = {<Button type = "link" onClick={handleGOBACK}>GO BACK</Button>}>
+    <div>
+        <Spin size = "large" spinning={Loading}>
 
-      </Card>
-      <Tabs
-          defaultActiveKey="1"
-          tabBarExtraContent={operations}
-          onChange={callback}
-          className="card p-4 overflow-auto"
-        >
-          <TabPane tab="Document" key="1">
-         
-            {
-              uploadForm()
-            }
-            {
-              uploadFolder()
-            }
-             <Table 
-             onRow={(r, rowIndex) => {
-              return {
-                onDoubleClick: () => { 
-                  setLoading(true)
-                  let stack = Stack
-                  console.log(Stack)
-                  stack.push(r)
-                  setStack(stack)
-                  setrecord(r)
-                  console.log(Stack)
-                  props.history.push('/documents/view' , r)
-                }, // double click row
-              };
-            }}
-             dataSource={FolderTable} 
-             columns={columnsForFolder} />
+        <Tabs
+            defaultActiveKey="1"
+            tabBarExtraContent={operations}
+            onChange={callback}
+            className="card p-4 overflow-auto"
+          >
+            <TabPane tab="Document" key="1">
+          
+              {
+                uploadForm()
+              }
+              {
+                uploadFolder()
+              }
+              <Table 
+              onRow={(r, rowIndex) => {
+                return {
+                  onDoubleClick: () => { 
+                    setLoading(true)
+                    let stack = Stack
+                    console.log(Stack)
+                    stack.push(r)
+                    setStack(stack)
+                    setrecord(r)
+                    console.log(Stack)
+                    props.history.push('/documents/view' , r)
+                  }, // double click row
+                };
+              }}
+              dataSource={FolderTable} 
+              columns={columnsForFolder} />
 
-            <Table 
-            dataSource={docs} 
-            columns={columnsForDocuments} />
+              <Table 
+              dataSource={docs} 
+              columns={columnsForDocuments} />
+            </TabPane>
+          {/*
+            <TabPane tab="Category" key="2">
+              
+              {CatagoryForm()}
+            <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
+            </TabPane>
+            <TabPane tab="Template" key="3">
+            {uploadTemplate()}
+              <Table dataSource={TemplateTable} columns={columnsForTemplate} />
           </TabPane>
-         {/*
-          <TabPane tab="Category" key="2">
-            
-            {CatagoryForm()}
-           <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
-          </TabPane>
-          <TabPane tab="Template" key="3">
-          {uploadTemplate()}
-            <Table dataSource={TemplateTable} columns={columnsForTemplate} />
-         </TabPane>
-         */
-         }
-      </Tabs>
-     
- 
-    </Spin>
+          */
+          }
+        </Tabs>
+
+
+        </Spin>
+        <Button type = "primary" onClick={handleGOBACK}>GO BACK</Button>
+
+    </div>
      );
 };
 
