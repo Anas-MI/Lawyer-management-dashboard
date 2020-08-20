@@ -94,11 +94,13 @@ const Documents = (props) => {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.name.length - b.name.length,
     },
+    /*
     {
       title: 'Matter',
       dataIndex: 'matter',
       key: '2',
     },
+    */
     {
       title: 'Category',
       dataIndex: 'category',
@@ -252,11 +254,11 @@ const Documents = (props) => {
       setTemplateTable(template)
     });
     
-    tempDocs = [];
+    let tempMatter = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
-        tempDocs = [
-          ...tempDocs,
+        tempMatter = [
+          ...tempMatter,
           {
             ...item,
             key: item._id,
@@ -288,7 +290,7 @@ const Documents = (props) => {
         ];
       });
     });
-    setMatters(tempDocs);
+    setMatters(tempMatter);
   };
 
   const handleSubmit = async () => {
@@ -329,7 +331,7 @@ const Documents = (props) => {
     docFormData.set('category', uploadData.category);
     docFormData.set('userId', userId);
     api
-      .post('/document/upload/934894383948u43', docFormData, {
+      .post('/document/upload/'+ userId, docFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
@@ -356,10 +358,6 @@ const Documents = (props) => {
 
         
       })
-    setTimeout(() => {
-      setViewUpload(false);
-      setDisable(false)
-    }, 600);
     }
     
   };
@@ -1234,7 +1232,7 @@ const deleteTemplate = async (docId) => {
       console.log(userId)
       setDisable(true)
     api
-      .post('/document/uploadtemplate/934894383948u43', tempDocx)
+      .post('/document/uploadtemplate/'+ userId, tempDocx)
       .then(function (response) {
         console.log(response)
         notification.success({ message: 'Document Uploaded.' });
@@ -1639,7 +1637,7 @@ const deleteTemplate = async (docId) => {
             <Input
               type="file"
               onChange={handleInput('document')}
-             // value={uploadData.document}
+              //value={uploadData.document}
             />
           </Form.Item>
         )}
