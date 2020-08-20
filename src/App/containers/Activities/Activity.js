@@ -38,6 +38,7 @@ class Activity extends React.Component {
         rate: '',
         invoice: 'Unbilled',
         time: '',
+        matter : "",
         billed : false
       },
       loading : true,
@@ -237,8 +238,6 @@ class Activity extends React.Component {
                 disabletime : false,
                 editTime: false,
                 EditExpense : false,
-                disabletime : false,
-                disableExpense : false
               })
               notification.success({ message: 'Time entry Edited !' });
             })
@@ -246,6 +245,7 @@ class Activity extends React.Component {
               notification.error({ message: 'Failed' });
             })
             .then(() => {
+            
               ReactDOM.findDOMNode(this.messageForm).reset()
               this.setState({
                 timeModal: false,
@@ -259,6 +259,7 @@ class Activity extends React.Component {
                   invoice: 'Unbilled',
                 },
               });
+              console.log(this.state.data)
               setTimeout(() => {
                 //window.location.reload();
               }, 1500);
@@ -281,12 +282,15 @@ class Activity extends React.Component {
               notification.error({ message: 'Failed' });
             })
             .then(() => {
+              ReactDOM.findDOMNode(this.messageForm).reset()
+
               this.setState({
                 expenseModal: false,
                 editmode: false,
                 data: {
                   billable: false,
                   nonBillable: false,
+                  matter : "",
                   date: '',
                   rate: '',
                   qty: '1.0',
@@ -324,6 +328,7 @@ class Activity extends React.Component {
                 data: {
                   billable: false,
                   nonBillable: false,
+                  matter : "",
                   date: '',
                   qty: '1.0',
                   rate: '',
@@ -360,6 +365,7 @@ class Activity extends React.Component {
                   billable: false,
                   nonBillable: false,
                   date: '',
+                  matter : "",
                   qty: '1.0',
                   rate: '',
                   invoice: 'Unbilled',
@@ -383,6 +389,7 @@ class Activity extends React.Component {
         data: {
           billable: false,
           nonBillable: false,
+          matter : "",
           date: '',
           qty: '1.0',
           rate: '',
@@ -397,6 +404,7 @@ class Activity extends React.Component {
         data: {
           billable: false,
           nonBillable: false,
+          matter : "",
           date: '',
           qty: '1.0',
           rate: '',
@@ -417,13 +425,11 @@ class Activity extends React.Component {
       if (record.type === 'time') {
         this.setState({
           editTime: true,
-
           data: record,
         });
       } else if (record.type === 'expense') {
         this.setState({
           EditExpense: true,
-      
           data: record,
         });
       }

@@ -47,6 +47,12 @@ const EditAccount = (props) =>{
         e.persist();
         setDisplay(false)
         const {name, value} = e.target;
+        console.log("chnage")
+        if(name === "defaultAccount"){
+            let data = state
+            data.defaultAccount = data.defaultAccount ? false : true
+            setState(data)
+        }else{
         let errors = error
         switch (name) {
             case "type":
@@ -116,6 +122,9 @@ const EditAccount = (props) =>{
         }
         setError( (st) => ({...st, ...errors }))
         setState( (st) => ({...st, [name] : value }));
+        
+        }
+        console.log(state.defaultAccount)
     }
 
     // handel Submit of form 
@@ -252,7 +261,7 @@ const EditAccount = (props) =>{
                     </Form.Group>
 
                     <Form.Group controlId="defaultAccount">
-                        <Form.Check type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
+                        <Form.Check defaultChecked = { state.defaultAccount } type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
                     </Form.Group>
                     <br /><br />
                     <Button onClick={handelSubmit}>Edit Bank Account</Button>

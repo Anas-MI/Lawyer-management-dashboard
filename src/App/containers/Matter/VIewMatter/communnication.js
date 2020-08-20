@@ -343,19 +343,19 @@ class Communication extends React.Component{
               timeError = 'Inavlid Time';
               console.log(timeError);
             } else if (parseInt(sHours) == 0) sHours = '00';
-            else if (sHours < 10) sHours = '0' + sHours;
+           // else if (sHours < 10) sHours = '0' + sHours;
   
             if (sMinutes == '' || isNaN(sMinutes) || parseInt(sMinutes) > 59) {
               timeError = 'Inavlid Time';
               console.log(timeError);
             } else if (parseInt(sMinutes) == 0) sMinutes = '00';
-            else if (sMinutes < 10) sMinutes = '0' + sMinutes;
+           // else if (sMinutes < 10) sMinutes = '0' + sMinutes;
   
             if (sSecs == '' || isNaN(sSecs) /*|| parseInt(sHours)>23 */) {
               timeError = 'Inavlid Time';
               console.log(timeError);
             } else if (parseInt(sSecs) == 0) sSecs = '00';
-            else if (sSecs < 10) sSecs = '0' + sSecs;
+           // else if (sSecs < 10) sSecs = '0' + sSecs;
             timeValue = sHours + ':' + sMinutes +':' + sSecs;
           }
           newData[name] = timeValue;

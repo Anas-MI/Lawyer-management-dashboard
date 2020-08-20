@@ -322,26 +322,26 @@ class Tasks extends React.Component {
       notification.warning({
         message: 'Please provide a taskName',
       });
-    }
+    }else
     if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
       valid = false
       notification.warning({
         message: 'Please provide a description',
       });
-    }
+    }else
     if( this.state.Data.dueDate === '' || this.state.Data.dueDate === undefined  ){
       valid = false
       notification.warning({
           message: 'Please select a due date',
         });
-    }
+    }else
     if( this.state.Data.matter === "" || this.state.Data.matter === undefined ){
       valid = false
       notification.warning({
         message: 'Please select a matter',
       });
       
-    } 
+    }else
     if(valid){
       this.setState({
         confirmLoading: true,

@@ -28,32 +28,18 @@ const { TabPane } = Tabs;
 // matterId={props.location.state.id}
 
 const Documents = (props) => {
-  
   const [docs, setDocs] = useState([]);
+  const [record, setrecord] = useState(props.location.state)
+  const [Stack, setStack] = useState([props.location.state])
   const userId = useSelector((state) => state.user.token.user._id);
-
   const [FolderModal, setFolderModal] = useState(false)
   const [FolderTable, setFolderTable] = useState([])
   const [FolderData, setFolderData] = useState({
     name : "",
     userId : "",
-    documents : []
-  })
-  const [TemplateTable, setTemplateTable] = useState([])
-  const [TemplateModal, setTemplateModal] = useState(false)
-  const [TemplateData, setTemplateData] = useState({
-      name : "",
-      userId : userId,
-      document : "",
-      category : ""
-  })
-  const [Disable, setDisable] = useState(false)
-  const [viewUpload, setViewUpload] = useState(false);
-  const [tabFor, settabFor] = useState("Document")
-  const [Loading, setLoading] = useState(true)
-  const [CatagoryData, setCatagoryData] = useState({
-    name : '',
-    userId : userId
+    folder : [],
+    documents : [],
+    type : "folder"
   })
   const [tempDocxModal, settempDocxModal] = useState(false)
   const [tempDocx, settempDocx] = useState({
@@ -63,8 +49,24 @@ const Documents = (props) => {
     matter: '',
     contact: '',
     category: '',
-    userId : userId
+    userId : userId,
+    type : "folder"
   });
+  const [TemplateTable, setTemplateTable] = useState([])
+  const [TemplateModal, setTemplateModal] = useState(false)
+  const [TemplateData, setTemplateData] = useState({
+      name : "",
+      userId : userId,
+      document : ""
+  })
+  const [Disable, setDisable] = useState(false)
+  const [viewUpload, setViewUpload] = useState(false);
+  const [tabFor, settabFor] = useState("Document")
+  const [Loading, setLoading] = useState(true)
+  const [CatagoryData, setCatagoryData] = useState({
+    name : '',
+    userId : userId
+  })
   const [CatagoryTable, setCatagoryTable] = useState([])
   const [cataoryModal, setcataoryModal] = useState(false)
   const [uploadData, setUploadData] = useState({
@@ -85,7 +87,6 @@ const Documents = (props) => {
       dataIndex: 'type',
       key: '0',
     },
-    
     {
       title: 'Name',
       dataIndex: 'name',
@@ -210,47 +211,33 @@ const Documents = (props) => {
     console.log(uploadData)
   };
 
-  const handleViaTemplate = (item) => (e) => {
-    console.log(item)
-    console.log(e)
-    if(item === "category" || item ==="document"){
-      tempDocx[`${item}`] = e;
-      settempDocx({ ...tempDocx });
-    }else
-    if(item === "category" || item ==="document"){
-      tempDocx[`${item}`] = e;
-      settempDocx({ ...tempDocx });
-    }
-    else {
-      if (item === 'matter') {
-        if(modalFor === "Upload"){
-          console.log("from the uploads")
-          tempDocx[`${item}`] = e;
-          settempDocx({ ...tempDocx });
-          getMatterById(e);
-        }else{
-          console.log("from the edits")
-          api.get(`/matter/view/${e}`).then((res) => {
-            tempDocx[`${item}`] = res.data.data ;
-            settempDocx({ ...tempDocx });
-            getMatterById(e);
-            });
-        }
-      } else {
-        tempDocx[`${item}`] = e.target.value;
-        settempDocx({ ...tempDocx });
-      }
-    }
-    console.log(tempDocx)
-  };
-
   const getDocuments = async () => {
+
     let tempDocs = [];
+    console.log(record)
+    api.get(`/document/folder/view/${record._id}`).then((res) => {
+      console.log(res)
+      res.data.data.documents.map((item, index) => {
+        tempDocs = [
+          ...tempDocs,
+          {
+            ...item,
+            type : "File",
+            key: item._id,
+            matter: item.matter !== null ? item.matter.matterDescription : '-',
+            receivedDate: getISTDate(item.receivedDate),
+            lastEdit: getISTDate(item.lastEdit),
+          },
+        ];
+      });
+      setDocs(tempDocs);
+    });
+    
     let template = []
-    await api.get(`/document/viewforuser/${userId}`).then((res) => {
+    api.get(`/document/viewforuser/${userId}`).then((res) => {
       console.log(res.data.data)
       res.data.data.map((item, index) => {
-        if(item.matter == undefined){
+        if(item.matter == undefined ){
           const data = {
             _id : item._id,
             key : index,
@@ -260,25 +247,11 @@ const Documents = (props) => {
           }
           template.push(data)
         }
-        else
-        if(item.type != "folder"){
-          tempDocs = [
-            ...tempDocs,
-            {
-              ...item,
-              type : "File",
-              key: item._id,
-              matter: item.matter !== null ? item.matter.matterDescription : '-',
-              receivedDate: getISTDate(item.receivedDate),
-              lastEdit: getISTDate(item.lastEdit),
-            },
-          ];
-        }
+        
       });
+      setTemplateTable(template)
     });
-    setDocs(tempDocs);
-    setTemplateTable(template)
-    setLoading(false)
+    
     tempDocs = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
@@ -350,6 +323,7 @@ const Documents = (props) => {
       var docFormData = new FormData();
     docFormData.set('document', uploadData.document);
     docFormData.set('name', uploadData.name);
+    docFormData.set('type', "folder");
     docFormData.set('matter', uploadData.matter);
     docFormData.set('contact', uploadData.contact);
     docFormData.set('category', uploadData.category);
@@ -359,61 +333,30 @@ const Documents = (props) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
-        notification.success({ message: 'Document Uploaded.' });
-        getDocuments();
+          let docs = record
+          docs.documents.push(response.data.data._id)
+            api
+                .post('/document/folder/edit/' + docs._id , docs)
+                .then(function (response) {
+                    console.log(response)
+                    getFolder()
+                    notification.success({ message: 'Document Uploaded.' });
+                    getDocuments();
+
+                    //getDocuments();
+                })
+                .catch(function (response) {
+                    notification.error({ message: 'Failed.' });
+                });
+                setTimeout(() => {
+                setFolderModal(false)
+                setDisable(false)
+                console.log(CatagoryTable)
+                }, 600);
+
+        
       })
-      .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
-      });
     setTimeout(() => {
-      setViewUpload(false);
-      setDisable(false)
-    }, 600);
-    }
-    
-  };
-  const SubmitViaTemplate = async () => {
-    
-    if(tempDocx.category === ''){
-      notification.warning({
-        message : "Please provide a category."
-      })
-    }else
-    if(tempDocx.contact === ''){
-      notification.warning({
-        message : "Please provide a contact."
-      })
-    }else
-    if(tempDocx.document === '' ){
-      notification.warning({
-        message : "Please provide a document."
-      })
-    }else
-    if(tempDocx.matter === '' ){
-      notification.warning({
-        message : "Please provide a matter."
-      })
-    }else
-    if(tempDocx.name === ''){
-      notification.warning({
-        message : "Please provide a name."
-      })
-    }
-    else{
-      console.log(userId)
-      setDisable(true)
-    api
-      .post('/document/uploadtemplate/934894383948u43', tempDocx)
-      .then(function (response) {
-        console.log(response)
-        notification.success({ message: 'Document Uploaded.' });
-        getDocuments();
-      })
-      .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
-      });
-    setTimeout(() => {
-      settempDocxModal(false)
       setViewUpload(false);
       setDisable(false)
     }, 600);
@@ -429,7 +372,6 @@ const Documents = (props) => {
     await api
       .get(`/document/delete/${docId}`)
       .then((res) => {
-        console.log(res)
         notification.success({ message: 'Document Deleted SuccessFully.' });
         getDocuments();
       })
@@ -492,7 +434,9 @@ const Documents = (props) => {
   };
 
   //funtions for template
-  const columnsForTemplate = [
+  {
+    /*
+    const columnsForTemplate = [
     
     {
       title: 'Name',
@@ -532,9 +476,9 @@ const Documents = (props) => {
       render: (_, record) => {
         return (
           <Popconfirm
-                    title="Are you sure delete this Template?"
-                    onConfirm={()=>deleteTemplate(record._id)}
-                    onCancel={()=>{}}
+                  title="Are you sure delete this Template?"
+                  onConfirm={()=>deleteTemplate(record._id)}
+                  onCancel={()=>{}}
                     okText="Yes"
                     cancelText="No"
                   >
@@ -585,12 +529,6 @@ const deleteTemplate = async (docId) => {
     });
 };
  const EditTemplate = async () => {
-  if(TemplateData.name === '' ){
-    notification.warning({
-      message : "Please provide a name."
-    })
-  
-  }else
       if(TemplateData.category === ''){
         notification.warning({
           message : "Please provide a category."
@@ -629,20 +567,12 @@ const deleteTemplate = async (docId) => {
     if(item === "category"){
       TemplateData[`${item}`] = e;
       setTemplateData({ ...TemplateData });
-    }else{
-      TemplateData[`${item}`] = e.target.value;
-      setTemplateData({ ...TemplateData });
     }
     
     console.log(TemplateData)
   };
   const submitTemplate = async () => {
-    if(TemplateData.name === '' ){
-      notification.warning({
-        message : "Please provide a name."
-      })
     
-    }else
     if(TemplateData.category === ''){
       notification.warning({
         message : "Please provide a category."
@@ -658,7 +588,6 @@ const deleteTemplate = async (docId) => {
       var docFormData = new FormData();
     docFormData.set('document', TemplateData.document);
     docFormData.set('category', TemplateData.category);
-    docFormData.set('name' , TemplateData.name)
     docFormData.set('userId', userId);
     api
       .post('/document/upload/934894383948u43', docFormData, {
@@ -678,6 +607,7 @@ const deleteTemplate = async (docId) => {
     }
     
   };
+
 
   //funtions for category
   const columnsForCatagory = [
@@ -731,7 +661,6 @@ const deleteTemplate = async (docId) => {
     },
     
   ];
-  
   const handleCategory = (item) => (e) => {
     console.log("chnage")
     console.log(item)
@@ -768,7 +697,7 @@ const deleteTemplate = async (docId) => {
   const getCategory = ( ) =>{
     let tempCatagory = [];
     api.get(`/document/category/viewforuser/${userId}`).then((res) => {
-      setCategory(res.data.data)
+        setCategory(res.data.data)
       console.log(res)
       res.data.data.map((item, index) => {
         const data = {
@@ -891,6 +820,140 @@ const deleteTemplate = async (docId) => {
     </Modal>
   );
 
+  const ButtonForCatagory = (
+    <div className="d-flex justify-content-center">
+           <Button
+            onClick={()=>setcataoryModal(true)}
+          >
+            Add Category
+          </Button>
+      </div>
+  
+  );
+  const ButtonForTemplate = (
+    <div className="d-flex justify-content-center">
+          <Button
+            onClick={() => {
+              setTemplateData({
+                document: '',
+                userId : userId,
+                category: '',
+              }); //todo
+
+              setTemplateModal(true);
+              setModalFor('Upload');
+            }}
+          >
+            Upload 
+          </Button>
+      </div>
+  
+  );
+  const uploadTemplate = () => (
+    <Modal
+      title={` ${modalFor} Template`}
+      visible={TemplateModal}
+      onCancel={() => setTemplateModal(false)}
+      footer={[
+        <Button key="back" onClick={() => setTemplateModal(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          disabled={Disable}
+          onClick={modalFor === 'Upload' ? submitTemplate : EditTemplate}
+        >
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        {...layout}
+        name="basic"
+        fields={[
+        
+          {
+            name: ['category'],
+            value: TemplateData.category,
+          },
+         
+        ]}
+      >
+        <Form.Item
+          key="category"
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: 'Please input category',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Catagory"
+            optionFilterProp="children"
+            onChange={handleTemplate('category')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {Category.map((item, index) => (
+              <Option key={index} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        
+        </Form.Item>
+        {modalFor === 'Upload' && (
+          <Form.Item
+            key="document"
+            label="Document"
+            name="document"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your File!',
+              },
+            ]}
+          >
+            <Input
+              type="file"
+              onChange={handleTemplate('document')}
+             // value={uploadData.document}
+            />
+          </Form.Item>
+        )}
+      </Form>
+    </Modal>
+  );
+    */
+  }
+  const getCategory = ( ) =>{
+    let tempCatagory = [];
+    api.get(`/document/category/viewforuser/${userId}`).then((res) => {
+        setCategory(res.data.data)
+      console.log(res)
+      res.data.data.map((item, index) => {
+        const data = {
+          name : item.name,
+          key : index,
+          _id : item._id,
+          userId :userId
+        }
+        tempCatagory.push(data)
+      });
+      setCatagoryTable(tempCatagory);
+    });
+  
+   
+    //setLoading(false)
+  }
   //funtions for folder
   const columnsForFolder = [
     {
@@ -915,12 +978,20 @@ const deleteTemplate = async (docId) => {
       title: 'Open',
       dataIndex: 'open',
       key: '6',
-      render: (_, record) => {
+      render: (_, r) => {
         return (
           <Button
             className="btn-outline-info "
             onClick={() => {
-              props.history.push('/documents/view' , record)
+              setLoading(true)
+              let stack = Stack
+              console.log(Stack)
+              stack.push(r)
+              setStack(stack)
+              setrecord(r)
+              console.log(Stack)
+              props.history.push('/documents/view' , r)
+              
             }}
           >
             Open
@@ -988,6 +1059,7 @@ const deleteTemplate = async (docId) => {
       },
     }
     
+    
   ];
 
   const deleteFolder = async (docId) => {
@@ -1014,30 +1086,51 @@ const deleteTemplate = async (docId) => {
   };
 
   const getFolder = ( ) =>{
+    /*
+    let tempDocs = [];
+    await api.get(`/document/folder/view/${record._id}`).then((res) => {
+      console.log(res.data.data)
+      res.data.data.documents.map((item, index) => {
+        tempDocs = [
+          ...tempDocs,
+          {
+            ...item,
+            type : "File",
+            key: item._id,
+            matter: item.matter !== null ? item.matter.matterDescription : '-',
+            receivedDate: getISTDate(item.receivedDate),
+            lastEdit: getISTDate(item.lastEdit),
+          },
+        ];
+      });
+    });
+    setDocs(tempDocs);
+      */
     let tempFolder = [];
-    api.get(`/document/folder/viewforuser/${userId}`).then((res) => {
+    api.get(`/document/folder/view/${record._id}`).then((res) => {
       console.log(res)
-      res.data.data.map((item, index) => {
-        if(item.type != "folder"){
-          const data = {
-            type: "Folder",
-            name : item.name,
-            documents : item.documents,
-            folder : item.folder,
-            key : index,
-            _id : item._id,
-            userId :userId
-          }
-          tempFolder.push(data)
+      
+      res.data.data.folder.map((item, index) => {
+        const data = {
+          type: "Folder",
+          folder : [],
+          name : item.name,
+          key : index,
+          documents : item.documents,
+          _id : item._id,
+          userId :userId
         }
+        tempFolder.push(data)
       });
       setFolderTable(tempFolder);
       console.log(FolderTable)
+      setLoading(false)
       //getDocuments()
     });
   
    
     //setLoading(false)
+  
   }
 
   const addFolder = ( ) =>{
@@ -1053,17 +1146,25 @@ const deleteTemplate = async (docId) => {
       .post('/document/folder/create' , FolderData)
       .then(function (response) {
         console.log(response)
-        getFolder()
-        notification.success({ message: 'Folder created.' });
+         let folderData = record
+         folderData.folder.push(response.data.data._id)
+         api
+            .post('/document/folder/edit/' + folderData._id , folderData)
+            .then(function (response) {
+              console.log(response)
+              getFolder()
+              setFolderModal(false)
+              setDisable(false)
+              notification.success({ message: 'Folder Created.' });
 
-        //getDocuments();
+              //getDocuments();
+            })
+            .catch(function (response) {
+              notification.error({ message: 'Failed.' });
+            });
       })
-      .catch(function (response) {
-        notification.error({ message: 'Failed.' });
-      });
     setTimeout(() => {
-      setcataoryModal(false)
-      setDisable(false)
+      
     }, 600);
     }
     
@@ -1102,10 +1203,92 @@ const deleteTemplate = async (docId) => {
     }
     
   }
+  const SubmitViaTemplate = async () => {
+    
+    if(tempDocx.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(tempDocx.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(tempDocx.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(tempDocx.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(tempDocx.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+      console.log(userId)
+      setDisable(true)
+    api
+      .post('/document/uploadtemplate/934894383948u43', tempDocx)
+      .then(function (response) {
+        console.log(response)
+        notification.success({ message: 'Document Uploaded.' });
+        getDocuments();
+      })
+      .catch(function (response) {
+        notification.error({ message: 'Document Upload Failed.' });
+      });
+    setTimeout(() => {
+      settempDocxModal(false)
+      setViewUpload(false);
+      setDisable(false)
+    }, 600);
+    }
+    
+  };
+  const handleViaTemplate = (item) => (e) => {
+    console.log(item)
+    console.log(e)
+    if(item === "category" || item ==="document"){
+      tempDocx[`${item}`] = e;
+      settempDocx({ ...tempDocx });
+    }else
+    if(item === "category" || item ==="document"){
+      tempDocx[`${item}`] = e;
+      settempDocx({ ...tempDocx });
+    }
+    else {
+      if (item === 'matter') {
+        if(modalFor === "Upload"){
+          console.log("from the uploads")
+          tempDocx[`${item}`] = e;
+          settempDocx({ ...tempDocx });
+          getMatterById(e);
+        }else{
+          console.log("from the edits")
+          api.get(`/matter/view/${e}`).then((res) => {
+            tempDocx[`${item}`] = res.data.data ;
+            settempDocx({ ...tempDocx });
+            getMatterById(e);
+            });
+        }
+      } else {
+        tempDocx[`${item}`] = e.target.value;
+        settempDocx({ ...tempDocx });
+      }
+    }
+    console.log(tempDocx)
+  };
 
   const uploadFolder = () => (
+  
     <Modal
-      title={`${modalFor === "Upload" ? "Create" : "Update"} Folder`}
+      title={` ${modalFor === "Upload" ? "Create" : "Update"} Folder`}
       visible={FolderModal}
       onCancel={() => setFolderModal(false)}
       footer={[
@@ -1180,144 +1363,8 @@ const deleteTemplate = async (docId) => {
     getDocuments();
     getCategory()
     getFolder()
-  }, []);
+  }, [record._id]);
 
-  const uploadForm = () => (
-    <Modal
-      title={` ${modalFor} Document`}
-      visible={viewUpload}
-      onCancel={() => setViewUpload(false)}
-      footer={[
-        <Button key="back" onClick={() => setViewUpload(false)}>
-          Cancel
-        </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          htmlType="submit"
-          disabled={Disable}
-          onClick={modalFor === 'Upload' ? handleSubmit : handleEdit}
-        >
-          Submit
-        </Button>,
-      ]}
-    >
-      <Form
-        {...layout}
-        name="basic"
-        fields={[
-          {
-            name: ['name'],
-            value: uploadData.name,
-          },
-          {
-            name: ['category'],
-            value: uploadData.category,
-          },
-          {
-            name: ['matter'],
-            value:
-              modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
-          }, //todo
-          {
-  
-            name: ['document'],
-           // value: uploadData.document,
-          }
-        ]}
-      >
-        <Form.Item
-          key="name"
-          label="Name"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: 'Please input name!',
-            },
-          ]}
-        >
-          <Input onChange={handleInput('name')} value={uploadData.name} />
-        </Form.Item>
-
-        <Form.Item
-          key="matter"
-          label="Matter"
-          name="matter"
-          rules={[
-            {
-              required: true,
-              message: 'Please input matter',
-            },
-          ]}
-        >
-          <Select
-            showSearch
-            style={{ width: 200 }}
-            placeholder="Select a Matter"
-            optionFilterProp="children"
-            onChange={handleInput('matter')}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {matters.map((item, index) => (
-              <Option key={index} value={item._id}>
-                {item.matterDescription}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          key="category"
-          label="Category"
-          name="category"
-          rules={[
-            {
-              required: true,
-              message: 'Please input category',
-            },
-          ]}
-        >
-          <Select
-            showSearch
-            style={{ width: 200 }}
-            placeholder="Select a Catagory"
-            optionFilterProp="children"
-            onChange={handleInput('category')}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {Category.map((item, index) => (
-              <Option key={index} value={item.name}>
-                {item.name}
-              </Option>
-            ))}
-          </Select>
-        
-        </Form.Item>
-      
-          <Form.Item
-            key="document"
-            label="Document"
-            name="document"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your File!',
-              },
-            ]}
-          >
-            <Input
-              type="file"
-              onChange={handleInput('document')}
-             // value={uploadData.document}
-            />
-          </Form.Item>
-      </Form>
-    </Modal>
-  );
   const uploadTempDoc = () => (
     <Modal
       title={` ${modalFor} Document`}
@@ -1467,13 +1514,13 @@ const deleteTemplate = async (docId) => {
       </Form>
     </Modal>
   );
-  const uploadTemplate = () => (
+  const uploadForm = () => (
     <Modal
-      title={` ${modalFor} Template`}
-      visible={TemplateModal}
-      onCancel={() => setTemplateModal(false)}
+      title={` ${modalFor} Document`}
+      visible={viewUpload}
+      onCancel={() => setViewUpload(false)}
       footer={[
-        <Button key="back" onClick={() => setTemplateModal(false)}>
+        <Button key="back" onClick={() => setViewUpload(false)}>
           Cancel
         </Button>,
         <Button
@@ -1481,7 +1528,7 @@ const deleteTemplate = async (docId) => {
           type="primary"
           htmlType="submit"
           disabled={Disable}
-          onClick={modalFor === 'Upload' ? submitTemplate : EditTemplate}
+          onClick={modalFor === 'Upload' ? handleSubmit : handleEdit}
         >
           Submit
         </Button>,
@@ -1493,16 +1540,20 @@ const deleteTemplate = async (docId) => {
         fields={[
           {
             name: ['name'],
-            value: TemplateData.name,
+            value: uploadData.name,
           },
           {
             name: ['category'],
-            value: TemplateData.category,
+            value: uploadData.category,
           },
-         
+          {
+            name: ['matter'],
+            value:
+              modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
+          }, //todo
         ]}
       >
-         <Form.Item
+        <Form.Item
           key="name"
           label="Name"
           name="name"
@@ -1513,7 +1564,36 @@ const deleteTemplate = async (docId) => {
             },
           ]}
         >
-          <Input onChange={handleTemplate('name')} value={TemplateData.name} />
+          <Input onChange={handleInput('name')} value={uploadData.name} />
+        </Form.Item>
+
+        <Form.Item
+          key="matter"
+          label="Matter"
+          name="matter"
+          rules={[
+            {
+              required: true,
+              message: 'Please input matter',
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a Matter"
+            optionFilterProp="children"
+            onChange={handleInput('matter')}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {matters.map((item, index) => (
+              <Option key={index} value={item._id}>
+                {item.matterDescription}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           key="category"
@@ -1531,7 +1611,7 @@ const deleteTemplate = async (docId) => {
             style={{ width: 200 }}
             placeholder="Select a Catagory"
             optionFilterProp="children"
-            onChange={handleTemplate('category')}
+            onChange={handleInput('category')}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
@@ -1558,7 +1638,7 @@ const deleteTemplate = async (docId) => {
           >
             <Input
               type="file"
-              onChange={handleTemplate('document')}
+              onChange={handleInput('document')}
              // value={uploadData.document}
             />
           </Form.Item>
@@ -1569,6 +1649,7 @@ const deleteTemplate = async (docId) => {
 
  
   
+
   
   const menu = (
     <Menu>
@@ -1593,7 +1674,8 @@ const deleteTemplate = async (docId) => {
       onClick = {()=>{
         setFolderData({
           name : "",
-          userId : "",
+          userId : userId,
+          folder : [],
           documents : []
         })
         setFolderModal(true)
@@ -1632,39 +1714,13 @@ const deleteTemplate = async (docId) => {
     </div>
   
   );
-  const ButtonForCatagory = (
-    <div className="d-flex justify-content-center">
-           <Button
-            onClick={()=>setcataoryModal(true)}
-          >
-            Add Category
-          </Button>
-      </div>
   
-  );
-  const ButtonForTemplate = (
-    <div className="d-flex justify-content-center">
-          <Button
-            onClick={() => {
-              setTemplateData({
-                document: '',
-                userId : userId,
-                category: '',
-              }); //todo
-
-              setTemplateModal(true);
-              setModalFor('Upload');
-            }}
-          >
-            Upload 
-          </Button>
-      </div>
-  
-  );
   
   const [operations, setoperations] = useState(ButtonForDocument)
   const callback = ( key ) => {
     console.log(key);
+    setoperations(ButtonForDocument)
+    /*
     if(key == 1){
       setoperations(ButtonForDocument)
     }else if(key == 2){
@@ -1672,51 +1728,87 @@ const deleteTemplate = async (docId) => {
     }if(key == 3){
       setoperations(ButtonForTemplate)
     }
+    */
+  }
+  const handleGOBACK = ( ) =>{
+    setLoading(true)
+    console.log(record)
+    let stack = Stack
+      console.log(stack.length)
+      stack.splice(stack.length - 1 , 1)
+      const r = stack[stack.length - 1]
+      setStack(stack)
+
+    if(Stack.length == 0){
+      props.history.push('/documents')
+    }else{  
+      setrecord(r)
+
+    }
+    console.log(record)
   }
   return (
-    <Spin size = "large" spinning={Loading}>
-      
-      <Tabs
-          defaultActiveKey="1"
-          tabBarExtraContent={operations}
-          onChange={callback}
-          className="card p-4 overflow-auto"
-        >
-          <TabPane tab="Document" key="1">
-            {
-              uploadForm()
-            }
-            {
-              uploadFolder()
-            }
-            {
-              uploadTempDoc()
-            }
-             <Table 
-             onRow={(record, rowIndex) => {
-              return {
-                onDoubleClick: () => { props.history.push('/documents/view' , record)}, // double click row
-              };
-            }}
-             dataSource={FolderTable} 
-             columns={columnsForFolder} />
+    <div>
+        <Spin size = "large" spinning={Loading}>
 
-            <Table 
-            dataSource={docs} 
-            columns={columnsForDocuments} />
-          </TabPane>
-          <TabPane tab="Category" key="2">
-            {CatagoryForm()}
-           <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
-          </TabPane>
-          <TabPane tab="Template" key="3">
+        <Tabs
+            defaultActiveKey="1"
+            tabBarExtraContent={operations}
+            onChange={callback}
+            className="card p-4 overflow-auto"
+          >
+            <TabPane tab="Document" key="1">
+          
+              {
+                uploadForm()
+              }
+              {
+                uploadFolder()
+              }
+              {
+              uploadTempDoc()
+              }
+              <Table 
+              onRow={(r, rowIndex) => {
+                return {
+                  onDoubleClick: () => { 
+                    setLoading(true)
+                    let stack = Stack
+                    console.log(Stack)
+                    stack.push(r)
+                    setStack(stack)
+                    setrecord(r)
+                    console.log(Stack)
+                    props.history.push('/documents/view' , r)
+                  }, // double click row
+                };
+              }}
+              dataSource={FolderTable} 
+              columns={columnsForFolder} />
+
+              <Table 
+              dataSource={docs} 
+              columns={columnsForDocuments} />
+            </TabPane>
+          {/*
+            <TabPane tab="Category" key="2">
+              
+              {CatagoryForm()}
+            <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
+            </TabPane>
+            <TabPane tab="Template" key="3">
             {uploadTemplate()}
-            <Table dataSource={TemplateTable} columns={columnsForTemplate} />
+              <Table dataSource={TemplateTable} columns={columnsForTemplate} />
           </TabPane>
-      </Tabs>
-     
- 
-    </Spin>
+          */
+          }
+        </Tabs>
+
+
+        </Spin>
+        <Button type = "primary" onClick={handleGOBACK}>GO BACK</Button>
+
+    </div>
      );
 };
 
