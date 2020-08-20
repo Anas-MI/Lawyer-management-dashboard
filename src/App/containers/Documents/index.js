@@ -479,8 +479,15 @@ const Documents = (props) => {
         }
         else{
         setDisable(true)
+        var docFormData = new FormData();
+          docFormData.set('document', uploadData.document);
+          docFormData.set('name', uploadData.name);
+          docFormData.set('matter', uploadData.matter);
+          docFormData.set('contact', uploadData.contact);
+          docFormData.set('category', uploadData.category);
+          docFormData.set('userId', userId);
         await api
-          .post(`/document/edit/${uploadData._id}`, uploadData)
+          .post(`/document/edit/${uploadData._id}`, docFormData)
           .then(function (response) {
             notification.success({ message: 'Document edited.' });
             setDisable(false)
@@ -609,8 +616,13 @@ const deleteTemplate = async (docId) => {
       }
       else{
       setDisable(true)
+      var docFormData = new FormData();
+          docFormData.set('document', TemplateData.document);
+          docFormData.set('name', TemplateData.name);
+          docFormData.set('category', TemplateData.category);
+          docFormData.set('userId', userId);
       await api
-        .post(`/document/edit/${TemplateData._id}`, TemplateData)
+        .post(`/document/edit/${TemplateData._id}`, docFormData)
         .then(function (response) {
           notification.success({ message: 'Template edited.' });
           setDisable(false)
@@ -1548,7 +1560,7 @@ const deleteTemplate = async (docId) => {
           </Select>
         
         </Form.Item>
-        {modalFor === 'Upload' && (
+       
           <Form.Item
             key="document"
             label="Document"
@@ -1566,7 +1578,7 @@ const deleteTemplate = async (docId) => {
              // value={uploadData.document}
             />
           </Form.Item>
-        )}
+    
       </Form>
     </Modal>
   );
