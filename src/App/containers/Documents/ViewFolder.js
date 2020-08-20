@@ -94,11 +94,13 @@ const Documents = (props) => {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.name.length - b.name.length,
     },
+    /*
     {
       title: 'Matter',
       dataIndex: 'matter',
       key: '2',
     },
+    */
     {
       title: 'Category',
       dataIndex: 'category',
@@ -252,11 +254,11 @@ const Documents = (props) => {
       setTemplateTable(template)
     });
     
-    tempDocs = [];
+    let tempMatter = [];
     await api.get(`/matter/viewforuser/${userId}`).then((res) => {
       res.data.data.map((item) => {
-        tempDocs = [
-          ...tempDocs,
+        tempMatter = [
+          ...tempMatter,
           {
             ...item,
             key: item._id,
@@ -288,7 +290,7 @@ const Documents = (props) => {
         ];
       });
     });
-    setMatters(tempDocs);
+    setMatters(tempMatter);
   };
 
   const handleSubmit = async () => {
@@ -417,8 +419,15 @@ const Documents = (props) => {
         }
         else{
         setDisable(true)
+        var docFormData = new FormData();
+          docFormData.set('document', uploadData.document);
+          docFormData.set('name', uploadData.name);
+          docFormData.set('matter', uploadData.matter);
+          docFormData.set('contact', uploadData.contact);
+          docFormData.set('category', uploadData.category);
+          docFormData.set('userId', userId);
         await api
-          .post(`/document/edit/${uploadData._id}`, uploadData)
+          .post(`/document/edit/${uploadData._id}`, docFormData)
           .then(function (response) {
             notification.success({ message: 'Document edited.' });
             setDisable(false)
@@ -1236,13 +1245,23 @@ const deleteTemplate = async (docId) => {
     api
       .post('/document/uploadtemplate/934894383948u43', tempDocx)
       .then(function (response) {
-        console.log(response)
-        notification.success({ message: 'Document Uploaded.' });
-        getDocuments();
+         let docs = record
+          docs.documents.push(response.data.data._id)
+        api
+                .post('/document/folder/edit/' + docs._id , docs)
+                .then(function (response) {
+                    console.log(response)
+                    notification.success({ message: 'Document Uploaded.' });
+                    getDocuments();
+
+                    //getDocuments();
+                })
+                .catch(function (response) {
+                    notification.error({ message: 'Failed.' });
+                });
+        
       })
-      .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
-      });
+      
     setTimeout(() => {
       settempDocxModal(false)
       setViewUpload(false);
@@ -1551,6 +1570,10 @@ const deleteTemplate = async (docId) => {
             value:
               modalFor === 'Edit' ? uploadData.matter._id : uploadData.matter,
           }, //todo
+          {
+            name: ['document'],
+           // value: uploadData.document,
+          }
         ]}
       >
         <Form.Item
@@ -1624,7 +1647,7 @@ const deleteTemplate = async (docId) => {
           </Select>
         
         </Form.Item>
-        {modalFor === 'Upload' && (
+ 
           <Form.Item
             key="document"
             label="Document"
@@ -1642,7 +1665,7 @@ const deleteTemplate = async (docId) => {
              // value={uploadData.document}
             />
           </Form.Item>
-        )}
+  
       </Form>
     </Modal>
   );
@@ -1661,6 +1684,7 @@ const deleteTemplate = async (docId) => {
             name: '',
             matter: '',
             category: '',
+            userId :userId
           }); //todo
 
           setViewUpload(true);

@@ -54,7 +54,7 @@ const ContactsManage = (props) => {
   async function fetchEventData() {
     response = await api.get('/contact/viewforuser/' + userId);
     company = await api.get('/company/viewforuser/' + userId);
- 
+    
     setTable();
   }
   useEffect(() => {
@@ -62,6 +62,7 @@ const ContactsManage = (props) => {
   }, []);
 
   const setTable = () => {
+    setLoading(false)
     response.data.data.map((value, id) => {
       let key = id;
 
@@ -77,6 +78,7 @@ const ContactsManage = (props) => {
       newtableData.push(data);
       setcontactData(newtableData);
     });
+    console.log(company)
     company.data.data.map((value, id) => {
       let key = id;
       const data = {
@@ -84,7 +86,9 @@ const ContactsManage = (props) => {
         _id: value._id,
         billingCustomRate: value.billingCustomRate,
         emailAddress: value.emailAddress.map((value) => {
-          return value.emailType + ' : ' + value.emailAddress + ' ,\n ';
+          if(value != null ){
+            return value.emailType + ' : ' + value.emailAddress + ' ,\n '
+          }
         }),
       };
       let newtableData = companyData;
@@ -99,7 +103,7 @@ const ContactsManage = (props) => {
       setState({ tableData: contactData });
       setType('contact')
     }
-    setLoading(false)
+    
     window.localStorage.setItem('company', "false")
     
   };

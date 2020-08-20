@@ -13,6 +13,7 @@ const EditAccount = (props) =>{
 
     const history = useHistory()
     const userId = useSelector((state) => state.user.token.user._id);
+    const [firstTrue, setfirstTrue] = useState(false)
     const [state, setState] = useState({
         userId : userId,
         type: "",
@@ -34,7 +35,14 @@ const EditAccount = (props) =>{
         api
         .get("/account/view/"+props.location.state)
         .then((res) => {
+            let newState = state
+            newState.defaultAccount = res.data.data.defaultAccount
+            if(newState.defaultAccount){
+                setfirstTrue(true)
+            }
+            setState(newState)
             setState({...state, ...res.data.data})
+            console.log(state)
         })
         .catch((err) => {
           console.log(err); 
@@ -156,6 +164,11 @@ const EditAccount = (props) =>{
           });
         } else {
             // if form is valid then do something
+            if(firstTrue){
+                let newState = state
+                newState.defaultAccount = !newState.defaultAccount
+                setState(newState)
+            }
             api.post("/account/edit/"+props.location.state, state)
                 .then((res) => {
                     console.log(res)
