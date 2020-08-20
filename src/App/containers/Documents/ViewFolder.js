@@ -331,7 +331,7 @@ const Documents = (props) => {
     docFormData.set('category', uploadData.category);
     docFormData.set('userId', userId);
     api
-      .post('/document/upload/'+ userId, docFormData, {
+      .post('/document/upload/934894383948u43', docFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
@@ -358,6 +358,10 @@ const Documents = (props) => {
 
         
       })
+    setTimeout(() => {
+      setViewUpload(false);
+      setDisable(false)
+    }, 600);
     }
     
   };
@@ -1232,15 +1236,25 @@ const deleteTemplate = async (docId) => {
       console.log(userId)
       setDisable(true)
     api
-      .post('/document/uploadtemplate/'+ userId, tempDocx)
+      .post('/document/uploadtemplate/934894383948u43', tempDocx)
       .then(function (response) {
-        console.log(response)
-        notification.success({ message: 'Document Uploaded.' });
-        getDocuments();
+         let docs = record
+          docs.documents.push(response.data.data._id)
+        api
+                .post('/document/folder/edit/' + docs._id , docs)
+                .then(function (response) {
+                    console.log(response)
+                    notification.success({ message: 'Document Uploaded.' });
+                    getDocuments();
+
+                    //getDocuments();
+                })
+                .catch(function (response) {
+                    notification.error({ message: 'Failed.' });
+                });
+        
       })
-      .catch(function (response) {
-        notification.error({ message: 'Document Upload Failed.' });
-      });
+      
     setTimeout(() => {
       settempDocxModal(false)
       setViewUpload(false);
@@ -1637,7 +1651,7 @@ const deleteTemplate = async (docId) => {
             <Input
               type="file"
               onChange={handleInput('document')}
-              //value={uploadData.document}
+             // value={uploadData.document}
             />
           </Form.Item>
         )}
@@ -1659,6 +1673,7 @@ const deleteTemplate = async (docId) => {
             name: '',
             matter: '',
             category: '',
+            userId :userId
           }); //todo
 
           setViewUpload(true);

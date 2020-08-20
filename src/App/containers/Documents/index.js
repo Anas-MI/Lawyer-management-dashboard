@@ -178,10 +178,13 @@ const Documents = (props) => {
     },
   ];
   const handleInput = (item) => (e) => {
+
     console.log(item)
     console.log(e)
     if (item === 'document') {
+      e.persist()
       setUploadData({ ...uploadData, document: e.target.files[0] });
+      console.log(uploadData)
     } else
     if(item === "category"){
       uploadData[`${item}`] = e;
@@ -207,7 +210,7 @@ const Documents = (props) => {
         setUploadData({ ...uploadData });
       }
     }
-    console.log(uploadData)
+    
   };
 
   const handleViaTemplate = (item) => (e) => {
@@ -348,12 +351,13 @@ const Documents = (props) => {
     else{
       setDisable(true)
       var docFormData = new FormData();
-    docFormData.set('document', uploadData.document);
-    docFormData.set('name', uploadData.name);
-    docFormData.set('matter', uploadData.matter);
-    docFormData.set('contact', uploadData.contact);
-    docFormData.set('category', uploadData.category);
-    docFormData.set('userId', userId);
+      docFormData.set('document', uploadData.document);
+      docFormData.set('name', uploadData.name);
+      docFormData.set('matter', uploadData.matter);
+      docFormData.set('contact', uploadData.contact);
+      docFormData.set('category', uploadData.category);
+      docFormData.set('userId', userId);
+      console.log(docFormData)
     api
       .post('/document/upload/934894383948u43', docFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -1062,7 +1066,7 @@ const deleteTemplate = async (docId) => {
         notification.error({ message: 'Failed.' });
       });
     setTimeout(() => {
-      setcataoryModal(false)
+      setFolderModal(false)
       setDisable(false)
     }, 600);
     }
@@ -1593,7 +1597,7 @@ const deleteTemplate = async (docId) => {
       onClick = {()=>{
         setFolderData({
           name : "",
-          userId : "",
+          userId : userId,
           documents : []
         })
         setFolderModal(true)
@@ -1648,6 +1652,7 @@ const deleteTemplate = async (docId) => {
             onClick={() => {
               setTemplateData({
                 document: '',
+                name :'',
                 userId : userId,
                 category: '',
               }); //todo
