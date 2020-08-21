@@ -56,16 +56,15 @@ class Tasks extends React.Component {
     let data = [];
     let count = 0
     this.state.tableData.map((val, index) => {
-      if(!val.status){
         const td = [
-          count,
+          index,
           val.taskName,
           val.description,
           val.matter,
           val.dueDate.substring(0,10),
         ];
         data.push(td);
-      }
+     
     });
     let content = {
       startY: 50,
@@ -174,12 +173,13 @@ class Tasks extends React.Component {
         if(value.status == false){
           
           upcomingData.push(newdata)
+          tableData.push(newdata)
         }
         if(value.status == true){
 
           CompletedData.push(newdata)
         }
-        tableData.push(newdata)
+       
         
       })
       this.setState({ 
@@ -538,26 +538,25 @@ class Tasks extends React.Component {
     const { TabPane } = Tabs;
     const callback = (key) =>{
       console.log(key)
-      /*
+      
       if(key == 1){
+        console.log("Key == 1")
         this.setState({
           tableData : this.state.upcomingData,
       
         })
+        console.log(this.state.tableData)
       }else
       if(key == 2){
+        console.log("Key == 2")
         this.setState({
           tableData : this.state.CompletedData,
       
         })
-      }else
-      if(key == 3){
-        this.setState({
-          tableData : this.state.ListData,
-      
-        })
+        console.log(this.state.tableData)
       }
-      */
+      
+      
     }
 
     return (
