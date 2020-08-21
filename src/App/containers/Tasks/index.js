@@ -536,8 +536,28 @@ class Tasks extends React.Component {
     
     );
     const { TabPane } = Tabs;
-    function callback(key) {
-      console.log(key);
+    const callback = (key) =>{
+      console.log(key)
+      /*
+      if(key == 1){
+        this.setState({
+          tableData : this.state.upcomingData,
+      
+        })
+      }else
+      if(key == 2){
+        this.setState({
+          tableData : this.state.CompletedData,
+      
+        })
+      }else
+      if(key == 3){
+        this.setState({
+          tableData : this.state.ListData,
+      
+        })
+      }
+      */
     }
 
     return (
