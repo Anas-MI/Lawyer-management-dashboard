@@ -164,6 +164,7 @@ class Tasks extends React.Component {
       console.log(res)
       res.data.data.map((value, index)=>{
         const newdata = value
+        newdata.matter = newdata.matterDescription
         newdata.key = index 
         newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
@@ -715,7 +716,7 @@ class Tasks extends React.Component {
                             <Form.Control
                               required
                               as="select"
-                              defaultValue={this.state.Data.matter.matterDescription}
+                              value={this.state.Data.matter.matterDescription}
                               onChange={this.handleChange}
                               name="matter"
                             >
