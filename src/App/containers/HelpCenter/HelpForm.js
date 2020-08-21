@@ -4,9 +4,12 @@ import { Form, Input, Button, Card, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 // import { UploadOutlined } from '@ant-design/icons';
 import api from '../../../resources/api';
+import { flatMap } from 'lodash';
+import { ThemeProvider } from 'react-bootstrap';
 
 const HelpForm = () => {
   const history = useHistory();
+  const [disable, setdisable] = useState(false)
   const user = useSelector((state) => state.user.token.user);
   const [ticketData, setTicketData] = useState({
     userId: user._id,
@@ -14,7 +17,7 @@ const HelpForm = () => {
     lastName: user.lastName,
     email: user.emailAddress,
     subject: '',
-    issue: '',
+    issue: "",
     attachment: '',
     url: '',
   });
@@ -46,7 +49,38 @@ const HelpForm = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('submit', ticketData);
+    notification.destroy()
+    /*
+    if(ticketData.firstName=== "" || ticketData.lastName === ""){
+      notification.warning({
+        message : "Please provide first name and last name"
+      })
+    }
+    */
+   console.log(ticketData)
+   let valid = true
+   if(ticketData.issue === ""){
+     valid = false
+      notification.warning({
+        message : "Please provide a issue"
+      })
+    }else
+    if(ticketData.subject === ""){
+      valid = false
+       notification.warning({
+         message : "Please provide a subject"
+       })
+     }else
+     if(ticketData.attachment === ""){
+      console.log("yha pe bhi aa rha he")
+      valid = false
+       notification.warning({
+         message : "Please provide a Attachment"
+       })
+     }else
+    if(valid){
+      setdisable(true)
+      console.log('submit', ticketData);
     var formData = new FormData();
     formData.set('firstName', ticketData.firstName);
     formData.set('lastName', ticketData.lastName);
@@ -61,14 +95,15 @@ const HelpForm = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(function (response) {
-        setTimeout(() => {
-          history.goBack();
-        }, 600);
+        setdisable(false)
+        history.goBack();
         notification.success({ message: 'Ticket Generated.' });
       })
       .catch(function (response) {
+        setdisable(false)
         notification.error({ message: 'Ticket Generation Failed.' });
       });
+    }
   };
 
   return (
@@ -177,7 +212,11 @@ const HelpForm = () => {
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+          <Button 
+          disabled = {disable}
+          type="primary" 
+          htmlType="submit" 
+          onClick={handleSubmit}>
             Submit
           </Button>
           <Button
