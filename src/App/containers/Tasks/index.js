@@ -38,7 +38,8 @@ class Tasks extends React.Component {
       status: false,
       disable : false,
       spinning : true,
-      options : null
+      options : null,
+      index: 0
     };
   }
   exportPDF = () => {
@@ -111,8 +112,10 @@ class Tasks extends React.Component {
     e.persist();
     let newState = this.state;
     if (e.target.id === "matter" ) {
+    
       if( e.target.selectedIndex > 0){
-        newState.Data[e.target.id] = response[e.target.selectedIndex - 1];
+        newState.index = e.target.selectedIndex 
+        newState.Data[e.target.id] = e.target.value;
       }
       
     } else {
@@ -159,12 +162,13 @@ class Tasks extends React.Component {
       } );
        
     });
-
+    
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
       console.log(res)
+      console.log(this.props.userId)
       res.data.data.map((value, index)=>{
         const newdata = value
-        newdata.matter = newdata.matterDescription
+        newdata.matter = newdata.matter ? newdata.matter.matterDescription : "nil"
         newdata.key = index 
         newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
@@ -352,6 +356,9 @@ class Tasks extends React.Component {
       });
       const data = this.state.Data;
       data.userId = this.props.userId;
+      if(this.state.index != 0){
+        data.matter = response[this.state.index - 1]
+      }
       if (this.state.editMode) {
         api
           .post('tasks/edit/' + data._id, data)
@@ -716,7 +723,7 @@ class Tasks extends React.Component {
                             <Form.Control
                               required
                               as="select"
-                              value={this.state.Data.matter.matterDescription}
+                              value={this.state.Data.matter}
                               onChange={this.handleChange}
                               name="matter"
                             >

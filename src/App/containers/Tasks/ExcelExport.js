@@ -33,7 +33,7 @@ export class ExportExcel extends Component {
                   <td>{index + 1}</td>
                   <td>{value.taskName}</td>
                   <td>{value.description}</td>
-                  <td>{value.matter}</td>
+                  <td>{value.matter.matterDescription ? value.matter.matterDescription  : value.matter}</td>
                   <td>{value.dueDate.substring(0,10)}</td>
                 </tr>
               );
