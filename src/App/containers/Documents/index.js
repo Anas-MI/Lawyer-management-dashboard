@@ -51,6 +51,7 @@ const Documents = (props) => {
   const [viewUpload, setViewUpload] = useState(false);
   const [tabFor, settabFor] = useState("Document")
   const [Loading, setLoading] = useState(true)
+
   const [CatagoryData, setCatagoryData] = useState({
     name : '',
     userId : userId
@@ -184,7 +185,7 @@ const Documents = (props) => {
     if (item === 'document') {
       e.persist()
       setUploadData({ ...uploadData, document: e.target.files[0] });
-      console.log(uploadData)
+     
     } else
     if(item === "category"){
       uploadData[`${item}`] = e;
@@ -210,6 +211,7 @@ const Documents = (props) => {
         setUploadData({ ...uploadData });
       }
     }
+    console.log(uploadData)
     
   };
 
@@ -479,24 +481,37 @@ const Documents = (props) => {
         }
         else{
         setDisable(true)
-        var docFormData = new FormData();
-          docFormData.set('document', uploadData.document);
-          docFormData.set('name', uploadData.name);
-          docFormData.set('matter', uploadData.matter);
-          docFormData.set('contact', uploadData.contact);
-          docFormData.set('category', uploadData.category);
-          docFormData.set('userId', userId);
+        var formData = new FormData();
+        formData.set('document', uploadData.document);
+        formData.set('userId', userId);
+        api
+          .post(`/document/edit/${uploadData._id}`, formData,{
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }).then(res=>{
+            console.log(res)
+          })
+          const newUploadData = {
+            _id: uploadData._id,
+            name: uploadData.name,
+            matter: uploadData.matter,
+            contact: uploadData.contact,
+            category: uploadData.category,
+          }
         await api
-          .post(`/document/edit/${uploadData._id}`, docFormData)
+          .post(`/document/edit/${uploadData._id}`, newUploadData)
           .then(function (response) {
+            
+            console.log(response)
             notification.success({ message: 'Document edited.' });
-            setDisable(false)
+            
             getDocuments();
           })
           .catch(function (response) {
+             console.log(response)
             notification.error({ message: 'Document Upload Failed.' });
           });
         setTimeout(() => {
+          setDisable(false)
           setViewUpload(false);
         }, 600);
       }
@@ -615,25 +630,40 @@ const deleteTemplate = async (docId) => {
       
       }
       else{
+      
       setDisable(true)
-      var docFormData = new FormData();
-          docFormData.set('document', TemplateData.document);
-          docFormData.set('name', TemplateData.name);
-          docFormData.set('category', TemplateData.category);
-          docFormData.set('userId', userId);
+
+      var formData = new FormData();
+        formData.set('document', TemplateData.document);
+        formData.set('userId', userId);
+        api
+          .post(`/document/edit/${TemplateData._id}`, formData,{
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }).then(res=>{
+            console.log(res)
+          })
+
+          const newUploadData = {
+            _id: TemplateData._id,
+            name: TemplateData.name,
+            category: TemplateData.category,
+          }
+       
       await api
-        .post(`/document/edit/${TemplateData._id}`, docFormData)
+        .post(`/document/edit/${TemplateData._id}`, newUploadData)
         .then(function (response) {
           notification.success({ message: 'Template edited.' });
-          setDisable(false)
           getDocuments();
+          setDisable(false)
+          setTemplateModal(false);
+         
         })
         .catch(function (response) {
           notification.error({ message: 'Template Upload Failed.' });
+          setDisable(false)
+          setTemplateModal(false);
         });
-      setTimeout(() => {
-        setTemplateModal(false);
-      }, 600);
+     
     }
 };
   const handleTemplate = (item) => (e) => {

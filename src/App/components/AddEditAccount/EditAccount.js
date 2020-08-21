@@ -138,6 +138,7 @@ const EditAccount = (props) =>{
     // handel Submit of form 
     const handelSubmit = e =>{
         e.preventDefault();
+        notification.destroy()
         if(!display){
           const validateForm = (error) => {
             let valid = true;

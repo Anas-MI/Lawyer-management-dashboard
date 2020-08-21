@@ -391,56 +391,69 @@ const Documents = (props) => {
       });
   };
 
-   const handleEdit = async () => {
-        if(uploadData.category === ''){
-          notification.warning({
-            message : "Please provide a category."
-          })
-        }else
-        if(uploadData.contact === ''){
-          notification.warning({
-            message : "Please provide a contact."
-          })
-        }else
-        if(uploadData.document === '' ){
-          notification.warning({
-            message : "Please provide a document."
-          })
-        }else
-        if(uploadData.matter === '' ){
-          notification.warning({
-            message : "Please provide a matter."
-          })
-        }else
-        if(uploadData.name === ''){
-          notification.warning({
-            message : "Please provide a name."
-          })
-        }
-        else{
-        setDisable(true)
-        var docFormData = new FormData();
-          docFormData.set('document', uploadData.document);
-          docFormData.set('name', uploadData.name);
-          docFormData.set('matter', uploadData.matter);
-          docFormData.set('contact', uploadData.contact);
-          docFormData.set('category', uploadData.category);
-          docFormData.set('userId', userId);
-        await api
-          .post(`/document/edit/${uploadData._id}`, docFormData)
-          .then(function (response) {
-            notification.success({ message: 'Document edited.' });
-            setDisable(false)
-            getDocuments();
-          })
-          .catch(function (response) {
-            notification.error({ message: 'Document Upload Failed.' });
-          });
-        setTimeout(() => {
-          setViewUpload(false);
-        }, 600);
+  const handleEdit = async () => {
+    if(uploadData.category === ''){
+      notification.warning({
+        message : "Please provide a category."
+      })
+    }else
+    if(uploadData.contact === ''){
+      notification.warning({
+        message : "Please provide a contact."
+      })
+    }else
+    if(uploadData.document === '' ){
+      notification.warning({
+        message : "Please provide a document."
+      })
+    }else
+    if(uploadData.matter === '' ){
+      notification.warning({
+        message : "Please provide a matter."
+      })
+    }else
+    if(uploadData.name === ''){
+      notification.warning({
+        message : "Please provide a name."
+      })
+    }
+    else{
+    setDisable(true)
+    var formData = new FormData();
+    formData.set('document', uploadData.document);
+    formData.set('userId', userId);
+    api
+      .post(`/document/edit/${uploadData._id}`, formData,{
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }).then(res=>{
+        console.log(res)
+      })
+      const newUploadData = {
+        _id: uploadData._id,
+        name: uploadData.name,
+        matter: uploadData.matter,
+        contact: uploadData.contact,
+        category: uploadData.category,
       }
-  };
+    await api
+      .post(`/document/edit/${uploadData._id}`, newUploadData)
+      .then(function (response) {
+        
+        console.log(response)
+        notification.success({ message: 'Document edited.' });
+        
+        getDocuments();
+      })
+      .catch(function (response) {
+         console.log(response)
+        notification.error({ message: 'Document Upload Failed.' });
+      });
+    setTimeout(() => {
+      setDisable(false)
+      setViewUpload(false);
+    }, 600);
+  }
+};
 
   //funtions for template
   {
