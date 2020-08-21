@@ -47,7 +47,7 @@ class TaskForm extends React.Component{
                             <Form.Control
                               required
                               as="select"
-                              defaultValue={res.data.data.matterDescription}
+                              defaultValue={res.data.data != null ? res.data.data.matterDescription : "s"}
                               onChange={this.props.handleChange}
                               name="matter"
                             >

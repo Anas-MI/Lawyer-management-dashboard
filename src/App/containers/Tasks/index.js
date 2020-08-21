@@ -38,7 +38,8 @@ class Tasks extends React.Component {
       status: false,
       disable : false,
       spinning : true,
-      options : null
+      options : null,
+      index: 0
     };
   }
   exportPDF = () => {
@@ -98,6 +99,8 @@ class Tasks extends React.Component {
 
 
   handleCancel = () => {
+    ReactDOM.findDOMNode(this.messageForm).reset()
+
     this.setState({
       visible: false,
       editMode : false,
@@ -109,8 +112,10 @@ class Tasks extends React.Component {
     e.persist();
     let newState = this.state;
     if (e.target.id === "matter" ) {
+    
       if( e.target.selectedIndex > 0){
-        newState.Data[e.target.id] = response[e.target.selectedIndex - 1];
+        newState.index = e.target.selectedIndex 
+        newState.Data[e.target.id] = e.target.value;
       }
       
     } else {
@@ -157,11 +162,13 @@ class Tasks extends React.Component {
       } );
        
     });
-
+    
     await api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
       console.log(res)
+      console.log(this.props.userId)
       res.data.data.map((value, index)=>{
         const newdata = value
+        newdata.matter = newdata.matter ? newdata.matter.matterDescription : "nil"
         newdata.key = index 
         newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
@@ -349,6 +356,9 @@ class Tasks extends React.Component {
       });
       const data = this.state.Data;
       data.userId = this.props.userId;
+      if(this.state.index != 0){
+        data.matter = response[this.state.index - 1]
+      }
       if (this.state.editMode) {
         api
           .post('tasks/edit/' + data._id, data)
@@ -360,14 +370,16 @@ class Tasks extends React.Component {
           )
           .catch(() => {
             this.openNotificationWithFailure('error');
-          });
+          }).then(()=>{
+            ReactDOM.findDOMNode(this.messageForm).reset()
+          })
       } else {
         api
           .post('/tasks/create', data)
           .then((res) => {
             console.log(res)
             this.openNotificationWithSucces('success')
-
+            
             this.componentDidMount()
           })
           .catch(() => {
@@ -524,8 +536,28 @@ class Tasks extends React.Component {
     
     );
     const { TabPane } = Tabs;
-    function callback(key) {
-      console.log(key);
+    const callback = (key) =>{
+      console.log(key)
+      /*
+      if(key == 1){
+        this.setState({
+          tableData : this.state.upcomingData,
+      
+        })
+      }else
+      if(key == 2){
+        this.setState({
+          tableData : this.state.CompletedData,
+      
+        })
+      }else
+      if(key == 3){
+        this.setState({
+          tableData : this.state.ListData,
+      
+        })
+      }
+      */
     }
 
     return (
@@ -672,7 +704,95 @@ class Tasks extends React.Component {
             </Button>,
           ]}
         >
-          <TaskForm options={this.state.options} data={this.state.Data}  handleChange={this.handleChange}></TaskForm>
+          <Form 
+           id='myForm'
+           className="form"
+           ref={ form => this.messageForm = form }
+          className="form-details">
+                  <Form.Group controlId="taskName">
+                    <Form.Label>Task Name</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      defaultValue={this.state.Data.taskName}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="dueDate">
+                    <Form.Label>Due Date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      defaultValue={this.state.Data.dueDate ? this.state.Data.dueDate.substring(0,10) : ""}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="description">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      required
+                      defaultValue={this.state.Data.description}
+                      as="textarea"
+                      rows="3"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="matter">
+                            <Form.Label>Matter</Form.Label>
+                            <Form.Control
+                              required
+                              as="select"
+                              value={this.state.Data.matter}
+                              onChange={this.handleChange}
+                              name="matter"
+                            >
+                              <option>Select a matter</option>
+                              {this.state.options}
+                            </Form.Control>
+                          </Form.Group>
+
+                {
+                  /*
+                    <Form.Group controlId="taskName">
+                    <Form.Label>Assignee</Form.Label>
+                    <div>
+                      <Input addonBefore={selectBefore} size="large" suffix={<UserOutlined className="site-form-item-icon" />}  placeholder="Type a name..." />
+                    </div>
+                  </Form.Group>
+                  */
+                }
+
+                  <Form.Group controlId="priority">
+                    <Form.Label>Priority</Form.Label>
+                    <Form.Control
+                      as="select"
+                    
+                      required
+                      defaultValue={this.state.Data.priority}
+                      onChange={this.handleChange}
+                    >
+                      <option>Low</option>
+                      <option>Normal</option>
+                      <option>High</option>
+                    </Form.Control>
+                  </Form.Group>
+                  
+                  <br />
+                  {
+                    /* 
+                    <Form.Group controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Notify me when the task is completed" />
+                  </Form.Group>
+                  <br />
+                  <Form.Group controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Notify assignee via email" />
+                  </Form.Group>
+                  <br />
+                    */
+                  }
+                </Form>
+    
         </Modal>
       </div>
     
