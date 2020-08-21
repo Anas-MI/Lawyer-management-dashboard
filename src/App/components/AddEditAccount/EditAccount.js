@@ -29,7 +29,7 @@ const EditAccount = (props) =>{
     })
     const [error, setError] = useState({})
     const [display, setDisplay] = useState(false)
-
+    const [Disabled, setDisabled] = useState(false)
     // get Account Data
     useEffect(() => {
         api
@@ -165,18 +165,23 @@ const EditAccount = (props) =>{
           });
         } else {
             // if form is valid then do something
+            setDisabled(true)
+            /*
             if(firstTrue){
                 let newState = state
                 newState.defaultAccount = !newState.defaultAccount
                 setState(newState)
             }
+            */
             api.post("/account/edit/"+props.location.state, state)
                 .then((res) => {
                     console.log(res)
+                    setDisabled(false)
                     notification.success({message : "Account Edited."})
                     history.goBack();
                 }).catch((err) => {
                     console.log(err); 
+                    setDisabled(false)
                     notification.error({message : "Failed to edit account."})
                   });
         }
@@ -278,7 +283,7 @@ const EditAccount = (props) =>{
                         <Form.Check defaultChecked = { state.defaultAccount } type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
                     </Form.Group>
                     <br /><br />
-                    <Button onClick={handelSubmit}>Edit Bank Account</Button>
+                    <Button disabled = {Disabled} onClick={handelSubmit}>Edit Bank Account</Button>
                 </Form>
             </Card>
         </div>          

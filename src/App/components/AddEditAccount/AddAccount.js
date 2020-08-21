@@ -28,6 +28,7 @@ const AddAccount = () =>{
     })
     const [error, setError] = useState({})
     const [display, setDisplay] = useState(false)
+    const [Disabled, setDisabled] = useState(false)
 
     // handel the change of form & set the error msg
     const handelChange = e =>{
@@ -173,15 +174,18 @@ const AddAccount = () =>{
         }
         else {
             // if form is valid then do something
+            setDisabled(true)
             api
             .post("/account/create", state)
             .then((res) => {
                 console.log(res)
                 notification.success({message : "Account Added."})
                 history.goBack();
+                setDisabled(false)
             })
             .catch((err) => {
                 console.log(err); 
+                setDisabled(false)
                 notification.error({message : "Failed to add account."})
               });
         }
@@ -281,7 +285,7 @@ const AddAccount = () =>{
                         <Form.Check type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
                     </Form.Group>
                     <br /><br />
-                    <Button  onClick={handelSubmit}>Create New Bank Account</Button>
+                    <Button disabled = {Disabled}  onClick={handelSubmit}>Create New Bank Account</Button>
                 </Form>
             </Card>
         </div>          
