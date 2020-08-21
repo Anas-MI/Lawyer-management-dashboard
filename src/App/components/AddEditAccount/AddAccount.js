@@ -108,6 +108,7 @@ const AddAccount = () =>{
     // handel Submit of form 
     const handelSubmit = e =>{
         e.preventDefault();
+        notification.destroy()
         if(!display){
           const validateForm = (error) => {
             let valid = true;
@@ -280,7 +281,7 @@ const AddAccount = () =>{
                         <Form.Check type="checkbox" name="defaultAccount" label="Set the account as default account" onChange={handelChange} />
                     </Form.Group>
                     <br /><br />
-                    <Button onClick={handelSubmit}>Create New Bank Account</Button>
+                    <Button  onClick={handelSubmit}>Create New Bank Account</Button>
                 </Form>
             </Card>
         </div>          

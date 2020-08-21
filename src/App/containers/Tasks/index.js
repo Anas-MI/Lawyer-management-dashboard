@@ -320,7 +320,7 @@ class Tasks extends React.Component {
     if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
       valid = false
       notification.warning({
-        message: 'Please provide a taskName',
+        message: 'Please provide a Task Name',
       });
     }else
     if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
