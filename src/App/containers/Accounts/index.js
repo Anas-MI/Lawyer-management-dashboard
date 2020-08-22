@@ -1,8 +1,12 @@
 import React, {useState, useEffect} from  'react'
-import { Table, notification, Button, Popconfirm, Spin } from 'antd';
+import { Table, notification, Button, Popconfirm, Spin, Space, Card } from 'antd';
+import { } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
 import { useSelector } from 'react-redux'
+import ExportExcel from './ExcelExport'
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const Accounts = () => {
     const history = useHistory()
@@ -106,15 +110,75 @@ const Accounts = () => {
             }
         },
       ];
-
+      const exportPDF = () => {
+        const unit = 'pt';
+        const size = 'A4'; // Use A1, A2, A3 or A4
+        const orientation = 'portrait'; // portrait or landscape
+  
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+  
+        doc.setFontSize(15);
+  
+        const title = 'Accounts';
+        const headers = [
+          [
+            'Account Name',
+            'Currency',
+            'Balance',
+            'Default Account',
+          ],
+        ];
+  
+        let data = [];
+  
+        state.map((val, index) => {
+          const td = [
+            val.accountName,
+            val.currency,
+            val.openingBalance,
+            val.type,
+          ];
+          data.push(td);
+        });
+  
+        let content = {
+          startY: 50,
+          head: headers,
+          body: data,
+        };
+  
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save('Accounts.pdf');
+      };
     return(
         <>
         <Spin size = "large" spinning={Loading}>
-          <div className='p-2 '>
-                <Button className='ml-auto' color='success'>Export</Button>
-                <Button className='ml-auto' color='success' style={{float : "right"}} onClick={() => { history.push('/add/accounts')}} >Add</Button>
+          <Card
+           title = "Accounts"
+           extra={
+            <div className="d-flex justify-content-center">
+                  <button
+                      className="ml-auto btn  btn-outline-primary   btn-sm"
+                      onClick={exportPDF}
+                  >
+                      Export to Pdf
+                  </button>
+                  <ExportExcel dataSource={state || []} />
+                  <button
+                      className="ml-auto btn  btn-outline-primary   btn-sm"
+                      onClick={() => { history.push('/add/accounts')}}
+                  >
+                      Add Account
+                  </button>
+        
             </div>
-            <Table columns={columns} dataSource={state}/>
+         
+        }
+           >
+             <Table columns={columns} dataSource={state}/>
+          </Card>
         </Spin>
             
         </>

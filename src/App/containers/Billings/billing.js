@@ -422,17 +422,17 @@ class billing extends React.Component {
           <Tabs defaultActiveKey="4" onChange={callback}>
          
             <TabPane tab="Draft" key="1">
-              <Table dataSource={this.state.draftBills} columns={columnsforDraft} />;
+              <Table className="table-responsive" dataSource={this.state.draftBills} columns={columnsforDraft} />;
             </TabPane>
           
            <TabPane tab="All" key="4">
-              <Table dataSource={this.state.tableData} columns={paidColumns} />
+              <Table className="table-responsive" dataSource={this.state.tableData} columns={paidColumns} />
             </TabPane>
             <TabPane tab="Unpaid" key="3">
-              <Table dataSource={this.state.unpaidBills} columns={unpaidColumns} />
+              <Table className="table-responsive" dataSource={this.state.unpaidBills} columns={unpaidColumns} />
             </TabPane>
             <TabPane tab="Paid" key="2">
-              <Table dataSource={this.state.paidBills} columns={paidColumns} />
+              <Table className="table-responsive" dataSource={this.state.paidBills} columns={paidColumns} />
             </TabPane>
           </Tabs>
         </Card>
