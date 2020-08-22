@@ -78,7 +78,12 @@ class ViewList extends React.Component{
                                 <td>{value.priority}</td>
                                 <td>{value.description}</td>
                                 <td>{value.dueDate.substring(0,10)}</td>
-                                <td><AntdButton onClick={()=>this.handleEdit(value,index)} type="link">Edit</AntdButton></td>
+                                {
+                                  /* 
+                                    <td><AntdButton onClick={()=>this.handleEdit(value,index)} type="link">Edit</AntdButton></td>
+
+                                  */
+                                }
                                 <td><Popconfirm
                                       title="Are you sure you want to delete"
                                       onConfirm={()=>this.handleDelete(index)}

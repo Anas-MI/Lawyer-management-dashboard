@@ -152,6 +152,7 @@ class Record extends React.Component{
              
         }
         const handleSubmit = (e) =>{
+            notification.destroy()
             if(this.state.data.client === "" || this.state.data.source ===  "Select a client"){
                 notification.error({message : "Please select a client"})
             }else if(this.state.data.source === "" || this.state.data.source ===  "Select a Source"){

@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
-
 export class ExportExcel extends Component {
   constructor(props) {
     super(props);
     console.log('data in excel', props.dataSource);
   }
-  getISTDate(dateInUTC) {
-    var localDate = new Date(dateInUTC);
-    return localDate.toLocaleString();
-  }
+  
   render() {
     console.log(this.props)
     return (
@@ -19,26 +15,32 @@ export class ExportExcel extends Component {
           <thead>
             <tr>
               <th>S.No</th>
-              <th>Task Name</th>
-              <th>Description</th>
-              <th>Matter</th>
+              <th>Last Seen</th>
+              <th>Status</th>
               <th>Due Date</th>
+              <th>ID</th>
+              <th>Client</th>
+              <th>Matter</th>
+              <th>Issue Date</th>
+              <th>Balance</th>
             </tr>
           </thead>
 
           <tbody>
             {this.props.dataSource.map((value, index) => {
-              if(value.matter){
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{value.taskName}</td>
-                    <td>{value.description}</td>
-                    <td>{value.matter.matterDescription  ? value.matter.matterDescription  : value.matter}</td>
-                    <td>{value.dueDate.substring(0,10)}</td>
-                  </tr>
-                );
-              }
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{value.lastSeen}</td>
+                  <td>{value.status}</td>
+                  <th>{value.dueDate}</th>
+                  <th>{ value.id }</th>
+                  <th>{value.client}</th>
+                  <th>{value.matter}</th>
+                  <th>{value.issueDate}</th>
+                  <th>{value.balance}</th>
+                </tr>
+              );
             })}
           </tbody>
         </table>
@@ -46,7 +48,7 @@ export class ExportExcel extends Component {
         <ReactHTMLTableToExcel
           className="btn btn-outline-primary btn-sm ml-auto"
           table="matter"
-          filename="Task"
+          filename="Bills"
           sheet="Sheet"
           buttonText="Export to Excel"
         />

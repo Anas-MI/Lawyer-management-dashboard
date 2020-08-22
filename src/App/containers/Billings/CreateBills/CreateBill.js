@@ -178,6 +178,7 @@ class CreateBill extends React.Component{
 
         }
         const handleModal = ( ) => {
+          notification.destroy()
           let billSelected = []
             this.state.tableData.map((item, index)=>{
              if( this.state.selected[index] ){
@@ -194,7 +195,7 @@ class CreateBill extends React.Component{
 
         const handleSubmit = ( ) =>{
           
-         
+         notification.destroy()
           let valid = true
           
           if(this.state.dates.issueDate === ""){
