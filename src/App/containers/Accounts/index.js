@@ -6,6 +6,8 @@ import api from '../../../resources/api'
 import { useSelector } from 'react-redux'
 import ExportExcel from './ExcelExport'
 import jsPDF from 'jspdf';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import 'jspdf-autotable';
 
 const Accounts = () => {
@@ -13,6 +15,9 @@ const Accounts = () => {
     const [state, setState] = useState([])
     const [Loading, setLoading] = useState(true)
     const userId = useSelector((state) => state.user.token.user._id);
+    const [value, setValue] = useState('');
+    const [dataSrc, setDataSrc] = useState([]);
+    const [showNameInput, setShowNameInput] = useState(false);
     
     const fetchAccount = ( ) =>{
       api
@@ -58,11 +63,55 @@ const Accounts = () => {
         })
     }
 
-
+    const FilterByNameInput = (
+      <div>
+        <SearchOutlined
+        style={{"vertical-align": "revert"}}
+          onClick={() => {
+            var dump =
+              showNameInput === false
+                ? setShowNameInput(true)
+                : setShowNameInput(false);
+          }}
+        />
+        <span style={{paddingLeft : "8px"}}> Account Name </span>
+  
+        {showNameInput && (
+          <div style={{paddingTop : "10px"}}>
+            <input
+              placeholder="Search"
+              value={value}
+              onChange={(e) => {
+                let filteredData;
+                setValue(e.target.value);
+                if (e.target.value.length !== 0 || e.target.value === '') {
+                  filteredData = state.filter((item) =>
+                    item.accountName
+                      .toLowerCase()
+                      .includes(e.target.value.toLowerCase())
+                  );
+                  setDataSrc(filteredData);
+                } else {
+                  setDataSrc(state);
+                }
+              }}
+            />
+          </div>
+        )}
+      </div>
+    );
     const columns = [
         {
-          title: 'Account Name',
+          title: FilterByNameInput,
           dataIndex: 'accountName',
+          render: (text) => (
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+              searchWords={[value]}
+              autoEscape
+              textToHighlight={text ? text.toString() : ''}
+            />
+          ),
         },
         {
           title: 'Currency',
@@ -71,6 +120,8 @@ const Accounts = () => {
         {
           title: 'Balance',
           dataIndex: 'openingBalance',
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => a.openingBalance - b.openingBalance,
         },
         {
             title: 'Default Account',
@@ -177,7 +228,11 @@ const Accounts = () => {
          
         }
            >
-             <Table columns={columns} dataSource={state}/>
+             <Table 
+             columns={columns} 
+             dataSource={
+              dataSrc.length === 0 && value === '' ? state : dataSrc
+            }/>
           </Card>
         </Spin>
             
