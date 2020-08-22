@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Menu, Dropdown, Button } from 'antd';
+import { Menu, Dropdown, Button, Card, Space } from 'antd';
 import { DownOutlined , CloseOutlined} from '@ant-design/icons';
-import { Card } from 'react-bootstrap'
+import {  } from 'react-bootstrap'
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
@@ -55,20 +55,15 @@ class NavRight extends Component {
             console.log("we are not there")
             view.map((value, index)=>{
                 cardForNotification.push(
-                    <Card key={index}>
-                    <Card.Header>
-                    <div className="d-flex mb-3 example-parent">
-                        <div className="mr-auto p-2 col-example"> <h4>Event Notification</h4> </div>
+                    <Card 
+                    title= "Event Notification"
+                    extra={
                         <div className="p-2 col-example" onClick={()=>handleRemove(index)} className="float-right">
                           <CloseOutlined />
                         </div>
-                       
-                    </div>
-                       
-                        
-                       
-                    </Card.Header>
-                    <Card.Body>
+                    }
+                    key={index}>
+
                         <table>
                             <tr>
                                 <th>
@@ -80,7 +75,7 @@ class NavRight extends Component {
                             </tr>
                             <tr>
                                 <th>
-                                    Starting Time : 
+                                    Starting Time :  
                                 </th>
                                 <th>
                                     {value.startTime}
@@ -100,7 +95,6 @@ class NavRight extends Component {
                             }
                            
                         </table>
-                    </Card.Body>
                 </Card>
                 )
             })
@@ -139,18 +133,24 @@ class NavRight extends Component {
               <Menu.Item onClick={()=>this.props.handleNavigation('/manage/billing/record', "")} key="6">
                 <span >Record payment</span>
               </Menu.Item>
-              <Menu.Item key="7">
+              {
+                  /*
+                        <Menu.Item key="7">
                 <span>Trust request</span>
               </Menu.Item>
+              <Menu.Item key="9">
+                <span>Secure message</span>
+              </Menu.Item>
+                  */
+              }
+              
               <Menu.Item onClick={()=>this.props.handleNavigation('/manage/communication', "phone")} key="4">
                 <span >Phone log</span>
               </Menu.Item>
               <Menu.Item  onClick={()=>this.props.handleNavigation('/manage/communication', "email")} key="8">
                 <span>Email log</span>
               </Menu.Item>
-              <Menu.Item key="9">
-                <span>Secure message</span>
-              </Menu.Item>
+              
               <Menu.Item onClick={()=>this.props.handleNavigation('/calendar', "openNow")} key="10">
                 <span>events</span>
               </Menu.Item>

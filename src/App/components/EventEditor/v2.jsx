@@ -388,6 +388,19 @@ const EditorTemplate = props => {
                   className="e-field"  />
                   </td>
                 </tr>
+                <tr>
+                  <td className="e-textlabel">Time For Reminder :</td>
+                  <td colSpan={4}>
+                  
+                  <TimePickerComponent 
+                  id="timeForReminder" 
+                  change={props.DateTimeChange}
+                  data-name="TimeForReminder"
+                  value={props.timeForReminder || props.TimeForReminder}
+                  placeholder="Select a Time"
+                  className="e-field"  />
+                  </td>
+                </tr>
                 {
                     /* 
                        <tr>
