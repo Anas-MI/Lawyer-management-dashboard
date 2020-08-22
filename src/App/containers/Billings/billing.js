@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import api from '../../../resources/api';
 import { connect } from 'react-redux'
+import ExportExcel from './ExcelExport'
 const { TabPane } = Tabs;
 
 class billing extends React.Component {
@@ -381,7 +382,7 @@ class billing extends React.Component {
         ],
       ];
     
-      let data = 
+      let data = []
             this.state.tableData.map((val, index)=>{
               const td= [val.lastSeen, val.status , val.dueDate , val.id ,val.client , val.matter , val.issueDate , val.balance]
               data.push(td)
@@ -405,19 +406,31 @@ class billing extends React.Component {
         <Card
           title="Billing"
           extra={
-            <span style={{ float: 'right' }}>
-              <Button className="ml-auto" color="success" onClick={exportPDF}>
-                Export
-              </Button>
-              <Button onClick={() => this.handelBills('record')}>
+            <div className="d-flex justify-content-center">
+            <button
+                className="ml-auto btn  btn-outline-primary   btn-sm"
+                onClick={exportPDF}
+            >
+                Export to Pdf
+            </button>
+            <ExportExcel dataSource={this.state.tableData || []} />
+            <button
+                className="ml-auto btn  btn-outline-primary   btn-sm"
+                onClick={() => this.handelBills('record')}
+            >
                 Record Payment
-              </Button>
-              <Button type="primary" onClick={() => this.props.history.push('/create/bills')}>
+            </button>
+            <button
+                className="ml-auto btn  btn-outline-primary   btn-sm"
+                onClick={() => this.props.history.push('/create/bills')}
+            >
                 New Bills
-              </Button>
-              {/*  <Button onClick={()=>this.showModal("expense")}>New Expense</Button>*/}
-            </span>
+            </button>
+             
+        
+            </div>
           }
+         
         >
           <Tabs defaultActiveKey="4" onChange={callback}>
          

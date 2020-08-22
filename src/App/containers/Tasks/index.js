@@ -168,6 +168,7 @@ class Tasks extends React.Component {
       res.data.data.map((value, index)=>{
         const newdata = value
         newdata.matter = newdata.matter ? newdata.matter.matterDescription : "nil"
+        newdata.matterId = newdata.matter._id
         newdata.key = index 
         newdata.dueDate = newdata.dueDate ? newdata.dueDate.substring(0,10)  : "-"
         if(value.status == false){
@@ -358,6 +359,8 @@ class Tasks extends React.Component {
       data.userId = this.props.userId;
       if(this.state.index != 0){
         data.matter = response[this.state.index - 1]
+      }else{
+        data.matter = data.matterId
       }
       if (this.state.editMode) {
         api
@@ -371,6 +374,14 @@ class Tasks extends React.Component {
           .catch(() => {
             this.openNotificationWithFailure('error');
           }).then(()=>{
+            this.setState({
+              visible: false,
+              editMode : false,
+              disable : false,
+              index : 0,
+              Data: { priority: 'Normal', matter: "" },
+              confirmLoading: false,
+            });
             ReactDOM.findDOMNode(this.messageForm).reset()
           })
       } else {
@@ -385,20 +396,18 @@ class Tasks extends React.Component {
           .catch(() => {
             this.openNotificationWithFailure('error');
           }).then(()=>{
+            this.setState({
+              visible: false,
+              editMode : false,
+              disable : false,
+              index : 0,
+              Data: { priority: 'Normal', matter: "" },
+              confirmLoading: false,
+            });
             ReactDOM.findDOMNode(this.messageForm).reset()
           })
       }
       
-        setTimeout(() => {
-          this.setState({
-            visible: false,
-            editMode : false,
-            disable : false,
-            Data: { priority: 'Normal', matter: "" },
-            confirmLoading: false,
-          });
-          //window.location.reload();
-        }, 1000);
       
     }
       
