@@ -147,7 +147,7 @@ class ViewList extends React.Component{
         notification.destroy();
         if(this.state.Data.taskName === '' || this.state.Data.taskName === undefined ){
           notification.warning({
-            message: 'Please provide a taskName',
+            message: 'Please provide a task name',
           });
         }else
         if(this.state.Data.description === '' ||this.state.Data.description === undefined  ){
