@@ -64,15 +64,33 @@ class customFeilds extends React.Component {
                                 <Form.Control type="text" placeholder="Name"  onChange={HandleChange} />
                             </Form.Group>
                         </Row>
+                        
+                        <br></br>
+                        <div className="form-header-container mb-4">
+                            <h4 className="form-header-text">Contact information</h4>
+                        </div>
+                        <Row md="2" style={{marginLeft : "1%"}} >
+                            <Form.Group controlId="number">
+                                <Form.Label>Phone Number</Form.Label>
+                                <Form.Control type="number" placeholder="Phone Number"  onChange={HandleChange} />
+                            </Form.Group>
+                        </Row>
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="Email">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control type="text" placeholder="Email"  onChange={HandleChange}/>
                             </Form.Group>
                         </Row >
-                        <br></br>
-                       <div className="form-header-container mb-4">
-                            <h4 className="form-header-text">Address</h4>
+                        <Row md="2" style={{marginLeft : "1%"}}>
+                            <Form.Group controlId="website">
+                                <Form.Label>Website</Form.Label>
+                                <Form.Control type="text" placeholder="Website"  onChange={HandleChange}/>
+                            </Form.Group>
+                        </Row >
+
+                      
+                        <div className="form-header-container mb-4">
+                            <h4 className="form-header-text">Mail Address</h4>
                         </div>
                         <Row md="4" style={{marginLeft : "1%"}}>
                             <Col >
