@@ -85,7 +85,7 @@ class CreateBill extends React.Component{
               type: val.type,
               id: val._id,
               hours : val.type === 'time' ? val.time : val.qty,
-              client : val.matter.client.firstName + " " + val.matter.client.lastName ,
+              client : val.matter ? val.matter.client.firstName + " " + val.matter.client.lastName : "-" ,
               matter : val.matter,
               rate: val.rate,
               billable: val.billable ? 'Yes' : 'No',

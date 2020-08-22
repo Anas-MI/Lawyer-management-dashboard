@@ -26,7 +26,8 @@ class Record extends React.Component{
            payment :[],
            total : 0,
            fromTotal  : true,
-           optionforAcoount : null
+           optionforAcoount : null, 
+           disabled : false
 
        }
    }
@@ -160,6 +161,9 @@ class Record extends React.Component{
             }else if(this.state.data.paymentDate === ""){
                 notification.error({message : "Please select a payment date"})
             }else{
+                this.setState({
+                    disabled: true
+                })
                 this.state.clientData.map((value,id)=>{
         
                     const data = value
@@ -178,9 +182,15 @@ class Record extends React.Component{
                     
                     api.post('/billing/bill/edit/'+value._id, data ).then((res)=>{
                         console.log(res)
+                        this.setState({
+                            disabled: false
+                        })
                         notification.success({message : "Bill Recorded"})
                     }).catch((err)=>{
                         console.log(err)
+                        this.setState({
+                            disabled: false
+                        })
                         notification.error({message : "Failure "})
                    })
                 })
@@ -248,7 +258,7 @@ class Record extends React.Component{
         const title = <div style={{"display": "flex", "flex-wrap": "wrap" }}>
                         <div className="mr-4">
                             <p style={{fontWeight : "bold"}}>Total open balance</p>
-        <p style={{fontWeight : "bold", "float": "right", "font-size": "17px"}}>${this.state.total}</p>
+        <p style={{fontWeight : "bold", "float": "right", "font-size": "17px"}}>${this.state.total.toFixed('2')}</p>
                         </div>
                         <div>
                             <Form className="pt-0">
@@ -283,9 +293,9 @@ class Record extends React.Component{
                                 <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">
                                     <Table dataSource={this.state.unpaidBills} columns={columns} />
                                 </Card> 
-
-
-                                <div className="mt-3" style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
+                                {
+                                    /* 
+                                    <div className="mt-3" style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
                                     <div style={{"flex" : "1"}} className="mr-3">
                                         <Form className="pt-0">
                                             <Form.Group controlId="formGroupMatter">
@@ -307,7 +317,11 @@ class Record extends React.Component{
                                         </Card>
                                     </div>
                                 </div>
-                            </div>
+                           
+                                    */
+                                }
+
+                                 </div>
 
         return <div>
             <Card title="Record Payment" bodyStyle={{"padding": "0px 24px 0px"}} className="mb-4">
@@ -389,7 +403,7 @@ class Record extends React.Component{
             {invoiceBody}
 
             <div className="pt-3">
-                <Button type="primary" onClick={handleSubmit}>Record</Button>
+                <Button type="primary" disabled={this.state.disabled} onClick={handleSubmit}>Record</Button>
                 <Button onClick={()=>{this.props.history.goBack()}}>Cancel</Button>
             </div>
     </div>
