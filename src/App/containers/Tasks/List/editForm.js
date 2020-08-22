@@ -69,7 +69,7 @@ class ListForm extends React.Component{
         as="select"
         name="practiseArea"
         onChange={this.props.handleChange}
-        defaultValue = {this.props.record.practiseArea}
+        value = {this.props.record.practiseArea}
         
        
         >
