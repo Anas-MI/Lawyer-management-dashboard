@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import api from '../../../resources/api';
 import jsPDF from 'jspdf';
 import {Card, Button } from 'antd';
 import 'jspdf-autotable';
+
 import ReactDOMServer from 'react-dom/server';
 
 import html2pdf from 'simple-html2pdf';
@@ -13,6 +16,24 @@ import html2pdf from 'simple-html2pdf';
 
 const Invoice = (props) => {
   console.log(props)
+  const userId = useSelector((state) => state.user.token.user._id);
+  const [Data, setData] = useState({
+    account : {
+        name : "Law office of" + props.location.state.clientData.name,
+        address : {
+
+        }
+    }
+})
+  function fetchDetails(){
+      api.get('/user/view/' + userId).then((res) => {
+          console.log(res)
+          setData(res.data.data)
+      })
+  }
+  useEffect(() => {
+    fetchDetails()
+  }, [])
   const exportPDF = () => {
     var canvas = document.getElementById('canvas');
     var pdf = new jsPDF('p', 'mm', 'a4');
@@ -31,6 +52,31 @@ const Invoice = (props) => {
       }
     );
   };
+  const street2 = Data.account.address.street 
+                  ? Data.account.address.street 
+                  : "" 
+          
+  const city2 =   Data.account.address.city 
+                  ? Data.account.address.city 
+                  : "" 
+  
+  const state2 =   Data.account.address.state 
+                  ?
+                  Data.account.address.state
+                  : 
+                  "" 
+            
+  const zipCode2 = Data.account.address.zipCode 
+                  ?
+                  Data.account.address.zipCode
+                  : 
+                  "" 
+                  + " "
+  const country2 =  Data.account.address.country 
+                  ?
+                  Data.account.address.country
+                  : 
+                  "" 
 
   const street = props.location.state.clientData.address.street 
                   ? props.location.state.clientData.address.street 
@@ -93,15 +139,19 @@ const Invoice = (props) => {
           <div>Date : {props.location.state.invoiceData.date}</div>
           <div>Due Date : {dueDate}</div>
           <div>{props.location.state.invoiceData.status}</div>
+          <div>
+            <span style={{fontWeight : "bold"}}>{street + " " + city + " " + state }</span><br></br>
+            <span style={{fontWeight : "bold"}}>{zipCode + " " + country}</span><br></br>
+          </div>
         </div>
       </div>
       <div className="float-left text-left">
-        <div><h3 style={{fontWeight : "bold"}}>Law office of {props.location.state.clientData.name} </h3></div>
+        <div><h3 style={{fontWeight : "bold"}}>{Data.account.name} </h3></div>
         <div>
-          <span>{street + " " + city }</span><br></br>
-          <span>{state +  " " + zipCode}</span><br></br>
-          <span>{country}</span><br></br>
+          <span style={{fontWeight : "bold"}}>{street2 + " " + city2 + " " + state2 }</span><br></br>
+          <span style={{fontWeight : "bold"}}>{zipCode2 + " " + country2}</span><br></br>
         </div>
+        
         <br></br>
       <div><h4 style={{fontWeight : '650'}}>{props.location.state.matter}</h4></div>
       <br></br>
