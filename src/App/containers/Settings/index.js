@@ -9,6 +9,21 @@ import api from '../../../resources/api'
 const { TabPane } = Tabs;
 
 let userData = {}
+let errors = {
+    type: "",
+    emailAddress: "",
+    number: "",
+    website: "",
+    address: "",
+    street: "",
+    city: "",
+    country: "",
+    state: "",
+    zipCode: "",
+  };
+const validEmailRegex = RegExp(
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  );
 class customFeilds extends React.Component {
   constructor(props){
       super(props)
@@ -29,7 +44,7 @@ class customFeilds extends React.Component {
           userData : {
             account : {
                 address : {
-        
+                    type: "Work"
                 }
             }
         }
@@ -41,6 +56,17 @@ class customFeilds extends React.Component {
       api.get('/user/view/' + this.props.userId).then((res)=>{
         console.log(res)
         userData = res.data.data
+        if(res.data.data.account == undefined){
+            userData.account = {
+                address : {
+                    type: "Work"
+                }
+            }
+        }
+        if(res.data.data.account.name == undefined || res.data.data.account.name == ""){
+                userData.account.name = `Law office of ${userData.firstName + " " + userData.lastName}`
+        }
+        
         this.setState({userData})
       })
   }
@@ -52,11 +78,28 @@ class customFeilds extends React.Component {
   render() {
     const HandleChange=(e)=>{
         e.persist()
+        const { name, value } = e.target
         let newstate=this.state
         
         newstate.Data[e.target.name] = e.target.value
         this.setState({Data : newstate.Data})
         console.log(this.state.Data)
+        switch (name) {
+            case 'emailAddress':
+              errors.emailAddress = validEmailRegex.test(value)
+                ? ''
+                : 'Email is not valid!';
+              break;
+            case 'number':
+              errors.number =
+                value.length < 10 || value.length > 13
+                  ? 'Phone number must be between 10 and 13 digits'
+                  : '';
+              break;
+  
+            default:
+              break;
+          }
     }
     const HandleOk=()=>{
         this.setState({dataStatus : true})
@@ -77,14 +120,27 @@ class customFeilds extends React.Component {
 
       const handleSubmit = ( ) =>{
         notification.destroy()
-        userData.account = this.state.Data
-        api.post('/user/update/' + this.props.userId, userData).then((res)=>{
-            console.log(res)
-            notification.success({message : "User Data saved."})
-        }).catch((err) => {
-            console.log(err)
-            notification.error({message : "Failed to update user details"})
-        })
+        const validateForm = () => {
+            let valid = true;
+            Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+            return valid;
+          };
+          if (validateForm()) {
+            this.setState({
+              disable : true
+            })
+            userData.account = this.state.Data
+            api.post('/user/update/' + this.props.userId, userData).then((res)=>{
+                console.log(res)
+                
+                notification.success({message : "User Data saved."})
+            }).catch((err) => {
+                console.log(err)
+                notification.error({message : "Failed to update user details"})
+            })
+        }else{
+            notification.warning({message : "Please provide all the details correctly."})
+        }
       }
   //  const operations = <Button onClick={() => this.setModal2Visible(true)}>Add Account</Button>
   
@@ -113,13 +169,18 @@ class customFeilds extends React.Component {
                                 <Form.Label>Phone Number</Form.Label>
                                 <Form.Control defaultValue={this.state.userData.account.number} type="number" name="number" placeholder="Phone Number"  onChange={HandleChange} />
                             </Form.Group>
+                            
+
                         </Row>
+                        <p  style={{marginLeft : "1%",  position:"relative", marginTop : "-10px"}} className="help-block text-danger">{errors.number}</p>
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="Email">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control defaultValue={this.state.userData.account.emailAddress} type="text" name="emailAddress" placeholder="Email"  onChange={HandleChange}/>
                             </Form.Group>
+
                         </Row >
+                        <p  style={{marginLeft : "1%", position:"relative", marginTop : "-10px"}} className="help-block text-danger">{errors.emailAddress}</p>
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="website">
                                 <Form.Label>Website</Form.Label>
@@ -137,7 +198,7 @@ class customFeilds extends React.Component {
                                 <Form.Control
                                     as="select"
                                     name="type"
-                                    defaultValue={this.state.userData.account.address.type}
+                                    defaultValue={this.state.userData.account.address ? this.state.userData.account.address.type : "" }
                                     onChange={HandleAddressChange}
                                 >
                                     <option>Work</option>
@@ -152,7 +213,7 @@ class customFeilds extends React.Component {
                                     name="street"
                                     type="text"
                                     placeholder="Street"
-                                    defaultValue={this.state.userData.account.address.street}
+                                    defaultValue={this.state.userData.account.address ? this.state.userData.account.address.street : ""}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>
@@ -164,8 +225,8 @@ class customFeilds extends React.Component {
                                 <Form.Control
                                     name="city"
                                     type="text"
-                                    placeholder="City"
-                                    defaultValue={this.state.userData.account.address.city}
+                                    placeholder="City" 
+                                    defaultValue={this.state.userData.account.address ? this.state.userData.account.address.city : ""}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>
@@ -176,7 +237,7 @@ class customFeilds extends React.Component {
                                         name="state"
                                         type="text"
                                         placeholder="State"
-                                        defaultValue={this.state.userData.account.address.state}
+                                        defaultValue={this.state.userData.account.address ? this.state.userData.account.address.state : ""}
                                         onChange={HandleAddressChange}
                                     />
                                     </Form.Group>
@@ -189,7 +250,7 @@ class customFeilds extends React.Component {
                                     name="zipCode"
                                     type="number"
                                     placeholder="ZipCode"
-                                    defaultValue={this.state.userData.account.address.zipCode}
+                                    defaultValue={this.state.userData.account.address ? this.state.userData.account.address.zipCode : ""}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>  
@@ -198,7 +259,7 @@ class customFeilds extends React.Component {
                                 <Form.Group controlId="country">
                                 <select
                                     name="country"
-                                    defaultValue={this.state.userData.account.address.country}
+                                    defaultValue={this.state.userData.account.address ? this.state.userData.account.address.country : ""}
                                     onChange={HandleAddressChange}
                                     style={{ "border-radius": "5px" }}
                                 >

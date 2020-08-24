@@ -531,7 +531,7 @@ class Activity extends React.Component{
           },
           clientData : {
             name: this.state.name,
-            address: this.state.address,
+            address: this.state.to,
           },
           matter : this.state.matter,
           timeData: this.state.timeData,
