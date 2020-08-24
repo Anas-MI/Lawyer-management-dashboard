@@ -17,7 +17,8 @@ import {
 } from 'antd';
 import { DownOutlined , FolderTwoTone, DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
-
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import api from '../../../resources/api';
 import { findLast } from 'lodash';
 const { Option } = Select;
@@ -79,7 +80,50 @@ const Documents = (props) => {
   const [modalFor, setModalFor] = useState('Upload');
   const [matters, setMatters] = useState([]);
   const [Category, setCategory] = useState([])
+  const [value, setValue] = useState('');
+  const [dataSrc, setDataSrc] = useState([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [foldervalue, setfolderValue] = useState('');
+  const [folderdataSrc, setfolderDataSrc] = useState([]);
+  const [showfolderNameInput, setShowfolderNameInput] = useState(false);
   //funtions for document
+  const FilterByNameInput = (
+    <div>
+      <SearchOutlined
+      style={{"vertical-align": "revert"}}
+        onClick={() => {
+          var dump =
+            showNameInput === false
+              ? setShowNameInput(true)
+              : setShowNameInput(false);
+        }}
+      />
+      <span style={{paddingLeft : "8px"}}> Name </span>
+
+      {showNameInput && (
+        <div style={{paddingTop : "10px"}}>
+          <input
+            placeholder="Search"
+            value={value}
+            onChange={(e) => {
+              let filteredData;
+              setValue(e.target.value);
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = docs.filter((item) =>
+                  item.name
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
+                );
+                setDataSrc(filteredData);
+              } else {
+                setDataSrc(docs);
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
   const columnsForDocuments = [
     {
       title: 'Type',
@@ -88,11 +132,17 @@ const Documents = (props) => {
     },
     
     {
-      title: 'Name',
+      title: FilterByNameInput,
       dataIndex: 'name',
       key: '1',
-      sortDirections: ['descend', 'ascend'],
-      sorter: (a, b) => a.name.length - b.name.length,
+      render: (text) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+          searchWords={[value]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
     },
     {
       title: 'Matter',
@@ -938,14 +988,52 @@ const deleteTemplate = async (docId) => {
   );
 
   //funtions for folder
+  const FilterFolderByNameInput = (
+    <div>
+      <SearchOutlined
+      style={{"vertical-align": "revert"}}
+        onClick={() => {
+          var dump =
+            showfolderNameInput === false
+              ? setShowfolderNameInput(true)
+              : setShowfolderNameInput(false);
+        }}
+      />
+      <span style={{paddingLeft : "8px"}}> Folder Name </span>
+
+      {showfolderNameInput && (
+        <div style={{paddingTop : "10px"}}>
+          <input
+            placeholder="Search"
+            value={foldervalue}
+            onChange={(e) => {
+              let filteredData;
+              setfolderValue(e.target.value);
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = FolderTable.filter((item) =>
+                  item.name
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
+                );
+                setfolderDataSrc(filteredData);
+              } else {
+                setfolderDataSrc(FolderTable);
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
   const columnsForFolder = [
     {
-      title: 'Type',
+      title: "Type"  ,
       dataIndex: 'type',
       key: '1',
     },
     {
-      title: 'Folder Name',
+    //  title: FilterFolderByNameInput,
+      title : "Folder Name",
       dataIndex: 'name',
       key: '1',
       render: (_ , record) => {
@@ -1749,7 +1837,9 @@ const deleteTemplate = async (docId) => {
              columns={columnsForFolder} />
 
             <Table 
-            dataSource={docs} 
+            dataSource={
+              dataSrc.length === 0 && value === '' ? docs : dataSrc
+            }
             columns={columnsForDocuments} />
           </TabPane>
           <TabPane tab="Category" key="2">

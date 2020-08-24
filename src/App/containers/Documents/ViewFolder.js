@@ -17,7 +17,8 @@ import {
 } from 'antd';
 import { DownOutlined , FolderTwoTone, DownloadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
-
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import api from '../../../resources/api';
 import { findLast } from 'lodash';
 const { Option } = Select;
@@ -52,6 +53,10 @@ const Documents = (props) => {
     userId : userId,
     type : "folder"
   });
+  const [value, setValue] = useState('');
+  const [dataSrc, setDataSrc] = useState([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  
   const [TemplateTable, setTemplateTable] = useState([])
   const [TemplateModal, setTemplateModal] = useState(false)
   const [TemplateData, setTemplateData] = useState({
@@ -81,12 +86,64 @@ const Documents = (props) => {
   const [matters, setMatters] = useState([]);
   const [Category, setCategory] = useState([])
   //funtions for document
+  const FilterByNameInput = (
+    <div>
+      <SearchOutlined
+      style={{"vertical-align": "revert"}}
+        onClick={() => {
+          var dump =
+            showNameInput === false
+              ? setShowNameInput(true)
+              : setShowNameInput(false);
+        }}
+      />
+      <span style={{paddingLeft : "8px"}}> Name </span>
+
+      {showNameInput && (
+        <div style={{paddingTop : "10px"}}>
+          <input
+            placeholder="Search"
+            value={value}
+            onChange={(e) => {
+              let filteredData;
+              setValue(e.target.value);
+              if (e.target.value.length !== 0 || e.target.value === '') {
+                filteredData = docs.filter((item) =>
+                  item.name
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
+                );
+                setDataSrc(filteredData);
+              } else {
+                setDataSrc(docs);
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
   const columnsForDocuments = [
     {
       title: 'Type',
       dataIndex: 'type',
       key: '0',
     },
+    
+    {
+      title: FilterByNameInput,
+      dataIndex: 'name',
+      key: '1',
+      render: (text) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+          searchWords={[value]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
+    },
+  
     {
       title: 'Name',
       dataIndex: 'name',
@@ -1824,7 +1881,9 @@ const deleteTemplate = async (docId) => {
               columns={columnsForFolder} />
 
               <Table 
-              dataSource={docs} 
+              dataSource={
+                dataSrc.length === 0 && value === '' ? docs : dataSrc
+              } 
               columns={columnsForDocuments} />
             </TabPane>
           {/*
