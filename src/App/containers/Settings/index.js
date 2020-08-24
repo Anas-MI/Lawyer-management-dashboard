@@ -1,12 +1,14 @@
 import React from 'react'
-import { Tabs,Modal , Card } from 'antd';
+import { Tabs,Modal , Card, notification } from 'antd'
+import { useSelector , connect} from 'react-redux'
 import Account from './account&payment/Account/account'
 import Payment from './account&payment/PaymentInfo/payment'
 import CustomFeilds from './CustomFeilds/CustomFeilds'
 import { Form, Button, Row, Col } from 'react-bootstrap'
+import api from '../../../resources/api'
 const { TabPane } = Tabs;
 
-
+let userData = {}
 class customFeilds extends React.Component {
   constructor(props){
       super(props)
@@ -14,17 +16,34 @@ class customFeilds extends React.Component {
         modal1Visible: false,
         modal2Visible: false,
         Data : {
-            Name: '',
-            Email : '',
-            ContactInfo : '',
-            Date : '',
-            Currency : '', 
+            name: '',
+            emailAddress : '',
+            timeFormat : "HH:SS PM",
+            dateFormat : "DD/MM/YYYY",
+            //Date : '',
+           // Currency : '', 
+            address : {
+
+            }
           },
+          userData : {
+            account : {
+                address : {
+        
+                }
+            }
+        }
         
       }
   }
 
-
+  componentDidMount(){
+      api.get('/user/view/' + this.props.userId).then((res)=>{
+        console.log(res)
+        userData = res.data.data
+        this.setState({userData})
+      })
+  }
 
   setModal2Visible(modal2Visible) {
     this.setState({ modal2Visible });
@@ -35,7 +54,7 @@ class customFeilds extends React.Component {
         e.persist()
         let newstate=this.state
         
-        newstate.Data[e.target.id] = e.target.value
+        newstate.Data[e.target.name] = e.target.value
         this.setState({Data : newstate.Data})
         console.log(this.state.Data)
     }
@@ -44,9 +63,29 @@ class customFeilds extends React.Component {
         this.setModal2Visible(false)
 
     }
-    const HandleAddressChange = (e)=> {
+    const HandleAddressChange = (e) => {
+        
+        e.persist();
+        const { id, value, name } = e.target;
+  
+        let newState = this.state;
+        newState.Data.address[name] = value;
+        this.setState(newState);
 
-    }
+    
+      }
+
+      const handleSubmit = ( ) =>{
+        notification.destroy()
+        userData.account = this.state.Data
+        api.post('/user/update/' + this.props.userId, userData).then((res)=>{
+            console.log(res)
+            notification.success({message : "User Data saved."})
+        }).catch((err) => {
+            console.log(err)
+            notification.error({message : "Failed to update user details"})
+        })
+      }
   //  const operations = <Button onClick={() => this.setModal2Visible(true)}>Add Account</Button>
   
     return (
@@ -61,7 +100,7 @@ class customFeilds extends React.Component {
                         <Row md="2" style={{marginLeft : "1%"}} >
                             <Form.Group controlId="Name">
                                 <Form.Label>Name</Form.Label>
-                                <Form.Control type="text" placeholder="Name"  onChange={HandleChange} />
+                                <Form.Control defaultValue={this.state.userData.account.name} type="text" name="name"  onChange={HandleChange} />
                             </Form.Group>
                         </Row>
                         
@@ -72,19 +111,19 @@ class customFeilds extends React.Component {
                         <Row md="2" style={{marginLeft : "1%"}} >
                             <Form.Group controlId="number">
                                 <Form.Label>Phone Number</Form.Label>
-                                <Form.Control type="number" placeholder="Phone Number"  onChange={HandleChange} />
+                                <Form.Control defaultValue={this.state.userData.account.number} type="number" name="number" placeholder="Phone Number"  onChange={HandleChange} />
                             </Form.Group>
                         </Row>
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="Email">
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control type="text" placeholder="Email"  onChange={HandleChange}/>
+                                <Form.Control defaultValue={this.state.userData.account.emailAddress} type="text" name="emailAddress" placeholder="Email"  onChange={HandleChange}/>
                             </Form.Group>
                         </Row >
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="website">
                                 <Form.Label>Website</Form.Label>
-                                <Form.Control type="text" placeholder="Website"  onChange={HandleChange}/>
+                                <Form.Control defaultValue={this.state.userData.account.website} type="text" name="website" placeholder="Website"  onChange={HandleChange}/>
                             </Form.Group>
                         </Row >
 
@@ -98,6 +137,7 @@ class customFeilds extends React.Component {
                                 <Form.Control
                                     as="select"
                                     name="type"
+                                    defaultValue={this.state.userData.account.address.type}
                                     onChange={HandleAddressChange}
                                 >
                                     <option>Work</option>
@@ -112,6 +152,7 @@ class customFeilds extends React.Component {
                                     name="street"
                                     type="text"
                                     placeholder="Street"
+                                    defaultValue={this.state.userData.account.address.street}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>
@@ -124,6 +165,7 @@ class customFeilds extends React.Component {
                                     name="city"
                                     type="text"
                                     placeholder="City"
+                                    defaultValue={this.state.userData.account.address.city}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>
@@ -134,6 +176,7 @@ class customFeilds extends React.Component {
                                         name="state"
                                         type="text"
                                         placeholder="State"
+                                        defaultValue={this.state.userData.account.address.state}
                                         onChange={HandleAddressChange}
                                     />
                                     </Form.Group>
@@ -146,6 +189,7 @@ class customFeilds extends React.Component {
                                     name="zipCode"
                                     type="number"
                                     placeholder="ZipCode"
+                                    defaultValue={this.state.userData.account.address.zipCode}
                                     onChange={HandleAddressChange}
                                 />
                                 </Form.Group>  
@@ -154,6 +198,7 @@ class customFeilds extends React.Component {
                                 <Form.Group controlId="country">
                                 <select
                                     name="country"
+                                    defaultValue={this.state.userData.account.address.country}
                                     onChange={HandleAddressChange}
                                     style={{ "border-radius": "5px" }}
                                 >
@@ -494,8 +539,10 @@ class customFeilds extends React.Component {
                         </div>
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="Date">
-                            <Form.Label>Prefix</Form.Label>
+                            <Form.Label>Date format</Form.Label>
                             <select
+                                defaultValue={this.state.userData.account.dateFormat}
+                                name="dateFormate"
                                 onChange={HandleChange}
                             >
                                 <option>DD/MM/YYYY</option>
@@ -508,6 +555,8 @@ class customFeilds extends React.Component {
                             <Form.Group controlId="time">
                                 <Form.Label>Time format</Form.Label>
                                 <select
+                                defaultValue={this.state.userData.account.timeFormat}
+                                name="timeFormat"
                                 onChange={HandleChange}
                                 >
                                     <option>HH:SS PM</option>
@@ -524,13 +573,13 @@ class customFeilds extends React.Component {
                         <Row md="2" style={{marginLeft : "1%"}}>
                             <Form.Group controlId="Currency Format">
                                 <Form.Label>Currency Format</Form.Label>
-                                <Form.Control type="text" placeholder="Currency Format" onChange={HandleChange} />
+                                <Form.Control type="text" defaultValue={this.state.userData.account.currencyFormat} name="currencyFormat" placeholder="Currency Format" onChange={HandleChange} />
                             </Form.Group>
                         </Row>
                     </Form>
                     <br></br>
                     <div style={{marginLeft : "1%"}}>
-                     <Button varient = "success">SAVE NEW INFORMATION</Button>
+                     <Button onClick={handleSubmit} varient = "success">SAVE NEW INFORMATION</Button>
                     </div>
 
               </TabPane>
@@ -547,5 +596,8 @@ class customFeilds extends React.Component {
   }
 }
 
-
-export default customFeilds
+const mapStateToProps = state => ({
+    userId: state.user.token.user._id
+  });
+  
+export default connect(mapStateToProps)(customFeilds)
