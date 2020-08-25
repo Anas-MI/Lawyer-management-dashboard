@@ -184,7 +184,7 @@ export default {
         },
         {
           id: 'help',
-          title: 'Help centre',
+          title: 'Support',
           type: 'item',
           icon: 'feather icon-help-circle',
           url: '/help',

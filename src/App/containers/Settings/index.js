@@ -24,6 +24,9 @@ let errors = {
 const validEmailRegex = RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
+const validNameRegex = RegExp(
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u
+  );
 class customFeilds extends React.Component {
   constructor(props){
       super(props)
@@ -66,7 +69,18 @@ class customFeilds extends React.Component {
         if(res.data.data.account.name == undefined || res.data.data.account.name == ""){
                 userData.account.name = `Law office of ${userData.firstName + " " + userData.lastName}`
         }
-        
+        if(res.data.data.account.timeFormat == undefined || res.data.data.account.timeFormat == ""){
+            userData.account.timeFormat = "HH:SS PM"
+        }
+        if(res.data.data.account.dateFormat == undefined || res.data.data.account.dateFormat == ""){
+            userData.account.dateFormat = "DD/MM/YYYY"
+        }
+        if(res.data.data.account.address.type == undefined || res.data.data.account.address.type == ""){
+            userData.account.address.type = "Work"
+        }
+        this.setState({
+            Data : userData.account
+        })
         this.setState({userData})
       })
   }
@@ -114,6 +128,55 @@ class customFeilds extends React.Component {
         let newState = this.state;
         newState.Data.address[name] = value;
         this.setState(newState);
+        switch (e.target.name) {
+            /* 
+                case 'type':
+              errors.type = value === 'default' ? 'Type is required!' : '';
+              break;
+    
+            case 'country':
+              errors.country =
+                value === 'default' ? 'Country is required!' : '';
+              break;
+    
+            case 'street':
+              errors.street =
+                value.length == 0
+                  ? ''
+                  : value.length < 2
+                  ? 'Street is Required'
+                  : '';
+              break;
+            case 'city':
+              errors.city =
+                value.length == 0
+                  ? ''
+                  : !validNameRegex.test(value)
+                  ? 'City Name must be in characters!'
+                  : value.length < 2
+                  ? 'City is Required'
+                  : '';
+              break;
+            case 'state':
+              errors.state =
+                value.length == 0
+                  ? ''
+                  : !validNameRegex.test(value)
+                  ? 'State Name must be in characters!'
+                  : value.length < 2
+                  ? 'State is Required'
+                  : '';
+              break;
+            */
+            case 'zipCode':
+              errors.zipCode =
+                value.length == 0
+                  ? ''
+                  : value.length > 4 && value.length < 10
+                  ? ''
+                  : 'Zipcode is should be of length between 4 to 10!';
+              break;
+          }
 
     
       }
@@ -592,7 +655,13 @@ class customFeilds extends React.Component {
                                 </Form.Group>
                             </Col>
                         </Row>
-                  
+                        <Row md="4" style={{marginLeft : "1%", position : "relative" , marginTop : "-10px"}}>
+                            <Col>
+                                <p className="help-block text-danger">
+                                    {errors.zipCode}
+                                </p>
+                            </Col>
+                        </Row>
  
                         <br></br>
                         <div className="form-header-container mb-4">

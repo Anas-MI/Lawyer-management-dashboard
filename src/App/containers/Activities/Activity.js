@@ -285,6 +285,7 @@ class Activity extends React.Component {
 
               this.setState({
                 expenseModal: false,
+                EditExpense : false,
                 editmode: false,
                 data: {
                   billable: false,
