@@ -16,7 +16,7 @@ const Support = (props) =>{
             name : value.firstName +  " " + value.lastName,
             firstName : value.firstName,
             lastName : value.lastName,
-            attachment : value.attachment,
+            attachment : value.document,
             email : value.email ,
             issue : value.issue ? value.issue : "-",
             url : value.url ?  value.url : 'No URL'

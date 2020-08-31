@@ -2,7 +2,10 @@ import React from 'react'
 import { Row, Col, Card} from 'react-bootstrap'
 
 const viewTicket = ( props ) => {
-    console.log(props)
+  
+  const handleClick = ( ) => {
+    window.open(props.location.state.attachment)
+  }
   return <Card style = {{padding : "50px"}}>
       <Card.Header>
         <h5>Ticket from {props.location.state.name}</h5>
@@ -10,7 +13,7 @@ const viewTicket = ( props ) => {
       <Card.Body>
       <Row md="2">
          <Col>
-            <img src = {props.location.state.attachment} alt = "No Image"></img>
+            <img height = "90%" width = "90%" src = {props.location.state.attachment} alt = "No Image"></img>
          </Col>
          <Col>
             <Row>
@@ -38,7 +41,7 @@ const viewTicket = ( props ) => {
             <Row>
                <Col>
                  <h6>Attachment</h6>
-                 <p>{props.location.state.attachment ? props.location.state.attachment : "No Attachments Added" }</p>
+                  <p>{props.location.state.attachment ? <a onClick = { handleClick } style = {{color : "blue"}}>{props.location.state.attachment}</a> : "No Attachments Added" }</p>
 
                </Col>
             </Row>
