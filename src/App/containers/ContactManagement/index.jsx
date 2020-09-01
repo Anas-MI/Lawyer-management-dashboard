@@ -362,38 +362,38 @@ const ContactsManage = (props) => {
       }
     >
       <div className="p-2 ">
+        <div className = "responsive-buttons">
+          <Button
+            color="success"
+            
+            onClick={() => setTableData('Person')}
+          >
+            Person
+          </Button>
+          <Button
+            color="success"
+            onClick={() => setTableData('Company')}
+          >
+            Company
+          </Button>
+        </div>
         <Button
-          className="ml-auto"
           color="success"
-          onClick={() => setTableData('Person')}
-        >
-          Person
-        </Button>
-        <Button
-          className="ml-auto"
-          color="success"
-          onClick={() => setTableData('Company')}
-        >
-          Company
-        </Button>
-        <Button
-          className="ml-auto"
-          color="success"
-          style={{ float: 'right' }}
+          className ="float-right"
           onClick={() => handleAddNew('Person')}
         >
           Add Person
         </Button>
         <Button
-          className="ml-auto"
           color="success"
-          style={{ float: 'right' }}
+          className ="float-right"
           onClick={() => handleAddNew('Company')}
         >
           Add Company
         </Button>
       </div>
       <Table
+        className = "table-responsive"
         dataSource={
           dataSrc.length === 0 && value === '' ? state.tableData : dataSrc
         }

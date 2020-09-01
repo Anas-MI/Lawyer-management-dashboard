@@ -153,7 +153,7 @@ class Dashboard extends React.Component {
                     
                     let data = res.data.data.target
                     let targetHours = parseFloat(data.target)/parseFloat(data.rate)
-                    let left  = targetHours - this.state.totalHours
+                    let left  = targetHours - this.state.totalHours >= 0 ? targetHours - this.state.totalHours : 0
                     console.log(this.state.totalHours + "   " + targetHours)
                     let percent = (this.state.totalHours / targetHours) * 100
                     this.setState({
@@ -437,7 +437,7 @@ class Dashboard extends React.Component {
                                             }
                                             <Progress type="circle" percent={this.state.percent} />
                 
-                                  `          <h6 style= {{"fontWeight" : "600", marginLeft : "-15%", marginTop : "10%"}}>{this.state.left} hours more to achive the target</h6>
+                                  `          <h6 className = "responsive-target">{this.state.left} hours more to achive the target</h6>
                                              <div>
                                                 <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>RESET YOUR TARGET</Button>
                                             </div>
