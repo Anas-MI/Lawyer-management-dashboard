@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row, Col, Card, Table, Tabs, Tab, Button} from 'react-bootstrap';
-import {notification} from 'antd'
+import {notification , Progress} from 'antd'
 import api from '../../resources/api'
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
@@ -26,9 +26,13 @@ class Dashboard extends React.Component {
             unPaidAmount :0,
             overDueCount : 0, 
             overDueAmount : 0,
+            totalHours : 0,
+            targetDetails : {},
+            percent : 0,
+            left : 0
         }
     }
-    componentDidMount(){
+    async componentDidMount(){
         var now = new Date();
         api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
             let tcount = 0
@@ -115,6 +119,50 @@ class Dashboard extends React.Component {
                 overDueAmount : overDueAmount
             })
           })
+        let totalHours = 0
+        api.get('/activity/viewforuser/' + this.props.userId).then((res) => {
+            console.group(res)
+            let totalHours = 0
+            res.data.data.map((value, index)=>{
+                if(value.type == "expense"){
+                    totalHours = totalHours + parseInt(value.qty)
+                }
+                if(value.type == "time"){
+
+                    var sHours = value.time.split(':')[0];
+                    var sMinutes = value.time.split(':')[1];
+                    var sSecs = value.time.split(':')[2];
+                    totalHours = totalHours + parseInt(sHours)
+                }
+            })
+            this.setState({
+                totalHours : totalHours
+            })
+            console.group(this.state.totalHours)
+          }).then(()=>{
+            api.get(`user/view/${this.props.userId}`).then((res)=>{
+                if(res.data.data.target == undefined){
+                    res.data.data.target = null
+                }else{
+                    
+                    let data = res.data.data.target
+                    let targetHours = parseFloat(data.target)/parseFloat(data.rate)
+                    let left  = targetHours - this.state.totalHours
+                    console.log(this.state.totalHours + "   " + targetHours)
+                    let percent = (this.state.totalHours / targetHours) * 100
+                    this.setState({
+                        targetHours,
+                        percent,
+                        left
+                    })
+                }
+                this.setState({
+                    targetDetails : res.data.data.target,
+                })
+          })
+          })
+
+          
     }
     convertTime = (serverdate) => {
         var date = new Date(serverdate);
@@ -308,7 +356,7 @@ class Dashboard extends React.Component {
                 </div>
             </Aux>
         );
-
+        
         return (
             <Aux>
                 <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Today's Agenda</b></h6>  
@@ -361,17 +409,30 @@ class Dashboard extends React.Component {
                     <Row>
                         <Col md={5} xl={5}>
                             <h6 style={{"font-size": "16px", "padding-bottom": "10px"}}><b>Hourly Metrics</b></h6>
-                            <Card className='Recent-Users' style={{ "height": "370px"}}>
+                            <Card className='Recent-Users' style={{ "height": "390px"}}>
                                 <Card.Header>
                                     <Card.Title as='h5'>Billable Hours Target</Card.Title>
                                 </Card.Header>
                                 <Card.Body className='px-0 py-2' style={{ "display": "flex", "justify-content": "center", "align-items": "center"}}>
-                                    <div>
-                                        <h6 className='mb-4 pl-2'><b>Billable Hours Target</b></h6>
+                                    {
+                                        this.state.targetDetails == null ? 
                                         <div>
-                                            <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>SET UP YOUR TARGET</Button>
+                                            <h6 className='mb-4 pl-2'><b>Billable Hours Target</b></h6>
+                                            <div>
+                                                <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>SET UP YOUR TARGET</Button>
+                                            </div>
                                         </div>
-                                    </div>
+                                        :
+                                        <div>
+                                            <p style= {{ marginLeft : "10%"}}>This year |</p>
+                                            <Progress type="circle" percent={this.state.percent} />
+                
+                                  `          <h6 style= {{"fontWeight" : "600", marginLeft : "-15%", marginTop : "10%"}}>{this.state.left} hours more to achive the target</h6>
+                                             <div>
+                                                <Button variant="info" className="btn-sm" onClick={()=>this.props.history.push('/target')}>RESET YOUR TARGET</Button>
+                                            </div>
+                                        </div>
+                                    }
                                 </Card.Body>
                             </Card>
                         </Col>
