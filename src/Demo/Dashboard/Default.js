@@ -124,6 +124,11 @@ class Dashboard extends React.Component {
             console.group(res)
             let totalHours = 0
             res.data.data.map((value, index)=>{
+                let end_of_the_year = new Date(new Date().getFullYear(), 11, 31)
+                let start_of_the_year = new Date(new Date().getFullYear(), 1, 1)
+                let date = new Date(Date.parse(value.date));
+                if(date < end_of_the_year && date > start_of_the_year){
+                    
                 if(value.type == "expense"){
                     totalHours = totalHours + parseInt(value.qty)
                 }
@@ -133,6 +138,7 @@ class Dashboard extends React.Component {
                     var sMinutes = value.time.split(':')[1];
                     var sSecs = value.time.split(':')[2];
                     totalHours = totalHours + parseInt(sHours)
+                }
                 }
             })
             this.setState({
@@ -424,7 +430,11 @@ class Dashboard extends React.Component {
                                         </div>
                                         :
                                         <div>
-                                            <p style= {{ marginLeft : "10%"}}>This year |</p>
+                                            {
+                                                /*
+                                                <p style= {{ marginLeft : "10%"}}>This year |</p>
+                                                */
+                                            }
                                             <Progress type="circle" percent={this.state.percent} />
                 
                                   `          <h6 style= {{"fontWeight" : "600", marginLeft : "-15%", marginTop : "10%"}}>{this.state.left} hours more to achive the target</h6>
