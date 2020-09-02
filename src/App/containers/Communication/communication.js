@@ -28,6 +28,7 @@ class Communication extends React.Component{
         this.state = {
             phone : false,
             email : false,
+            secure : false,
             tableData : [],
             data : {
                 subject : "",
@@ -41,6 +42,7 @@ class Communication extends React.Component{
             tableData : [],
             editEmail : false,
             editPhone : false,
+            editSecure : false,
             disable : false
         
         }
@@ -75,7 +77,7 @@ class Communication extends React.Component{
      api.get('/matter/viewforuser/'+ this.props.userId).then((res)=>{
        matters = res
             option = res.data.data.map((val, index)=>{
-                 return <option>{val.matterDescription}</option>
+                 return <option value = {val._id}>{val.matterDescription}</option>
              })
          }).then(()=>{
              console.log(option)
@@ -106,8 +108,8 @@ class Communication extends React.Component{
             id: val._id,
             addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
-            matter: val.matter ? val.matter.matterDescription : '-',
-            matterId : val.matter ? val.matter._id : "",
+            matterDesc: val.matter ? val.matter.matterDescription : '-',
+            matter : val.matter ? val.matter._id : "",
             from: val.from ? val.from.firstName + " " + val.from.lastName  : '-',
             fromId : val.from ? val.from._id : "",
             to: val.to ? val.to.firstName + " " + val.to.lastName  : '-',
@@ -150,6 +152,11 @@ class Communication extends React.Component{
 
     }
     showModal = (type) => {
+      if(type==="secure"){
+        this.setState({
+            secure : true,
+          });
+        }else
         if(type==="email"){
             this.setState({
                 email : true,
@@ -182,9 +189,7 @@ class Communication extends React.Component{
 
               let data = this.state.data
               console.log(data)
-              if(matterkey == null){
-                data.matter = data.matterId
-              }
+              
               if(fromKey == null){
                 data.from = data.fromId
               }
@@ -276,12 +281,118 @@ class Communication extends React.Component{
             }
         }   
       };
+
+      handleSecure = () => {    
+        notification.destroy()
+        
+        if(this.state.data.subject == ""){
+            notification.error({message : "Please add a subject"})
+        }else
+        if(this.state.data.body == ""){
+            notification.error({message : "Please add a body"})
+        }else{
+          this.setState({
+            disable : true
+          })
+           
+            if(this.state.editSecure){
+
+              let data = this.state.data
+              data.logType = "email"
+              data.userId = this.props.userId;
+            console.log(data)
+            api
+              .post('/communication/edit/'+ this.state.data.id, data)
+              .then((res) => {
+                console.log(res)
+                this.componentDidMount()            
+                this.setState({
+                  disable : false
+                  
+                })
+                notification.success({ message: 'Log Edited !' });
+              })
+              .catch((err) => {
+                notification.error({ message: 'Failed' });
+              })
+              .then(() => {
+                ReactDOM.findDOMNode(this.messageForm).reset()
+                
+                this.setState({
+                  editSecure : false,
+                  secure: false,
+                  disable : false,
+                  data: {
+                    billable: true,
+                    nonBillable: false,
+                    date: '',
+
+                    qty: '1.0',
+                    rate: '',
+                    invoice: 'Unbilled',
+                  },
+                });
+                
+               
+                setTimeout(() => {
+                  //window.location.reload();
+                }, 1500)
+              });
+  
+
+            }else{
+              let data = this.state.data
+              data.logType = "email"
+              data.userId = this.props.userId;
+              console.log(data)
+
+              api.get(`/contact/view/${data.to}`).then((res)=>{
+                data.emailAddress = res.data.data.emailAddress[0]
+                data.number = res.data.data.number[0]
+                
+              })
+             /* 
+            api
+              .post('/communication/create', data)
+              .then((res) => {
+                console.log(res)
+                this.setState({
+                  disable : false
+                })
+                this.componentDidMount()
+                notification.success({ message: 'Log Added !' });
+              })
+              .catch((err) => {
+                notification.error({ message: 'Failed' });
+              }).then(()=>{
+                
+                ReactDOM.findDOMNode(this.messageForm).reset()
+              })
+             */
+  
+            }
+        }   
+      };
     
       handleCancel = type => {
         ReactDOM.findDOMNode(this.messageForm).reset()
         matterkey = null
         fromKey = null
         toKey = null
+        if(type==="secure"){
+          this.setState({
+              secure : false,
+              editSecure : false,
+              disable : false,
+              data : {
+                subject : "",
+                body : "",
+                from : name
+            },
+       
+            });
+            console.log(this.state)
+      }else
         if(type==="email"){
             this.setState({
                 email : false,
@@ -330,15 +441,14 @@ class Communication extends React.Component{
 
         if (name === 'matter') {
 
-          console.log("inside matter")
           if (selectedIndex >= 1) {
             matterkey = ""
-            console.log(matters.data.data[selectedIndex - 1]._id)
-            newData[name] = matters.data.data[selectedIndex - 1]._id;
-            console.log("inside matter > 1 ")
+           // console.log(matters.data.data[selectedIndex - 1]._id)
+            newData[name] = value;
+          //  console.log("inside matter > 1 ")
           } else {
             newData[name] = '';
-            console.log("inside matte.....r")
+          //  console.log("inside matte.....r")
           }
 
         }else
@@ -471,8 +581,8 @@ class Communication extends React.Component{
             },
             {
                 title: 'Matter',
-                dataIndex: 'matter',
-                key: 'matter',
+                dataIndex: 'matterDesc',
+                key: 'matterDesc',
               },
             {
               title: 'From',
@@ -574,13 +684,21 @@ class Communication extends React.Component{
               >
                   Export to Pdf
               </button>
+              
               <ExportExcel dataSource={this.state.tableData || []} />
+              <button
+                  className="ml-auto btn  btn-outline-primary   btn-sm"
+                  onClick={()=>this.showModal("secure")}
+              >
+                New secure message
+              </button>
               <button
                   className="ml-auto btn  btn-outline-primary   btn-sm"
                   onClick={()=>this.showModal("email")}
               >
                   New Email Log
               </button>
+              
               <button
                   className="ml-auto btn  btn-outline-primary   btn-sm"
                   onClick={()=>this.showModal("phone")}
@@ -602,7 +720,194 @@ class Communication extends React.Component{
             <Card bodyStyle={{"padding": "0px"}} className="overflow-auto">                
               <Table columns={columns} dataSource={this.state.tableData}  />
             </Card>
-           
+            <Modal
+                title={this.state.editSecure ? "Edit Log" : "Send a secure message"}
+                visible={this.state.editSecure}
+                onOk={this.handleSecure}
+                onCancel={()=>this.handleCancel("secure")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("secure")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={this.handleSecure}>
+                    Update Log
+                  </Button>,
+                ]}
+                >
+                  {
+                      this.state.editEmail ?
+                      <Form 
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form }>
+                       <Row>
+                           
+                           <Col>
+                           <Form.Group>
+                             <Form.Label>Matter</Form.Label>
+                              <Form.Control 
+                                  as="select"
+                                  name="matter" 
+                                  defaultValue = {this.state.data.matter}
+                                  onChange={handleChange}>
+                                  <option>Select a matter</option>
+                                  {this.state.option}
+                              </Form.Control>
+                       </Form.Group>
+                           </Col>
+                       </Row>
+                     
+                      <Row>
+                          <Col >
+                          <Form.Group>
+                               <Form.Label>From</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="from" 
+                                   defaultValue = {this.state.data.from}
+                                   onChange={handleChange}>
+                                   <option>{name}</option>    
+                               
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                          
+                          <Col>
+                          <Form.Group >
+                               <Form.Label>To</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="to" 
+                                   defaultValue = {this.state.data.to}
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>
+                                   {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                      </Row>
+                       
+                      <Form.Group controlId="subject">
+                               <Form.Label>Subject</Form.Label>
+                               <Form.Control 
+                               name="subject" 
+                               rows="3"
+                               defaultValue = {this.state.data.subject}
+                               onChange={handleChange} />
+                           </Form.Group>  
+                   
+                      
+                           <Form.Group controlId="body">
+                               <Form.Label>Body</Form.Label>
+                               <Form.Control 
+                               name="body" 
+                               as="textarea" 
+                               rows="3"
+                               defaultValue = {this.state.data.body}
+                               onChange={handleChange} />
+                           </Form.Group>
+                      
+                   
+                     </Form>    
+                  
+                      :
+                      null
+                  }
+            </Modal>
+            <Modal
+                title={this.state.editSecure ? "Edit Secure message" : "New Secure Message"}
+                visible={this.state.secure}
+                onOk={this.handleSecure}
+                onCancel={()=>this.handleCancel("secure")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("secure")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={this.handleSecure}>
+                    {this.state.editSecure ? "Update Log" : "Send"}
+                  </Button>,
+                ]}
+                >
+                  {           
+        
+                      <Form  
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form }>
+                       <Row>
+                           
+                           <Col>
+                           <Form.Group>
+                       <Form.Label>Matter</Form.Label>
+                              <Form.Control 
+                                  as="select"
+                                  name="matter" 
+                                  placeholder="Matter"
+                                  onChange={handleChange}>
+                              <option>Select a matter</option>
+                              {this.state.option}
+                              </Form.Control>
+                       </Form.Group>
+                           </Col>
+                       </Row>
+                     
+                      <Row>
+                          <Col >
+                          <Form.Group>
+                               <Form.Label>From</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="from" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                              <option>{name}</option>    
+                             
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                          
+                          <Col>
+                          <Form.Group >
+                               <Form.Label>To</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="to" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>
+                                   {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                      </Row>
+                       
+                     
+                      <Form.Group controlId="subject">
+                               <Form.Label>Subject</Form.Label>
+                               <Form.Control 
+                               name="subject" 
+                               rows="3"
+                               placeholder="subject"
+                               onChange={handleChange} />
+                           </Form.Group>  
+                   
+                      
+                           <Form.Group controlId="body">
+                               <Form.Label>Body</Form.Label>
+                               <Form.Control 
+                               name="body" 
+                               as="textarea" 
+                               rows="3"
+                               placeholder="body"
+                               onChange={handleChange} />
+                           </Form.Group>
+                      
+                   
+                  </Form>    
+                   
+                  }
+            </Modal>
+            
             <Modal
                 title={this.state.editEmail ? "Edit email log" : "Add a email log"}
                 visible={this.state.editEmail}
