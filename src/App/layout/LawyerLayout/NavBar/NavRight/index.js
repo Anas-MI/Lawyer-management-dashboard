@@ -158,16 +158,21 @@ class NavRight extends Component {
           );
         return (
             <Aux>
+            <div>
                <ul className="navbar-nav ml-auto">
-               <li >
-                    <div style ={{position : 'relative' , top: "-4px"}}>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <Button type="primary" className="ant-dropdown-link" onClick={e => e.preventDefault()}> Create new <DownOutlined /></Button>
-                    </Dropdown>
-                    </div>
-                </li>
-                <li><Timer/></li>
-                <li onClick={()=>this.setState({visible : true})} style={{"position": "relative" , "top" : "-4px"}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
+                    <li>
+                        <div style ={{position : 'relative' , top: "-4px"}}>
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <Button type="primary" className="ant-dropdown-link" style={{ "height" : "37px"}} onClick={e => e.preventDefault()}> Create new <DownOutlined /></Button>
+                        </Dropdown>
+                        </div>
+                    </li>
+
+                    <li><Timer/></li>
+
+                    <li onClick={()=>this.setState({visible : true})} style={{"position": "relative" , "top" : "-4px", "padding-right": "20px"}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
+                </ul>
+                </div>
                     {/* <li>
                         <Dropdown alignRight={!this.props.rtlLayout}>
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -250,7 +255,6 @@ class NavRight extends Component {
                             </Dropdown.Menu>
                         </Dropdown>
                     </li> */}
-                </ul>
                 <Drawer
                     title="Notifications"
                     placement="right"

@@ -952,6 +952,9 @@ label {
   color: #55656d;
   font-size: 14px;
 }
+.serach-top-my{
+  width: 200%;
+}
 
 @media (max-width: 768px) {
   #about img {
@@ -961,6 +964,13 @@ label {
   #footer .ftr-set h3 {
     /* color: #fff; */
     margin-bottom: 10px;
+  }
+
+  .nav-res-flex{
+    flex-direction: column;
+  }
+  .serach-top-my{
+    width: fit-content;
   }
 }
 /*# sourceMappingURL=App.css.map */
