@@ -160,7 +160,7 @@ class NavRight extends Component {
             <Aux>
             <div>
                <ul className="navbar-nav ml-auto" style={{"padding-left": "5px"}}>
-                    <li>
+                    <li style={{"padding-left": "5px"}}>
                         <div style ={{position : 'relative' , top: "-4px"}}>
                         <Dropdown overlay={menu} trigger={['click']}>
                             <Button type="primary" className="ant-dropdown-link" style={{ "height" : "37px"}} onClick={e => e.preventDefault()}> Create new <DownOutlined /></Button>
@@ -168,7 +168,7 @@ class NavRight extends Component {
                         </div>
                     </li>
 
-                    <li><Timer/></li>
+                    <li style={{"padding-left": "5px"}}><Timer/></li>
 
                     <li onClick={()=>this.setState({visible : true})} style={{"position": "relative" , "top" : "-4px", "padding-right": "20px"}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
                 </ul>

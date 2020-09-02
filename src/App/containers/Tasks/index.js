@@ -571,9 +571,7 @@ class Tasks extends React.Component {
                 >
                     ADD TASK
                 </button>
-            </div>
-            
-                
+            </div> 
           </div>
         <Tabs
           defaultActiveKey="1"

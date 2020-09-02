@@ -347,51 +347,56 @@ const ContactsManage = (props) => {
   };
   return (
     <Spin size = "large" spinning={Loading}>
-      <Card
-      title="Contacts"
-      extra={
-        <div className="d-flex justify-content-center">
-          <button
-            className="ml-auto btn  btn-outline-primary   btn-sm"
-            onClick={exportPDF}
-          >
-            Export to Pdf
-          </button>
-          <ExportExcel dataSource={state.tableData || []} />
-        </div>
-      }
-    >
-      <div className="p-2 ">
-        <div className = "responsive-buttons">
+      
+      <div className="d-flex mb-2 title-component-header">
+            <div className="title-header-name">
+              <h5>Contacts</h5>
+            </div>
+            <div className="d-flex">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                >
+                    Export to Pdf
+                </button>
+                <ExportExcel dataSource={state.tableData || []} />
+            </div> 
+      </div>
+      <Card>
+        <div className = "d-flex justify-content-between give-box-direction">
+          <div>
           <Button
             color="success"
-            
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => setTableData('Person')}
           >
             Person
           </Button>
           <Button
             color="success"
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => setTableData('Company')}
           >
             Company
           </Button>
+          </div>
+          <div>
+            <Button
+              color="success"
+              style={{"margin": "0 10px 10px 0"}}
+              onClick={() => handleAddNew('Person')}
+            >
+              Add Person
+            </Button>
+            <Button
+              color="success"
+              style={{"margin": "0 10px 10px 0"}}
+              onClick={() => handleAddNew('Company')}
+            >
+              Add Company
+            </Button>
+          </div>
         </div>
-        <Button
-          color="success"
-          className ="float-right"
-          onClick={() => handleAddNew('Person')}
-        >
-          Add Person
-        </Button>
-        <Button
-          color="success"
-          className ="float-right"
-          onClick={() => handleAddNew('Company')}
-        >
-          Add Company
-        </Button>
-      </div>
       <Table
         className = "table-responsive"
         dataSource={

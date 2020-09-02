@@ -988,4 +988,7 @@ label {
   .title-component-header{
     flex-direction: column;
   }
+  .give-box-direction {
+    flex-direction: column;
+  }
 }
