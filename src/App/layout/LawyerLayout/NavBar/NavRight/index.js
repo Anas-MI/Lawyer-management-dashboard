@@ -170,7 +170,7 @@ class NavRight extends Component {
 
                     <li style={{"padding-left": "5px"}}><Timer/></li>
 
-                    <li onClick={()=>this.setState({visible : true})} style={{"position": "relative" , "top" : "-4px", "padding-right": "20px"}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
+                    <li onClick={()=>this.setState({visible : true})} className="bell-padding" style={{}}><BellTwoTone style={{ fontSize: '30px'}} /></li>
                 </ul>
                 </div>
                     {/* <li>

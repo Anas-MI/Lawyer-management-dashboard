@@ -394,29 +394,32 @@ class matterManage extends React.Component {
       doc.autoTable(content);
       doc.save('matters.pdf');
     };
-    const Add = (
-      <div className="d-flex justify-content-center">
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={exportPDF}
-        >
-          Export to Pdf
-        </button>
-        <ExportExcel dataSource={this.state.tableData} />
-        <button
-          className="ml-auto btn  btn-outline-primary   btn-sm"
-          onClick={() => handleAddNew()}
-        >
-          Add Matter
-        </button>
-      </div>
-    );
     return (
       <Spin size = "large" spinning = {this.state.loading}>
-        <Card title="Matter" extra={Add}>
+        <div className="d-flex mb-2 title-component-header">
+            <div className="title-header-name">
+              <h5>Matter</h5>
+            </div>
+            <div className="d-flex">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                >
+                    Export to Pdf
+                </button>
+                <button
+                  className="btn  btn-outline-primary   btn-sm"
+                  onClick={() => handleAddNew()}
+                >
+                  Add Matter
+                </button>
+            </div> 
+          </div>
+        <Card>
         <div>
           <span className="ml-auto"></span>
           <Button
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => {
               setTable('All');
             }}
@@ -424,6 +427,7 @@ class matterManage extends React.Component {
             All
           </Button>
           <Button
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => {
               setTable('open');
             }}
@@ -431,6 +435,7 @@ class matterManage extends React.Component {
             Open
           </Button>
           <Button
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => {
               setTable('pending');
             }}
@@ -438,6 +443,7 @@ class matterManage extends React.Component {
             Pending
           </Button>
           <Button
+            style={{"margin": "0 10px 10px 0"}}
             onClick={() => {
               setTable('closed');
             }}
