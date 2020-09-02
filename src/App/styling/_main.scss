@@ -701,3 +701,31 @@ header {
 	position: relative;
 	top: 29px;
 }
+
+.responsive-buttons{
+	display: list-item;
+	float: left;
+
+}
+
+.responsive-target{
+	margin-top: 10%;
+	font-weight:  600;
+}
+
+.fullwidth{
+	width: 100%;
+}
+
+
+@media only screen and (max-width: 600px) {
+	.responsive-buttons {
+	  float: right;
+	}
+	.responsive-target{
+		margin-left: auto;
+	}
+	
+
+  }
+

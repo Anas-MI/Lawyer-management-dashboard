@@ -168,6 +168,7 @@ export default {
           icon: 'feather icon-phone-call',
           url: '/manage/communication',
         },
+        /*
         {
           id: 'reports',
           title: 'Reports',
@@ -175,6 +176,7 @@ export default {
           icon: 'feather icon-book',
           url: '/',
         },
+        */
         {
           id: 'settings',
           title: 'Settings',
@@ -184,7 +186,7 @@ export default {
         },
         {
           id: 'help',
-          title: 'Help centre',
+          title: 'Support',
           type: 'item',
           icon: 'feather icon-help-circle',
           url: '/help',

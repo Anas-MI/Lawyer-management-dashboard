@@ -14,9 +14,12 @@ const Support = (props) =>{
             key : index,
             _id : value._id,
             name : value.firstName +  " " + value.lastName,
+            firstName : value.firstName,
+            lastName : value.lastName,
+            attachment : value.document,
             email : value.email ,
             issue : value.issue ? value.issue : "-",
-            url : value.url ?  value.url : '-'
+            url : value.url ?  value.url : 'No URL'
           }
           tableData.push(data)
         })
@@ -77,7 +80,7 @@ const Support = (props) =>{
     
     
       const handleView = (record) => {
-        props.history.push('/view/ticket', record._id);
+        props.history.push('/view/ticket', record);
       };
 
 
@@ -95,7 +98,7 @@ const Support = (props) =>{
              dataSource={Data} 
              onRow={(record, rowIndex) => {
               return {
-              //  onDoubleClick: () => handleView(record), // double click row
+                onDoubleClick: () => handleView(record), // double click row
                 onContextMenu: (event) => {}, // right button click row
                 onMouseEnter: (event) => {}, // mouse enter row
                 onMouseLeave: (event) => {}, // mouse leave row

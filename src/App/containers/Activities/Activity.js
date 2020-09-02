@@ -285,6 +285,7 @@ class Activity extends React.Component {
 
               this.setState({
                 expenseModal: false,
+                EditExpense : false,
                 editmode: false,
                 data: {
                   billable: false,
@@ -470,7 +471,7 @@ class Activity extends React.Component {
           disableExpense : false,
           disabletime : false
         })
-        notification.success({ message: 'Acitivity dublicated !' });
+        notification.success({ message: 'Acitivity duplicated !' });
       })
       .catch((err) => {
         notification.error({ message: 'Failed' });
@@ -557,13 +558,13 @@ class Activity extends React.Component {
         },
       },
       {
-        title: 'Dublicate',
+        title: 'Duplicate',
         dataIndex: 'Dublicate',
         key: '_id',
         render: (_, record) => {
           return (
             <Button onClick={() => handleDublicate(record)}>
-              Dublicate
+              Duplicate
             </Button>
           );
         },

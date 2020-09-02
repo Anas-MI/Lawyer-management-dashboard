@@ -645,9 +645,9 @@ class NavSearch extends Component {
        
             <Aux>
                 <AutoComplete
-                    dropdownClassName="certain-category-search-dropdown"
+                    dropdownClassName="certain-category-search-dropdown serach-top-my"
                     dropdownMatchSelectWidth={500}
-                    style={{ width: "200%" }}
+                    // style={{ width: "200%" }}
                     options={this.state.options}
                 >
                     <Input.Search size="large" onChange={handleSearch} placeholder="input here" />

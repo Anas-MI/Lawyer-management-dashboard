@@ -229,6 +229,7 @@ const Accounts = () => {
         }
            >
              <Table 
+             className = "table-responsive"
              columns={columns} 
              dataSource={
               dataSrc.length === 0 && value === '' ? state : dataSrc

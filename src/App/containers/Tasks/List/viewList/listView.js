@@ -60,10 +60,9 @@ class ViewList extends React.Component{
     }
 
     handleEdit = (value , index) => {
-
       this.setState({ editMode: true });
       this.setState({ Data: value });
-      console.log(this.state.Data)
+      console.log(value)
       this.setState({ selected: value});
     }
     componentDidMount(){
@@ -72,18 +71,16 @@ class ViewList extends React.Component{
             list = res.data.data
             console.log(res)
             res.data.data.tasks.map((value,index)=>{
+              let matter = value.matter.matterDescription
+              value.matter = value.matter._id
                const temp = <tr>
                                 <td>{value.taskName}</td>
                                {/* <td>{value.assignee}</td> */}
                                 <td>{value.priority}</td>
                                 <td>{value.description}</td>
                                 <td>{value.dueDate.substring(0,10)}</td>
-                                {
-                                  /* 
-                                    <td><AntdButton onClick={()=>this.handleEdit(value,index)} type="link">Edit</AntdButton></td>
-
-                                  */
-                                }
+                                <td>{matter}</td>
+                                <td><AntdButton onClick={()=>this.handleEdit(value,index)} type="link">Edit</AntdButton></td>
                                 <td><Popconfirm
                                       title="Are you sure you want to delete"
                                       onConfirm={()=>this.handleDelete(index)}
@@ -112,7 +109,7 @@ class ViewList extends React.Component{
                         newdata.Data.matter = value._id;
                         this.setState(newdata);
                     }
-                    return <option>{value.matterDescription}</option>;
+                    return <option value = {value._id}>{value.matterDescription}</option>;
                     });
                 this.setState({options : options})
             });
@@ -131,20 +128,13 @@ class ViewList extends React.Component{
     
       handleChange = (e) => {
         e.persist();
+        console.log(e)
         let newState = this.state;
-        if (e.target.id === 'matter' ) {
-           
-      if( e.target.selectedIndex > 0){
-        newState.index = e.target.selectedIndex 
         newState.Data[e.target.id] = e.target.value;
-      }
-      
-    } else {
-      newState.Data[e.target.id] = e.target.value;
-        }
         this.setState(newState);
-        console.log(this.state);
-      };
+        console.log(this.state.Data);
+
+    };
 
     handleOk = (e) => {
 
@@ -191,6 +181,9 @@ class ViewList extends React.Component{
               )
               .catch(() => {
                 this.openNotificationWithFailure('error');
+                this.setState({
+                  disable : false
+                })
               }).then(()=>{
                 ReactDOM.findDOMNode(this.messageForm).reset()
               })
@@ -217,6 +210,9 @@ class ViewList extends React.Component{
                       })
                       .catch(() => {
                           notification.error({message : "Failed."})
+                          this.setState({
+                            disable : false
+                          })
                       }).then(()=>{
                         ReactDOM.findDOMNode(this.messageForm).reset()
                       })
@@ -237,7 +233,6 @@ class ViewList extends React.Component{
       };
     
     render(){
-        console.log(this.props.location.state)
         return <div>
                 <Card>
                     <Card.Header>
@@ -297,6 +292,7 @@ class ViewList extends React.Component{
                                 <th>Priority</th>
                                 <th>Permissions</th>
                                 <th>Due At</th>
+                                <th>Matter</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                                 </tr>

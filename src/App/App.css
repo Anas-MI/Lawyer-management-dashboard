@@ -952,6 +952,18 @@ label {
   color: #55656d;
   font-size: 14px;
 }
+.serach-top-my{
+  width: 200%;
+}
+
+.title-component-header{
+  background: #fff;
+  padding: 5px 9px;
+  justify-content: space-between;
+}
+.title-header-name{
+  padding: 5px 0px;
+}
 
 @media (max-width: 768px) {
   #about img {
@@ -962,8 +974,21 @@ label {
     /* color: #fff; */
     margin-bottom: 10px;
   }
+
+  .nav-res-flex{
+    flex-direction: column;
+  }
+  .serach-top-my{
+    width: fit-content;
+  }
 }
 /*# sourceMappingURL=App.css.map */
 
 @media (max-width: 576px) {
+  .title-component-header{
+    flex-direction: column;
+  }
+  .give-box-direction {
+    flex-direction: column;
+  }
 }

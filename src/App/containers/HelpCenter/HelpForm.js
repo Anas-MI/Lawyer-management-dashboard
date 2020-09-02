@@ -65,6 +65,7 @@ const HelpForm = () => {
         message : "Please provide a issue"
       })
     }else
+    /*
     if(ticketData.subject === ""){
       valid = false
        notification.warning({
@@ -77,7 +78,7 @@ const HelpForm = () => {
        notification.warning({
          message : "Please provide a Attachment"
        })
-     }else
+     }else*/
     if(valid){
       setdisable(true)
       console.log('submit', ticketData);
@@ -89,6 +90,7 @@ const HelpForm = () => {
     formData.set('issue', ticketData.issue);
     formData.set('subject', ticketData.subject);
     formData.set('document', ticketData.attachment);
+    formData.set('url', ticketData.url);
     console.log(formData.values);
     await api
       .post('/ticket/create/', formData, {
@@ -97,6 +99,7 @@ const HelpForm = () => {
       .then(function (response) {
         setdisable(false)
         history.goBack();
+        console.log(response)
         notification.success({ message: 'Ticket Generated.' });
       })
       .catch(function (response) {
@@ -176,7 +179,9 @@ const HelpForm = () => {
         >
           <Input disabled />
         </Form.Item>
-        <Form.Item
+        {
+          /*
+          <Form.Item
           name="subject"
           label="Subject"
           rules={[
@@ -188,6 +193,8 @@ const HelpForm = () => {
         >
           <Input onChange={handleInput('subject')} />
         </Form.Item>
+          */
+        }
         <Form.Item
           name="issue"
           label="Issue"

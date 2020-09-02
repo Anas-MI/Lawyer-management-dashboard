@@ -526,24 +526,6 @@ class Tasks extends React.Component {
   
   render() {
     console.log(this.state.tableData)
-    const operations = (
-      <div className="d-flex justify-content-center">
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={this.exportPDF}
-              >
-                  Export to Pdf
-              </button>
-              <ExportExcel dataSource={this.state.tableData || []} />
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={this.showModal}
-              >
-                  ADD TASK
-              </button>
-        </div>
-    
-    );
     const { TabPane } = Tabs;
     const callback = (key) =>{
       console.log(key)
@@ -571,9 +553,28 @@ class Tasks extends React.Component {
     return (
       <Spin size="large" spinning={this.state.spinning} >
         <div>
+          <div className="d-flex mb-2 title-component-header">
+            <div className="title-header-name">
+              <h5>Task</h5>
+            </div>
+            <div className="d-flex">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={this.exportPDF}
+                >
+                    Export to Pdf
+                </button>
+                <ExportExcel dataSource={this.state.tableData || []} />
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={this.showModal}
+                >
+                    ADD TASK
+                </button>
+            </div> 
+          </div>
         <Tabs
           defaultActiveKey="1"
-          tabBarExtraContent={operations}
           onChange={callback}
           className="card p-4 overflow-auto"
         >

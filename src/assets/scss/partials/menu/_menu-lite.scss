@@ -1664,6 +1664,7 @@
 
         &.mob-open {
             margin-left: 0;
+            overflow: auto;
 
             ~.pcoded-header,
             ~.pcoded-main-container {
