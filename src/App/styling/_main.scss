@@ -713,6 +713,12 @@ header {
 	margin-top: 10%;
 	font-weight:  600;
 }
+
+.fullwidth{
+	width: 100%;
+}
+
+
 @media only screen and (max-width: 600px) {
 	.responsive-buttons {
 	  float: right;
@@ -720,5 +726,7 @@ header {
 	.responsive-target{
 		margin-left: auto;
 	}
+	
+
   }
 
