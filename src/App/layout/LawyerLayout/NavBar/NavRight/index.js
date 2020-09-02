@@ -159,7 +159,7 @@ class NavRight extends Component {
         return (
             <Aux>
             <div>
-               <ul className="navbar-nav ml-auto">
+               <ul className="navbar-nav ml-auto" style={{"padding-left": "5px"}}>
                     <li>
                         <div style ={{position : 'relative' , top: "-4px"}}>
                         <Dropdown overlay={menu} trigger={['click']}>
