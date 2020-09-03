@@ -214,7 +214,7 @@ class customFeilds extends React.Component {
       <Card>
       <Tabs tabBarExtraContent={operations}>
              <TabPane tab="Custom Feild" key="1">
-                <Table columns={columns} dataSource={this.state.tableData} />
+                <Table  className="table-responsive" columns={columns} dataSource={this.state.tableData} />
               </TabPane>
               
         </Tabs>
