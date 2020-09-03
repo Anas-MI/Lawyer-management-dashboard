@@ -309,17 +309,17 @@ class editCompany extends React.Component{
      const addFeild = (type) => {
       let list = this.state
         if(type==="email"){
-          list.emailAddress.push("")
+          list.emailAddress.push({})
           this.setState(list)
         }else
         if(type==="address"){
           list.address.push({})
           this.setState(list)
         }else if(type==="phone"){
-          list.phone.push("")
+          list.phone.push({})
           this.setState(list)
         }else if(type==="website"){
-          list.website.push("")
+          list.website.push({})
           this.setState(list)
         }
         else if (type === 'employees') {
