@@ -49,11 +49,37 @@ class AddEditMatter extends React.Component{
     }
   }
   async componentDidMount(){
-      
+   
     const editData = await api.get('/matter/view/'+this.props.location.state)
-    this.setState({editData : editData.data.data, matterDescription : editData.data.data.matterDescription , relatedContacts : editData.data.data.relatedContacts? editData.data.data.relatedContacts : [] })
+    console.log(editData)
+    this.setState({editData : editData.data.data, 
+      matterDescription : editData.data.data.matterDescription , 
+      relatedContacts : editData.data.data.relatedContacts? editData.data.data.relatedContacts : [] })
     this.setState({client: editData.data.data.client._id})
 
+    api.get('/user/view/' + this.props.userId).then((res)=>{
+   // console.log(res)
+      let customFeilds = []
+  
+      res.data.data.customFields.map((value, index)=>{
+          customFeilds.push(<Col md="6">
+          <Form.Group key={index} controlId={index}>
+            <Form.Label>{value.name}</Form.Label>
+            <Form.Control
+              name={value.name}
+              type={value.type}
+              defaultValue={this.state.editData.customFields.length == 0 || this.state.editData.customFields[index] == undefined ? " " : this.state.editData.customFields[index][value.name]}
+            onChange={this.handleCustom}
+            />
+          </Form.Group>
+        </Col>)
+      })
+      this.setState({
+        customFields : customFeilds
+      })
+    
+      })
+   
     if(this.props.location.pathname==="/manage/Matter/edit"){
       editMode= true;
       editRes= this.props.location.state
@@ -64,13 +90,12 @@ class AddEditMatter extends React.Component{
    
     optns = contacts.data.data.map((value, index)=>{
  
-      return <option id={index}>{value.firstName}</option>
+      return <option value={value._id} id={index}>{value.firstName + " " + value.lastName}</option>
      })
-     console.log(this.state.editData.client)
      const formData = <div>
        <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
-              <Form.Control as="select" name="client" defaultValue={this.state.editData.client.firstName} onChange={this.handleChange}>
+              <Form.Control as="select" name="client" value={this.state.editData.client._id} onChange={this.handleChange}>
               <option>Select a contact</option>
 
                 {optns}
@@ -148,7 +173,7 @@ class AddEditMatter extends React.Component{
                onChange={this.handleCustom}/>
              </Form.Group>
     })*/
-    this.setState({optns : optns, customFields : customFields})
+    this.setState({optns : optns,})
   }
    openNotificationWithIcon = type => {
     notification[type]({
@@ -173,7 +198,7 @@ class AddEditMatter extends React.Component{
         message: "Please select a contact",
       });
     }else{
-      console.log("all good")
+     // console.log("all good")
        const data = this.state
         data.customFields = customData
         data.client = contacts.data.data[clientId]._id
@@ -271,7 +296,6 @@ class AddEditMatter extends React.Component{
       </div>
       <Card title="Matter Information" className="mb-4">
         <Form className="form-details" >
-          {console.log(this.state.editData)}
           
            
             <Form.Group controlId="formGroupMatter">
@@ -306,7 +330,11 @@ class AddEditMatter extends React.Component{
       <Form className="form-details">
       <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feilds</Button></p>
 
-      {customFields}
+      {       
+                  this.state.customFields.map((val)=>{
+                    return val
+                  })
+                }
       </Form>
       </Card>
       <Card title="Billing Preference"  className="mb-4">
