@@ -284,23 +284,26 @@ class AddCompany extends React.Component {
      
       this.setState(list);
       console.log(this.state)
-      switch (name) {
-        case 'emailAddress':
-          errors.Email[id] = validEmailRegex.test(value)
-            ? ''
-            : 'Email is not valid!';
-          break;
-
-        case 'phone':
-          errors.phone[id] =
-            value.length < 10 || value.length > 13
-              ? 'phone number must be between 10 and 13 digits'
-              : '';
-          break;
-
-        default:
-          break;
+      if (tagName !== 'SELECT') {
+        switch (name) {
+          case 'emailAddress':
+            errors.Email[id] = validEmailRegex.test(value)
+              ? ''
+              : 'Email is not valid!';
+            break;
+  
+          case 'phone':
+            errors.phone[id] =
+              value.length < 10 || value.length > 13
+                ? 'phone number must be between 10 and 13 digits'
+                : '';
+            break;
+  
+          default:
+            break;
+        }
       }
+      
     };
 
     const handleImageChange = (e) => {

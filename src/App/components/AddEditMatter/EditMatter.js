@@ -90,12 +90,12 @@ class AddEditMatter extends React.Component{
    
     optns = contacts.data.data.map((value, index)=>{
  
-      return <option value={value._id} id={index}>{value.firstName}</option>
+      return <option value={value._id} id={index}>{value.firstName + " " + value.lastName}</option>
      })
      const formData = <div>
        <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
-              <Form.Control as="select" name="client" defaultValue={this.state.editData.client.firstName} onChange={this.handleChange}>
+              <Form.Control as="select" name="client" value={this.state.editData.client._id} onChange={this.handleChange}>
               <option>Select a contact</option>
 
                 {optns}

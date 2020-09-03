@@ -412,23 +412,25 @@ class newPerson extends React.Component {
       }
       console.log(list)
       this.setState(list);
-      if (name === 'emailAddress')
-        switch (name) {
-          case 'emailAddress':
-            errors.Email[id] = validEmailRegex.test(value)
-              ? ''
-              : 'Email is not valid!';
-            break;
-          case 'phone':
-            errors.phone[id] =
-              value.length < 10 || value.length > 13
-                ? 'phone number must be between 10 and 13 digits'
-                : '';
-            break;
-
-          default:
-            break;
-        }
+        if (tagName !== 'SELECT') {
+          switch (name) {
+            case 'emailAddress':
+              errors.Email[id] = validEmailRegex.test(value)
+                ? ''
+                : 'Email is not valid!';
+              break;
+            case 'phone':
+              errors.phone[id] =
+                value.length < 10 || value.length > 13
+                  ? 'phone number must be between 10 and 13 digits'
+                  : '';
+              break;
+  
+            default:
+              break;
+          }
+      }
+        
     };
 
     const addFeild = (type) => {

@@ -181,7 +181,7 @@ class editPerson extends React.Component {
             <Form.Control
               name={value.name}
               type={value.type}
-              defaultValue={this.state.editData.customFields == undefined ? " " : this.state.editData.customFields[index][value.name]}
+              defaultValue={this.state.editData.customFields == undefined  || this.state.editData.customFields.length ==0 ? " " : this.state.editData.customFields[index][value.name]}
             onChange={this.handleCustom}
             />
           </Form.Group>
@@ -479,22 +479,24 @@ class editPerson extends React.Component {
       }
       this.setState(list)
       console.log(this.state)
-      switch (name) {
-        case 'emailAddress':
-          errors.Email[id] = validEmailRegex.test(this.state.emailAddress[id].emailAddress)
-            ? ''
-            : 'Email is not valid!';
-          break;
-        case 'phone':
-          errors.phone[id] =
-            value.length < 10 || value.length > 13
-              ? 'phone number must be between 10 and 13 digits'
-              : '';
-          break;
+      if (tagName !== 'SELECT') {
+        switch (name) {
+          case 'emailAddress':
+            errors.Email[id] = validEmailRegex.test(value)
+              ? ''
+              : 'Email is not valid!';
+            break;
+          case 'phone':
+            errors.phone[id] =
+              value.length < 10 || value.length > 13
+                ? 'phone number must be between 10 and 13 digits'
+                : '';
+            break;
 
-        default:
-          break;
-      }
+          default:
+            break;
+        }
+    }
     };
     const addFeild = (type) => {
       let list = this.state;
