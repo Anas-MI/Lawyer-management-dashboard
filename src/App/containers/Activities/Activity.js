@@ -796,7 +796,7 @@ class Activity extends React.Component {
               <Button onClick={() => setTableData('expense')}>Expense</Button>
             </div>
             <Form className="pt-0">
-              <Form.Row className="ml-1">
+              <Form.Row className="ml-1" style={{"justifyContent" : "center"}}>
                 <Form.Group controlId="From" className="mr-2">
                   <Form.Control
                     size="sm"
@@ -805,8 +805,8 @@ class Activity extends React.Component {
                     onChange={handleCustomSorting}
                     style={{ width: '175px' }}
                   />
-                </Form.Group>{' '}
-                -
+                </Form.Group>
+                
                 <Form.Group controlId="To" className="mx-2">
                   <Form.Control
                     size="sm"
