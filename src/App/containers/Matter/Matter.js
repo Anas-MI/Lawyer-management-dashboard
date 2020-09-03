@@ -407,6 +407,7 @@ class matterManage extends React.Component {
                 >
                     Export to Pdf
                 </button>
+                <ExportExcel dataSource={this.state.tableData || []} />
                 <button
                   className="btn  btn-outline-primary   btn-sm"
                   onClick={() => handleAddNew()}
@@ -426,6 +427,7 @@ class matterManage extends React.Component {
           >
             All
           </Button>
+          
           <Button
             style={{"margin": "0 10px 10px 0"}}
             onClick={() => {

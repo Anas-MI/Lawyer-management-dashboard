@@ -94,7 +94,7 @@ class newPerson extends React.Component {
     options = response.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
-    feilds = await api.get("/user/view/5eecb08eaec6f1001765f8d5");
+    feilds = await api.get("/user/view/"+ this.props.userId);
 
     customFields = feilds.data.data.customFields.map((value, index) => {
       return (
@@ -305,51 +305,54 @@ class newPerson extends React.Component {
     let address = null;
     const handleChange = (e) => {
       e.persist();
-      if(e.target.name==="company" && e.target.selectedIndex!=0){
-        console.log(e.target.selectedIndex)
-        this.setState((st) => ({ ...st, [e.target.name]: response.data.data[e.target.selectedIndex-1] }));
-      }else {
-      this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
+      if (e.target.name === 'company' && e.target.selectedIndex != 0) {
+        console.log(e.target.selectedIndex);
+        this.setState((st) => ({
+          ...st,
+          [e.target.name]: response.data.data[e.target.selectedIndex - 1],
+        }));
+      } else {
+        this.setState((st) => ({ ...st, [e.target.name]: e.target.value }));
       }
       console.log(this.state);
       const { name, value, id } = e.target;
       switch (name) {
-        case "prefix":
-          error.Prefix = value === "default" ? "Prefix is required!" : "";
+        case 'prefix':
+          error.Prefix = value === 'default' ? 'Prefix is required!' : '';
           break;
-        case "firstName":
+        case 'firstName':
           error.FirstName =
             value.length == 0
-              ? "First Name is required!"
+              ? 'First Name is required!'
               : !validNameRegex.test(value)
-              ? "First Name must be in characters!"
+              ? 'First Name must be in characters!'
               : value.length > 20
-              ? "First Name must be less than 20 characters long!"
-              : "";
+              ? 'First Name must be less than 20 characters long!'
+              : '';
           break;
-        case "middleName":
+        case 'middleName':
           error.MiddleName =
             value.length == 0
-              ? ""
+              ? ''
               : !validNameRegex.test(value)
-              ? "Middle Name must be in characters!"
+              ? 'Middle Name must be in characters!'
               : value.length > 20
-              ? "Middle Name must be less than 20 characters long!"
-              : "";
+              ? 'Middle Name must be less than 20 characters long!'
+              : '';
           break;
-        case "lastName":
+        case 'lastName':
           error.LastName =
             value.length == 0
-              ? ""
+              ? ''
               : !validNameRegex.test(value)
-              ? "Last Name must be in characters!"
+              ? 'Last Name must be in characters!'
               : value.length > 20
-              ? "Last Name must be less than 20 characters long!"
-              : "";
+              ? 'Last Name must be less than 20 characters long!'
+              : '';
           break;
 
-        case "title":
-          error.Title = value.length == 0 ? "Title is Required" : "";
+        case 'title':
+          error.Title = value.length == 0 ? 'Title is Required' : '';
           break;
 
         default:
@@ -359,97 +362,106 @@ class newPerson extends React.Component {
     const HandleAddressChange = (e) => {
       e.persist();
       const { id, value, name } = e.target;
-      console.log(id + value + name)
+      console.log(id + value + name);
       let newState = this.state;
       newState.address[id][name] = value;
       this.setState(newState);
       console.log(this.state);
       switch (e.target.name) {
-        case "type":
-          errors.Type[id] = value === "default" ? "Type is required!" : "";
+        case 'type':
+          errors.Type[id] = value === 'default' ? 'Type is required!' : '';
           break;
 
-        case "country":
+        case 'country':
           errors.Country[id] =
-            value === "default" ? "Country is required!" : "";
+            value === 'default' ? 'Country is required!' : '';
           break;
 
-        case "street":
+        case 'street':
           errors.Street[id] =
             value.length == 0
-              ? ""
+              ? ''
               : value.length < 2
-              ? "Street is Required"
-              : "";
+              ? 'Street is Required'
+              : '';
           break;
-        case "city":
+        case 'city':
           errors.City[id] =
             value.length == 0
-              ? ""
+              ? ''
               : !validNameRegex.test(value)
-              ? "City Name must be in characters!"
+              ? 'City Name must be in characters!'
               : value.length < 2
-              ? "City is Required"
-              : "";
+              ? 'City is Required'
+              : '';
           break;
-        case "state":
+        case 'state':
           errors.State[id] =
             value.length == 0
-              ? ""
+              ? ''
               : !validNameRegex.test(value)
-              ? "State Name must be in characters!"
+              ? 'State Name must be in characters!'
               : value.length < 2
-              ? "State is Required"
-              : "";
+              ? 'State is Required'
+              : '';
           break;
-        case "zipCode":
+        case 'zipCode':
           errors.ZipCode[id] =
             value.length == 0
-              ? ""
+              ? ''
               : value.length > 4 && value.length < 10
-              ? ""
-              : "Zipcode is not valid!";
+              ? ''
+              : 'Zipcode is not valid!';
           break;
       }
     };
     const handleMultipleChange = (e) => {
       e.persist();
       let list = this.state;
-      const { id, value, name } = e.target;
-      list[name][id] = value;
-      this.setState(list);
-      console.log(this.state);
-      switch (name) {
-        case "emailAddress":
-          errors.Email[id] = validEmailRegex.test(value)
-            ? ""
-            : "Email is not valid!";
-          break;
-        case "phone":
-          errors.phone[id] =
-            value.length < 10 || value.length > 13
-              ? "phone number must be between 10 and 13 digits"
-              : "";
-          break;
-
-        default:
-          break;
+      const { name, id, value, tagName } = e.target;
+      if (tagName === 'SELECT') {
+        name === 'emailAddress'
+          ? (list[name][id][`emailType`] = value)
+          : (list[name][id][`${name}Type`] = value);
+      } else {
+        list[name][id][name] = value;
       }
+      console.log(list)
+      this.setState(list);
+        if (tagName !== 'SELECT') {
+          switch (name) {
+            case 'emailAddress':
+              errors.Email[id] = validEmailRegex.test(value)
+                ? ''
+                : 'Email is not valid!';
+              break;
+            case 'phone':
+              errors.phone[id] =
+                value.length < 10 || value.length > 13
+                  ? 'phone number must be between 10 and 13 digits'
+                  : '';
+              break;
+  
+            default:
+              break;
+          }
+      }
+        
     };
 
     const addFeild = (type) => {
       let list = this.state;
       if (type === "emailAddress") {
-        list.emailAddress.push("");
+        list.emailAddress.push({});
         this.setState(list);
       } else if (type === "address") {
         list.address.push({});
         this.setState(list);
       } else if (type === "phone") {
-        list.phone.push("");
+        list.phone.push({});
         this.setState(list);
       } else if (type === "website") {
-        list.website.push("");
+        list.website.push({});
         this.setState(list);
       }
     };

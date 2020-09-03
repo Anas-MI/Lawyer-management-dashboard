@@ -225,7 +225,7 @@ class AddEditMatter extends React.Component{
               <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Practise Area</Form.Label>
                 <Form.Control as="select" name="practiseArea" onChange={handleChange} defaultValue={editRes.practiseArea}>
-                  <option>{editRes.practiseArea}</option>
+                  <option>Select a practise area</option>
                   <option>Attorney</option>
                   <option>Administrative</option>
                   <option>Bankruptcy</option>

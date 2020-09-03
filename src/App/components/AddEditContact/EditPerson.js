@@ -24,9 +24,7 @@ const validUrlRegex = RegExp(
 let editMode = true;
 let options = null;
 let response = {};
-let feilds = {};
 let customData = [];
-let customFields = null;
 let res = '';
 let error = {
   FirstName: '',
@@ -68,7 +66,8 @@ class editPerson extends React.Component {
       fileList: [],
       prefixx : "",
       companyy : "",
-      billingPaymentProfile : "default"
+      billingPaymentProfile : "default",
+      customFeilds : []
     };
   }
 
@@ -102,14 +101,14 @@ class editPerson extends React.Component {
    componentDidMount() {
     let user = JSON.parse(window.localStorage.getItem('Case.user'))
     user = user.token.user
-    console.log(user)
+
     this.setState({
       user : user.firstName + " " + user.lastName
     })
    api.get(
       '/contact/view/' + this.props.location.state._id
     ).then((editData)=>{
-  
+      console.log(editData)
       const preForm = <div>
          <Form.Group controlId="Prefix">
                       <Form.Label>Prefix</Form.Label>
@@ -132,7 +131,7 @@ class editPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.Prefix}</p>
       </div>
-      console.log(editData.data.data)
+
       const comForm = <div>
         <Form.Group controlId="formGroupCompany">
                       <Form.Label>Company</Form.Label>
@@ -170,8 +169,30 @@ class editPerson extends React.Component {
     });
    })
 
+   
+    api.get('/user/view/' + this.props.userId).then((res)=>{
+      console.log(res)
+      let customFeilds = []
+  
+      res.data.data.customFields.map((value, index)=>{
+          customFeilds.push(<Col md="6">
+          <Form.Group key={index} controlId={index}>
+            <Form.Label>{value.name}</Form.Label>
+            <Form.Control
+              name={value.name}
+              type={value.type}
+              defaultValue={this.state.editData.customFields == undefined  || this.state.editData.customFields.length ==0 ? " " : this.state.editData.customFields[index][value.name]}
+            onChange={this.handleCustom}
+            />
+          </Form.Group>
+        </Col>)
+      })
+      this.setState({
+        customFeilds : customFeilds
+      })
     
-    // feilds = await api.get('/user/view/' + this.props.userId);
+      })
+    
 
     // customFields = feilds.data.data.customFields.map((value, index) => {
     //   let val = '';
@@ -193,7 +214,7 @@ class editPerson extends React.Component {
     //   );
     // });
 
-    this.setState({ customFields, options });
+    this.setState({ options });
 
     {
       /*
@@ -263,7 +284,7 @@ class editPerson extends React.Component {
         api
           .post('/contact/edit/' + this.props.location.state._id, data)
           .then((data) => {
-            console.log(data);
+
             finalres = data.data._id;
             this.setState({ visible: true });
             const key = 'updatingDetails';
@@ -281,7 +302,7 @@ class editPerson extends React.Component {
               dataList.fileList.forEach((file) => {
                 formData.append('image', file);
               });
-              console.log({ data });
+
               api
                 .post('/contact/upload/' + data.data.data._id, formData)
                 .then((res) => {
@@ -458,22 +479,24 @@ class editPerson extends React.Component {
       }
       this.setState(list)
       console.log(this.state)
-      switch (name) {
-        case 'emailAddress':
-          errors.Email[id] = validEmailRegex.test(this.state.emailAddress[id].emailAddress)
-            ? ''
-            : 'Email is not valid!';
-          break;
-        case 'phone':
-          errors.phone[id] =
-            value.length < 10 || value.length > 13
-              ? 'phone number must be between 10 and 13 digits'
-              : '';
-          break;
+      if (tagName !== 'SELECT') {
+        switch (name) {
+          case 'emailAddress':
+            errors.Email[id] = validEmailRegex.test(value)
+              ? ''
+              : 'Email is not valid!';
+            break;
+          case 'phone':
+            errors.phone[id] =
+              value.length < 10 || value.length > 13
+                ? 'phone number must be between 10 and 13 digits'
+                : '';
+            break;
 
-        default:
-          break;
-      }
+          default:
+            break;
+        }
+    }
     };
     const addFeild = (type) => {
       let list = this.state;
@@ -1218,7 +1241,12 @@ class editPerson extends React.Component {
                     Custom Field
                   </Button>
                 </p>
-                {customFields}
+                {
+                  this.state.customFeilds.map((val)=>{
+                    return val
+                  })
+                }
+                
                 <br></br>
               </div>
               <br></br>

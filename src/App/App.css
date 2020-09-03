@@ -983,6 +983,10 @@ label {
 .ant-table-filter-trigger-container{
   margin-bottom: 20px;
 }
+.short-activity-botton {
+  margin-left: 0.5rem;
+  margin-top: 1rem;
+}
 
 @media (max-width: 768px) {
   #about img {
@@ -1027,6 +1031,18 @@ label {
   .btn-sm {
     padding: 2px 8px !important;
     font-size: 12px !important;
+  }
+  
+}
+
+@media (max-width: 410px) {
+  .date-activity-res{
+    flex-direction: column;
+    margin-top: 5px;
+  }
+  .short-activity-botton{
+    margin-left: 0px;
+    margin-top: 1px;
   }
 }
 
