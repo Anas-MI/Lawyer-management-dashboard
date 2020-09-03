@@ -125,6 +125,7 @@ class Communication extends React.Component{
           }
           if ( val.logType === "secure") {
             temp.from = name
+            temp.type = "secure"
             temp.logType = "email"
             emailData.push(temp);
           }
@@ -359,13 +360,14 @@ class Communication extends React.Component{
 
               api.get(`/contact/view/${data.to}`).then((res)=>{
                 console.log(res)
-                let emailAddress = res.data.data.emailAddress[0].emailAddress ? res.data.data.emailAddress[0].emailAddress : ""
-                let number = res.data.data.phone[0].phone ? res.data.data.phone[0].phone : ""
+                let emailAddress = res.data.data.emailAddress.length != 0 ? res.data.data.emailAddress[0].emailAddress : ""
+                let number = res.data.data.phone.length != 0 ? res.data.data.phone[0].phone : ""
                 console.log(data)
                 let email = {
                   to: emailAddress,
                   subject : data.subject,
                   text : data.body,
+                  date  : new Date()
 
                 }
                 let sms = {
@@ -447,6 +449,8 @@ class Communication extends React.Component{
                 phone : false,
                 disable : false,
                 editEmail: false,
+                editSecure :false,
+                secure : false,
                 data : {
                   subject : "",
                   body : "",
@@ -563,7 +567,13 @@ class Communication extends React.Component{
                 });
             }else
             */
+           console.log(record)
             if(record.logType==="email"){
+              if(record.type === "secure"){
+                this.setState({
+                  editSecure : true
+                  });
+              }
               this.setState({
                 editEmail : true,
                   data : record ,
@@ -776,101 +786,7 @@ class Communication extends React.Component{
               <Table columns={columns} dataSource={this.state.tableData}  />
             </Card>
             <Modal
-                title={this.state.editSecure ? "Edit Log" : "Send a secure message"}
-                visible={this.state.editSecure}
-                onOk={this.handleSecure}
-                onCancel={()=>this.handleCancel("secure")}
-                footer={[
-                  <Button  onClick={()=>this.handleCancel("secure")}>
-                    Cancel
-                  </Button>,
-                  <Button type="primary" disabled = {this.state.disable} onClick={this.handleSecure}>
-                    Update Log
-                  </Button>,
-                ]}
-                >
-                  {
-                      this.state.editEmail ?
-                      <Form 
-                      id='myForm'
-                      className="form"
-                      ref={ form => this.messageForm = form }>
-                       <Row>
-                           
-                           <Col>
-                           <Form.Group>
-                             <Form.Label>Matter</Form.Label>
-                              <Form.Control 
-                                  as="select"
-                                  name="matter" 
-                                  defaultValue = {this.state.data.matter}
-                                  onChange={handleChange}>
-                                  <option>Select a matter</option>
-                                  {this.state.option}
-                              </Form.Control>
-                       </Form.Group>
-                           </Col>
-                       </Row>
-                     
-                      <Row>
-                          <Col >
-                          <Form.Group>
-                               <Form.Label>From</Form.Label>
-                               <Form.Control 
-                                   as="select"
-                                   name="from" 
-                                   defaultValue = {this.state.data.from}
-                                   onChange={handleChange}>
-                                   <option>{name}</option>    
-                               
-                               </Form.Control>
-                               </Form.Group>
-                          </Col>
-                          
-                          <Col>
-                          <Form.Group >
-                               <Form.Label>To</Form.Label>
-                               <Form.Control 
-                                   as="select"
-                                   name="to" 
-                                   defaultValue = {this.state.data.to}
-                                   onChange={handleChange}>
-                                   <option>Select a contact</option>
-                                   {this.state.contacts}
-                               </Form.Control>
-                               </Form.Group>
-                          </Col>
-                      </Row>
-                       
-                      <Form.Group controlId="subject">
-                               <Form.Label>Subject</Form.Label>
-                               <Form.Control 
-                               name="subject" 
-                               rows="3"
-                               defaultValue = {this.state.data.subject}
-                               onChange={handleChange} />
-                           </Form.Group>  
-                   
-                      
-                           <Form.Group controlId="body">
-                               <Form.Label>Body</Form.Label>
-                               <Form.Control 
-                               name="body" 
-                               as="textarea" 
-                               rows="3"
-                               defaultValue = {this.state.data.body}
-                               onChange={handleChange} />
-                           </Form.Group>
-                      
-                   
-                     </Form>    
-                  
-                      :
-                      null
-                  }
-            </Modal>
-            <Modal
-                title={this.state.editSecure ? "Edit Secure message" : "New Secure Message"}
+                title={this.state.secure ? "Edit Secure message" : "New Secure Message"}
                 visible={this.state.secure}
                 onOk={this.handleSecure}
                 onCancel={()=>this.handleCancel("secure")}
@@ -1010,7 +926,9 @@ class Communication extends React.Component{
                                    defaultValue = {this.state.data.from}
                                    onChange={handleChange}>
                                    <option>Select a contact</option>    
-                               {this.state.contacts}
+                                   {
+                                this.state.editSecure ? <option>{name}</option>:  this.state.contacts
+                                   } 
                                </Form.Control>
                                </Form.Group>
                           </Col>
@@ -1106,7 +1024,7 @@ class Communication extends React.Component{
                            
                            <Col>
                            <Form.Group>
-                       <Form.Label>Matter</Form.Label>
+                             <Form.Label>Matter</Form.Label>
                               <Form.Control 
                                   as="select"
                                   name="matter" 
@@ -1128,8 +1046,12 @@ class Communication extends React.Component{
                                    name="from" 
                                    placeholder="Select a contact"
                                    onChange={handleChange}>
-                              <option>Select a contact</option>    
-                             {this.state.contacts}
+                              <option>Select a contact</option>
+                              {
+                                this.state.contacts
+                              } 
+                       
+                            
                                </Form.Control>
                                </Form.Group>
                           </Col>

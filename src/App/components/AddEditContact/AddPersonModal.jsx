@@ -94,7 +94,7 @@ class newPerson extends React.Component {
     options = response.data.data.map((value, id) => {
       return <option key={id}>{value.name}</option>;
     });
-    feilds = await api.get("/user/view/5eecb08eaec6f1001765f8d5");
+    feilds = await api.get("/user/view/"+ this.props.userId);
 
     customFields = feilds.data.data.customFields.map((value, index) => {
       return (

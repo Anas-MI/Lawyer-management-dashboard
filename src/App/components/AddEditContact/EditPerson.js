@@ -109,7 +109,7 @@ class editPerson extends React.Component {
    api.get(
       '/contact/view/' + this.props.location.state._id
     ).then((editData)=>{
-  
+      console.log(editData)
       const preForm = <div>
          <Form.Group controlId="Prefix">
                       <Form.Label>Prefix</Form.Label>
