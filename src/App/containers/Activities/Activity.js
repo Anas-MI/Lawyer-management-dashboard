@@ -790,14 +790,15 @@ class Activity extends React.Component {
               'justify-content': 'space-between',
             }}
           >
-            <div className="mb-2">
+            <div className="mb-2" style={{"margin-top": "1rem"}}>
               <Button onClick={() => setTableData('all')}>All</Button>
               <Button onClick={() => setTableData('time')}>Time</Button>
               <Button onClick={() => setTableData('expense')}>Expense</Button>
             </div>
             <Form className="pt-0">
-              <Form.Row className="ml-1" style={{"justifyContent" : "center"}}>
-                <Form.Group controlId="From" className="mr-2">
+              <Form.Row className="ml-1 date-activity-res">
+                <Form.Group controlId="From" className="mr-2"  style={{ "display": "flex", "flex-direction": "column"}}>
+                  <Form.Label style={{ marginBottom : "0px" }}>From</Form.Label>
                   <Form.Control
                     size="sm"
                     type="date"
@@ -807,7 +808,8 @@ class Activity extends React.Component {
                   />
                 </Form.Group>
                 
-                <Form.Group controlId="To" className="mx-2">
+                <Form.Group controlId="To" style={{ "display": "flex", "flex-direction": "column"}}>
+                  <Form.Label style={{ marginBottom : "0px" }}>To</Form.Label>
                   <Form.Control
                     size="sm"
                     type="date"
@@ -816,7 +818,7 @@ class Activity extends React.Component {
                     style={{ width: '175px' }}
                   />
                 </Form.Group>
-                <Form.Group controlId="sorting">
+                <Form.Group controlId="sorting" className="short-activity-botton">
                   <Form.Control
                     size="sm"
                     as="select"
@@ -825,7 +827,6 @@ class Activity extends React.Component {
                     style={{ height: 'fit-content', padding: '4px' }}
                   >
                     <option>Sort</option>
-
                     <option>Today</option>
                     <option>This Week</option>
                     <option>This month</option>
@@ -1089,8 +1090,6 @@ class Activity extends React.Component {
                 /><br></br>
                     </Col>
                 </Row>
-        
-              
         </Form>
 
           
