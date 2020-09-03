@@ -352,7 +352,7 @@ const ContactsManage = (props) => {
             <div className="title-header-name">
               <h5>Contacts</h5>
             </div>
-            <div className="d-flex">
+            <div className="d-flex extra-iteam-div">
                 <button
                     className="btn  btn-outline-primary   btn-sm"
                     onClick={exportPDF}

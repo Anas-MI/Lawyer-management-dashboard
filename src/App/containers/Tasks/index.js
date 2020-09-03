@@ -557,7 +557,7 @@ class Tasks extends React.Component {
             <div className="title-header-name">
               <h5>Task</h5>
             </div>
-            <div className="d-flex">
+            <div className="d-flex extra-iteam-div">
                 <button
                     className="btn  btn-outline-primary   btn-sm"
                     onClick={this.exportPDF}

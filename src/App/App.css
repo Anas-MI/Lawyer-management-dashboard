@@ -960,14 +960,30 @@ label {
   background: #fff;
   padding: 5px 9px;
   justify-content: space-between;
+  border: 1px solid #f0f0f0;
 }
 .title-header-name{
-  padding: 5px 0px;
+  padding: 5px 10px 5px 0px;
+}
+
+.title-header-name h5{
+  font-weight: 700;
+}
+.extra-iteam-div{
+  justify-content: space-evenly;
+}
+.excel-button {
+  width: 95%;
+  height: 95%;
 }
 
 @media (max-width: 768px) {
   #about img {
     margin: 50px 0;
+  }
+
+  .title-header-name{
+    margin: auto;
   }
 
   #footer .ftr-set h3 {
@@ -1001,4 +1017,22 @@ label {
     padding-right: 5px !important;
     padding-left: 0px !important;
   }
+  .btn-sm {
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 390px) { 
+  .extra-iteam-div{
+    flex-direction: column;
+  }
+  .excel-button {
+    width: 97%;
+  }
+}
+@media only screen and (max-width: 660px) and (min-width: 570px)  {
+.title-component-header{
+  flex-direction: column;
+}
 }

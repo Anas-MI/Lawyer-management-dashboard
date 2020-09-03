@@ -671,44 +671,42 @@ class Communication extends React.Component{
           }
         return <Spin size = "large" spinning={this.state.loading}>
           <div className='p-2 '>
-            
-            <br></br>
-            <br></br>
-            
-            <Card title="Communication" bodyStyle={{"padding": "14px 10px 0px 10px"}}
-            extra={
-              <div className="d-flex justify-content-center">
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={exportPDF}
-              >
-                  Export to Pdf
-              </button>
-              
-              <ExportExcel dataSource={this.state.tableData || []} />
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={()=>this.showModal("secure")}
-              >
-                New secure message
-              </button>
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={()=>this.showModal("email")}
-              >
-                  New Email Log
-              </button>
-              
-              <button
-                  className="ml-auto btn  btn-outline-primary   btn-sm"
-                  onClick={()=>this.showModal("phone")}
-              >
-                  New Phone Log
-              </button>
-          
+          <div className="d-flex mb-2 title-component-header">
+              <div className="title-header-name">
+                <h5>Communication</h5>
               </div>
-           
-              }>
+              <div className="d-flex extra-iteam-div">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                >
+                    Export to PDF
+                </button>
+                
+                <ExportExcel dataSource={this.state.tableData || []} />
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={()=>this.showModal("secure")}
+                >
+                  New secure message
+                </button>
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={()=>this.showModal("email")}
+                >
+                    New Email Log
+                </button>
+                
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={()=>this.showModal("phone")}
+                >
+                    New Phone Log
+                </button>
+              </div>
+          </div>
+            
+            <Card bodyStyle={{"padding": "14px 10px 0px 10px"}}>
                 <div style={{"display": "flex", "flex-wrap": "wrap", "justify-content": "space-between" }}>
                   <div className="mb-2">
                   <Button  onClick={()=>setTableData("all")}>All</Button>
