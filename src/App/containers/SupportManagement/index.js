@@ -94,6 +94,7 @@ const Support = (props) =>{
           </Card.Header>
           <Card.Body>
              <Table 
+             className="table-responsive"
              columns={columns} 
              dataSource={Data} 
              onRow={(record, rowIndex) => {
