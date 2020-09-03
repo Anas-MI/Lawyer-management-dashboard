@@ -976,6 +976,13 @@ label {
   width: 95%;
   height: 95%;
 }
+.ant-table-thead > tr > th {
+  vertical-align: baseline;
+  min-width: 111px;
+}
+.ant-table-filter-trigger-container{
+  margin-bottom: 20px;
+}
 
 @media (max-width: 768px) {
   #about img {
