@@ -33,6 +33,7 @@ class Communication extends React.Component{
             data : {
                 subject : "",
                 body : "",
+                to : "",
                 from : user.token.user._id
             },
             loading : true,
@@ -105,6 +106,7 @@ class Communication extends React.Component{
           const temp = {
             key: index,
             logType: val.logType,
+            type: val.logType,
             id: val._id,
             addTime : val.addTime ? val.addTime : "-",
             time: val.time ? val.time : '',
@@ -118,7 +120,12 @@ class Communication extends React.Component{
             body: val.body,
             date: val.date ? val.date.substring(0,10) : "-"      
           };
-          if (val.logType === 'email') {
+          if (val.logType === 'email' || val.logType === "secure") {
+            emailData.push(temp);
+          }
+          if ( val.logType === "secure") {
+            temp.from = name
+            temp.logType = "email"
             emailData.push(temp);
           }
           if (val.logType === 'phone') {
@@ -284,7 +291,9 @@ class Communication extends React.Component{
 
       handleSecure = () => {    
         notification.destroy()
-        
+        if(this.state.data.to == ""){
+          notification.error({message : "Please add a contact to send message"})
+        }else
         if(this.state.data.subject == ""){
             notification.error({message : "Please add a subject"})
         }else
@@ -298,7 +307,7 @@ class Communication extends React.Component{
             if(this.state.editSecure){
 
               let data = this.state.data
-              data.logType = "email"
+              data.logType = "secure"
               data.userId = this.props.userId;
             console.log(data)
             api
@@ -326,7 +335,7 @@ class Communication extends React.Component{
                     billable: true,
                     nonBillable: false,
                     date: '',
-
+                    to : "",
                     qty: '1.0',
                     rate: '',
                     invoice: 'Unbilled',
@@ -342,40 +351,78 @@ class Communication extends React.Component{
 
             }else{
               let data = this.state.data
-              data.logType = "email"
+              data.logType = "secure"
               data.userId = this.props.userId;
+              data.time = new Date().getHours() + ":" + new Date().getMinutes()
+              data.from = user.token.user._id
               console.log(data)
 
               api.get(`/contact/view/${data.to}`).then((res)=>{
-                data.emailAddress = res.data.data.emailAddress[0]
-                data.number = res.data.data.number[0]
+                console.log(res)
+                let emailAddress = res.data.data.emailAddress[0].emailAddress ? res.data.data.emailAddress[0].emailAddress : ""
+                let number = res.data.data.phone[0].phone ? res.data.data.phone[0].phone : ""
+                console.log(data)
+                let email = {
+                  to: emailAddress,
+                  subject : data.subject,
+                  text : data.body,
+
+                }
+                let sms = {
+                  number : number,
+                  message : data.body
+                }
+                console.log(data)
+                api.post(`/communication/sendsms`, sms ).then((smsres)=>{
+                  console.log(smsres)
+                  notification.success({
+                    message : "SMS Sent"
+                  })
                 
+                }).catch((err)=>{
+                  console.log(err)
+                  notification.error({message : "Failed to send the sms"})
+                })
+
+                api.post(`/communication/sendemail`, email ).then((email)=>{
+                  console.log(email)
+                  notification.success({
+                    message : "Email Sent"
+                  })
+                  api
+                  .post('/communication/create', data)
+                  .then((res) => {
+                    console.log(res)              
+                    this.componentDidMount()
+                    notification.success({ message: 'Log Added !' });
+                  })
+                  .catch((err) => {
+                    notification.error({ message: 'Failed' });
+                  }).then(()=>{
+                    this.setState({
+                      disable : false,
+                      secure : false,
+                      editSecure : false
+                    })
+                    ReactDOM.findDOMNode(this.messageForm).reset()
+                  })
+                }).catch((err)=>{
+                  console.log(err)
+                  notification.error({message : "Failed to send the email"})
+                })
+
+               
+         
               })
              /* 
-            api
-              .post('/communication/create', data)
-              .then((res) => {
-                console.log(res)
-                this.setState({
-                  disable : false
-                })
-                this.componentDidMount()
-                notification.success({ message: 'Log Added !' });
-              })
-              .catch((err) => {
-                notification.error({ message: 'Failed' });
-              }).then(()=>{
-                
-                ReactDOM.findDOMNode(this.messageForm).reset()
-              })
-             */
+                */
   
             }
         }   
       };
     
       handleCancel = type => {
-        ReactDOM.findDOMNode(this.messageForm).reset()
+       // ReactDOM.findDOMNode(this.messageForm).reset()
         matterkey = null
         fromKey = null
         toKey = null
@@ -387,6 +434,7 @@ class Communication extends React.Component{
               data : {
                 subject : "",
                 body : "",
+                to: "",
                 from : name
             },
        
@@ -402,6 +450,7 @@ class Communication extends React.Component{
                 data : {
                   subject : "",
                   body : "",
+                  to : "",
                   from : name
               },
          
@@ -417,6 +466,7 @@ class Communication extends React.Component{
                 data : {
                   subject : "",
                   body : "",
+                  to : "",
                   from : name
               },
               });
@@ -505,7 +555,14 @@ class Communication extends React.Component{
         console.log(this.state);
       };
         const handleEdit = record => {
-            
+          /*
+            if(record.type==="secure"){
+              this.setState({
+                editSecure : true,
+                  data : record ,
+                });
+            }else
+            */
             if(record.logType==="email"){
               this.setState({
                 editEmail : true,
@@ -615,7 +672,7 @@ class Communication extends React.Component{
                   render:(_,record)=>{
                       return (
                         <Popconfirm
-                          title="Are you sure delete this task?"
+                          title="Are you sure delete this Log?"
                           onConfirm={()=>handleDelete(record)}
                           okText="Yes"
                           cancelText="No"
