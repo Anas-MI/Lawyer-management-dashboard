@@ -206,28 +206,27 @@ const Accounts = () => {
     return(
         <>
         <Spin size = "large" spinning={Loading}>
-          <Card
-           title = "Accounts"
-           extra={
-            <div className="d-flex justify-content-center">
+          <div className="d-flex mb-2 title-component-header">
+              <div className="title-header-name">
+                <h5>Accounts</h5>
+              </div>
+              <div className="d-flex extra-iteam-div">
                   <button
-                      className="ml-auto btn  btn-outline-primary   btn-sm"
+                      className="btn  btn-outline-primary   btn-sm"
                       onClick={exportPDF}
                   >
                       Export to Pdf
                   </button>
                   <ExportExcel dataSource={state || []} />
                   <button
-                      className="ml-auto btn  btn-outline-primary   btn-sm"
+                      className="btn  btn-outline-primary   btn-sm"
                       onClick={() => { history.push('/add/accounts')}}
                   >
                       Add Account
                   </button>
-        
-            </div>
-         
-        }
-           >
+              </div>
+          </div>
+          <Card>
              <Table 
              className = "table-responsive"
              columns={columns} 

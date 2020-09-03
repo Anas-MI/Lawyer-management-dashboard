@@ -66,6 +66,7 @@ const PersonalTarget = () => {
             })
         }else{
             setdisabled(true)
+            console.log(state)
             api.post(`/user/update/${userId}`, state).then((res)=>{
                 console.log(res)
                 setdisabled(false)

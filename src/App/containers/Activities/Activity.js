@@ -752,39 +752,36 @@ class Activity extends React.Component {
     };
     return (
       <Spin size = "large" spinning={this.state.loading}>
-        <div className="p-2 ">
-        <br></br>
-        <br></br>
+        <div>
+        <div className="d-flex mb-2 title-component-header">
+            <div className="title-header-name">
+              <h5>Activities</h5>
+            </div>
+            <div className="d-flex extra-iteam-div">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                >
+                    Export to Pdf
+                </button>
+                <ExportExcel dataSource={this.state.tableData || []} />
+                <button
+                    className=" btn  btn-outline-primary   btn-sm"
+                    onClick={() => this.showModal('time')}
+                >
+                    New Time Entry
+                </button>
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={() => this.showModal('expense')}
+                >
+                    New Expense Entry
+                </button>
+            </div> 
+          </div>
 
         <Card
-          title="Activities"
           bodyStyle={{ padding: '14px 10px 0px 10px' }}
-          extra={
-            <div className="d-flex justify-content-center">
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={exportPDF}
-            >
-                Export to Pdf
-            </button>
-            <ExportExcel dataSource={this.state.tableData || []} />
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={() => this.showModal('time')}
-            >
-                New Time Entry
-            </button>
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={() => this.showModal('expense')}
-            >
-                New Expense Entry
-            </button>
-        
-            </div>
-         
-        }
-         
         >
           <div
             style={{
@@ -799,7 +796,7 @@ class Activity extends React.Component {
               <Button onClick={() => setTableData('expense')}>Expense</Button>
             </div>
             <Form className="pt-0">
-              <Form.Row className="ml-1">
+              <Form.Row className="ml-1" style={{"justifyContent" : "center"}}>
                 <Form.Group controlId="From" className="mr-2">
                   <Form.Control
                     size="sm"
@@ -808,8 +805,8 @@ class Activity extends React.Component {
                     onChange={handleCustomSorting}
                     style={{ width: '175px' }}
                   />
-                </Form.Group>{' '}
-                -
+                </Form.Group>
+                
                 <Form.Group controlId="To" className="mx-2">
                   <Form.Control
                     size="sm"

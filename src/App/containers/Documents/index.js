@@ -1828,6 +1828,7 @@ const deleteTemplate = async (docId) => {
               uploadTempDoc()
             }
              <Table 
+             className="table-responsive"
              onRow={(record, rowIndex) => {
               return {
                 onDoubleClick: () => { props.history.push('/documents/view' , record)}, // double click row
@@ -1837,6 +1838,7 @@ const deleteTemplate = async (docId) => {
              columns={columnsForFolder} />
 
             <Table 
+            className="table-responsive"
             dataSource={
               dataSrc.length === 0 && value === '' ? docs : dataSrc
             }
@@ -1844,11 +1846,11 @@ const deleteTemplate = async (docId) => {
           </TabPane>
           <TabPane tab="Category" key="2">
             {CatagoryForm()}
-           <Table dataSource={CatagoryTable} columns={columnsForCatagory} />
+           <Table className="table-responsive" dataSource={CatagoryTable} columns={columnsForCatagory} />
           </TabPane>
           <TabPane tab="Template" key="3">
             {uploadTemplate()}
-            <Table dataSource={TemplateTable} columns={columnsForTemplate} />
+            <Table className="table-responsive" dataSource={TemplateTable} columns={columnsForTemplate} />
           </TabPane>
       </Tabs>
      

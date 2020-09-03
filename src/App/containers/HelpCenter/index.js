@@ -93,7 +93,7 @@ export default function Index() {
           </span>
         }
       >
-        <Table dataSource={tickets} columns={columns} />
+        <Table className="table-responsive" dataSource={tickets} columns={columns} />
       </Card>
     </div>
   );
