@@ -403,34 +403,33 @@ class billing extends React.Component {
     return (
       <Spin size= "large" spinning = {this.state.loading}>
         <div className="p-2 ">
-        <Card
-          title="Billing"
-          extra={
-            <div className="d-flex justify-content-center">
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={exportPDF}
-            >
-                Export to Pdf
-            </button>
-            <ExportExcel dataSource={this.state.tableData || []} />
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={() => this.handelBills('record')}
-            >
-                Record Payment
-            </button>
-            <button
-                className="ml-auto btn  btn-outline-primary   btn-sm"
-                onClick={() => this.props.history.push('/create/bills')}
-            >
-                New Bills
-            </button>
-             
-        
+          <div className="d-flex mb-2 title-component-header">
+              <div className="title-header-name">
+                <h5>Billing</h5>
+              </div>
+              <div className="d-flex extra-iteam-div">
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={exportPDF}
+                >
+                    Export to Pdf
+                </button>
+                <ExportExcel dataSource={this.state.tableData || []} />
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={() => this.handelBills('record')}
+                >
+                    Record Payment
+                </button>
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={() => this.props.history.push('/create/bills')}
+                >
+                    New Bills
+                </button>
+            </div> 
             </div>
-          }
-         
+        <Card
         >
           <Tabs defaultActiveKey="4" onChange={callback}>
          
