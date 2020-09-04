@@ -9,7 +9,6 @@ class DynamicFeilds extends React.Component {
   render() {
     return (
       <div>
-        {console.log('data fro record', this.props.record)}
         {this.props.inputList.map((val, idx) => {
           let inputId = `input-${idx}`;
           const jsx = this.props.editMode ? (

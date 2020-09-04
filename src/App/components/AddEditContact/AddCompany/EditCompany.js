@@ -262,44 +262,35 @@ class editCompany extends React.Component {
     const handleMultipleChange = (e) => {
       e.persist();
       let list = this.state;
-      console.log(e)
-      const { name, id, value, tagName, selectedIndex } = e.target;
-      if(name == "employees"){
-       if(selectedIndex != 0){
-        list.employees[id] = contacts[selectedIndex - 1]._id
-       }
-      }else{
-        if (tagName === 'SELECT' && name != "employees") {
-          name === 'emailAddress'
-            ? (list[name][id][`emailType`] = value)
-            : (list[name][id][`${name}Type`] = value);
-        } else {
-          list[name][id][name] = value;
-        }
+      const { name, id, value, tagName } = e.target;
+      if (tagName === 'SELECT') {
+        name === 'emailAddress'
+          ? (list[name][id][`emailType`] = value)
+          : (list[name][id][`${name}Type`] = value);
+      } else {
+        list[name][id][name] = value;
       }
-     
+      console.log(list)
       this.setState(list);
-      console.log(this.state)
-      if (tagName !== 'SELECT') {
-        switch (name) {
-          case 'emailAddress':
-            errors.Email[id] = validEmailRegex.test(value)
-              ? ''
-              : 'Email is not valid!';
-            break;
+        if (tagName !== 'SELECT') {
+          switch (name) {
+            case 'emailAddress':
+              errors.Email[id] = validEmailRegex.test(value)
+                ? ''
+                : 'Email is not valid!';
+              break;
+            case 'phone':
+              errors.phone[id] =
+                value.length < 10 || value.length > 13
+                  ? 'phone number must be between 10 and 13 digits'
+                  : '';
+              break;
   
-          case 'phone':
-            errors.phone[id] =
-              value.length < 10 || value.length > 13
-                ? 'phone number must be between 10 and 13 digits'
-                : '';
-            break;
-  
-          default:
-            break;
-        }
+            default:
+              break;
+          }
       }
-      
+        
     };
 
     const handleImageChange = (e) => {
