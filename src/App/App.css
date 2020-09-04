@@ -992,6 +992,9 @@ label {
   #about img {
     margin: 50px 0;
   }
+  .matter-res-date{
+    flex-direction: column;
+  }
 
   .title-header-name{
     margin: auto;
