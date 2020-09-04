@@ -156,6 +156,7 @@ const Documents = (props) => {
   const getDocuments = async () => {
     let tempDocs = [];
     await api.get('/document/viewforcontact/' + userId + '/' + props.id).then((res) => {
+      console.log(res)
       res.data.data.map((item, index) => {
         tempDocs = [
           ...tempDocs,

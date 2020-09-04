@@ -132,7 +132,7 @@ function CompanyView(props) {
       const mail = response.data.client.emailAddress.map((value, index) => {
         return (
           <div className="table-span-light" key={index}>
-            <p>{value}</p>
+            <p>{value.emailAddress}</p>
           </div>
         );
       });
