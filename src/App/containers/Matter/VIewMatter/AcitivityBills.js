@@ -617,7 +617,7 @@ class Activity extends React.Component{
             </Card>
             
             <Card bodyStyle={{"padding": "0px"}} className="overflow-auto  mb-3" title="Time Entries"> 
-              <Table columns={columnsForTime} dataSource={this.state.timeData}  />
+              <Table className="table-responsive" columns={columnsForTime} dataSource={this.state.timeData}  />
             </Card>
             <div className="form-add mb-4">
                 <span onClick={() => this.setState({ timeModal: true })}>
@@ -626,7 +626,7 @@ class Activity extends React.Component{
               </div>
 
             <Card bodyStyle={{"padding": "0px"}} className="overflow-auto" title="Expense Entries">                
-              <Table columns={columnsForExpense} dataSource={this.state.expenseData}  />
+              <Table className="table-responsive" columns={columnsForExpense} dataSource={this.state.expenseData}  />
              </Card><br></br>
              <div className="form-add mb-4">
                 <span onClick={() => this.setState({ expenseModal: true })}>

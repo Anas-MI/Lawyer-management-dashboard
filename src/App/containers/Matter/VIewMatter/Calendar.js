@@ -351,7 +351,7 @@ export default function Calendar(props) {
         }
       >
         {modalForm()}
-        <Table dataSource={calendar} columns={columns} />
+        <Table className="table-responsive"  dataSource={calendar} columns={columns} />
       </Card>
     </div>
   

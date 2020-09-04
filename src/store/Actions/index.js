@@ -41,6 +41,7 @@ import {
 } from "../ActionTypes";
 
 import api from "../../resources/api";
+import { notification } from "antd";
 
 //Auth
 export const setLoginSuccess = (payload) => ({
@@ -113,6 +114,17 @@ export const loginUser = (payload, cb) => {
     api
       .post("/auth/login", payload)
       .then((res) => {
+        console.log(res)
+        let created_at = new Date(res.data.token.user.created_at)
+        let now = new Date()
+        let expiry_date = created_at
+        expiry_date.setDate(created_at.getDate() + 7)
+    
+        //expiry_date.setMonth(created_at.getMonth())
+
+        console.log(expiry_date)
+        console.log(now)
+        console.log(created_at)
         if (payload.type === "user") {
           if (res.data.token.user.admin) {
             return cb({
@@ -129,17 +141,27 @@ export const loginUser = (payload, cb) => {
               message: "E-Mail not Verified",
             });
           }
+          if(now > expiry_date ){
+            return cb({
+              message: "Your trails period is expired.",
+            });
+            
+          }  
         } else {
+    
           if (!res.data.token.user.admin) {
             return cb({
               message: "Only For Admin",
             });
           }
         }
-        dispatch(setLoginSuccess(res.data));
-        cb(null, {
-          message: "Logged In",
-        });
+        
+          dispatch(setLoginSuccess(res.data));
+          cb(null, {
+            message: "Logged In",
+          });
+      
+        
       })
       .catch((err) => {
         console.log(err);

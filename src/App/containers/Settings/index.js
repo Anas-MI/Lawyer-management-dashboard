@@ -21,6 +21,8 @@ let errors = {
     state: "",
     zipCode: "",
   };
+
+
 const validEmailRegex = RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -33,6 +35,7 @@ class customFeilds extends React.Component {
       this.state = {
         modal1Visible: false,
         modal2Visible: false,
+        disable : false,
         Data : {
             name: '',
             emailAddress : '',
@@ -56,6 +59,7 @@ class customFeilds extends React.Component {
   }
 
   componentDidMount(){
+    
       api.get('/user/view/' + this.props.userId).then((res)=>{
         console.log(res)
         userData = res.data.data
@@ -79,7 +83,8 @@ class customFeilds extends React.Component {
             userData.account.address.type = "Work"
         }
         this.setState({
-            Data : userData.account
+            Data : userData.account,
+            prevState : userData.account
         })
         this.setState({userData})
       })
@@ -93,7 +98,7 @@ class customFeilds extends React.Component {
     const HandleChange=(e)=>{
         e.persist()
         const { name, value } = e.target
-        let newstate=this.state
+        let newstate = this.state
         
         newstate.Data[e.target.name] = e.target.value
         this.setState({Data : newstate.Data})
@@ -189,18 +194,37 @@ class customFeilds extends React.Component {
             return valid;
           };
           if (validateForm()) {
-            this.setState({
-              disable : true
-            })
-            userData.account = this.state.Data
-            api.post('/user/update/' + this.props.userId, userData).then((res)=>{
-                console.log(res)
-                
-                notification.success({message : "User Data saved."})
-            }).catch((err) => {
-                console.log(err)
-                notification.error({message : "Failed to update user details"})
-            })
+            console.log(this.state.userData.account)
+            console.log(this.state.Data)
+            /*
+            if(JSON.stringify(this.state.userData.account) === JSON.stringify(this.state.Data)){
+                notification.warning({message : "Please provide new details"})
+            }
+            */
+            if(this.state.Data.name === ""){
+                notification.warning({
+                    message : "Please provide a name"
+                })
+            }
+            else{
+                this.setState({
+                    disable : true
+                  })
+                  userData.account = this.state.Data
+                  api.post('/user/update/' + this.props.userId, userData).then((res)=>{
+                      console.log(res)
+                      this.setState({
+                        disable : false
+                      })
+                      notification.success({message : "User Data saved."})
+                  }).catch((err) => {
+                      console.log(err)
+                      this.setState({
+                        disable : false
+                      })
+                      notification.error({message : "Failed to update user details"})
+                  })
+            }
         }else{
             notification.warning({message : "Please provide all the details correctly."})
         }
@@ -709,7 +733,7 @@ class customFeilds extends React.Component {
                     </Form>
                     <br></br>
                     <div style={{marginLeft : "1%"}}>
-                     <Button onClick={handleSubmit} varient = "success">SAVE NEW INFORMATION</Button>
+                     <Button onClick={handleSubmit} disabled={this.state.disable} varient = "success">SAVE NEW INFORMATION</Button>
                     </div>
 
               </TabPane>

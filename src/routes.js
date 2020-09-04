@@ -253,6 +253,7 @@ const routes = [
     name: 'Default',
     component: DashboardDefault,
   },
+  
   { path: '/tasks', exact: true, name: 'Tasks', component: tasks },
   { path: '/tasks/view/list', exact: true, name: 'View List', component: list },
   { path: '/profile', exact: true, name: 'Profile', component: Profile },

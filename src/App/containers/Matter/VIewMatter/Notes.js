@@ -294,7 +294,7 @@ const Notes = (props) => {
                  
                 }
             >
-                <Table dataSource={tableData}  columns={columnsNotes}/>
+                <Table className="table-responsive"  dataSource={tableData}  columns={columnsNotes}/>
             </Card>
             <Modal
                 title="New Note"
