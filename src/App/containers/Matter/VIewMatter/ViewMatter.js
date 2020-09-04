@@ -247,31 +247,17 @@ function CompanyView(props) {
     });
   };
 
+  const handleCreateBills = (e) =>{
+    console.log(props)
+    props.history.push('/create/bills')
+  }
+
+  const handleRecordPayment = ( ) => {
+    props.history.push('/manage/billing/record')
+  }
+
   //data source for bills section
-  const dataForBills = [
-    {
-      key: '1',
-      lastSeen: '2m ago',
-      status: 'paid',
-      dueDate: '20/10/20',
-      id: '664',
-      client: 'abc name',
-      matter: 'dummy matter',
-      issueDate: '10/9/20',
-      Balance: '1000',
-    },
-    {
-      key: '1',
-      lastSeen: '2m ago',
-      status: 'unpaid',
-      dueDate: '20/10/20',
-      id: '654',
-      client: 'abcd name',
-      matter: 'dummy matter 2',
-      issueDate: '10/9/20',
-      Balance: '800',
-    },
-  ];
+  
 
   const handleBills = () => {
     console.log(props.location.state.id);
@@ -474,7 +460,7 @@ function CompanyView(props) {
           <TaskFuntions id={props.location.state.id}></TaskFuntions>
         </TabPane>
         <TabPane tab="Bills" key="9">
-          <Bills dataSource={dataForBills} />
+          <Bills handleRecordPayment={handleRecordPayment} handleBills = {handleCreateBills} />
         </TabPane>
       </Tabs>
     </div>
