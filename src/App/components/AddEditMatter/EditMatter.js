@@ -292,7 +292,7 @@ class AddEditMatter extends React.Component{
     return (
       <div className='form-width'>
       <div className="form-header-container mb-4">
-            <h3 className="form-header-text">Add New Matter</h3>
+            <h3 className="form-header-text">Edit Matter</h3>
       </div>
       <Card title="Matter Information" className="mb-4">
         <Form className="form-details" >
@@ -326,9 +326,9 @@ class AddEditMatter extends React.Component{
             </div>
           </Form>
       </Card>
-      <Card title="Custom Feilds"  className="mb-4">
+      <Card title="Custom Fields"  className="mb-4">
       <Form className="form-details">
-      <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feilds</Button></p>
+      <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Fields</Button></p>
 
       {       
                   this.state.customFields.map((val)=>{
