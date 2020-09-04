@@ -151,7 +151,7 @@ export const loginUser = (payload, cb) => {
         }
         if(now > expiry_date ){
           return cb({
-            message: "Subscription expired",
+            message: "Your trails period is expired.",
           });
           
         }else{

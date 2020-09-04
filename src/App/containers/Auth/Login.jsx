@@ -93,7 +93,7 @@ const Login = (props) => {
           if (err) {
             setDisplay(true)
             console.log(err)
-            if(err.message === "Subscription expired"){
+            if(err.message === "Your trails period is expired."){
               props.history.push('/plans/subscription')
             }
             notification.error(err);
