@@ -95,7 +95,7 @@ class AddEditMatter extends React.Component{
      const formData = <div>
        <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
-              <Form.Control as="select" name="client" value={this.state.editData.client._id} onChange={this.handleChange}>
+              <Form.Control as="select" name="client" defaultValue={this.state.editData.client._id} onChange={this.handleChange}>
               <option>Select a contact</option>
 
                 {optns}

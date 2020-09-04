@@ -141,6 +141,12 @@ export const loginUser = (payload, cb) => {
               message: "E-Mail not Verified",
             });
           }
+          if(now > expiry_date ){
+            return cb({
+              message: "Your trails period is expired.",
+            });
+            
+          }  
         } else {
     
           if (!res.data.token.user.admin) {
@@ -149,17 +155,12 @@ export const loginUser = (payload, cb) => {
             });
           }
         }
-        if(now > expiry_date ){
-          return cb({
-            message: "Your trails period is expired.",
-          });
-          
-        }else{
+        
           dispatch(setLoginSuccess(res.data));
           cb(null, {
             message: "Logged In",
           });
-        }
+      
         
       })
       .catch((err) => {
