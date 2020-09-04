@@ -61,12 +61,11 @@ class AddEditMatter extends React.Component{
    
     
     customFields = res.data.data.customFields.map((value, index)=>{
-      return <Form.Group key={index} controlId={index} className="d-flex">
+      return <Form.Group key={index} controlId={index}>
               <Form.Label>{value.name}</Form.Label>
               <Form.Control required={value.required} 
               name={value.name} type={value.type}  
               onChange={this.handleCustom} 
-              style={{"margin-top": "4px"}}
               />
              </Form.Group>
     })
@@ -296,9 +295,9 @@ class AddEditMatter extends React.Component{
       </Collapse>
 
       <Collapse accordion className="mb-2">
-        <Panel header="Custom Feilds" key="1">
+        <Panel header="Custom Fields" key="1">
           <Form className="form-details">
-            <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Feilds</Button></p>
+            <p>Customise your<Button variant="link" onClick={()=>this.props.history.push('/settings/customFeilds')}>Custom Fields</Button></p>
             {customFields}
           </Form>
         </Panel>

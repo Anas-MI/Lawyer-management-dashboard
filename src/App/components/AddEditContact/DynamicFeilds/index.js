@@ -14,7 +14,7 @@ class DynamicFeilds extends React.Component {
           const jsx = this.props.editMode ? (
             <div key={idx}>
               <Form.Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId={idx}>
                     <Form.Label>Type</Form.Label>
                     <Form.Control
@@ -29,7 +29,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                <Col>
+                <Col sm>
                   <Form.Group controlId={idx}>
                     <Form.Label>{this.props.text}</Form.Label>
                     <Form.Control
@@ -56,7 +56,7 @@ class DynamicFeilds extends React.Component {
           ) : (
             <div key={idx}>
               <Form.Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId={idx}>
                     <Form.Label>Type</Form.Label>
                     <Form.Control
@@ -70,7 +70,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                <Col>
+                <Col sm>
                   <Form.Group controlId={idx}>
                     <Form.Label>{this.props.text}</Form.Label>
                     <Form.Control

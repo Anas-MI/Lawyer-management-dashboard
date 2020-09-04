@@ -1056,6 +1056,9 @@ label {
   .excel-button {
     width: 97%;
   }
+  .matter-amount span {
+    font-size: 17px;
+  }
 }
 @media only screen and (max-width: 660px) and (min-width: 570px)  {
 .title-component-header{
