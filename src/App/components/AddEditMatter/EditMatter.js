@@ -63,14 +63,13 @@ class AddEditMatter extends React.Component{
   
       res.data.data.customFields.map((value, index)=>{
           customFeilds.push(<Col md="6">
-          <Form.Group key={index} controlId={index} className="d-flex">
+          <Form.Group key={index} controlId={index}>
             <Form.Label>{value.name}</Form.Label>
             <Form.Control
               name={value.name}
               type={value.type}
               defaultValue={this.state.editData.customFields.length == 0 || this.state.editData.customFields[index] == undefined ? " " : this.state.editData.customFields[index][value.name]}
             onChange={this.handleCustom}
-            style={{"margin-top": "4px"}}
             />
           </Form.Group>
         </Col>)
