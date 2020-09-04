@@ -145,7 +145,7 @@ function CompanyView(props) {
       });
       data.push(
         <Card title="Related Contact" className="form-width mb-4">
-          <table class="table table-borderless">
+          <table class="table table-borderless table-responsive">
             <tbody>
               <tr>
                 <td className="border-0 py-2">
@@ -307,6 +307,7 @@ function CompanyView(props) {
       <Tabs defaultActiveKey="1" onChange={callback} >
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
+          bodyStyle={{padding : "0px"}}
             title="Financial"
             extra={
               <Button type="link" onClick={handleBills}>
@@ -319,13 +320,13 @@ function CompanyView(props) {
               <div>Work In progress Amount</div>
               <div class="d-flex py-2 mt-2 matter-amount">
                 <div style={{ flex: 1, 'border-right': '2px solid #B2E4D6' }}>
-                  <p>
+                  <p style={{fontSize : "13px"}}>
                     <b>Outstanding Amount</b>
                   </p>
                      <span>{parseFloat(total).toFixed('2')}</span>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p>
+                  <p style={{fontSize : "13px"}}>
                     <b>Trust Funds</b>
                   </p>
                   <span>$500.00</span>
@@ -342,7 +343,7 @@ function CompanyView(props) {
             }
             className="form-width mb-4"
           >
-            <table class="table table-borderless">
+            <table class="table table-borderless table-responsive ">
               <tbody>
                 <tr>
                   <td className="border-0 py-2">
@@ -391,7 +392,7 @@ function CompanyView(props) {
           >
             <Form>
               <Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="relationship">
                     <Form.Label>Relationship</Form.Label>
                     <Form.Control

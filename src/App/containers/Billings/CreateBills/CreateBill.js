@@ -276,7 +276,7 @@ class CreateBill extends React.Component{
                     </Card.Header>
                     
                     <Card.Footer>
-                         <Table dataSource={this.state.tableData} columns={column}></Table>
+                         <Table className="table-responsive" dataSource={this.state.tableData} columns={column}></Table>
                     </Card.Footer>
                 </Card>
                 <Button type="primary" onClick={handleModal}>Generate</Button>
