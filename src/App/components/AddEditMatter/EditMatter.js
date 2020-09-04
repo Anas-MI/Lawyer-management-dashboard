@@ -63,13 +63,14 @@ class AddEditMatter extends React.Component{
   
       res.data.data.customFields.map((value, index)=>{
           customFeilds.push(<Col md="6">
-          <Form.Group key={index} controlId={index}>
+          <Form.Group key={index} controlId={index} className="d-flex">
             <Form.Label>{value.name}</Form.Label>
             <Form.Control
               name={value.name}
               type={value.type}
               defaultValue={this.state.editData.customFields.length == 0 || this.state.editData.customFields[index] == undefined ? " " : this.state.editData.customFields[index][value.name]}
             onChange={this.handleCustom}
+            style={{"margin-top": "4px"}}
             />
           </Form.Group>
         </Col>)
@@ -137,7 +138,7 @@ class AddEditMatter extends React.Component{
                   <option>Pending</option>
                 </Form.Control>
               </Form.Group>
-              <Form.Row>
+              <Form.Row className="matter-res-date">
                 <Col>
                   <Form.Group controlId="formGroupOpenDate">
                   <Form.Label>Open Date</Form.Label>
