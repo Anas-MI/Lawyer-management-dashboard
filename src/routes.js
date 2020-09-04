@@ -18,7 +18,7 @@ import HelpCenter from './App/containers/HelpCenter';
 import HelpForm from './App/containers/HelpCenter/HelpForm';
 import SupportManagement from './App/containers/SupportManagement';
 import SubscriptionManagement from './App/containers/SubscriptionManagement'
-import Subscription from './App/containers/Subscription/Subscription'
+
 // import Profile from './App/containers/Profile';
 
 window.jQuery = $;
@@ -253,12 +253,7 @@ const routes = [
     name: 'Default',
     component: DashboardDefault,
   },
-  {
-    path: '/subscription',
-    exact: true,
-    name: 'subscription',
-    component: Subscription,
-  },
+  
   { path: '/tasks', exact: true, name: 'Tasks', component: tasks },
   { path: '/tasks/view/list', exact: true, name: 'View List', component: list },
   { path: '/profile', exact: true, name: 'Profile', component: Profile },

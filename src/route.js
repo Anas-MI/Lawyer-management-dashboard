@@ -17,9 +17,16 @@ const Contact = React.lazy(()=>import('./App/containers/Auth/contactus'))
 const Subscription = React.lazy(()=>import('./App/containers/Auth/subscription'))
 const AdminRegister = React.lazy(() => import('./Demo/Authentication/SignUp/SignUp1'));
 const AdminLogin = React.lazy(() => import('./Demo/Authentication/SignIn/SignIn1'));
+const SubscriptionPage = React.lazy(() => import('./App/containers/Subscription/Subscription'));
 
 const route = [
     { path: '/', exact: true, name: 'HomePage', component: HomePage },
+    {
+      path: '/plans/subscription',
+      exact: true,
+      name: 'subscription',
+      component: SubscriptionPage,
+    },
     { path: '/login', exact: true, name: 'Login', component: LoginPage },
     { path: '/registration', exact: true, name: 'Registration', component: Registration },
     { path: '/forgot', exact: true, name: 'Forgot', component: ForgotPass },

@@ -85,6 +85,7 @@ class NavSearch extends Component {
 
         api.get('/company/viewforuser/' + id).then((res)=>{
             let companyData = []
+            console.log(res)
             res.data.data.map((value, id) => {
       
                 const data = {

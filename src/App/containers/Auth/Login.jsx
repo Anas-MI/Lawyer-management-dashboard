@@ -92,9 +92,14 @@ const Login = (props) => {
         loginUser({ ...state, type: "user" }, (err, response) => {
           if (err) {
             setDisplay(true)
+            console.log(err)
+            if(err.message === "Subscription expired"){
+              props.history.push('/plans/subscription')
+            }
             notification.error(err);
           } else {
             notification.success(response);
+            
             console.log(response)
           }
           setSpinner(false);
