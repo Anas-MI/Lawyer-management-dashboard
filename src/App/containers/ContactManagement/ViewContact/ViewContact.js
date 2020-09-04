@@ -95,6 +95,14 @@ function CompanyView(props) {
     setLoading(false)
   };
 
+  const handleCreateBills = (e) =>{
+    console.log(props)
+    props.history.push('/create/bills')
+  }
+
+  const handleRecordPayment = ( ) => {
+    props.history.push('/manage/billing/record')
+  }
   return (
     <>
       <Spin size="large" spinning={Loading}>
@@ -222,7 +230,7 @@ function CompanyView(props) {
      
         </TabPane>
         <TabPane tab="Bills" key="9">
-          <Bills id = {cId}></Bills>
+          <Bills handleRecordPayment={handleRecordPayment} handleBills = {handleCreateBills}  id = {cId}></Bills>
         </TabPane>
               
         <TabPane tab="Transactions" key="10"></TabPane>

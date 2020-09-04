@@ -4,7 +4,7 @@ const Payment = () =>{
     return <div>
         <Card title="Setup Your Subscriptions" className="form-width mb-3">
             <h4>Subscription</h4>
-            <table class="table table-borderless form-width">
+            <table class="table table-borderless form-width table-responsive">
                 <tbody>
                     <tr>
                         <td className="border-0 py-2" style={{"padding-top": "20px"}}><span className="table-span-dark">Current Plan</span></td>

@@ -838,7 +838,7 @@ class Activity extends React.Component {
           </div>
         </Card>
         <Card bodyStyle={{ padding: '0px' }} className="overflow-auto">
-          <Table columns={columns} dataSource={this.state.tableData} />
+          <Table className="table-responsive" columns={columns} dataSource={this.state.tableData} />
         </Card>
 
         <Modal

@@ -214,7 +214,7 @@ class customFeilds extends React.Component {
       <Card>
       <Tabs tabBarExtraContent={operations}>
              <TabPane tab="Custom Feild" key="1">
-                <Table columns={columns} dataSource={this.state.tableData} />
+                <Table  className="table-responsive" columns={columns} dataSource={this.state.tableData} />
               </TabPane>
               
         </Tabs>
@@ -247,7 +247,7 @@ class customFeilds extends React.Component {
         </Tabs>
         */}
         <Modal
-          title="Add Custom Feild"
+          title="Add Custom Field"
           centered
           visible={this.state.visible}
           onOk={HandleOk}
@@ -257,21 +257,21 @@ class customFeilds extends React.Component {
               Cancel
             </Button>,
             <Button type="primary" disabled = {this.state.disable} onClick={HandleOk}>
-              Create Feild
+              Create Field
             </Button>,
           ]}
         >
           <Form
-          id='myForm'
-          className="form"
-          ref={ form => this.messageForm = form }
-          >
+            id='myForm'
+            className="form"
+            ref={ form => this.messageForm = form }
+            >
             <Form.Group controlId="Name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control type="name" placeholder="Name" name="name" onChange={HandleChange}/>
             </Form.Group>
             <Form.Group controlId="Type">
-                <Form.Label>Select Custom Feild type</Form.Label>
+                <Form.Label>Select Custom Field type</Form.Label>
                 <Form.Control as="select" name="type" onChange={HandleChange}>
                 <option>Checkbox</option>
                 <option>Date</option>
@@ -282,7 +282,8 @@ class customFeilds extends React.Component {
                 <option>Picklist</option>
                 <option>Text</option>
                 </Form.Control>
-                <br></br>
+            </Form.Group>
+            <Form.Group>
                 <Form.Check 
                     type="checkbox"
                     id={`Default`}
@@ -297,7 +298,6 @@ class customFeilds extends React.Component {
                     name="required"
                     onChange={HandleChange}
                 />
-
             </Form.Group>
             </Form>
         </Modal>

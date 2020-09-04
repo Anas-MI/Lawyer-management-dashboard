@@ -137,7 +137,7 @@ class AddEditMatter extends React.Component{
                   <option>Pending</option>
                 </Form.Control>
               </Form.Group>
-              <Form.Row>
+              <Form.Row className="matter-res-date">
                 <Col>
                   <Form.Group controlId="formGroupOpenDate">
                   <Form.Label>Open Date</Form.Label>

@@ -65,7 +65,8 @@ class AddEditMatter extends React.Component{
               <Form.Label>{value.name}</Form.Label>
               <Form.Control required={value.required} 
               name={value.name} type={value.type}  
-              onChange={this.handleCustom} />
+              onChange={this.handleCustom} 
+              />
              </Form.Group>
     })
     this.setState({optns : optns, customFields : customFields})
@@ -255,7 +256,7 @@ class AddEditMatter extends React.Component{
                   <option>Pending</option>
                 </Form.Control>
               </Form.Group>
-              <Form.Row>
+              <Form.Row className="matter-res-date">
                 <Col>
                   <Form.Group controlId="formGroupOpenDate">
                   <Form.Label>Open Date</Form.Label>

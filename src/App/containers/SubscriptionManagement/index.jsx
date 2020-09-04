@@ -187,6 +187,7 @@ const SubscriptionManagement = (props) => {
             </Card.Header>
             <Card.Body>
                  <Table
+                 className="table-responsive"
                   dataSource={data}
                    columns={columns}
                    onRow={(record, rowIndex) => {
