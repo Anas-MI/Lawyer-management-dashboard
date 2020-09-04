@@ -434,7 +434,7 @@ class billing extends React.Component {
           <Tabs defaultActiveKey="4" onChange={callback}>
          
             <TabPane tab="Draft" key="1">
-              <Table className="table-responsive" dataSource={this.state.draftBills} columns={columnsforDraft} />;
+              <Table className="table-responsive" dataSource={this.state.draftBills} columns={columnsforDraft} />
             </TabPane>
           
            <TabPane tab="All" key="4">
