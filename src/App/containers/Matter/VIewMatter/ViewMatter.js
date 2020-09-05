@@ -169,7 +169,7 @@ function CompanyView(props) {
                 <td className="border-0 py-2">
                   <span className="table-span-dark">Email</span>
                 </td>
-                <td className="border-0">
+                <td className="border-0 py-2">
                   <span className="table-span-light">{mail}</span>
                 </td>
               </tr>
@@ -266,19 +266,19 @@ function CompanyView(props) {
   return (
     <Spin size="large" spinning = {Loading}>
       <div>
-      <Card style={{ height: '110px' }}>
-        <div className="d-flex mb-3 example-parent">
-          <div className="mr-auto p-2 col-example">
+      <Card >
+        <Row>
+          <Col sm className="pb-2">
             <h4>{Client}</h4>
             <p>{desc}</p>
-          </div>
-
-          <div className="p-2 col-example">
+          </Col>
+          <Col sm>
+          <div>
             <Button
+              className="mr-2"
               onClick={() =>
                 props.history.push('/edit/matter', props.location.state.id)
               }
-              type="link"
             >
               Edit
             </Button>
@@ -297,12 +297,12 @@ function CompanyView(props) {
                     notification.error({ message: 'Failed to delete' })
                   )
               }
-              type="link"
             >
               Delete
             </Button>
           </div>
-        </div>
+          </Col>
+        </Row>
       </Card>
       <Tabs defaultActiveKey="1" onChange={callback} >
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
@@ -365,7 +365,7 @@ function CompanyView(props) {
                   <td className="border-0 py-2">
                     <span className="table-span-dark">Email</span>
                   </td>
-                  <td className="border-0">
+                  <td className="border-0 py-2">
                     <span className="table-span-light">{Email}</span>
                   </td>
                 </tr>

@@ -6,7 +6,7 @@ class AddressForm extends React.Component{
   render(){
       return <Form className="quickBill">
                     <Row>
-                    <Col md="3" className="px-1">
+                    <Col md="5" className="px-1">
                         <Form.Group controlId="firstName">
                           <Form.Control
                             name="firstName"
@@ -16,7 +16,7 @@ class AddressForm extends React.Component{
                           />
                         </Form.Group>
                         </Col>
-                        <Col md="3" className="px-1">
+                        <Col md="4" className="px-1">
                         <Form.Group controlId="lastName">
                           <Form.Control
                             name="lastName"
@@ -28,7 +28,7 @@ class AddressForm extends React.Component{
                         </Col>
                     </Row>
                     <Row>
-                        <Col md="2" className="px-1">
+                        <Col md="3" className="px-1">
                           <Form.Group controlId="type">
                           <Form.Control
                             as="select"
@@ -41,7 +41,7 @@ class AddressForm extends React.Component{
                           </Form.Control>
                         </Form.Group>
                         </Col>
-                        <Col md="2" className="px-1">
+                        <Col md="3" className="px-1">
                         <Form.Group controlId="street">
                           <Form.Control
                             name="street"
@@ -51,7 +51,7 @@ class AddressForm extends React.Component{
                           />
                         </Form.Group>
                         </Col>
-                        <Col md="2" className="px-1">
+                        <Col md="3" className="px-1">
                         <Form.Group controlId="city">
                           <Form.Control
                             name="city"
@@ -64,7 +64,7 @@ class AddressForm extends React.Component{
                     </Row>
                     <Row>
                         
-                        <Col md="2" className="px-1">
+                        <Col md="3" className="px-1">
                         <Form.Group controlId="state">
                           <Form.Control
                             name="state"
@@ -74,7 +74,7 @@ class AddressForm extends React.Component{
                           />
                         </Form.Group>
                         </Col>
-                        <Col md="2" className="px-1">
+                        <Col md="3" className="px-1">
                         <Form.Group controlId="zipCode">
                           <Form.Control
                             name="zipCode"
@@ -85,7 +85,7 @@ class AddressForm extends React.Component{
                         </Form.Group>
                         
                       </Col>
-                      <Col md="2" className="px-1">
+                      <Col md="3" className="px-1">
                         <Form.Group controlId="country">
                           <select
                             name="country"
