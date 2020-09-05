@@ -83,16 +83,17 @@ export default function Index() {
 
   return (
     <div>
-      <Card
-        title="Help Center"
-        extra={
-          <span style={{ float: 'right' }} className="">
-            <Button>
-              <Link to="/help/createticket"> Create a new ticket</Link>
-            </Button>
-          </span>
-        }
-      >
+      <div className="d-flex mb-2 title-component-header">
+              <div className="title-header-name">
+                <h5>Help Center</h5>
+              </div>
+              <div className="d-flex extra-iteam-div">
+                <Button>
+                  <Link to="/help/createticket"> Create a new ticket</Link>
+                </Button>
+            </div> 
+          </div>
+      <Card>
         <Table className="table-responsive" dataSource={tickets} columns={columns} />
       </Card>
     </div>

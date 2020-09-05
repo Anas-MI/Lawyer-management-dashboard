@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
 import api from '../../../resources/api';
 import { Card } from 'react-bootstrap'
+import { notification } from 'antd';
 
 class subscription extends Component {
     state = {
         qdata : [ ],
-        qmsg : ''
+        qmsg : '',
+        data : {
+            userId : window.localStorage.getItem('userId'),
+            subscriptionRequested : ""
+        }
     };
 
     componentDidMount () {
@@ -18,8 +23,30 @@ class subscription extends Component {
         console.log(this.state.qdata)
         })
     }
-
+    
     render() {
+        const handleClick = ( index ) => {
+            console.log(index)
+            const data = this.state.data
+            data.requestGranted = "No"
+            if (index== 0) {
+                data.subscriptionRequested = "monthly"
+                window.location.href = 'https://www.fygaro.com/en/payments/c82abb7f-7851-425d-bdff-af2fb0704eaf/buy-now'
+            }
+            if (index == 1) {
+                data.subscriptionRequested = "yearly"
+                window.location.href = 'https://www.fygaro.com/en/payments/b2489fb2-225b-4839-a9ae-d8b1726fe58e/buy-now'
+            }
+
+            api.post(`subscription/create`, data).then((res)=>{
+                console.log(res)
+               // notification.success({message : "Sending request to the admin"})
+            }).catch((err)=>{
+                console.log(err)
+               // notification.warning({message : "Failed to send request to the admin"})
+            })
+    
+        }
     return(
         <Card>
             <Card.Header>
@@ -36,7 +63,7 @@ class subscription extends Component {
                             <div className="col-lg-12 py-3 section-title">
                                 <h2 style = {{fontSize : "35px"}} className="text-center">Subscriptions</h2>
                                 <div className="row py-3 d-flex justify-content-center">
-                                    {this.state.qdata.map((repodata) => 
+                                    {this.state.qdata.map((repodata, index) => 
                                         <div className="col-lg-3 col-md-6" key={repodata.id}>        
                                             <div className="sub_card overflow-hidden">
                                                 <p className="card-text font-weight-bold text-break">{repodata.planName}</p>
@@ -46,7 +73,7 @@ class subscription extends Component {
                                                 </ul>
                                                 <div className="text-center">
                                                     <p>Get a 15-Day Free Trial</p>
-                                                    <button type="button" className="sub-button">Subscribe</button>
+                                                    <button type="button" onClick = {()=>handleClick(index)} className="sub-button">Subscribe</button>
                                                 </div>                                    
                                             </div>
                                         </div>

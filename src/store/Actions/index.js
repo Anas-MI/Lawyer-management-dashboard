@@ -137,6 +137,7 @@ export const loginUser = (payload, cb) => {
             });
           }
           if(now > expiry_date ){
+            window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
               message: "Your trails period is expired.",
             });
