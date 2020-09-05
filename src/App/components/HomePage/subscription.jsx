@@ -26,7 +26,7 @@ class subscription extends Component {
                 <div className="row">
                     <div className="col-lg-12 py-3 section-title">
                         <h2 className="text-center">Subscription</h2>
-                        <div className="row py-3">
+                        <div className="row py-3 d-flex justify-content-center">
                             {this.state.qdata.map((repodata) => 
                                 <div className="col-lg-3 col-md-6" key={repodata.id}>        
                                     <div className="sub_card overflow-hidden">
@@ -37,7 +37,7 @@ class subscription extends Component {
                                         </ul>
                                         <div className="text-center">
                                             <p>Get a 15-Day Free Trial</p>
-                                            <button type="button" className="sub-button">Subscribe</button>
+                                            <button onClick={this.props.handleSubscription} type="button" className="sub-button">Subscribe</button>
                                         </div>                                    
                                     </div>
                                 </div>
