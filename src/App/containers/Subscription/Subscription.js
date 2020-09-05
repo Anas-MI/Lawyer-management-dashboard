@@ -23,10 +23,10 @@ class subscription extends Component {
         const handleClick = ( index ) => {
             console.log(index)
             if (index== 0) {
-                window.open('https://www.fygaro.com/en/payments/c82abb7f-7851-425d-bdff-af2fb0704eaf/buy-now')
+                window.location.href = 'https://www.fygaro.com/en/payments/c82abb7f-7851-425d-bdff-af2fb0704eaf/buy-now'
             }
             if (index == 1) {
-                window.open('https://www.fygaro.com/en/payments/b2489fb2-225b-4839-a9ae-d8b1726fe58e/buy-now')
+                window.location.href = 'https://www.fygaro.com/en/payments/b2489fb2-225b-4839-a9ae-d8b1726fe58e/buy-now'
             }
     
         }

@@ -740,7 +740,7 @@ class customFeilds extends React.Component {
               <TabPane tab="Payment Info" key="2">
                 <Payment></Payment>
              </TabPane>
-             <TabPane tab="Custom Feilds" key="3">
+             <TabPane tab="Custom Fields" key="3">
                  <CustomFeilds></CustomFeilds>
              </TabPane>
         </Tabs>
