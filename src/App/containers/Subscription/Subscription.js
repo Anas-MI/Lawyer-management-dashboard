@@ -28,6 +28,7 @@ class subscription extends Component {
         const handleClick = ( index ) => {
             console.log(index)
             const data = this.state.data
+            data.requestGranted = "No"
             if (index== 0) {
                 data.subscriptionRequested = "monthly"
                 window.location.href = 'https://www.fygaro.com/en/payments/c82abb7f-7851-425d-bdff-af2fb0704eaf/buy-now'
@@ -39,10 +40,10 @@ class subscription extends Component {
 
             api.post(`subscription/create`, data).then((res)=>{
                 console.log(res)
-                notification.success({message : "Sending request to the admin"})
+               // notification.success({message : "Sending request to the admin"})
             }).catch((err)=>{
                 console.log(err)
-                notification.warning({message : "Failed to send request to the admin"})
+               // notification.warning({message : "Failed to send request to the admin"})
             })
     
         }

@@ -8,7 +8,7 @@ const Payment = () =>{
                 <tbody>
                     <tr>
                         <td className="border-0 py-2" style={{"padding-top": "20px"}}><span className="table-span-dark">Current Plan</span></td>
-                        <td className="border-0 py-2"><span className="table-span-light">Elite</span> <Button type="link">View Plan</Button></td>
+                        <td className="border-0 py-2"><span className="table-span-light">Elite</span></td>
                     </tr>
                     <tr>
                         <td className="border-0 py-2"><span className="table-span-dark">Pay on next Bill</span></td>
