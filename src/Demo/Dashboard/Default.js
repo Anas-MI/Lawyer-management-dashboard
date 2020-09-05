@@ -1,5 +1,6 @@
 import React from 'react';
 import {Row, Col, Card, Table, Tabs, Tab, Button} from 'react-bootstrap';
+
 import {notification , Progress} from 'antd'
 import api from '../../resources/api'
 import Aux from "../../hoc/_Aux";
@@ -9,7 +10,9 @@ import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { logoutUser } from '../../store/Actions'
 
+    
 
 class Dashboard extends React.Component {
     constructor(){
@@ -180,8 +183,10 @@ class Dashboard extends React.Component {
       };
     
     render() {
-      
-   
+
+        
+       
+       //if(user.token.user.updated)
         setInterval(()=>{
             let data = window.localStorage.getItem('notifications')
             api.get('/calendar/viewforuser/'+this.props.userId).then(res=>{
@@ -430,11 +435,6 @@ class Dashboard extends React.Component {
                                         </div>
                                         :
                                         <div style={{ textAlign : "center"}}>
-                                            {
-                                                /*
-                                                <p style= {{ marginLeft : "10%"}}>This year |</p>
-                                                */
-                                            }
                                             <Progress type="circle" percent={this.state.percent}  />
                 
                                   `          <h6 className = "responsive-target">{this.state.left} hours more to achive the target</h6>
@@ -663,7 +663,12 @@ class Dashboard extends React.Component {
         );
     }
 }
+const mapDispatchToProps = dispatch => ({
+    logoutUser,
+    
+});
+   
 const mapStateToProps = (state) => ({
     userId: state.user.token.user._id,
   });
-  export default connect(mapStateToProps)(Dashboard);
+  export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
