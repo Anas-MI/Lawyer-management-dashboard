@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { notification } from "antd";
 import { Spin } from "antd";
+import api from "../../../resources/api";
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -14,6 +15,7 @@ const validEmailRegex = RegExp(
 
 const Login = (props) => {
   const dispatch = useDispatch();
+ 
 
   const params = useParams();
   const [display, setDisplay] = useState(false);
@@ -99,8 +101,20 @@ const Login = (props) => {
             notification.error(err);
           } else {
             notification.success(response);
-            
             console.log(response)
+            
+            localStorage.setItem('timer', 0)
+
+            let user = JSON.parse(window.localStorage.getItem('Case.user'))
+            user = user.token.user
+            user.updated_at = new Date()
+            
+            api.post(`user/update/${user._id}`, user).then((res)=>{
+              console.log(res)
+            }).catch((err)=>{
+              console.log(err)
+            })
+            
           }
           setSpinner(false);
         })

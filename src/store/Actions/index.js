@@ -118,13 +118,8 @@ export const loginUser = (payload, cb) => {
         let created_at = new Date(res.data.token.user.created_at)
         let now = new Date()
         let expiry_date = created_at
-        expiry_date.setDate(created_at.getDate() + 7)
-    
-        //expiry_date.setMonth(created_at.getMonth())
-
-        console.log(expiry_date)
-        console.log(now)
-        console.log(created_at)
+        expiry_date.setDate(created_at.getDate() + 15)
+        
         if (payload.type === "user") {
           if (res.data.token.user.admin) {
             return cb({

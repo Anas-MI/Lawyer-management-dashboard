@@ -9,12 +9,15 @@ import Subscription from '../components/HomePage/subscription'
 
 function Home(props) {
   console.log(props)
+  const handleSubscription =()=>{
+    props.history.push('/login')
+  }
   return (
     <div className="Home">
         <Navigation />
         <Header />
         <Features />
-        <Subscription />
+        <Subscription handleSubscription = {handleSubscription} />
         <Blog />
         <Contact />
         <Footer />
