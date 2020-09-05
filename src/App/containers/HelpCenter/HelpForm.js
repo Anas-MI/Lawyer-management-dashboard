@@ -220,13 +220,16 @@ const HelpForm = () => {
 
         <Form.Item {...tailLayout}>
           <Button 
+          className="m-2"
           disabled = {disable}
           type="primary" 
           htmlType="submit" 
           onClick={handleSubmit}>
             Submit
           </Button>
+          or 
           <Button
+            className="m-2"
             htmlType="button"
             onClick={() => {
               history.goBack();
