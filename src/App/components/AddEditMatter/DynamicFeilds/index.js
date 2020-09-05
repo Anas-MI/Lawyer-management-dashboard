@@ -54,7 +54,7 @@ class DynamicFeilds extends React.Component {
             <>
             <div key={idx}>
             <Row>
-              <Col>
+              <Col sm>
                     <Form.Group controlId={idx}>
                         <Form.Label>Relationship</Form.Label>
                         <Form.Control name='relationship' type="text" placeholder="Relationship"  onChange={this.props.change} />

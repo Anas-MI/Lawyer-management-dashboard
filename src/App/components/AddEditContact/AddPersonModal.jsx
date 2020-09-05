@@ -616,7 +616,7 @@ class newPerson extends React.Component {
               <p className="help-block text-danger">{error.Prefix}</p>
 
               <Form.Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupFirstName">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
@@ -630,7 +630,7 @@ class newPerson extends React.Component {
                   </Form.Group>
                   <p className="help-block text-danger">{error.FirstName}</p>
                 </Col>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupMiddleName">
                     <Form.Label>Middle Name</Form.Label>
                     <Form.Control
@@ -643,7 +643,7 @@ class newPerson extends React.Component {
                   </Form.Group>
                   <p className="help-block text-danger">{error.MiddleName}</p>
                 </Col>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupLastName">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control
@@ -660,7 +660,7 @@ class newPerson extends React.Component {
               </Form.Row>
 
               <Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupCompany">
                     <Form.Label>Company</Form.Label>
                     <Form.Control as="select" name="company" onChange={handleChange}>
@@ -690,7 +690,7 @@ class newPerson extends React.Component {
                 </span>
               </div>
               <Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupTitle">
                     <Form.Label>Title</Form.Label>
                     <Form.Control
@@ -740,7 +740,7 @@ class newPerson extends React.Component {
                 return (
                   <div className="mb-3">
                     <Form.Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Type</Form.Label>
                           <Form.Control
@@ -754,7 +754,7 @@ class newPerson extends React.Component {
                         </Form.Group>
                         <p className="help-block text-danger">{errors.Type}</p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Street</Form.Label>
                           <Form.Control
@@ -770,7 +770,7 @@ class newPerson extends React.Component {
                       </Col>
                     </Form.Row>
                     <Form.Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>City</Form.Label>
                           <Form.Control
@@ -784,7 +784,7 @@ class newPerson extends React.Component {
                           {errors.City[index]}
                         </p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>State</Form.Label>
                           <Form.Control
@@ -798,7 +798,7 @@ class newPerson extends React.Component {
                       </Col>
                     </Form.Row>
                     <Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>ZipCode</Form.Label>
                           <Form.Control
@@ -812,7 +812,7 @@ class newPerson extends React.Component {
                           {errors.ZipCode[index]}
                         </p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Country</Form.Label>
                           <select
