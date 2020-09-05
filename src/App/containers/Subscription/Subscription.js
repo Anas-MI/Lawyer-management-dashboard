@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
 import api from '../../../resources/api';
 import { Card } from 'react-bootstrap'
+import { notification } from 'antd';
 
 class subscription extends Component {
     state = {
         qdata : [ ],
-        qmsg : ''
+        qmsg : '',
+        data : {
+            userId : window.localStorage.getItem('userId'),
+            subscriptionRequested : ""
+        }
     };
 
     componentDidMount () {
@@ -22,12 +27,23 @@ class subscription extends Component {
     render() {
         const handleClick = ( index ) => {
             console.log(index)
+            const data = this.state.data
             if (index== 0) {
+                data.subscriptionRequested = "monthly"
                 window.location.href = 'https://www.fygaro.com/en/payments/c82abb7f-7851-425d-bdff-af2fb0704eaf/buy-now'
             }
             if (index == 1) {
+                data.subscriptionRequested = "yearly"
                 window.location.href = 'https://www.fygaro.com/en/payments/b2489fb2-225b-4839-a9ae-d8b1726fe58e/buy-now'
             }
+
+            api.post(`subscription/create`, data).then((res)=>{
+                console.log(res)
+                notification.success({message : "Sending request to the admin"})
+            }).catch((err)=>{
+                console.log(err)
+                notification.warning({message : "Failed to send request to the admin"})
+            })
     
         }
     return(

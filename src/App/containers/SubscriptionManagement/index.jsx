@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space, notification} from "antd";
+import { Table,Button,Input, Space, notification , Popconfirm} from "antd";
 import { Card } from 'react-bootstrap'
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
@@ -10,11 +10,26 @@ const SubscriptionManagement = (props) => {
 
     //Search Related 
     const [state,setState] = useState({})
+    const [tableData, settableData] = useState([])
     const [planName, setPlanName] = useState([])
     const [planAmount, setPlanAmount] = useState([])
 
     // fetch the subscription plan name and amount to filter the data in table. 
+    const fetchSubs = ( ) =>{
+      api.get(`subscription/showall`).then((res)=>{
+        let tableData = []
+        console.log(res)
+        res.data.data.map((val, i)=>{
+           val.key = i
+           val.requestGranted = val.requestGranted ? "YES" : "NO"
+           tableData.push(val)
+        })
+        settableData(tableData)
+      })
+    }
     useEffect(() => {
+      fetchSubs()
+       /*
         api.get('/plans/showall').then(res => {
             console.log(res.data.data)
             res.data.data.map( (fetchvalue) => {
@@ -22,6 +37,7 @@ const SubscriptionManagement = (props) => {
                 setPlanAmount(planAmount => [...planAmount, {text : fetchvalue.price, value: fetchvalue.price}])
             }) 
             })
+            */
       }, []);
 
     const getColumnSearchProps = dataIndex => ({
@@ -89,20 +105,19 @@ const SubscriptionManagement = (props) => {
         clearFilters();
         setState({ searchText: '' });
       };
-
+     const  deleteHandler = (_id) => {
+        api.get('subscription/delete/' + _id).then((res)=>{
+          console.log(res)
+          notification.success({message : "Request Deleted"})
+          fetchSubs()
+        }).catch((err)=>{
+          notification.error({message : "Failed to delete"})
+        })
+       
+      }
     const columns = [
-        {
-            title: "Name",
-            dataIndex: "name",
-            key: "_id",
-            //render: text => <a style={{"color" : "blue"}}>{text}</a>,
-            ...getColumnSearchProps('name'),
-            sorter: (a, b ,c) => ( 
-                c==='ascend'
-                ?a.name<b.name
-                :a.name>b.name
-            )
-        },
+      
+         /*
         {
             title: "Email",
             dataIndex: "email",
@@ -114,15 +129,64 @@ const SubscriptionManagement = (props) => {
                 :a.email>b.email
             )
         },
+        */
         {
             title: "Subscription Name",
-            dataIndex: "subscriptionName",
+            dataIndex: "subscriptionRequested",
             key: "_id",
+            /* 
             filters: planName,
               onFilter: (value, record) => record.subscriptionName.indexOf(value) === 0,
               sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
               sortDirections: ['descend'],
+              */
         },
+        
+        {
+          title: "Request Granted",
+          dataIndex: "requestGranted",
+          key: "requestGranted",
+          //render: text => <a style={{"color" : "blue"}}>{text}</a>,
+          //sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
+          //  sortDirections: ['descend'],
+      },
+      {
+        title: 'Approve',
+        dataIndex: 'Approve',
+        key: 'Approve',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure you want to Approve this Request?"
+              onConfirm={() => {}}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button>Approve</Button>
+            </Popconfirm>
+          );
+        },
+      },
+      {
+        title: 'Delete',
+        dataIndex: 'delete',
+        key: 'delete',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={() => deleteHandler(record._id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>Delete</Button>
+            </Popconfirm>
+          );
+        },
+      },
+      
+
+        /*
         {
             title: "Subscription Amount",
             dataIndex: "subscriptionPlan",
@@ -151,7 +215,7 @@ const SubscriptionManagement = (props) => {
                     <Button>Send</Button>
                 )
             }
-        },
+        },*/
     ]
 
     // sample data 
@@ -182,13 +246,13 @@ const SubscriptionManagement = (props) => {
           <Card>
             <Card.Header>
                 <div className="mb-4">
-                    <h3>SUBSCRIPTIONS</h3>
+                    <h5>SUBSCRIPTIONS</h5>
                 </div>
             </Card.Header>
             <Card.Body>
                  <Table
                  className="table-responsive"
-                  dataSource={data}
+                  dataSource={tableData}
                    columns={columns}
                    onRow={(record, rowIndex) => {
                     return {
