@@ -165,7 +165,8 @@ const CalendarContainer = props => {
         notification[type]({
           message: 'Failure'});
       };
-    const handleSubmit = (e) =>{
+    
+      const handleSubmit = (e) =>{
         console.log(e.requestType)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
@@ -191,16 +192,21 @@ const CalendarContainer = props => {
             eventdata.userId = userId 
             eventdata.startTime = startTime
             eventdata.endTime = endTime
-           
-            api.post('/calendar/update/'+ id , eventdata )
-            .then((res)=>{
-                fetchEventData()
-                notification.success({message : "Event Edited"})
-            }).catch((err)=>{
-                console.log(err)
-                notification.error({message : "Failed"})
-            })
-            setData({})
+            if(eventdata.title == "" || eventdata.title == undefined  ){
+                notification.warning({message : "Please provide a title" })
+             }else{
+                api.post('/calendar/update/'+ id , eventdata )
+                .then((res)=>{
+                    fetchEventData()
+                    setData({})
+                    notification.success({message : "Event Edited"})
+                }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed"})
+                })
+                
+             }
+            
             setTimeout(()=>{
                // window.location.reload()
             },1500)
@@ -358,7 +364,7 @@ const CalendarContainer = props => {
         }      
     }
    const onClickButton2 = () =>{
-           
+    notification.destroy()
     let eventdata = data
     eventdata.userId = userId
     if(startTime !== "Invalid Date"){
@@ -367,13 +373,13 @@ const CalendarContainer = props => {
         eventdata.endTime = endTime             
     }
   
-    if(data.title == ""){
+    if(eventdata.title === ""){
             notification.warning({message : "Please provide a title" })
     }else{
        
         api.post('/calendar/create', eventdata).then((res)=>{
             console.log(res)
-            //fetchEventData()
+            fetchEventData()
             notification.success({message : "Evented Added"})
             let eventData = {
                 Id: '',
