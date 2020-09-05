@@ -383,29 +383,24 @@ class editCompany extends React.Component{
                 </Form.Group>
                 <p className="help-block text-danger">{error.FirstName}</p>
               </Col>
-              <Col>
-                
-              </Col>
-              <Col>
-                           </Col>
             </Form.Row>
                         
             <DynamicFeilds type={"text"} name={"emailAddress"} text={"Email"} error={errors.Email} inputList={this.state.emailAddress} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
             <div className="form-add mb-4">
               <span onClick={()=>addFeild("email")}>Add an Email</span>
             </div>
-            <Row>
+            {/* <Row>
               <Col>
-              {/*
+              
                 <Form.Group controlId="formGroupTitle">
                   <Form.Label>Title</Form.Label>
                   <Form.Control name='title' type="text" placeholder="Title" 
                   onChange={handleChange}/>
                 </Form.Group>
                 <p className="help-block text-danger">{error.Title}</p>
-              */}
+             
               </Col>
-            </Row>
+            </Row> */}
   
             
             <DynamicFeilds type={"number"} name={"phone"} text={"Phone Number"} error={errors.phone} inputList={this.state.phone} change={handleMultipleChange} delete={handleDelete}></DynamicFeilds>
@@ -423,7 +418,7 @@ class editCompany extends React.Component{
               this.state.address.map((value, index)=>{
                 return <div className="mb-3">
                    <Form.Row>
-              <Col>
+              <Col sm>
               <Form.Group controlId={index}>
                 <Form.Label>Type</Form.Label>
                 <Form.Control as="select" name="type" onChange={HandleAddressChange}>
@@ -434,7 +429,7 @@ class editCompany extends React.Component{
               <p className="help-block text-danger">{errors.Type}</p>
 
               </Col>
-              <Col>
+              <Col sm>
               <Form.Group controlId={index}>
                   <Form.Label>Street</Form.Label>
                   <Form.Control name='street' type="text" placeholder="Street" 
@@ -445,7 +440,7 @@ class editCompany extends React.Component{
               
             </Form.Row>
             <Form.Row>
-              <Col>
+              <Col sm>
                 <Form.Group controlId={index}>
                   <Form.Label>City</Form.Label>
                   <Form.Control name='city' type="text" placeholder="City" 
@@ -453,7 +448,7 @@ class editCompany extends React.Component{
                 </Form.Group>
                 <p className="help-block text-danger">{errors.City[index]}</p>
               </Col>
-              <Col>
+              <Col sm>
                 <Form.Group controlId={index}>
                   <Form.Label>State</Form.Label>
                   <Form.Control name='state' type="text" placeholder="State" 
@@ -464,7 +459,7 @@ class editCompany extends React.Component{
             
             </Form.Row>
             <Form.Row>
-                <Col>
+                <Col sm>
                   <Form.Group controlId={index}>
                     <Form.Label>ZipCode</Form.Label>
                     <Form.Control name='zipCode' type="text" placeholder="ZipCode" 
@@ -472,7 +467,7 @@ class editCompany extends React.Component{
                   </Form.Group>
                   <p className="help-block text-danger">{errors.ZipCode[index]}</p>
                 </Col>
-                <Col>
+                <Col sm>
                 <Form.Group controlId={index}>
               <Form.Label>Country</Form.Label>
                 <select
@@ -796,8 +791,6 @@ class editCompany extends React.Component{
                 </Col>
               </Form.Row>
               <Button id={index} name="address" onClick={handleDelete}>-</Button>
-
-                  
                 </div>
               })
             }
@@ -904,8 +897,8 @@ class editCompany extends React.Component{
                 </Col>
               </Row>
 
-          <div className="float-right" style={{marginTop : "7.5%"}}>
-          <Button type="submit" disabled = {this.state.disable}  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
+          <div className="float-right" >
+          <Button type="submit" style={{marginTop : "16%"}} disabled = {this.state.disable}  className="btn btn-success">{editMode?'Update':'Create and save another'}</Button>
 
           </div>
 

@@ -789,10 +789,9 @@
                         className="form"
                         ref={ form => this.messageForm = form }>
                          <Row>
-                             
-                             <Col>
+                             <Col sm>
                              <Form.Group>
-                         <Form.Label>Matter</Form.Label>
+                              <Form.Label>Matter</Form.Label>
                                 <Form.Control 
                                     as="select"
                                     name="matter" 
@@ -806,7 +805,7 @@
                          </Row>
                        
                         <Row>
-                            <Col >
+                            <Col  sm>
                             <Form.Group>
                                  <Form.Label>From</Form.Label>
                                  <Form.Control 
@@ -820,7 +819,7 @@
                                  </Form.Group>
                             </Col>
                             
-                            <Col>
+                            <Col sm>
                             <Form.Group >
                                  <Form.Label>To</Form.Label>
                                  <Form.Control 
@@ -884,7 +883,7 @@
                         ref={ form => this.messageForm = form }>
                          <Row>
                              
-                             <Col>
+                             <Col sm>
                              <Form.Group>
                          <Form.Label>Matter</Form.Label>
                                 <Form.Control 
@@ -900,7 +899,7 @@
                          </Row>
                        
                         <Row>
-                            <Col >
+                            <Col sm>
                             <Form.Group>
                                  <Form.Label>From</Form.Label>
                                  <Form.Control 
@@ -916,7 +915,7 @@
                                  </Form.Group>
                             </Col>
                             
-                            <Col>
+                            <Col sm>
                             <Form.Group >
                                  <Form.Label>To</Form.Label>
                                  <Form.Control 
@@ -931,7 +930,7 @@
                             </Col>
                         </Row>
                          <Row>
-                             <Col>
+                             <Col sm>
                              <Form.Group controlId="date">
                                 <Form.Label>Time</Form.Label>
                                 <Form.Control 
@@ -942,7 +941,7 @@
                                 onChange={handleChange}/>
                             </Form.Group>
                              </Col>
-                             <Col>
+                             <Col sm>
                              <Form.Group controlId="date">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control 
@@ -1005,7 +1004,7 @@
                         ref={ form => this.messageForm = form }>
                          <Row>
                              
-                             <Col>
+                             <Col sm>
                              <Form.Group>
                                <Form.Label>Matter</Form.Label>
                                 <Form.Control 
@@ -1021,7 +1020,7 @@
                          </Row>
                        
                         <Row>
-                            <Col >
+                            <Col  sm>
                             <Form.Group>
                                  <Form.Label>From</Form.Label>
                                  <Form.Control 
@@ -1039,7 +1038,7 @@
                                  </Form.Group>
                             </Col>
                             
-                            <Col>
+                            <Col sm>
                             <Form.Group >
                                  <Form.Label>To</Form.Label>
                                  <Form.Control 
@@ -1054,7 +1053,7 @@
                             </Col>
                         </Row>
                          <Row>
-                             <Col>
+                             <Col sm>
                              <Form.Group controlId="date">
                                 <Form.Label>Time</Form.Label>
                                 <Form.Control 
@@ -1065,7 +1064,7 @@
                                 onChange={handleChange}/>
                             </Form.Group>
                              </Col>
-                             <Col>
+                             <Col sm>
                              <Form.Group controlId="date">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control 
@@ -1125,7 +1124,7 @@
                     className="form"
                     ref={ form => this.messageForm = form }>
                      <Row>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="duration">
                             <Form.Label>Duration</Form.Label>
                             <Form.Control 
@@ -1135,7 +1134,7 @@
                             onChange={handleChange}/>
                         </Form.Group>
                          </Col>
-                         <Col>
+                         <Col sm>
                          <Form.Group>
                      <Form.Label>Matter</Form.Label>
                             <Form.Control 
@@ -1151,7 +1150,7 @@
                      </Row>
                    
                     <Row>
-                        <Col >
+                        <Col  sm>
                         <Form.Group>
                              <Form.Label>From</Form.Label>
                              <Form.Control 
@@ -1165,7 +1164,7 @@
                              </Form.Group>
                         </Col>
                         
-                        <Col>
+                        <Col sm>
                         <Form.Group >
                              <Form.Label>To</Form.Label>
                              <Form.Control 
@@ -1180,7 +1179,7 @@
                         </Col>
                     </Row>
                      <Row>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="date">
                             <Form.Label>Time</Form.Label>
                             <Form.Control 
@@ -1191,7 +1190,7 @@
                             onChange={handleChange}/>
                         </Form.Group>
                          </Col>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="date">
                             <Form.Label>Date</Form.Label>
                             <Form.Control 
@@ -1253,7 +1252,7 @@
                                className="form"
                                ref={ form => this.messageForm = form }>
                      <Row>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="duration">
                             <Form.Label>Duration</Form.Label>
                             <Form.Control 
@@ -1263,7 +1262,7 @@
                             onChange={handleChange}/>
                         </Form.Group>
                          </Col>
-                         <Col>
+                         <Col sm>
                          <Form.Group>
                      <Form.Label>Matter</Form.Label>
                             <Form.Control 
@@ -1279,7 +1278,7 @@
                      </Row>
                    
                     <Row>
-                        <Col >
+                        <Col  sm>
                         <Form.Group>
                              <Form.Label>From</Form.Label>
                              <Form.Control 
@@ -1293,7 +1292,7 @@
                              </Form.Group>
                         </Col>
                         
-                        <Col>
+                        <Col sm>
                         <Form.Group >
                              <Form.Label>To</Form.Label>
                              <Form.Control 
@@ -1308,7 +1307,7 @@
                         </Col>
                     </Row>
                      <Row>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="date">
                             <Form.Label>Time</Form.Label>
                             <Form.Control 
@@ -1319,7 +1318,7 @@
                             onChange={handleChange}/>
                         </Form.Group>
                          </Col>
-                         <Col>
+                         <Col sm>
                          <Form.Group controlId="date">
                             <Form.Label>Date</Form.Label>
                             <Form.Control 

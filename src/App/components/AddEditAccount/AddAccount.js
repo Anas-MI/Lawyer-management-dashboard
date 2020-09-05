@@ -251,14 +251,14 @@ const AddAccount = () =>{
                         <p className="help-block text-danger">{error.swiftCode}</p>
                     </Form.Group>
                     <Form.Row>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="transitNumber">
                                 <Form.Label>Transit Number</Form.Label>
                                 <Form.Control type="text" name="transitNumber" placeholder="Transit Number"  onChange={handelChange}/>
                                 <p className="help-block text-danger">{error.transitNumber}</p>
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="currency">
                                 <Form.Label>Currency</Form.Label>
                                 <Form.Control

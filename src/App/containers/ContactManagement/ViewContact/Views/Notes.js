@@ -272,30 +272,30 @@ const Notes = (props) => {
     return(
       <Spin spinning={Loading} size = "large">
         <div>
-            <Card
-                title="Notes"
-                className="mb-4"
-                extra={
-                    <div className="d-flex justify-content-center">
+        <div className="d-flex mb-2 title-component-header">
+              <div className="title-header-name">
+                <h5>Notes</h5>
+              </div>
+              <div className="d-flex extra-iteam-div">
                     <button
-                        className="ml-auto btn  btn-outline-primary   btn-sm"
+                        className="btn  btn-outline-primary   btn-sm"
                         onClick={exportPDF}
                     >
                         Export to Pdf
                     </button>
                     <ExportExcel dataSource={tableData || []} />
                     <button
-                        className="ml-auto btn  btn-outline-primary   btn-sm"
+                        className="btn  btn-outline-primary   btn-sm"
                         onClick={()=> setVisible(true)}
                     >
                         Add Notes
                     </button>
-                
-                    </div>
-                 
-                }
+                </div> 
+            </div>
+            <Card
+                className="mb-4"
             >
-                <Table dataSource={tableData}  columns={columnsNotes}/>
+                <Table className="table-responsive" dataSource={tableData}  columns={columnsNotes}/>
             </Card>
             <Modal
                 title="New Note"

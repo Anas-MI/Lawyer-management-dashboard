@@ -115,7 +115,6 @@ class editPerson extends React.Component {
                       <select
                         as="select"
                         name="prefix"
-                    
                         defaultValue = {editData.data.data.prefix}
                         onChange={this.handleChange}
                         style={{ 'border-radius': '5px' }}
@@ -637,11 +636,15 @@ class editPerson extends React.Component {
               </div>
               <h4>Personal Details</h4>
               <div className="form-header-container mb-4">
-                <Row>
-                  <Col xs={7} md="6">
-                  {console.log(this.state.prefix)}
+                <Form.Row>
+                  <Col className="py-3">{imageUpload}</Col>
+                </Form.Row>
+                <Form.Row>
+                  <Col sm>
+                    {console.log(this.state.prefix)}
                     {this.state.prefixx}
-
+                    </Col>
+                  <Col sm>
                     <Form.Group controlId="formGroupFirstName">
                       <Form.Label>First Name</Form.Label>
                       <Form.Control
@@ -654,11 +657,10 @@ class editPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.FirstName}</p>
                   </Col>
-                  <Col className="py-3">{imageUpload}</Col>
-                </Row>
+                </Form.Row>
 
                 <Form.Row>
-                  <Col>
+                  <Col sm>
                     <Form.Group controlId="formGroupMiddleName">
                       <Form.Label>Middle Name</Form.Label>
                       <Form.Control
@@ -670,7 +672,7 @@ class editPerson extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{error.MiddleName}</p>
                   </Col>
-                  <Col>
+                  <Col sm>
                     <Form.Group controlId="formGroupLastName">
                       <Form.Label>Last Name</Form.Label>
                       <Form.Control
@@ -686,7 +688,7 @@ class editPerson extends React.Component {
                 </Form.Row>
 
                 <Row>
-                  <Col>
+                  <Col sm>
                     {this.state.companyy}
                   </Col>
                 </Row>
@@ -712,7 +714,7 @@ class editPerson extends React.Component {
                   </span>
                 </div>
                 <Row>
-                  <Col>
+                  <Col sm>
                     <Form.Group controlId="formGroupTitle">
                       <Form.Label>Title</Form.Label>
                       <Form.Control
@@ -765,7 +767,7 @@ class editPerson extends React.Component {
                   return (
                     <div className="mb-3">
                       <Form.Row>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>Type</Form.Label>
                             <Form.Control
@@ -784,7 +786,7 @@ class editPerson extends React.Component {
                             {errors.Type}
                           </p>
                         </Col>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>Street</Form.Label>
                             <Form.Control
@@ -802,7 +804,7 @@ class editPerson extends React.Component {
                         </Col>
                       </Form.Row>
                       <Form.Row>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>City</Form.Label>
                             <Form.Control
@@ -818,7 +820,7 @@ class editPerson extends React.Component {
                             {errors.City[index]}
                           </p>
                         </Col>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>State</Form.Label>
                             <Form.Control
@@ -836,7 +838,7 @@ class editPerson extends React.Component {
                         </Col>
                       </Form.Row>
                       <Row>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>ZipCode</Form.Label>
                             <Form.Control
@@ -852,7 +854,7 @@ class editPerson extends React.Component {
                             {errors.ZipCode[index]}
                           </p>
                         </Col>
-                        <Col>
+                        <Col sm>
                           <Form.Group controlId={index}>
                             <Form.Label>Country</Form.Label>
                             <select

@@ -807,7 +807,7 @@ class Communication extends React.Component{
                       ref={ form => this.messageForm = form }>
                        <Row>
                            
-                           <Col>
+                           <Col sm>
                            <Form.Group>
                        <Form.Label>Matter</Form.Label>
                               <Form.Control 
@@ -823,7 +823,7 @@ class Communication extends React.Component{
                        </Row>
                      
                       <Row>
-                          <Col >
+                          <Col  sm>
                           <Form.Group>
                                <Form.Label>From</Form.Label>
                                <Form.Control 
@@ -837,7 +837,7 @@ class Communication extends React.Component{
                                </Form.Group>
                           </Col>
                           
-                          <Col>
+                          <Col sm>
                           <Form.Group >
                                <Form.Label>To</Form.Label>
                                <Form.Control 
@@ -901,7 +901,7 @@ class Communication extends React.Component{
                       ref={ form => this.messageForm = form }>
                        <Row>
                            
-                           <Col>
+                           <Col sm>
                            <Form.Group>
                        <Form.Label>Matter</Form.Label>
                               <Form.Control 
@@ -917,7 +917,7 @@ class Communication extends React.Component{
                        </Row>
                      
                       <Row>
-                          <Col >
+                          <Col  sm>
                           <Form.Group>
                                <Form.Label>From</Form.Label>
                                <Form.Control 
@@ -933,7 +933,7 @@ class Communication extends React.Component{
                                </Form.Group>
                           </Col>
                           
-                          <Col>
+                          <Col sm>
                           <Form.Group >
                                <Form.Label>To</Form.Label>
                                <Form.Control 
@@ -948,7 +948,7 @@ class Communication extends React.Component{
                           </Col>
                       </Row>
                        <Row>
-                           <Col>
+                           <Col sm>
                            <Form.Group controlId="date">
                               <Form.Label>Time</Form.Label>
                               <Form.Control 
@@ -959,7 +959,7 @@ class Communication extends React.Component{
                               onChange={handleChange}/>
                           </Form.Group>
                            </Col>
-                           <Col>
+                           <Col sm>
                            <Form.Group controlId="date">
                               <Form.Label>Date</Form.Label>
                               <Form.Control 
@@ -1022,7 +1022,7 @@ class Communication extends React.Component{
                       ref={ form => this.messageForm = form }>
                        <Row>
                            
-                           <Col>
+                           <Col sm>
                            <Form.Group>
                              <Form.Label>Matter</Form.Label>
                               <Form.Control 
@@ -1038,7 +1038,7 @@ class Communication extends React.Component{
                        </Row>
                      
                       <Row>
-                          <Col >
+                          <Col  sm>
                           <Form.Group>
                                <Form.Label>From</Form.Label>
                                <Form.Control 
@@ -1056,7 +1056,7 @@ class Communication extends React.Component{
                                </Form.Group>
                           </Col>
                           
-                          <Col>
+                          <Col sm>
                           <Form.Group >
                                <Form.Label>To</Form.Label>
                                <Form.Control 
@@ -1071,7 +1071,7 @@ class Communication extends React.Component{
                           </Col>
                       </Row>
                        <Row>
-                           <Col>
+                           <Col sm>
                            <Form.Group controlId="date">
                               <Form.Label>Time</Form.Label>
                               <Form.Control 
@@ -1082,7 +1082,7 @@ class Communication extends React.Component{
                               onChange={handleChange}/>
                           </Form.Group>
                            </Col>
-                           <Col>
+                           <Col sm>
                            <Form.Group controlId="date">
                               <Form.Label>Date</Form.Label>
                               <Form.Control 
@@ -1142,7 +1142,7 @@ class Communication extends React.Component{
                   className="form"
                   ref={ form => this.messageForm = form }>
                    <Row>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="duration">
                           <Form.Label>Duration</Form.Label>
                           <Form.Control 
@@ -1152,7 +1152,7 @@ class Communication extends React.Component{
                           onChange={handleChange}/>
                       </Form.Group>
                        </Col>
-                       <Col>
+                       <Col sm>
                        <Form.Group>
                    <Form.Label>Matter</Form.Label>
                           <Form.Control 
@@ -1168,7 +1168,7 @@ class Communication extends React.Component{
                    </Row>
                  
                   <Row>
-                      <Col >
+                      <Col  sm>
                       <Form.Group>
                            <Form.Label>From</Form.Label>
                            <Form.Control 
@@ -1182,7 +1182,7 @@ class Communication extends React.Component{
                            </Form.Group>
                       </Col>
                       
-                      <Col>
+                      <Col sm>
                       <Form.Group >
                            <Form.Label>To</Form.Label>
                            <Form.Control 
@@ -1197,7 +1197,7 @@ class Communication extends React.Component{
                       </Col>
                   </Row>
                    <Row>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="date">
                           <Form.Label>Time</Form.Label>
                           <Form.Control 
@@ -1208,7 +1208,7 @@ class Communication extends React.Component{
                           onChange={handleChange}/>
                       </Form.Group>
                        </Col>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="date">
                           <Form.Label>Date</Form.Label>
                           <Form.Control 
@@ -1270,7 +1270,7 @@ class Communication extends React.Component{
                              className="form"
                              ref={ form => this.messageForm = form }>
                    <Row>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="duration">
                           <Form.Label>Duration</Form.Label>
                           <Form.Control 
@@ -1280,7 +1280,7 @@ class Communication extends React.Component{
                           onChange={handleChange}/>
                       </Form.Group>
                        </Col>
-                       <Col>
+                       <Col sm>
                        <Form.Group>
                    <Form.Label>Matter</Form.Label>
                           <Form.Control 
@@ -1296,7 +1296,7 @@ class Communication extends React.Component{
                    </Row>
                  
                   <Row>
-                      <Col >
+                      <Col  sm>
                       <Form.Group>
                            <Form.Label>From</Form.Label>
                            <Form.Control 
@@ -1310,7 +1310,7 @@ class Communication extends React.Component{
                            </Form.Group>
                       </Col>
                       
-                      <Col>
+                      <Col sm>
                       <Form.Group >
                            <Form.Label>To</Form.Label>
                            <Form.Control 
@@ -1325,7 +1325,7 @@ class Communication extends React.Component{
                       </Col>
                   </Row>
                    <Row>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="date">
                           <Form.Label>Time</Form.Label>
                           <Form.Control 
@@ -1336,7 +1336,7 @@ class Communication extends React.Component{
                           onChange={handleChange}/>
                       </Form.Group>
                        </Col>
-                       <Col>
+                       <Col sm>
                        <Form.Group controlId="date">
                           <Form.Label>Date</Form.Label>
                           <Form.Control 
