@@ -863,7 +863,7 @@ class Activity extends React.Component {
               className="form"
               ref={ form => this.messageForm = form } >
                 <Row>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="duration">
                             <Form.Label>Duration</Form.Label>
                               <Form.Control 
@@ -874,13 +874,13 @@ class Activity extends React.Component {
                                 onChange={handleChange}/>
                         </Form.Group>
                     </Col>
-                    <Col className = "activityTimer">
+                    <Col  sm style={{margin : "auto"}}>
                         <Timer setTimer = {this.setTimer} ></Timer>
                     </Col>
                 </Row>
                 
-                <Row>
-                    <Col>
+                <Row className="mt-2">
+                    <Col sm>
                     <Form.Group controlId="matter">
                         <Form.Label>Matter</Form.Label>
                         <Form.Control 
@@ -893,7 +893,7 @@ class Activity extends React.Component {
                         </Form.Control>
                     </Form.Group>
                     </Col>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="rate">
                         <Form.Label>Rate</Form.Label>
                         <Form.Control 
@@ -909,7 +909,7 @@ class Activity extends React.Component {
               
                     
                 <Row>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="Description">
                         <Form.Label>Description</Form.Label>
                         <Form.Control 
@@ -924,7 +924,7 @@ class Activity extends React.Component {
                 </Row>
               
                 <Row>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="date">
                         <Form.Label>Date</Form.Label>
                         <Form.Control 
@@ -954,7 +954,7 @@ class Activity extends React.Component {
                 </Row>
                     
                     <Row>
-                        <Col>
+                        <Col sm>
                         <Form.Check 
                       type="checkbox"
                       id="billable"
@@ -1001,7 +1001,7 @@ class Activity extends React.Component {
           className="form"
           ref={ form => this.messageForm = form }>
             <Row>
-                <Col>
+                <Col sm>
                 <Form.Group controlId="duration">
                     <Form.Label>Duration</Form.Label>
                     <Form.Control 
@@ -1011,13 +1011,13 @@ class Activity extends React.Component {
                     onChange={handleChange}/>
                 </Form.Group>
                 </Col>
-                <Col className = "activityTimer" >
+                <Col sm style={{margin : "auto"}}>
                     <Timer setTimer = {this.setTimer} ></Timer>
                 </Col>
             </Row>
             
-            <Row>
-                <Col>
+            <Row className="mt-2">
+                <Col sm>
                     <Form.Group controlId="matter">
                                     <Form.Label>Matter</Form.Label>
                                     <Form.Control 
@@ -1031,7 +1031,7 @@ class Activity extends React.Component {
                                     </Form.Control>
                                 </Form.Group>
                 </Col>
-                <Col>
+                <Col sm>
                 <Form.Group controlId="rate">
                     <Form.Label>Rate</Form.Label>
                     <Form.Control 
@@ -1047,7 +1047,7 @@ class Activity extends React.Component {
             
                 
             <Row>
-                <Col>
+                <Col sm>
                 <Form.Group controlId="Description">
                     <Form.Label>Description</Form.Label>
                     <Form.Control 
@@ -1063,7 +1063,7 @@ class Activity extends React.Component {
             
             <Row>
                 
-                <Col>
+                <Col sm>
                 <Form.Group controlId="date">
                     <Form.Label>Date</Form.Label>
                     <Form.Control 
@@ -1079,7 +1079,7 @@ class Activity extends React.Component {
             </Row>
                 
                 <Row>
-                    <Col>
+                    <Col sm>
                     <Form.Check 
                     type="checkbox"
                     id="billable"
@@ -1114,7 +1114,7 @@ class Activity extends React.Component {
               className="form"
               ref={ form => this.messageForm = form } >
                 <Row>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="quantity">
                             <Form.Label>Quantity</Form.Label>
                             <Form.Control 
@@ -1124,7 +1124,7 @@ class Activity extends React.Component {
                             onChange={handleChange}/>
                         </Form.Group>
                     </Col>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="matter">
                             <Form.Label>Matter</Form.Label>
                             <Form.Control 
@@ -1139,7 +1139,7 @@ class Activity extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="Description">
                             <Form.Label>Description</Form.Label>
                             <Form.Control 
@@ -1153,7 +1153,7 @@ class Activity extends React.Component {
                 </Row>
                 
                 <Row>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="rate">
                             <Form.Label>Rate</Form.Label>
                             <Form.Control 
@@ -1164,7 +1164,7 @@ class Activity extends React.Component {
                             onChange={handleChange} />
                         </Form.Group>
                     </Col>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="date">
                             <Form.Label>Date</Form.Label>
                             <Form.Control 
@@ -1238,7 +1238,7 @@ class Activity extends React.Component {
           className="form"
           ref={ form => this.messageForm = form }>
         <Row>
-            <Col>
+            <Col sm>
                 <Form.Group controlId="quantity">
                     <Form.Label>Quantity</Form.Label>
                     <Form.Control 
@@ -1248,7 +1248,7 @@ class Activity extends React.Component {
                     onChange={handleChange}/>
                 </Form.Group>
             </Col>
-            <Col>
+            <Col sm>
             <Form.Group controlId="matter">
                                     <Form.Label>Matter</Form.Label>
                                     <Form.Control 
@@ -1263,7 +1263,7 @@ class Activity extends React.Component {
             </Col>
     </Row>
     <Row>
-        <Col>
+        <Col sm>
         <Form.Group controlId="Description">
                 <Form.Label>Description</Form.Label>
                 <Form.Control 
@@ -1276,7 +1276,7 @@ class Activity extends React.Component {
         </Col>
     </Row>
     <Row>
-        <Col>
+        <Col sm>
             <Form.Group controlId="date">
                 <Form.Label>Date</Form.Label>
                 <Form.Control 
@@ -1287,7 +1287,7 @@ class Activity extends React.Component {
                 onChange={handleChange}/>
             </Form.Group>
         </Col>
-        <Col>
+        <Col sm>
             <Form.Group controlId="rate">
                 <Form.Label>Rate</Form.Label>
                 <Form.Control 
@@ -1307,12 +1307,7 @@ class Activity extends React.Component {
                defaultChecked = {this.state.data.billable==="Yes"? true : false}
                onChange={handleChange}
            /><br></br>
-    
-          
-          
-    
     </Form>
-    
         </Modal>
       </div>
    
