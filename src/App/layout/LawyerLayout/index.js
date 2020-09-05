@@ -27,6 +27,28 @@ class LawyerLayout extends Component {
     };
 
     componentWillMount() {
+      //  var now = new Date();
+        const user = JSON.parse(window.localStorage.getItem('Case.user'))
+        console.log("from layout")
+        if(user != null){
+            const updated_at = new Date(user.token.user.updated_at)
+            console.log(updated_at)
+    
+            let last_update = updated_at
+            last_update.setHours(updated_at.getHours() + 24 )
+            console.log(last_update)
+    
+            const now = new Date()
+    
+            if(last_update < now){
+                //console.log(this.props)
+                // this.props.logoutUser()
+                localStorage.setItem('Case.user' , null)
+                window.location.reload()
+                //   this.props.history.push('/')
+            }
+        }
+
         if (this.props.windowWidth > 992 && this.props.windowWidth <= 1024 && this.props.layout !== 'horizontal') {
             this.props.onComponentWillMount();
         }
