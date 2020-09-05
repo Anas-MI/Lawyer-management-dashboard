@@ -596,20 +596,24 @@ class Activity extends React.Component{
          <div className='p-2 '>
             
             <Card title="New Quick Bill" className="overflow-auto mb-3">
-              <div className="d-flex justify-content-between">
+              <div>
                   <div>
                     <p><b>FROM</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.LName}</p>
                  </div>
-                 <div>
+                 <div className="mt-3">
                     <p><b>TO</b></p>
                     <p style={{fontWeight : '600'}}>{this.state.name}</p><br/>
                     <AddressForm HandleAddressChange={HandleAddressChange} type="To"></AddressForm>            
                  </div>
-                 <div>
+                 <div className="mt-3">
                     <p><b>Matter</b></p>
                     <Form className="quickBill">
-                     <Form.Control  type="text" placeholder="Small text" value={this.state.matter} />
+                      <Form.Row>
+                        <Col md="5">
+                        <Form.Control  type="text" placeholder="Small text" value={this.state.matter} />
+                        </Col>
+                      </Form.Row>
                     </Form>
                     <p style={{fontWeight : '600'}}>{}</p><br/>
                  </div>
@@ -635,10 +639,10 @@ class Activity extends React.Component{
               </div>
 
             <Card className="mb-3" >
-                <div className="d-flex justify-content-between">
-                  <h4><b>Bill Total : </b></h4>    
-                  <h4><b>{this.state.total ? this.state.total.toFixed(2) : "0"}</b></h4>
-                </div>
+                  <Row>
+                    <Col sm className="col-md-3"><h4><b>Bill Total : </b></h4></Col>
+                    <Col sm><h4><b>{this.state.total ? this.state.total.toFixed(2) : "0"}</b></h4></Col>
+                  </Row>
             </Card>
             <Card>
               <div>
@@ -677,13 +681,12 @@ class Activity extends React.Component{
                     </Row>
                  </Form>
               </div>
-              
             </Card>
-
-            <Button onClick={handleBill} type="primary" className="mr-2">Generate Bill</Button>
-            <span>or</span>
-            <Button onClick={()=>{this.props.history.goBack()}} className="ml-2">Cancel</Button>
-            
+            <div className="mt-2">
+              <Button onClick={handleBill} type="primary" className="mr-2">Generate Bill</Button>
+              <span>or</span>
+              <Button onClick={()=>{this.props.history.goBack()}} className="ml-2">Cancel</Button>
+            </div>
             <Modal
           title="New Time Entry"
           visible={this.state.timeModal}
@@ -706,7 +709,7 @@ class Activity extends React.Component{
               className="form"
               ref={ form => this.messageForm = form } >
                 <Row>
-                    <Col>
+                    <Col sm>
                         <Form.Group controlId="duration">
                             <Form.Label>Duration</Form.Label>
                               <Form.Control 
@@ -717,13 +720,13 @@ class Activity extends React.Component{
                                 onChange={handleChange}/>
                         </Form.Group>
                     </Col>
-                    <Col className = "activityTimer">
+                    <Col className ="col-sm" style={{"margin": "auto"}}>
                         <Timer setTimer = {this.setTimer} ></Timer>
                     </Col>
                 </Row>
                 
-                <Row>
-                    <Col>
+                <Row className="mt-2">
+                    <Col sm>
                     <Form.Group controlId="matter">
                         <Form.Label>Matter</Form.Label>
                         <Form.Control 
@@ -736,7 +739,7 @@ class Activity extends React.Component{
                         </Form.Control>
                     </Form.Group>
                     </Col>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="rate">
                         <Form.Label>Rate</Form.Label>
                         <Form.Control 
@@ -752,7 +755,7 @@ class Activity extends React.Component{
               
                     
                 <Row>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="Description">
                         <Form.Label>Description</Form.Label>
                         <Form.Control 
@@ -763,11 +766,10 @@ class Activity extends React.Component{
                         onChange={handleChange} />
                     </Form.Group>
                     </Col>
-
                 </Row>
               
                 <Row>
-                    <Col>
+                    <Col sm>
                     <Form.Group controlId="date">
                         <Form.Label>Date</Form.Label>
                         <Form.Control 
@@ -782,7 +784,7 @@ class Activity extends React.Component{
                 </Row>
                     
                     <Row>
-                        <Col>
+                        <Col sm>
                         <Form.Check 
                       type="checkbox"
                       id="billable"
@@ -818,7 +820,7 @@ class Activity extends React.Component{
                   className="form"
                   ref={ form => this.messageForm = form } >
                     <Row>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="quantity">
                                 <Form.Label>Quantity</Form.Label>
                                 <Form.Control 
@@ -828,7 +830,7 @@ class Activity extends React.Component{
                                 onChange={handleChange}/>
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="matter">
                                 <Form.Label>Matter</Form.Label>
                                 <Form.Control 
@@ -843,7 +845,7 @@ class Activity extends React.Component{
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="Description">
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control 
@@ -857,7 +859,7 @@ class Activity extends React.Component{
                     </Row>
                     
                     <Row>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="rate">
                                 <Form.Label>Rate</Form.Label>
                                 <Form.Control 
@@ -868,7 +870,7 @@ class Activity extends React.Component{
                                 onChange={handleChange} />
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col sm>
                             <Form.Group controlId="date">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control 
@@ -895,9 +897,6 @@ class Activity extends React.Component{
                     </Form.Group>
                             */
                         }
-                  
-                    
-                  
                     <Form.Check 
                           type="checkbox"
                           id="billable"
@@ -918,14 +917,9 @@ class Activity extends React.Component{
                       />
                             */
                         }
-                      
-
               </Form>
-
             </Modal>
-         
         </div>
-     
         </Spin>
         }
 }

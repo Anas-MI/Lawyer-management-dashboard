@@ -29,7 +29,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                <Col sm>
+                <Col>
                   <Form.Group controlId={idx}>
                     <Form.Label>{this.props.text}</Form.Label>
                     <Form.Control
@@ -70,7 +70,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                <Col sm>
+                <Col>
                   <Form.Group controlId={idx}>
                     <Form.Label>{this.props.text}</Form.Label>
                     <Form.Control

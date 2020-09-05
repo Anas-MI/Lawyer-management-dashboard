@@ -802,7 +802,7 @@ class newPerson extends React.Component {
                             {errors.ZipCode[index]}
                           </p>
                         </Col>
-                        <Col sm>
+                        <Col>
                           <Form.Group controlId={index}>
                             <Form.Label>Country</Form.Label>
                             <select

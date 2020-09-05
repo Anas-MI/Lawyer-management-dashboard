@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
 import { Card, Button, Tabs, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { Row, Col } from 'react-bootstrap';
 import Communication from './Views/Communication'
 import Bills from './Views/bills'
 import Documents from './Views/docs'
@@ -131,82 +132,47 @@ function CompanyView(props) {
               title="Contact Details"
               className="m-2 card-box"
             >
-              <table class="table table-borderless">
-                <tbody>
-                  <tr>
-                    <td>
+              <Row>
+                <Col sm>
                       <img
                         height="200"
                         width="200"
                         src={url}
                         alt="No image"
                       ></img>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Name</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{Title}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Email Address</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{Email}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Phone Number</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{Number}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Website</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{Website}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Address</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{address}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                </Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Name</span></Col>
+                <Col sm><span className="table-span-light">{Title}</span></Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Email Address</span></Col>
+                <Col sm><span className="table-span-light">{Email}</span></Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Phone Number</span></Col>
+                <Col sm><span className="table-span-light">{Number}</span></Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Website</span></Col>
+                <Col sm><span className="table-span-light">{Website}</span></Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Address</span></Col>
+                <Col sm><span className="table-span-light">{address}</span></Col>
+              </Row>
             </Card>
+
             <Card title="Billing Information" className="m-2 card-box">
-              <table class="table table-borderless">
-                <tbody>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">ID</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{ID}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border-0 py-1">
-                      <span className="table-span-dark">Rate</span>
-                    </td>
-                    <td className="border-0 py-1">
-                      <span className="table-span-light">{Rate}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">ID</span></Col>
+                <Col sm><span className="table-span-light">{ID}</span></Col>
+              </Row>
+              <Row className="py-2">
+                <Col sm><span className="table-span-dark">Rate</span></Col>
+                <Col sm><span className="table-span-light">{Rate}</span></Col>
+              </Row>
             </Card>
           </div>
         </TabPane>

@@ -38,7 +38,7 @@ class EmailForm extends React.Component{
        return    this.props.editmode ?
        <Form >
         <Row>
-            <Col>
+            <Col sm>
             <Form.Group controlId="duration">
                <Form.Label>Duration</Form.Label>
                <Form.Control 
@@ -48,7 +48,7 @@ class EmailForm extends React.Component{
                onChange={this.props.handleChange}/>
            </Form.Group>
             </Col>
-            <Col>
+            <Col sm>
             <Form.Group>
         <Form.Label>Matter</Form.Label>
                <Form.Control 
@@ -64,7 +64,7 @@ class EmailForm extends React.Component{
         </Row>
       
        <Row>
-           <Col >
+           <Col  sm>
            <Form.Group>
                 <Form.Label>From</Form.Label>
                 <Form.Control 
@@ -78,7 +78,7 @@ class EmailForm extends React.Component{
                 </Form.Group>
            </Col>
            
-           <Col>
+           <Col sm>
            <Form.Group >
                 <Form.Label>To</Form.Label>
                 <Form.Control 
@@ -93,7 +93,7 @@ class EmailForm extends React.Component{
            </Col>
        </Row>
         <Row>
-            <Col>
+            <Col sm>
             <Form.Group controlId="date">
                <Form.Label>Time</Form.Label>
                <Form.Control 
@@ -104,7 +104,7 @@ class EmailForm extends React.Component{
                onChange={this.props.handleChange}/>
            </Form.Group>
             </Col>
-            <Col>
+            <Col sm>
             <Form.Group controlId="date">
                <Form.Label>Date</Form.Label>
                <Form.Control 
@@ -144,7 +144,7 @@ class EmailForm extends React.Component{
        :
        <Form >
         <Row>
-            <Col>
+            <Col sm>
             <Form.Group controlId="duration">
                <Form.Label>Duration</Form.Label>
                <Form.Control 
@@ -154,7 +154,7 @@ class EmailForm extends React.Component{
                onChange={this.props.handleChange}/>
            </Form.Group>
             </Col>
-            <Col>
+            <Col sm>
             <Form.Group>
         <Form.Label>Matter</Form.Label>
                <Form.Control 
@@ -170,7 +170,7 @@ class EmailForm extends React.Component{
         </Row>
       
        <Row>
-           <Col >
+           <Col  sm>
            <Form.Group>
                 <Form.Label>From</Form.Label>
                 <Form.Control 
@@ -184,7 +184,7 @@ class EmailForm extends React.Component{
                 </Form.Group>
            </Col>
            
-           <Col>
+           <Col sm>
            <Form.Group >
                 <Form.Label>To</Form.Label>
                 <Form.Control 
@@ -199,7 +199,7 @@ class EmailForm extends React.Component{
            </Col>
        </Row>
         <Row>
-            <Col>
+            <Col sm>
             <Form.Group controlId="date">
                <Form.Label>Time</Form.Label>
                <Form.Control 
@@ -210,7 +210,7 @@ class EmailForm extends React.Component{
                onChange={this.props.handleChange}/>
            </Form.Group>
             </Col>
-            <Col>
+            <Col sm>
             <Form.Group controlId="date">
                <Form.Label>Date</Form.Label>
                <Form.Control 

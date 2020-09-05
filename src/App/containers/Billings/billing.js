@@ -428,7 +428,7 @@ class billing extends React.Component {
                     New Bills
                 </button>
             </div> 
-            </div>
+          </div>
         <Card
         >
           <Tabs defaultActiveKey="4" onChange={callback}>

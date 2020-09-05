@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs,Modal , Card, notification } from 'antd'
+import { Tabs, Modal , Card, notification } from 'antd'
 import { useSelector , connect} from 'react-redux'
 import Account from './account&payment/Account/account'
 import Payment from './account&payment/PaymentInfo/payment'
@@ -233,54 +233,58 @@ class customFeilds extends React.Component {
   
     return (
       <Card>
-      
-      <Tabs tabBarExtraContent="">
+        <Tabs>
              <TabPane tab="Account" key="1">
                     <Form>
                         <div className="form-header-container mb-4">
                             <h4 className="form-header-text">General information</h4>
                         </div>
-                        <Row md="2" style={{marginLeft : "1%"}} >
-                            <Form.Group controlId="Name">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control defaultValue={this.state.userData.account.name} type="text" name="name"  onChange={HandleChange} />
-                            </Form.Group>
-                        </Row>
+                        <Form.Row>
+                            <Col className="col-md-5">
+                                <Form.Group controlId="Name">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control defaultValue={this.state.userData.account.name} type="text" name="name"  onChange={HandleChange} />
+                                </Form.Group>
+                            </Col>
+                        </Form.Row>
                         
                         <br></br>
                         <div className="form-header-container mb-4">
                             <h4 className="form-header-text">Contact information</h4>
                         </div>
-                        <Row md="2" style={{marginLeft : "1%"}} >
-                            <Form.Group controlId="number">
-                                <Form.Label>Phone Number</Form.Label>
-                                <Form.Control defaultValue={this.state.userData.account.number} type="number" name="number" placeholder="Phone Number"  onChange={HandleChange} />
-                            </Form.Group>
-                            
-
-                        </Row>
-                        <p  style={{marginLeft : "1%",  position:"relative", marginTop : "-10px"}} className="help-block text-danger">{errors.number}</p>
-                        <Row md="2" style={{marginLeft : "1%"}}>
+                        <Form.Row>
+                            <Col className="col-md-5">
+                                <Form.Group controlId="number">
+                                    <Form.Label>Phone Number</Form.Label>
+                                    <Form.Control defaultValue={this.state.userData.account.number} type="number" name="number" placeholder="Phone Number"  onChange={HandleChange} />
+                                </Form.Group>
+                            </Col>
+                        </Form.Row>
+                        <p className="help-block text-danger">{errors.number}</p>
+                        <Form.Row>
+                        <Col className="col-md-5">
                             <Form.Group controlId="Email">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control defaultValue={this.state.userData.account.emailAddress} type="text" name="emailAddress" placeholder="Email"  onChange={HandleChange}/>
                             </Form.Group>
-
-                        </Row >
-                        <p  style={{marginLeft : "1%", position:"relative", marginTop : "-10px"}} className="help-block text-danger">{errors.emailAddress}</p>
-                        <Row md="2" style={{marginLeft : "1%"}}>
+                        </Col>
+                            
+                        </Form.Row>
+                        <p className="help-block text-danger">{errors.emailAddress}</p>
+                        <Form.Row>
+                        <Col className="col-md-5">
                             <Form.Group controlId="website">
                                 <Form.Label>Website</Form.Label>
                                 <Form.Control defaultValue={this.state.userData.account.website} type="text" name="website" placeholder="Website"  onChange={HandleChange}/>
                             </Form.Group>
-                        </Row >
+                        </Col>
+                        </Form.Row>
 
-                      
                         <div className="form-header-container mb-4">
                             <h4 className="form-header-text">Mail Address</h4>
                         </div>
-                        <Row md="4" style={{marginLeft : "1%"}}>
-                            <Col >
+                        <Form.Row>
+                            <Col  sm className="col-md-4">
                                 <Form.Group controlId="type">
                                 <Form.Control
                                     as="select"
@@ -294,7 +298,7 @@ class customFeilds extends React.Component {
                                 </Form.Control>
                                 </Form.Group>
                             </Col>
-                            <Col>
+                            <Col sm className="col-md-4">
                                 <Form.Group controlId="street">
                                 <Form.Control
                                     name="street"
@@ -305,9 +309,9 @@ class customFeilds extends React.Component {
                                 />
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row md="4" style={{marginLeft : "1%"}}>
-                            <Col>
+                        </Form.Row>
+                        <Form.Row>
+                            <Col sm className="col-md-4">
                                 <Form.Group controlId="city">
                                 <Form.Control
                                     name="city"
@@ -318,7 +322,7 @@ class customFeilds extends React.Component {
                                 />
                                 </Form.Group>
                             </Col>
-                                <Col >
+                            <Col sm className="col-md-4">
                                     <Form.Group controlId="state">
                                     <Form.Control
                                         name="state"
@@ -328,10 +332,10 @@ class customFeilds extends React.Component {
                                         onChange={HandleAddressChange}
                                     />
                                     </Form.Group>
-                                </Col>              
-                        </Row>
-                        <Row md="4" style={{marginLeft : "1%"}}>
-                            <Col>
+                            </Col>              
+                        </Form.Row>
+                        <Form.Row>
+                            <Col sm className="col-md-4">
                                 <Form.Group controlId="zipCode">
                                 <Form.Control
                                     name="zipCode"
@@ -342,7 +346,7 @@ class customFeilds extends React.Component {
                                 />
                                 </Form.Group>  
                              </Col>
-                            <Col>
+                            <Col sm className="col-md-4">
                                 <Form.Group controlId="country">
                                 <select
                                     name="country"
@@ -678,20 +682,21 @@ class customFeilds extends React.Component {
                                 </select>
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row md="4" style={{marginLeft : "1%", position : "relative" , marginTop : "-10px"}}>
-                            <Col>
+                        </Form.Row>
+                        <Form.Row>
+                            <Col sm className="col-md-4">
                                 <p className="help-block text-danger">
                                     {errors.zipCode}
                                 </p>
                             </Col>
-                        </Row>
+                        </Form.Row>
  
                         <br></br>
                         <div className="form-header-container mb-4">
                             <h4 className="form-header-text">Date and time format</h4>
                         </div>
-                        <Row md="2" style={{marginLeft : "1%"}}>
+                        <Row >
+                        <Col className="col-md-5">
                             <Form.Group controlId="Date">
                             <Form.Label>Date format</Form.Label>
                             <select
@@ -703,9 +708,11 @@ class customFeilds extends React.Component {
                                 <option>MM/DD/YYYY</option>
                             </select>
                             </Form.Group>
+                        </Col>
                         </Row>
                         
-                        <Row md="2" style={{marginLeft : "1%"}}>
+                        <Row>
+                        <Col className="col-md-5">
                             <Form.Group controlId="time">
                                 <Form.Label>Time format</Form.Label>
                                 <select
@@ -717,26 +724,29 @@ class customFeilds extends React.Component {
                                     <option>HH:SS pm</option>
                                     <option>HH:SS</option>
                                 </select>
-                                
                             </Form.Group>
+                        </Col>
                         </Row>
                         <br></br>
                         <div className="form-header-container mb-4">
                             <h4 className="form-header-text">Additional information</h4>
                         </div>
-                        <Row md="2" style={{marginLeft : "1%"}}>
+                        <Row >
+                        <Col className="col-md-5">
                             <Form.Group controlId="Currency Format">
                                 <Form.Label>Currency Format</Form.Label>
                                 <Form.Control type="text" defaultValue={this.state.userData.account.currencyFormat} name="currencyFormat" placeholder="Currency Format" onChange={HandleChange} />
                             </Form.Group>
+                        </Col>
+                            
                         </Row>
                     </Form>
                     <br></br>
                     <div style={{marginLeft : "1%"}}>
                      <Button onClick={handleSubmit} disabled={this.state.disable} varient = "success">SAVE NEW INFORMATION</Button>
                     </div>
-
               </TabPane>
+
               <TabPane tab="Payment Info" key="2">
                 <Payment></Payment>
              </TabPane>

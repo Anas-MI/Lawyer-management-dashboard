@@ -375,8 +375,6 @@ class editCompany extends React.Component {
                   </Form.Group>
                   <p className="help-block text-danger">{error.FirstName}</p>
                 </Col>
-                <Col></Col>
-                <Col></Col>
               </Form.Row>
 
               <DynamicFeilds
@@ -445,7 +443,7 @@ class editCompany extends React.Component {
                 return (
                   <div className="mb-3">
                     <Form.Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Type</Form.Label>
                           <Form.Control
@@ -462,7 +460,7 @@ class editCompany extends React.Component {
                         </Form.Group>
                         <p className="help-block text-danger">{errors.Type}</p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Street</Form.Label>
                           <Form.Control
@@ -480,7 +478,7 @@ class editCompany extends React.Component {
                       </Col>
                     </Form.Row>
                     <Form.Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>City</Form.Label>
                           <Form.Control
@@ -496,7 +494,7 @@ class editCompany extends React.Component {
                           {errors.City[index]}
                         </p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>State</Form.Label>
                           <Form.Control
@@ -514,7 +512,7 @@ class editCompany extends React.Component {
                       </Col>
                     </Form.Row>
                     <Form.Row>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>ZipCode</Form.Label>
                           <Form.Control
@@ -530,7 +528,7 @@ class editCompany extends React.Component {
                           {errors.ZipCode[index]}
                         </p>
                       </Col>
-                      <Col>
+                      <Col sm>
                         <Form.Group controlId={index}>
                           <Form.Label>Country</Form.Label>
                           <select
