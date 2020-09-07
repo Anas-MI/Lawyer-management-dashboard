@@ -15,11 +15,15 @@ const SubscriptionManagement = (props) => {
     //Search Related 
     const [state,setState] = useState({})
     const [tableData, settableData] = useState([])
+    const [dataSrc, setDataSrc] = useState([]);
+    const [dataSrcforApp, setDataSrcforApp] = useState([]);
     const [Approved, setApproved] = useState([])
+    const [value, setValue] = useState('');
     const [Declined, setDeclined] = useState([])
+    const [dataSrcforDec, setDataSrcforDec] = useState([]);
     const [planName, setPlanName] = useState([])
     const [planAmount, setPlanAmount] = useState([])
-
+    const [showNameInput, setShowNameInput] = useState(false);
     // fetch the subscription plan name and amount to filter the data in table. 
     const fetchSubs = ( ) =>{
       api.get(`subscription/showall`).then((res)=>{
@@ -30,6 +34,8 @@ const SubscriptionManagement = (props) => {
         res.data.data.map((val, i)=>{
            val.key = i
            val.date= (val.created_at).substr(0,10)
+           val.name = val.userId.firstName + " " + val.userId.lastName
+           val.email = val.userId.emailAddress
          //  val.requestGranted = val.requestGranted ? "YES" : "NO"
 
            if(val.requestGranted === "Yes"){
@@ -131,7 +137,8 @@ const SubscriptionManagement = (props) => {
         setState({ searchText: '' });
       };
      const  deleteHandler = (_id) => {
-        api.get('subscription/edit/' + _id , ).then((res)=>{
+       console.log(_id)
+        api.get('subscription/delete/' + _id ).then((res)=>{
           console.log(res)
           notification.success({message : "Request Deleted"})
           fetchSubs()
@@ -143,6 +150,16 @@ const SubscriptionManagement = (props) => {
       const  handleDecline = (record) => {
         record.requestGranted = "Declined"
         console.log(record)
+
+        const userData = {
+          registeredOn : record
+      }
+        api.post(`user/update/${record.userId._id}` , userData).then((res=>{
+                console.log(res)
+            })).catch((err)=>{
+                console.log(err)
+            })
+
         api.post('subscription/edit/' + record._id , record).then((res)=>{
           console.log(res)
           notification.success({message : "Request Declined"})
@@ -154,6 +171,17 @@ const SubscriptionManagement = (props) => {
       }
       const  handleApprove = (record) => {
         record.requestGranted = "Yes"
+        record.date = new Date()
+        console.log(record)
+        const userData = {
+          registeredOn : record
+      }
+        api.post(`user/update/${record.userId._id}` , userData).then((res=>{
+                console.log(res)
+            })).catch((err)=>{
+                console.log(err)
+            })
+            
         api.post('subscription/edit/' + record._id , record).then((res)=>{
           console.log(res)
           notification.success({message : "Request Approved"})
@@ -163,21 +191,140 @@ const SubscriptionManagement = (props) => {
         })
        
       }
+      const FilterByNameInput = (
+        <div>
+          <SearchOutlined
+          style={{"vertical-align": "revert"}}
+            onClick={() => {
+              var dump =
+                showNameInput === false
+                  ? setShowNameInput(true)
+                  : setShowNameInput(false);
+            }}
+          />
+          <span style={{paddingLeft : "8px"}}> Username </span>
+    
+          {showNameInput && (
+            <div style={{paddingTop : "10px"}}>
+              <input
+                placeholder="Search"
+                value={value}
+                onChange={(e) => {
+                  let filteredData;
+                  setValue(e.target.value);
+                  if (e.target.value.length !== 0 || e.target.value === '') {
+                    filteredData = tableData.filter((item) =>
+                      item.name
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    );
+                    setDataSrc(filteredData);
+                  } else {
+                    setDataSrc(tableData);
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+      const FilterByNameInputForApproved = (
+        <div>
+          <SearchOutlined
+          style={{"vertical-align": "revert"}}
+            onClick={() => {
+              var dump =
+                showNameInput === false
+                  ? setShowNameInput(true)
+                  : setShowNameInput(false);
+            }}
+          />
+          <span style={{paddingLeft : "8px"}}> Username </span>
+    
+          {showNameInput && (
+            <div style={{paddingTop : "10px"}}>
+              <input
+                placeholder="Search"
+                value={value}
+                onChange={(e) => {
+                  let filteredData;
+                  setValue(e.target.value);
+                  if (e.target.value.length !== 0 || e.target.value === '') {
+                    filteredData = Approved.filter((item) =>
+                      item.name
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    );
+                    setDataSrcforApp(filteredData);
+                  } else {
+                    setDataSrcforApp(Approved);
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+      const FilterByNameInputForDec = (
+        <div>
+          <SearchOutlined
+          style={{"vertical-align": "revert"}}
+            onClick={() => {
+              var dump =
+                showNameInput === false
+                  ? setShowNameInput(true)
+                  : setShowNameInput(false);
+            }}
+          />
+          <span style={{paddingLeft : "8px"}}> Username </span>
+    
+          {showNameInput && (
+            <div style={{paddingTop : "10px"}}>
+              <input
+                placeholder="Search"
+                value={value}
+                onChange={(e) => {
+                  let filteredData;
+                  setValue(e.target.value);
+                  if (e.target.value.length !== 0 || e.target.value === '') {
+                    filteredData = Declined.filter((item) =>
+                      item.name
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    );
+                    setDataSrcforDec(filteredData);
+                  } else {
+                    setDataSrcforDec(Declined);
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
       const columnsForApproved = [
       
-        /*
+      
        {
            title: "Email",
            dataIndex: "email",
-           key: "_id",
-           ...getColumnSearchProps('email'),
-           sorter: (a, b ,c) => ( 
-               c==='ascend'
-               ?a.email<b.email
-               :a.email>b.email
-           )
+           key: "email",
        },
-       */
+      
+       {
+        title: FilterByNameInputForApproved,
+        dataIndex: 'name',
+        key: '_id',
+  
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+            searchWords={[value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
+      },
       {
        title: "Request Date",
        dataIndex: "date",
@@ -227,6 +374,18 @@ const SubscriptionManagement = (props) => {
          );
        },
      },
+     {
+      title: 'Invoice',
+      dataIndex: 'Invoice',
+      key: 'Invoice',
+      render: (_, record) => {
+        return (
+          
+            <Button onClick={()=>{props.history.push('/subscription/invoice', record)}}>View</Button>
+         
+        );
+      },
+    },
      {
        title: 'Delete',
        dataIndex: 'delete',
@@ -279,19 +438,25 @@ const SubscriptionManagement = (props) => {
    ]
     const columns = [
       
-         /*
-        {
-            title: "Email",
-            dataIndex: "email",
-            key: "_id",
-            ...getColumnSearchProps('email'),
-            sorter: (a, b ,c) => ( 
-                c==='ascend'
-                ?a.email<b.email
-                :a.email>b.email
-            )
-        },
-        */
+      {
+        title: "Email",
+        dataIndex: "email",
+        key: "email",
+    },
+       {
+        title: FilterByNameInput,
+        dataIndex: 'name',
+        key: '_id',
+  
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+            searchWords={[value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
+      },
        {
         title: "Request Date",
         dataIndex: "date",
@@ -323,6 +488,150 @@ const SubscriptionManagement = (props) => {
           //render: text => <a style={{"color" : "blue"}}>{text}</a>,
           //sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
           //  sortDirections: ['descend'],
+      },
+      {
+        title: 'Approve',
+        dataIndex: 'Approve',
+        key: 'Approve',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure you want to Approve this Request?"
+              onConfirm={() => handleApprove(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button>Approve</Button>
+            </Popconfirm>
+          );
+        },
+      },
+      {
+        title: 'Invoice',
+        dataIndex: 'Invoice',
+        key: 'Invoice',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{props.history.push('/subscription/invoice', record)}}>View</Button>
+           
+          );
+        },
+      },
+      {
+        title: 'Delete',
+        dataIndex: 'delete',
+        key: 'delete',
+        render: (_, record) => {
+          return (
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={() => deleteHandler(record._id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger>Delete</Button>
+            </Popconfirm>
+          );
+        },
+      },
+      
+
+        /*
+        {
+            title: "Subscription Amount",
+            dataIndex: "subscriptionPlan",
+            key: "_id",
+            filters: planAmount,
+              onFilter: (value, record) => record.subscriptionPlan.indexOf(value) === 0,
+              sorter: (a, b) => a.subscriptionPlan.length - b.subscriptionPlan.length,
+              sortDirections: ['descend'],
+        },
+        {
+            title: "Download Invoice",
+            dataIndex: "DownloadInvoice",
+            key: "_id",
+            render:(_,record)=>{
+                return (
+                    <Button>Download</Button>
+                )
+            }
+        },
+        {
+            title: "Send Invoice",
+            dataIndex: "Send Invoice",
+            key: "_id",
+            render:(_,record)=>{
+                return (
+                    <Button>Send</Button>
+                )
+            }
+        },*/
+    ]
+    const columnsforDec = [
+      
+      {
+        title: "Email",
+        dataIndex: "email",
+        key: "email",
+    },
+       {
+        title: FilterByNameInputForDec,
+        dataIndex: 'name',
+        key: '_id',
+  
+        render: (text) => (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+            searchWords={[value]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ),
+      },
+       {
+        title: "Request Date",
+        dataIndex: "date",
+        key: "_id",
+        /* 
+        filters: planName,
+          onFilter: (value, record) => record.subscriptionName.indexOf(value) === 0,
+          sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
+          sortDirections: ['descend'],
+          */
+    },
+   
+        {
+            title: "Subscription Type",
+            dataIndex: "subscriptionRequested",
+            key: "_id",
+            /* 
+            filters: planName,
+              onFilter: (value, record) => record.subscriptionName.indexOf(value) === 0,
+              sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
+              sortDirections: ['descend'],
+              */
+        },
+        
+        {
+          title: "Request Granted",
+          dataIndex: "requestGranted",
+          key: "requestGranted",
+          //render: text => <a style={{"color" : "blue"}}>{text}</a>,
+          //sorter: (a, b) => a.subscriptionName.length - b.subscriptionName.length,
+          //  sortDirections: ['descend'],
+      },
+      {
+        title: 'Invoice',
+        dataIndex: 'Invoice',
+        key: 'Invoice',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{props.history.push('/subscription/invoice', record)}}>View</Button>
+           
+          );
+        },
       },
       {
         title: 'Approve',
@@ -411,7 +720,7 @@ const SubscriptionManagement = (props) => {
       ];
 
       const handleView = (record) => {
-        props.history.push('/view/subscription', record._id);
+        props.history.push('/view/subscription', record);
       };
 
     return (
@@ -429,7 +738,9 @@ const SubscriptionManagement = (props) => {
               <TabPane tab="Approved" key="1">
               <Table
                  className="table-responsive"
-                  dataSource={Approved}
+                 dataSource={
+                  dataSrcforApp.length === 0 && value === '' ? Approved : dataSrcforApp
+                }
                    columns={columnsForApproved}
                    onRow={(record, rowIndex) => {
                     return {
@@ -445,7 +756,9 @@ const SubscriptionManagement = (props) => {
               <TabPane tab="Pending" key="2">
                 <Table
                  className="table-responsive"
-                  dataSource={tableData}
+                 dataSource={
+                  dataSrc.length === 0 && value === '' ? tableData : dataSrc
+                }
                    columns={columns}
                    onRow={(record, rowIndex) => {
                     return {
@@ -461,8 +774,10 @@ const SubscriptionManagement = (props) => {
               <TabPane tab="Declined" key="3">
               <Table
                  className="table-responsive"
-                  dataSource={Declined}
-                   columns={columns}
+                 dataSource={
+                  dataSrc.length === 0 && value === '' ? Declined : dataSrcforDec
+                }
+                   columns={columnsforDec}
                    onRow={(record, rowIndex) => {
                     return {
                       onDoubleClick: () => handleView(record), // double click row

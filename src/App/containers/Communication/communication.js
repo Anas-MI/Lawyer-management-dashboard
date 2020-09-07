@@ -371,47 +371,54 @@ class Communication extends React.Component{
 
                 }
                 let sms = {
-                  number : number,
-                  message : data.body
+                  mobile : number,
+                  content : data.body
                 }
-                console.log(data)
-                api.post(`/communication/sendsms`, sms ).then((smsres)=>{
-                  console.log(smsres)
-                  notification.success({
-                    message : "SMS Sent"
-                  })
-                
-                }).catch((err)=>{
-                  console.log(err)
-                  notification.error({message : "Failed to send the sms"})
-                })
-
-                api.post(`/communication/sendemail`, email ).then((email)=>{
-                  console.log(email)
-                  notification.success({
-                    message : "Email Sent"
-                  })
-                  api
-                  .post('/communication/create', data)
-                  .then((res) => {
-                    console.log(res)              
-                    this.componentDidMount()
-                    notification.success({ message: 'Log Added !' });
-                  })
-                  .catch((err) => {
-                    notification.error({ message: 'Failed' });
-                  }).then(()=>{
-                    this.setState({
-                      disable : false,
-                      secure : false,
-                      editSecure : false
+                console.log(email)
+                console.log(sms)
+                if(number !== ""){
+                  api.post(`/communication/sendsms`, sms ).then((smsres)=>{
+                    console.log(smsres)
+                    notification.success({
+                      message : "SMS Sent"
                     })
-                    ReactDOM.findDOMNode(this.messageForm).reset()
+                  
+                  }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed to send the sms"})
                   })
-                }).catch((err)=>{
-                  console.log(err)
-                  notification.error({message : "Failed to send the email"})
-                })
+                }
+
+                
+                if(emailAddress !== ""){
+                  api.post(`/communication/sendemail`, email ).then((email)=>{
+                    console.log(email)
+                    notification.success({
+                      message : "Email Sent"
+                    })
+                    api
+                    .post('/communication/create', data)
+                    .then((res) => {
+                      console.log(res)              
+                      this.componentDidMount()
+                      notification.success({ message: 'Log Added !' });
+                    })
+                    .catch((err) => {
+                      notification.error({ message: 'Failed' });
+                    }).then(()=>{
+                      this.setState({
+                        disable : false,
+                        secure : false,
+                        editSecure : false
+                      })
+                      ReactDOM.findDOMNode(this.messageForm).reset()
+                    })
+                  }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed to send the email"})
+                  })
+                }
+                
 
                
          

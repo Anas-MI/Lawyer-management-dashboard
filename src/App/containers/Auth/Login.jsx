@@ -95,8 +95,12 @@ const Login = (props) => {
           if (err) {
             setDisplay(true)
             console.log(err)
-            if(err.message === "Your trails period is expired."){
+            if(err.message === "Your trails period is expired."  || 
+              err.message === "You payment has been declined." || 
+              err.message === "Payment confirmation awaited."){
+
               props.history.push('/plans/subscription')
+
             }
             notification.error(err);
           } else {
