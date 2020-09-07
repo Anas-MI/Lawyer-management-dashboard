@@ -96,6 +96,7 @@ const AddMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/AddMatter')
 );
 const Invoice = React.lazy(() => import('./App/components/Invoice/Invoice'));
+const SubscriptonInvoice = React.lazy(() => import('./App/containers/SubscriptionManagement/Invoice'));
 const EditMatter = React.lazy(() =>
   import('./App/components/AddEditMatter/EditMatter')
 );
@@ -219,6 +220,12 @@ export const adminRoutes = [
     exact: true,
     name: 'Manage Subscription',
     component: SubscriptionManagement,
+  },
+  {
+    path: '/subscription/invoice',
+    exact: true,
+    name: 'Subscription Invoice',
+    component: SubscriptonInvoice,
   },
   {
     path: '/view/subscription',
@@ -398,6 +405,7 @@ const routes = [
     name: 'Invoice',
     component: Invoice,
   },
+ 
   { path: '/settings', exact: true, name: 'Settings', component: Settings },
   {
     path: '/settings/customFeilds',

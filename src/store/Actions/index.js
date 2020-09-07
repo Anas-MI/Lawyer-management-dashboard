@@ -119,6 +119,11 @@ export const loginUser = (payload, cb) => {
         let now = new Date()
         let expiry_date = created_at
         expiry_date.setDate(created_at.getDate() + 15)
+        if(res.data.token.user.registeredOn == undefined){
+          res.data.token.user.registeredOn = {
+
+          }
+        }
         
         if (payload.type === "user") {
           if (res.data.token.user.admin) {
@@ -136,12 +141,24 @@ export const loginUser = (payload, cb) => {
               message: "E-Mail not Verified",
             });
           }
-          if(now > expiry_date ){
+          if( res.data.token.user.registeredOn.requestGranted === "Declined"){
+            window.localStorage.setItem('userId' , res.data.token.user._id)
+            return cb({
+              message: "You payment has been declined.",
+            });
+          }  
+          if( res.data.token.user.registeredOn.requestGranted === "No"){
+            window.localStorage.setItem('userId' , res.data.token.user._id)
+            return cb({
+              message: "Payment confirmation awaited.",
+            });
+          }  
+
+          if(now > expiry_date && res.data.token.user.registeredOn.requestGranted !== "Yes"){
             window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
               message: "Your trails period is expired.",
             });
-            
           }  
         } else {
     

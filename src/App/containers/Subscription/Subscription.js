@@ -37,6 +37,15 @@ class subscription extends Component {
                 data.subscriptionRequested = "yearly"
                 window.location.href = 'https://www.fygaro.com/en/payments/b2489fb2-225b-4839-a9ae-d8b1726fe58e/buy-now'
             }
+            const userData = {
+                registeredOn : data
+            }
+            
+            api.post(`user/update/${data.userId}` , userData).then((res=>{
+                console.log(res)
+            })).catch((err)=>{
+                console.log(err)
+            })
 
             api.post(`subscription/create`, data).then((res)=>{
                 console.log(res)
