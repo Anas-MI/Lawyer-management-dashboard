@@ -32,24 +32,26 @@ const SubscriptionManagement = (props) => {
         let declined = []
         console.log(res)
         res.data.data.map((val, i)=>{
-           val.key = i
-           val.date= (val.created_at).substr(0,10)
-           val.name = val.userId.firstName + " " + val.userId.lastName
-           val.email = val.userId.emailAddress
-         //  val.requestGranted = val.requestGranted ? "YES" : "NO"
+         if( val.userId != null ){
+          val.key = i
+          val.date= (val.created_at).substr(0,10)
+          val.name = val.userId.firstName + " " + val.userId.lastName
+          val.email = val.userId.emailAddress
+        //  val.requestGranted = val.requestGranted ? "YES" : "NO"
 
-           if(val.requestGranted === "Yes"){
-             val.requestGranted = "Yes"
-             approved.push(val)
-            }else
-            if(val.requestGranted === "Declined"){
-              val.requestGranted = "Declined"
-              declined.push(val)
-            }else
-            {
-              val.requestGranted = "No"
-              tableData.push(val)
-            }
+          if(val.requestGranted === "Yes"){
+            val.requestGranted = "Yes"
+            approved.push(val)
+           }else
+           if(val.requestGranted === "Declined"){
+             val.requestGranted = "Declined"
+             declined.push(val)
+           }else
+           {
+             val.requestGranted = "No"
+             tableData.push(val)
+           }
+          }
         })
        
         settableData(tableData)
