@@ -49,13 +49,17 @@ const GrowthChart = (props) => {
 
 
   return (
-    <div style={{display:'flex'}}>
+    <>
+      <Row>
+        <Col sm className="card col-md-5 mx-3">
+          <Line {...config} />
+        </Col>
+        <Col sm className="card col-md-5 mx-3">
+          <Line {...subconfig} />
+        </Col>
+      </Row>
 
-          <Line {...config} style={{width:'auto'}} />
-      
-          <Line {...subconfig}  style={{width:'auto'}} />
-
-
+          
       {/* <Dropdown >
         <Dropdown.Toggle variant={"link"} id="dropdown-basic">
           Growth Chart
@@ -86,7 +90,7 @@ const GrowthChart = (props) => {
         type==='user'
       } */}
       
-    </div>
+    </>
   );
 };
 export default GrowthChart;

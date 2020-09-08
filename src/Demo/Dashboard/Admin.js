@@ -216,7 +216,7 @@ class AdminDashboard extends React.Component {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col md={6} xl={8}>
+                    <Col md={12}>
                         <GrowthChart/>
                     </Col>
 
