@@ -978,11 +978,9 @@ label {
 }
 .ant-table-thead > tr > th {
   vertical-align: baseline;
-  min-width: 111px;
+  min-width: 126px;
 }
-.ant-table-filter-trigger-container{
-  margin-bottom: 20px;
-}
+
 .short-activity-botton {
   margin-left: 0.5rem;
   margin-top: 1rem;
