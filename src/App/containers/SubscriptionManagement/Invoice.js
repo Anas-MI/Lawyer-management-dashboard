@@ -4,7 +4,7 @@ import api from '../../../resources/api';
 import jsPDF from 'jspdf';
 import {Card, Button } from 'antd';
 import 'jspdf-autotable';
-
+import html2canvas from 'html2canvas'
 import ReactDOMServer from 'react-dom/server';
 
 import html2pdf from 'simple-html2pdf';
@@ -18,8 +18,8 @@ const Invoice = (props) => {
   console.log(props)
 
   const exportPDF = () => {
-    var canvas = document.getElementById('canvas');
-    var pdf = new jsPDF('p', 'mm', 'a4');
+    var input = document.getElementById('canvas');
+   // 
     // pdf.html(canvas, {
     //   callback: function () {
     //     pdf.save('testing.pdf');
@@ -27,13 +27,23 @@ const Invoice = (props) => {
     //   },
     // });
     // pdf.save('test.pdf');
-    pdf.addPage(
-      canvas,
 
-      function () {
-        pdf.save('invoice.pdf');
-      }
-    );
+    
+      html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+        });
+        const imgProps= pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth() ;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('Invoice.pdf');
+      });
+    ;
+
   };
   /*
   const street = props.location.state.clientData.address.street 
@@ -65,8 +75,8 @@ const country =  props.location.state.clientData.address.country
 
   const invoiceForm = () => (
     
-    <Card  bodyStyle={{"padding": "30px"}} className="mb-3">
-    <div id="canvas" className="text-center P-3">
+    <Card className="mb-3">
+    <div style={{"padding": "7%"}} id="canvas" className="text-center P-3">
         {
 /* 
   <div>
