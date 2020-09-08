@@ -171,7 +171,7 @@ const Invoice = (props) => {
             {props.location.state.timeData.map((item, index) => (
               <tr key={index}>
                 <th scope="row">{item.date}</th>
-                <td>{item.qty}</td>
+                <td>{item.time}</td>
                 <td>{item.description}</td>
                 <td>&#8377;{item.rate}</td>
                 <td>{item.subTotal}</td>
@@ -195,7 +195,7 @@ const Invoice = (props) => {
             {props.location.state.expenseData.map((item, index) => (
               <tr key={index}>
                 <th scope="row">{item.date}</th>
-                <td>{item.time}</td>
+                <td>{item.qty}</td>
                 <td>{item.description}</td>
                 <td>&#8377;{item.rate}</td>
                 <td>{item.subTotal}</td>

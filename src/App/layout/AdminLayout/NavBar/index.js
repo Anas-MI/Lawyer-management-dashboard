@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import { Row, Col } from 'react-bootstrap';
 import NavLeft from "./NavLeft";
 import NavRight from "./NavRight";
 import Aux from "../../../../hoc/_Aux";
@@ -32,9 +32,9 @@ class NavBar extends Component {
                         </a>
                     </div>
                     <a className="mobile-menu" id="mobile-header" href={DEMO.BLANK_LINK}><i className="feather icon-more-horizontal"/></a>
-                    <div className="collapse navbar-collapse">
-                        <NavLeft/>
-                        <NavRight rtlLayout={this.props.rtlLayout} />
+                    <div className="collapse navbar-collapse nav-res-flex" style={{"justify-content" : "space-between"}}>                    
+                            <NavLeft/>
+                            <NavRight rtlLayout={this.props.rtlLayout} />                                   
                     </div>
                 </header>
             </Aux>
