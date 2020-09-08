@@ -23,33 +23,36 @@ const LawyerDetail = props => {
     return (
         <div>
        <Aux>
-                <Row>
+            <Row>
                 <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
-                            <Card.Header style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                                <Card.Title as='h5'>Lawyer Info</Card.Title>
-                                <Button onClick={handleLawyerDashboard}>View Dashboard</Button>
+                            <Card.Header>
+                                <Row>
+                                    <Col sm className="my-auto"><h6 className='mb-4'><b>Lawyer Info</b></h6></Col>
+                                    <Col sm className="mt-1"><Button onClick={handleLawyerDashboard}>View Dashboard</Button></Col>
+                                </Row>                                
                             </Card.Header>
-                            <Card.Body className='px-0 py-2'>
-                                <Table responsive hover>
-                                    <tbody>
-                                    <tr className="unread">
-                                        <td>First Name</td><td>{selectedLawyer.firstName}</td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td>Last Name</td><td>{selectedLawyer.lastName}</td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td>Email Address</td><td>{selectedLawyer.emailAddress}</td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td>Country</td><td>{selectedLawyer.countryOfPractice}</td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td>Firm Size</td><td>{selectedLawyer.lawFirmSize}</td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
+                            <Card.Body className='px-3 py-2'>
+                                <Row className="m-3">
+                                    <Col sm><span className="table-span-dark">First Name</span></Col>
+                                    <Col sm><span className="table-span-light">{selectedLawyer.firstName}</span></Col>
+                                </Row>
+                                <Row className="m-3">
+                                    <Col sm><span className="table-span-dark">Last Name</span></Col>
+                                    <Col sm><span className="table-span-light">{selectedLawyer.lastName}</span></Col>
+                                </Row>
+                                <Row className="m-3">
+                                    <Col sm><span className="table-span-dark">Email Address</span></Col>
+                                    <Col sm><span className="table-span-light">{selectedLawyer.emailAddress}</span></Col>
+                                </Row>
+                                <Row className="m-3">
+                                    <Col sm><span className="table-span-dark">Country</span></Col>
+                                    <Col sm><span className="table-span-light">{selectedLawyer.countryOfPractice}</span></Col>
+                                </Row>
+                                <Row className="m-3">
+                                    <Col sm><span className="table-span-dark">Firm Size</span></Col>
+                                    <Col sm><span className="table-span-light">{selectedLawyer.lawFirmSize}</span></Col>
+                                </Row>                                
                             </Card.Body>
                         </Card>
                     </Col>
@@ -58,46 +61,28 @@ const LawyerDetail = props => {
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Total Matters</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> */}
-                                             297</h3>
-                                    </div>
-
-                                </div>
+                                <h6 className='mb-4'><b>Total Matters</b></h6>
+                                <p className="m-0" style={{fontSize : "24px"}}>297</p>
                             </Card.Body>
                         </Card>
                     </Col>
                     <Col md={6} xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Payments Received</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> */}
-                                             314$</h3>
-                                    </div>
-                                </div>
+                                <h6 className='mb-4'><b>Payments Received</b></h6>
+                                <p className="m-0" style={{fontSize : "24px"}}><b>314$</b></p>
                             </Card.Body>
                         </Card>
                     </Col>
                     <Col xl={4}>
                         <Card>
                             <Card.Body>
-                                <h6 className='mb-4'>Contacts</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-4">
-                                        <div className="f-w-300 d-flex align-items-center m-b-0">
-                                            {/* <i className="feather icon-arrow-up text-c-green f-30 m-r-5"/>  */}
-                                            +91-1254785214</div>
-                                    </div>
-                                </div>
+                                <h6 className='mb-4'><b>Contacts</b></h6>
+                                <p>+91-1254785214</p>
                             </Card.Body>
                         </Card>
                     </Col>
+
                     <Col md={6} xl={8}>
                         <Card className='Recent-Users'>
                             <Card.Header>

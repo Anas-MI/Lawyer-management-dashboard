@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space, notification } from "antd";
+import { Table,Button,Input, Space, notification, Card } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
@@ -295,19 +295,21 @@ const LawyerManagement = (props) => {
   // }
 
   return (
-    <div>
-      <Table dataSource={lawyers} columns={columns}
-        onRow={(record, rowIndex) => {
-            return {
-              onDoubleClick: event => {}, // double click row
-              onContextMenu: event => {}, // right button click row
-              onMouseEnter: event => {}, // mouse enter row
-              onMouseLeave: event => {}, // mouse leave row
-            };
-          }}>
+    <>
+      <Card bodyStyle={{ padding: '0px' }} className="overflow-auto">
+          <Table className="table-responsive" dataSource={lawyers} columns={columns}
+            onRow={(record, rowIndex) => {
+                return {
+                  onDoubleClick: event => {}, // double click row
+                  onContextMenu: event => {}, // right button click row
+                  onMouseEnter: event => {}, // mouse enter row
+                  onMouseLeave: event => {}, // mouse leave row
+                };
+              }}>
 
-      </Table>
-    </div>
+          </Table>
+      </Card>
+    </>
   );
 };
 
