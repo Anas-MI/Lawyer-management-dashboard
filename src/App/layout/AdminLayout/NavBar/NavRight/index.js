@@ -20,6 +20,7 @@ class NavRight extends Component {
 
         return (
             <Aux>
+                <div>
                 <ul className="navbar-nav ml-auto">
                     <li><Timer/></li>
                     {/* <li>
@@ -106,6 +107,7 @@ class NavRight extends Component {
                     </li> */}
                 </ul>
                 <ChatList listOpen={this.state.listOpen} closed={() => {this.setState({listOpen: false});}} />
+                </div>
             </Aux>
         );
     }
