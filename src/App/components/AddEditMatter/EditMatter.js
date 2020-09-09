@@ -212,21 +212,21 @@ class AddEditMatter extends React.Component{
                 </Form.Control>
               </Form.Group>
               <Form.Row className="matter-res-date">
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupOpenDate">
                   <Form.Label>Open Date</Form.Label>
                   <Form.Control name='openDate' type="Date" defaultValue={this.state.editData.openDate} 
                   onChange={this.handleChange}/>
                   </Form.Group>
                 </Col>
-                <Col>  
+                <Col sm>  
                   <Form.Group controlId="formGroupClosing Date">
                   <Form.Label>Closing Date</Form.Label>
                   <Form.Control name='closeDate' type="Date" defaultValue={this.state.editData.closeDate}
                    onChange={this.handleChange}/>
                   </Form.Group>
                 </Col>  
-                <Col>
+                <Col sm>
                   <Form.Group controlId="formGroupPendingDate">
                   <Form.Label>Pending Date</Form.Label>
                   <Form.Control name='pendingDate' type="Date" defaultValue={this.state.editData.pendingDate}

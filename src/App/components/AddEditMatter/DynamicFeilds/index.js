@@ -28,7 +28,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{this.props.error[idx]}</p>
              </Col>
-             <Col>
+             <Col sm>
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
                   <Form.Control as="select" name='contact' defaultValue ={val.contact} onChange={this.props.change}>
@@ -38,7 +38,7 @@ class DynamicFeilds extends React.Component {
                  </Form.Group>
             </Col>
             
-            <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
+            <Button id={idx} style={{ "height": "45px",  "margin": "auto"}} name={this.props.name} onClick={this.props.delete}>-</Button>
         </Row> 
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact" id={idx} checked={val.billThis} onChange={this.props.change} />
@@ -61,7 +61,7 @@ class DynamicFeilds extends React.Component {
                     </Form.Group>
                     <p className="help-block text-danger">{this.props.error[idx]}</p>
              </Col>
-             <Col>
+             <Col sm>
                   <Form.Group controlId={idx}>
                   <Form.Label>Contact</Form.Label>
                   <Form.Control as="select" name="contact" onChange={this.props.change}  >
@@ -70,7 +70,7 @@ class DynamicFeilds extends React.Component {
                  </Form.Control>
                  </Form.Group>
             </Col>
-            <Button id={idx} style={{ "height": "45px", "margin-top": "25px"}} name={this.props.name} onClick={this.props.delete}>-</Button>
+            <Button id={idx} style={{ "height": "45px", "margin": "auto"}} name={this.props.name} onClick={this.props.delete}>-</Button>
         </Row> 
           <Form.Group controlId={idx}>
             <Form.Check name="billThis" type="checkbox" label="Bill this contact"   onChange={this.props.change}  />

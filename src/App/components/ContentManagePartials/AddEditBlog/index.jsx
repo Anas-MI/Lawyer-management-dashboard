@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateBlog, createBlog } from '../../../../store/Actions';
 import { Form, Button } from 'react-bootstrap';
-import { notification } from 'antd';
+import { notification, Card } from 'antd';
 import api from '../../../../resources/api';
 import { result } from 'lodash';
 
@@ -166,7 +166,8 @@ const AddEditBlog = (props) => {
   };
 
   return (
-    <div className="w-75 m-auto">
+    <>
+      <Card>
       <h3 className="text-center">Add New Blog</h3>
       <Form className="form-details">
         <Form.Group controlId="formGroupEmail">
@@ -228,7 +229,8 @@ const AddEditBlog = (props) => {
         </Form.Group>
         <Button onClick={handleSubmit}>{editMode ? 'Update' : 'Create'}</Button>
       </Form>
-    </div>
+      </Card>
+    </>
   );
 };
 
