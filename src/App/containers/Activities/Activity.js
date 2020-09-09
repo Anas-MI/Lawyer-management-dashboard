@@ -213,7 +213,7 @@ class Activity extends React.Component {
  
     notification.destroy();
     if (timeError !== '') {
-      notification.error({ message: 'Invalid time' });
+      notification.error({ message: 'Invalid time, Please enter time in the format : HH:MM:SS' });
     } else if (this.state.data.date === '') {
       notification.error({ message: 'Please select a Date' });
     } else if (this.state.data.rate === '') {

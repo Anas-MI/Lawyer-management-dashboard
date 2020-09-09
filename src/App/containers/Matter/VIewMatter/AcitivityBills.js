@@ -198,7 +198,7 @@ class Activity extends React.Component{
    
         notification.destroy()
         if(timeError !== ""){
-          notification.error({message : "Invalid time"})
+          notification.error({message : "Invalid time,  Please enter time in the format : HH:MM:SS"})
         }else
         if(this.state.data.date === ""){
             notification.error({message : "Please select a Date"})
@@ -212,7 +212,7 @@ class Activity extends React.Component{
               data.type = "time"
               data.userId = this.props.userId
               api.post('/activity/create', data).then((res)=>{
-           
+                this.componentDidMount()
                 notification.success({message : "Time entry Added !"})
               }).catch((err)=>{
                 this.componentDidMount()
@@ -279,6 +279,7 @@ class Activity extends React.Component{
       };
     
       handleCancel = type => {
+        
         if(type==="time"){
             this.setState({
                 timeModal : false,
@@ -311,7 +312,7 @@ class Activity extends React.Component{
      
              
         }
-       
+        this.setTimer()
       
       };
 
@@ -479,7 +480,7 @@ class Activity extends React.Component{
                 newData[name] = ""
               }
               
-            }else if (name === 'time') {
+            } else if (name === 'time') {
               timeError = '';
               var timeValue = value;
               if (timeValue == '' || timeValue.indexOf(':') < 0) {
@@ -607,15 +608,18 @@ class Activity extends React.Component{
                     <AddressForm HandleAddressChange={HandleAddressChange} type="To"></AddressForm>            
                  </div>
                  <div className="mt-3">
-                    <p><b>Matter</b></p>
+                    <p><b>MATTER</b></p>
+                    
+                    {/*
                     <Form className="quickBill">
                       <Form.Row>
                         <Col md="5">
-                        <Form.Control  type="text" placeholder="Small text" value={this.state.matter} />
+                        <Form.Control  type="text" placeholder="Small text" value={} />
                         </Col>
                       </Form.Row>
                     </Form>
-                    <p style={{fontWeight : '600'}}>{}</p><br/>
+                    */}
+                    <p style={{fontWeight : '600'}}>{this.state.matter}</p><br/>
                  </div>
               </div>
             </Card>

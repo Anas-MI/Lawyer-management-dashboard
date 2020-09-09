@@ -38,7 +38,7 @@ class Tasks extends React.Component {
       status: false,
       disable : false,
       spinning : true,
-      options : null,
+      options : [],
       index: 0
     };
   }
@@ -149,15 +149,15 @@ class Tasks extends React.Component {
     let tableData = [];
     let CompletedData = []
     let upcomingData = []
-
+    let options = []
     api
       .get('/matter/viewforuser/' + this.props.userId)
       .then((res) =>{
         response = res.data.data
         console.log(response);
-        options = response.map((value, index) => {
-      
-      return <option>{value.matterDescription}</option>;
+        response.map((value, index) => {
+        options.push( <option>{value.matterDescription}</option>)
+   
       } );
        
     });
@@ -677,7 +677,10 @@ class Tasks extends React.Component {
             name="matter"
           >
             <option>Select a matter</option>
-            {this.state.options}
+            {this.state.options.map((val)=>{
+              return val
+            })
+            }
           </Form.Control>
         </Form.Group>
         <br />
@@ -757,7 +760,10 @@ class Tasks extends React.Component {
                               name="matter"
                             >
                               <option>Select a matter</option>
-                              {this.state.options}
+                              {this.state.options.map((val)=>{
+                                  return val
+                                })
+                                }
                             </Form.Control>
                           </Form.Group>
 

@@ -435,7 +435,7 @@ class Dashboard extends React.Component {
                                         </div>
                                         :
                                         <div style={{ textAlign : "center"}}>
-                                            <Progress type="circle" percent={this.state.percent}  />
+                                            <Progress type="circle" percent={this.state.percent.toFixed('0')}  />
                 
                                   `          <h6 className = "responsive-target">{this.state.left} hours more to achive the target</h6>
                                              <div>

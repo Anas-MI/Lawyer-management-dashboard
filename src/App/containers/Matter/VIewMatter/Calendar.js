@@ -9,7 +9,8 @@ import {
   notification,
   Input,
   Checkbox,
-  Spin
+  Spin,
+  Popconfirm
 } from 'antd';
 
 export default function Calendar(props) {
@@ -100,14 +101,21 @@ export default function Calendar(props) {
       key: '7',
       render: (_, record) => {
         return (
-          <Button
-            className=" btn-outline-danger "
-            onClick={() => {
+          <Popconfirm
+            title="Are you sure?"
+            onConfirm={() => {
               handleDelete(record._id);
             }}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+            className=" btn-outline-danger "
           >
             Delete
           </Button>
+          </Popconfirm>
+          
         );
       },
     },

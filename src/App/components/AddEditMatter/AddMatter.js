@@ -34,8 +34,10 @@ class AddEditMatter extends React.Component{
       customFields : [{
       }],
       modal : false,
-      disable  : false
+      disable  : false,
+      taskOptions: []
     }
+
 
   }
   handleCustom(e){
@@ -50,6 +52,14 @@ class AddEditMatter extends React.Component{
       editMode= true;
       editRes= this.props.location.state
     }
+    let taskOptions = []
+    api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
+      console.log(res)
+      res.data.data.map((value, index)=>{
+        taskOptions.push(<option value={value._id}>{value.taskName}</option>)
+      })
+      this.setState({taskOptions : taskOptions})
+    })
     res = await api.get('/user/view/'+this.props.userId).then(
       contacts = await api.get('contact/viewforuser/'+this.props.userId))
     
@@ -69,7 +79,10 @@ class AddEditMatter extends React.Component{
               />
              </Form.Group>
     })
+
+    
     this.setState({optns : optns, customFields : customFields})
+
   }
    openNotificationWithIcon = type => {
     notification[type]({
@@ -141,10 +154,16 @@ class AddEditMatter extends React.Component{
  
     if(e.target.name==="client"){
        if(e.target.selectedIndex !=0){
-        this.setState(st=>({...st,[e.target.name]: contacts.data.data[e.target.selectedIndex - 1]}))
+         console.log("sahi jgh")
+        this.setState(st=>({...st,[e.target.name]: contacts.data.data[e.target.selectedIndex - 1]._id}))
        }else{
         this.setState(st=>({...st,[e.target.name]: ""}))
        }
+    }else
+    if(e.target.name === "task"){
+      if(e.target.selectedIndex != 0){
+        this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      }
     }else{
       this.setState(st=>({...st,[e.target.name]:e.target.value}))
     }
@@ -166,13 +185,16 @@ class AddEditMatter extends React.Component{
     const { id , value, name , checked ,selectedIndex } = e.target
     if(name==="billThis"){
       list.relatedContacts[id][name] = checked
+    }if(name === 'contact'){
+      console.log(contacts)
+      if(selectedIndex != 0){
+        list.relatedContacts[id][name] = contacts.data.data[selectedIndex -1]._id
+      list.relatedContacts[id].id = selectedIndex
+      }
     }else{
     list.relatedContacts[id][name] = value
     }
-    if(name=='contact'){
-      list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
-      list.relatedContacts[id].id = selectedIndex
-    }
+    
     console.log(error.relationship)
     switch (name) {
       case "relationship":
@@ -267,7 +289,7 @@ class AddEditMatter extends React.Component{
                 <Col>  
                   <Form.Group controlId="formGroupClosing Date">
                   <Form.Label>Closing Date</Form.Label>
-                  <Form.Control name='closing Date' type="Date" placeholder="Closing Date" 
+                  <Form.Control name='closeDate' type="Date" placeholder="Closing Date" 
                     value={editRes.closeDate} onChange={handleChange}/>
                   </Form.Group>
                 </Col>  
@@ -308,7 +330,7 @@ class AddEditMatter extends React.Component{
           <Form className="form-details">
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>Rate</Form.Label>
-              <Form.Control as="select" onChange={handleChange} defaultValue={editRes.billingType}>
+              <Form.Control as="select" name="billingType" onChange={handleChange} defaultValue={editRes.billingType}>
                 <option>Flat</option>
                 <option>Hourly</option>
                 <option>Contagious</option>
@@ -323,10 +345,13 @@ class AddEditMatter extends React.Component{
           <Form className="form-details">
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>Task</Form.Label>
-                <Form.Control as="select" onChange={handleChange} defaultValue={editRes.task}>
-                  <option>Client Intake</option>
-                  <option>Task List</option>
-                  <option>New Task List</option>
+                <Form.Control as="select" name="task" onChange={handleChange} >
+                  <option>Select a task</option>
+                  {
+                    this.state.taskOptions.map((val)=>{
+                      return val
+                    })
+                  }
                 </Form.Control>
               </Form.Group>
           </Form>

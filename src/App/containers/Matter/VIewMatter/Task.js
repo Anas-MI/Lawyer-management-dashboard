@@ -35,7 +35,7 @@
         status: false,
         disable : false,
         spinning : true,
-        options : null,
+        options : [],
         index: 0
       };
     }
@@ -140,15 +140,15 @@
       let tableData = [];
       let CompletedData = []
       let upcomingData = []
-  
+      let options = []
       api
         .get('/matter/viewforuser/' + this.props.userId)
         .then((res) =>{
           response = res.data.data
           console.log(response);
-          options = response.map((value, index) => {
-        
-        return <option>{value.matterDescription}</option>;
+          response.map((value, index) => {
+          options.push( <option>{value.matterDescription}</option>)
+     
         } );
          
       });
@@ -668,7 +668,11 @@
               name="matter"
             >
               <option>Select a matter</option>
-              {this.state.options}
+              {
+              this.state.options.map((val)=>{
+                  return val
+                })
+                }
             </Form.Control>
           </Form.Group>
           <br />
@@ -748,7 +752,10 @@
                                 name="matter"
                               >
                                 <option>Select a matter</option>
-                                {this.state.options}
+                                {this.state.options.map((val)=>{
+                                return val
+                              })
+                              }
                               </Form.Control>
                             </Form.Group>
   

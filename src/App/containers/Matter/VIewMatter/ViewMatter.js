@@ -17,6 +17,8 @@ const { TabPane } = Tabs;
 function CompanyView(props) {
   let response = {};
   const [desc, setdesc] = useState('');
+  const [Active, setActive] = useState("1")
+  const [TabKey, setTabKey] = useState("")
   const [Loading, setLoading] = useState(true)
   const [total, settotal] = useState("0")
   const [Client, setClient] = useState('');
@@ -125,6 +127,7 @@ function CompanyView(props) {
 
     let data = [];
     //  setRealatedContacts(rcntct)
+    
     response.data.relatedContacts.map(async (value, index) => {
       console.log(value.contact);
       const cntct = await api.get('/contact/view/' + value.contact);
@@ -178,6 +181,7 @@ function CompanyView(props) {
         </Card>
       );
       setContact(data);
+      console.log(contact)
     });
 
     // setEvents(evnt)
@@ -225,6 +229,7 @@ function CompanyView(props) {
   };
   function callback(key) {
     console.log(key);
+    setActive(key)
   }
 
   const showModal = () => {
@@ -304,40 +309,55 @@ function CompanyView(props) {
           </Col>
         </Row>
       </Card>
-      <Tabs defaultActiveKey="1" onChange={callback} >
+      <Tabs activeKey= { Active } onChange={callback} >
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
           bodyStyle={{padding : "0px"}}
             title="Financial"
             extra={
-              <Button type="link" onClick={handleBills}>
-                Quick Bills
-              </Button>
+              <div>
+                <Button type="link" onClick={()=>{setActive("2")}}>Add expense/time entry</Button>
+
+                <Button type="link" onClick={()=>{setActive("9")}}>View Bills</Button>
+                <Button type="link" onClick={handleBills}>
+                  Quick Bills
+                </Button>
+              </div>
             }
             className="form-width mb-4"
           >
             <div className="text-center pt-2">
-              <div>Work In progress Amount</div>
+       
               <div class="d-flex py-2 mt-2 matter-amount">
                 <div style={{ flex: 1, 'border-right': '2px solid #B2E4D6' }}>
                   <p style={{fontSize : "13px"}}>
-                    <b>Outstanding Amount</b>
+                    <b>Work in progress amount</b>
                   </p>
                      <span>{parseFloat(total).toFixed('2')}</span>
                 </div>
-                <div style={{ flex: 1 }}>
+              
+                <div style={{ flex: 1, 'border-right': '2px solid #B2E4D6' }}>
                   <p style={{fontSize : "13px"}}>
                     <b>Trust Funds</b>
                   </p>
                   <span>$500.00</span>
                 </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{fontSize : "13px"}}>
+                    <b>Outstanding balance</b>
+                  </p>
+                  <span>$500.00</span>
+                </div>
+                
               </div>
             </div>
           </Card>
           <Card
             title="Details"
             extra={
-              <Button type="link" onClick={showModal}>
+              <Button type="link" onClick={() =>
+                props.history.push('/edit/matter', props.location.state.id)
+              }>
                 Add Contact
               </Button>
             }
