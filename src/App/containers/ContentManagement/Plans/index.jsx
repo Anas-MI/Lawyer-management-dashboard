@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space, notification } from "antd";
+import { Table, Button, Input, Space, notification,Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
@@ -186,6 +186,7 @@ const PlansManage = (props) => {
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
       </div>
+      <Card bodyStyle={{ padding: '0px' }} className="overflow-auto">
       <Table className="overflow-auto"
         dataSource={tableData}
         columns={columns}
@@ -198,6 +199,7 @@ const PlansManage = (props) => {
           };
         }}
       ></Table>
+      </Card>
     </div>
   );
 };
