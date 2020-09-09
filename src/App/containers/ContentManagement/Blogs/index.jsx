@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space, notification } from "antd";
+import { Table, Button, Input, Space, notification,Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
@@ -208,6 +208,7 @@ const BlogsManage = (props) => {
           Add New
         </Button>
       </div>
+      <Card bodyStyle={{ padding: '0px' }} className="overflow-auto">
       <Table className="overflow-auto"
         dataSource={tableData}
         columns={columns}
@@ -220,6 +221,7 @@ const BlogsManage = (props) => {
           };
         }}
       ></Table>
+      </Card>
     </div>
   );
 };

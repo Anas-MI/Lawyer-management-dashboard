@@ -980,6 +980,9 @@ label {
   vertical-align: baseline;
   min-width: 126px;
 }
+.ant-table-tbody > tr > td {
+  word-break: break-all;
+}
 
 .short-activity-botton {
   margin-left: 0.5rem;
