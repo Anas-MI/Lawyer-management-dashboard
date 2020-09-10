@@ -73,7 +73,7 @@ class LawyerLayout extends Component {
             
             let data = window.localStorage.getItem('notifications')
             const user = JSON.parse(window.localStorage.getItem('Case.user'))
-            if(user.token != null){
+            if(user != null){
                 api.get('/calendar/viewforuser/'+ user.token.user._id).then(res=>{
            
                     res.data.data.map((value, index)=>{

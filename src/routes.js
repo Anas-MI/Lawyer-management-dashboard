@@ -11,6 +11,7 @@ import BlogsManage from './App/containers/ContentManagement/Blogs';
 import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
 import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
 import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
+import footer from './App/containers/ContentManagement/footer/footer'
 import Accounts from './App/containers/Accounts';
 import Documents from './App/containers/Documents';
 import Support from './App/containers/Support/Support';
@@ -214,6 +215,12 @@ export const adminRoutes = [
     exact: true,
     name: 'Add Edit Plans',
     component: AddEditPlans,
+  },
+  {
+    path: '/manage/footer',
+    exact: true,
+    name: 'Add Edit footer',
+    component: footer,
   },
   {
     path: '/manage/subscription',

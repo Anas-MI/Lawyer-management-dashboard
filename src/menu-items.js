@@ -61,6 +61,13 @@ export const navigation = {
               icon: 'feather icon-codepen',
               url: '/manage/plans',
             },
+            {
+              id: 'footer',
+              title: 'footer',
+              type: 'item',
+              icon: 'feather icon-users',
+              url: '/manage/footer',
+            },
           ],
         },
         /*
