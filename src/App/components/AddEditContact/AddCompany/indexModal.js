@@ -63,8 +63,8 @@ class editCompany extends React.Component{
       console.log(res.data.data)
       contacts = res.data.data
       optionsss = res.data.data.map((value, index)=>{
-          return <option id={index}>{value.firstName}</option>
-         })
+        return <option value={value._id}>{value.firstName + " " + value.lastName}</option>
+      })
       this.setState({optionsss : optionsss})
     }).catch((err)=>{
       console.log(err)
@@ -264,32 +264,36 @@ class editCompany extends React.Component{
       e.persist();
       let list = this.state;
       const { name, id, value, tagName } = e.target;
-      if (tagName === 'SELECT') {
-        name === 'emailAddress'
-          ? (list[name][id][`emailType`] = value)
-          : (list[name][id][`${name}Type`] = value);
-      } else {
-        list[name][id][name] = value;
-      }
-      console.log(list)
-      this.setState(list);
-        if (tagName !== 'SELECT') {
-          switch (name) {
-            case 'emailAddress':
-              errors.Email[id] = validEmailRegex.test(value)
-                ? ''
-                : 'Email is not valid!';
-              break;
-            case 'phone':
-              errors.phone[id] =
-                value.length < 10 || value.length > 13
-                  ? 'phone number must be between 10 and 13 digits'
-                  : '';
-              break;
-  
-            default:
-              break;
-          }
+      if(name === "employees"){
+        list[name][id] = value
+      }else{
+        if (tagName === 'SELECT') {
+          name === 'emailAddress'
+            ? (list[name][id][`emailType`] = value)
+            : (list[name][id][`${name}Type`] = value);
+        } else {
+          list[name][id][name] = value;
+        }
+        console.log(list)
+        this.setState(list);
+          if (tagName !== 'SELECT') {
+            switch (name) {
+              case 'emailAddress':
+                errors.Email[id] = validEmailRegex.test(value)
+                  ? ''
+                  : 'Email is not valid!';
+                break;
+              case 'phone':
+                errors.phone[id] =
+                  value.length < 10 || value.length > 13
+                    ? 'phone number must be between 10 and 13 digits'
+                    : '';
+                break;
+    
+              default:
+                break;
+            }
+        }
       }
         
     };

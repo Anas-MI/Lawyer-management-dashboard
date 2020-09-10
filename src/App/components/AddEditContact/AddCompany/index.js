@@ -67,7 +67,7 @@ class AddCompany extends React.Component {
       console.log(res.data.data)
       contacts = res.data.data
       optionsss = res.data.data.map((value, index)=>{
-          return <option id={index}>{value.firstName}</option>
+          return <option value={value._id}>{value.firstName + " " + value.lastName}</option>
          })
       this.setState({optionsss : optionsss})
     }).catch((err)=>{
