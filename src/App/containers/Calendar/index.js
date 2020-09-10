@@ -165,8 +165,7 @@ const CalendarContainer = props => {
         notification[type]({
           message: 'Failure'});
       };
-    
-      const handleSubmit = (e) =>{
+    const handleSubmit = (e) =>{
         console.log(e.requestType)
         if(e.requestType==="eventRemoved"){
             const id = e.data[0].id
@@ -192,21 +191,16 @@ const CalendarContainer = props => {
             eventdata.userId = userId 
             eventdata.startTime = startTime
             eventdata.endTime = endTime
-            if(eventdata.title == "" || eventdata.title == undefined  ){
-                notification.warning({message : "Please provide a title" })
-             }else{
-                api.post('/calendar/update/'+ id , eventdata )
-                .then((res)=>{
-                    fetchEventData()
-                    setData({})
-                    notification.success({message : "Event Edited"})
-                }).catch((err)=>{
-                    console.log(err)
-                    notification.error({message : "Failed"})
-                })
-                
-             }
-            
+           
+            api.post('/calendar/update/'+ id , eventdata )
+            .then((res)=>{
+                fetchEventData()
+                notification.success({message : "Event Edited"})
+            }).catch((err)=>{
+                console.log(err)
+                notification.error({message : "Failed"})
+            })
+            setData({})
             setTimeout(()=>{
                // window.location.reload()
             },1500)
@@ -372,7 +366,7 @@ const CalendarContainer = props => {
         eventdata.startTime = startTime
         eventdata.endTime = endTime             
     }
-  
+    console.log(eventdata)
     if(eventdata.title === ""){
             notification.warning({message : "Please provide a title" })
     }else{

@@ -13,14 +13,15 @@ const Support = (props) =>{
           const data = {
             key : index,
             _id : value._id,
-            name : value.firstName +  " " + value.lastName,
-            firstName : value.firstName,
-            lastName : value.lastName,
+            
+            firstName : value.firstName ? value.firstName : "_",
+            lastName : value.lastName ? value.lastName : "_",
             attachment : value.document,
             email : value.email ,
             issue : value.issue ? value.issue : "-",
             url : value.url ?  value.url : 'No URL'
           }
+          data.name = data.firstName + " " + data.lastName
           tableData.push(data)
         })
         setData(tableData)

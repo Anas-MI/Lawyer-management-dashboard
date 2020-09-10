@@ -173,142 +173,14 @@ class Dashboard extends React.Component {
 
           
     }
-    convertTime = (serverdate) => {
-        var date = new Date(serverdate);
-        // convert to utc time
-        var toutc = date.toUTCString();
-        //convert to local time
-        var locdat = new Date(toutc + ' UTC');
-        return locdat;
-      };
+    
     
     render() {
 
         
        
        //if(user.token.user.updated)
-        setInterval(()=>{
-            let data = window.localStorage.getItem('notifications')
-            api.get('/calendar/viewforuser/'+this.props.userId).then(res=>{
-           
-                res.data.data.map((value, index)=>{
-                   
-                    const StartTime = value.startTime? value.startTime : ""
-                    const Description = value.title
-                    const matter = value.matter ?  value.matter.matterDescription : ""
-                    const timeForReminder = value.timeForReminder ? value.timeForReminder : ""
-                    
-                    if(value.notification == true){
-
-                        const alertdate =  this.convertTime(value.startTime)
-                       
-                        let ddd = alertdate.getDate();
-                        let mmm = alertdate.getMonth()+1; 
-                        let yyyyy = alertdate.getFullYear();
-                       // let hourss = timeForReminder.getHours() > 12 ? timeForReminder.getHours() - 12 : timeForReminder.getHours()  ;
-                      //  let minss = timeForReminder.getMinutes() ;
-                        let hourss = timeForReminder.split(':')[0];
-                        let minss = timeForReminder.split(':')[1];
-                        minss = minss ?  minss.substring(0,2) : ""
-                       
-                       
-                       
-                        /*
-                            if(ddd<10) {
-                                ddd = '0' + dd
-                            }          
-                            if(mmm<10) {
-                                mmm = '0' + mm
-                            }
-        */            
-                        let today = new Date();
-                        let dd = today.getDate();
-                        let mm = today.getMonth()+1; 
-                        let yyyy = today.getFullYear();
-                        let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours() ;
-                        let plusonehour = parseInt(hours) + 1
-                        console.log(plusonehour)
-                        let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()
-                        let plusmins = parseInt(mins + 0)
-                       
-                        console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
-                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
-                        /*
-                            if(dd<10) {
-                                dd = '0'+dd
-                            } 
-                            
-                            if(mm<10) {
-                                mm = '0'+mm
-                            } 
-                        console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
-                        console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
-                        /*
-                        if ( minss == "00" && ddd==dd && mmm==mm && yyyy==yyyyy && plusonehour  == hourss && ( plusmins == 00 )){
-                            notification.open({
-                                message: Description,
-                                description:
-                                    'Event assosiated to matter ' + matter + 'starts at ' + StartTime,
-                                className: 'custom-class',
-                                style: {
-                                  width: 600,
-                                },
-                              });
-                            console.log(value)
-                        
-                        }else
-                        */
-                        if(ddd==dd && mmm==mm && yyyy==yyyyy && hours == hourss &&  minss == mins  ){
-                            alert("Event : " + Description + "\n" + 'Event assosiated to matter ' + matter + 'starts at ' + StartTime )
-                            const notificationtoshow =  {
-                                description: Description,
-                                matter : matter,
-                                startTime : StartTime
-                            }
-
-                            if(data == null){
-                                window.localStorage.setItem('notification', JSON.stringify([{ 
-                                    description: Description,
-                                    matter : matter,
-                                    startTime : StartTime
-                                }]))
-                            }else{
-                                data.push(notificationtoshow)
-                                window.localStorage.setItem('notification', JSON.stringify(data))
-                            }
-                            
-                           /*
-                            notification.open({
-                                message: Description,
-                                description:
-                                    'Event assosiated to matter ' + matter + 'starts at ' + StartTime,
-                                className: 'custom-class',
-                                style: {
-                                  width: 600,
-                                },
-                              });
-                            console.log(value)
-                            */
-                        }
-                        else{
-                            console.log("i min passed")
-                        }   
-                    }
-                    /*
-                    const tableData={
-                        id: value._id,
-                        Subject : value.title,
-                       
-                        TimeForReminder : value.timeForReminder,
-                        Matter : value.matter ?  value.matter.matterDescription : "",
-                        Email : value.email,
-                        Notification : value.notification,
-                    }
-                   */
-                })
-            })
-
-        },60*1000)
+    
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">

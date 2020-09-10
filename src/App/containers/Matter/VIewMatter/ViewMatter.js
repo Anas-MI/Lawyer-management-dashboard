@@ -33,7 +33,27 @@ function CompanyView(props) {
   const [Website, setWebsite] = useState();
   const [Email, setEmail] = useState();
   const [Number, setNumber] = useState();
+  const [BillAmount, setBillAmount] = useState(0)
   console.log(props.location.state);
+    const fetchBills = ( ) =>{
+      api.get('/billing/bill/viewforuser/'+ props.location.state.userId).then((res)=>{
+        console.log(res)
+        let billamount = 0
+        res.data.data.map((value , index)=>{
+  
+          if(value.status === "Unpaid"){
+            billamount = billamount + parseFloat(value.balance).toFixed('2')
+          }
+          /*
+          if(value.status=="draft"){
+            draftBills.push(temp)
+          }
+          */
+        })
+        console.log(billamount)
+        setBillAmount(billamount)
+      })
+    }
   useEffect(() => {
     async function fetchData() {
       await api.get('/matter/view/' + props.location.state.id).then((res) => {
@@ -79,6 +99,7 @@ function CompanyView(props) {
       setValue();
     }
     fetchData();
+    fetchBills()
   }, []);
 
   useEffect(() => {
@@ -340,13 +361,13 @@ function CompanyView(props) {
                   <p style={{fontSize : "13px"}}>
                     <b>Trust Funds</b>
                   </p>
-                  <span>$500.00</span>
+                  <span>$0.00</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{fontSize : "13px"}}>
                     <b>Outstanding balance</b>
                   </p>
-                  <span>$500.00</span>
+                  <span>${BillAmount}</span>
                 </div>
                 
               </div>
@@ -489,4 +510,5 @@ function CompanyView(props) {
     </Spin>
     );
 }
+
 export default CompanyView;

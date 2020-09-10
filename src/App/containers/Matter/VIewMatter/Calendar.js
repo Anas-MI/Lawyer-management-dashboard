@@ -136,6 +136,31 @@ export default function Calendar(props) {
     setcalEvent({ ...calEvent });
   };
   const handleEdit = async () => {
+    if(calEvent.title === ""){
+      notification.warning({
+        message : "Please provide a title"
+      })
+     }else
+     if(calEvent.startDate === ""){
+      notification.warning({
+        message : "Please provide a Start Date"
+      })
+     }else
+     if(calEvent.startTime === ""){
+      notification.warning({
+        message : "Please provide a start time"
+      })
+     }else
+     if(calEvent.endDate === ""){
+      notification.warning({
+        message : "Please provide a end date"
+      })
+     }else
+     if(calEvent.endTime === ""){
+      notification.warning({
+        message : "Please provide a end time"
+      })
+     }else{
     await api
       .post(`/calendar/update/${calEvent.id}`, calEvent)
       .then(function (response) {
@@ -148,6 +173,7 @@ export default function Calendar(props) {
     setTimeout(() => {
       setVisible(false);
     }, 600);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -163,8 +189,37 @@ export default function Calendar(props) {
   };
 
   const handleSubmit = async () => {
+   if(calEvent.title === ""){
+    notification.warning({
+      message : "Please provide a title"
+    })
+   }else
+   if(calEvent.startDate === ""){
+    notification.warning({
+      message : "Please provide a Start Date"
+    })
+   }else
+   if(calEvent.startTime === ""){
+    notification.warning({
+      message : "Please provide a start time"
+    })
+   }else
+   if(calEvent.endDate === ""){
+    notification.warning({
+      message : "Please provide a end date"
+    })
+   }else
+   if(calEvent.endTime === ""){
+    notification.warning({
+      message : "Please provide a end time"
+    })
+   }else
+   {
+    let cal = calEvent
+    cal.startTime = cal.startDate + " " + cal.startTime
+    cal.endTime = cal.endDate + " " + cal.endTime
     await api
-      .post('/calendar/create', calEvent)
+      .post('/calendar/create', cal)
       .then((res) => {
         notification.success({ message: 'Event Added.' });
         console.log(res);
@@ -178,6 +233,7 @@ export default function Calendar(props) {
     setTimeout(() => {
       setVisible(false);
     }, 600);
+   }
   };
 
   const editHandler = async (docId) => {
