@@ -1,438 +1,440 @@
-import React, { useState, useEffect } from 'react';
-import api from '../../../../resources/api';
-import {
-  Card,
-  Modal,
-  Form,
-  Table,
-  Button,
-  notification,
-  Input,
-  Checkbox,
-  Spin,
-  Popconfirm
-} from 'antd';
+import React , {useEffect,useRef,forwardRef, useState} from 'react'
+import { 
+    ScheduleComponent, 
+    Day, Week, WorkWeek, 
+    Month, Agenda, Inject , ViewDirective,ViewsDirective
+} from '@syncfusion/ej2-react-schedule';
 
-export default function Calendar(props) {
-  const [calendar, setCalendar] = useState([]);
-  const [Loading, setLoading] = useState(true)
-  const [visible, setVisible] = useState(false);
-  const [calEvent, setcalEvent] = useState({
-    id: '',
-    title: '',
-    startDate: '',
-    startTime: '',
-    endDate: '',
-    endTime: '',
-    type: '',
-    location: '',
-    matter: props.matterId,
-    userId: props.userId,
-    notification: 'true',
-    email: 'true',
-    timeForReminder: '',
-    description: '',
-  });
-  const [modalFor, setModalFor] = useState('Add');
+import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
+import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
+import { EventSettingsModel } from "@syncfusion/ej2-react-schedule";
+import api from '../../../../resources/api'
+import {notification, Button, Card, message} from 'antd'
 
-  const [disable, setDisable] = useState(false);
+import "@syncfusion/ej2-base/styles/material.css";
+import "@syncfusion/ej2-buttons/styles/material.css";
+import "@syncfusion/ej2-calendars/styles/material.css";
+import "@syncfusion/ej2-dropdowns/styles/material.css";
+import "@syncfusion/ej2-inputs/styles/material.css";
+import "@syncfusion/ej2-lists/styles/material.css";
+import "@syncfusion/ej2-navigations/styles/material.css";
+import "@syncfusion/ej2-popups/styles/material.css";
+import "@syncfusion/ej2-splitbuttons/styles/material.css";
+import "@syncfusion/ej2-react-schedule/styles/material.css";
+import EditorTemplate from '../../../components/EventEditor/v2';
+import { extend } from '@syncfusion/ej2-base';
+import { useDispatch, useSelector, connectAdvanced } from 'react-redux';
+import {  L10n, Internationalization } from '@syncfusion/ej2-base';
 
-  const columns = [
-    /*
-    {
-      title: 'Start Date',
-      dataIndex: 'startDate',
-      key: '1',
-      sortDirections: ['descend', 'ascend'],
-      sorter: (a, b) => a.startDate > b.startDate,
-    },
-    */
-    {
-      title: 'Start Time',
-      dataIndex: 'startTime',
-      key: '1',
-      sortDirections: ['descend', 'ascend'],
-      sorter: (a, b) => a.startTime > b.startTime,
-    },
-    /*
-    {
-      title: 'End Date',
-      dataIndex: 'endDate',
-      key: '2',
-      sortDirections: ['descend', 'ascend'],
-      sorter: (a, b) => a.endDate > b.endDate,
-    },
-    */
-    {
-      title: 'End Time',
-      dataIndex: 'endTime',
-      key: '3',
-      sortDirections: ['descend', 'ascend'],
-      sorter: (a, b) => a.endTime > b.endTime,
-    },
-    {
-      title: 'Title',
-      dataIndex: 'title',
-      key: '4',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: '5',
-    },
-    {
-      title: 'Edit',
-      dataIndex: 'edit',
-      key: '6',
-      render: (_, record) => {
-        return (
-          <Button
-            className="btn-outline-info "
-            onClick={() => {
-              editHandler(record._id);
-            }}
-          >
-            Edit
-          </Button>
-        );
-      },
-    },
-    {
-      title: 'Delete',
-      dataIndex: 'delete',
-      key: '7',
-      render: (_, record) => {
-        return (
-          <Popconfirm
-            title="Are you sure?"
-            onConfirm={() => {
-              handleDelete(record._id);
-            }}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-            className=" btn-outline-danger "
-          >
-            Delete
-          </Button>
-          </Popconfirm>
-          
-        );
-      },
-    },
-  ];
-  const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
-  const handleInput = (item) => (e) => {
-    setDisable(false);
-    calEvent[`${item}`] =
-      item === 'email' || item === 'notification'
-        ? e.target.checked
-        : e.target.value;
-    setcalEvent({ ...calEvent });
-  };
-  const handleEdit = async () => {
-    if(calEvent.title === ""){
-      setDisable(true);
-      notification.warning({
-        message : "Please provide a title"
-      })
-     }else
-     if(calEvent.startDate === ""){
-      setDisable(true);
-      notification.warning({
-        message : "Please provide a Start Date"
-      })
-     }else
-     if(calEvent.startTime === ""){
-      setDisable(true);
-      notification.warning({
-        message : "Please provide a start time"
-      })
-     }else
-     if(calEvent.endDate === ""){
-      setDisable(true);
-      notification.warning({
-        message : "Please provide a end date"
-      })
-     }else
-     if(calEvent.endTime === ""){
-      setDisable(true);
-      notification.warning({
-        message : "Please provide a end time"
-      })
-     }else{
-    await api
-      .post(`/calendar/update/${calEvent.id}`, calEvent)
-      .then(function (response) {
-        notification.success({ message: 'Event Updated.' });
-        getCalendar();
-      })
-      .catch(function (response) {
-        notification.error({ message: 'Event Update Failed.' });
-      });
-    setTimeout(() => {
-      setVisible(false);
-    }, 600);
-    }
-  };
+const Add = <Button type="link">Add</Button>
 
-  const handleDelete = async (id) => {
-    await api
-      .get(`/calendar/delete/${id}`)
-      .then((res) => {
-        getCalendar();
-        notification.success({ message: 'Event Deleted SuccessFully.' });
-      })
-      .catch((err) =>
-        notification.success({ message: 'Event Deletion Failed.' })
-      );
-  };
-
-  const handleSubmit = async () => {
-   if(calEvent.title === ""){
-    setDisable(true);
-    notification.warning({
-      message : "Please provide a title"
-    })
-   }else
-   if(calEvent.startDate === ""){
-    setDisable(true);
-    notification.warning({
-      message : "Please provide a Start Date"
-    })
-   }else
-   if(calEvent.startTime === ""){
-    setDisable(true);
-    notification.warning({
-      message : "Please provide a start time"
-    })
-   }else
-   if(calEvent.endDate === ""){
-    setDisable(true);
-    notification.warning({
-      message : "Please provide a end date"
-    })
-   }else
-   if(calEvent.endTime === ""){
-    setDisable(true);
-    notification.warning({
-      message : "Please provide a end time"
-    })
-   }else
-   {
-    let cal = calEvent
-    cal.startTime = cal.startDate + " " + cal.startTime
-    cal.endTime = cal.endDate + " " + cal.endTime
-    await api
-      .post('/calendar/create', cal)
-      .then((res) => {
-        notification.success({ message: 'Event Added.' });
-        console.log(res);
-
-        getCalendar();
-      })
-      .catch((err) => {
-        notification.error({ message: 'Event Addition Failed.' });
-        console.log(err);
-      });
-    setTimeout(() => {
-      setVisible(false);
-    }, 600);
-   }
-  };
-
-  const editHandler = async (docId) => {
-    setVisible(true);
-    setModalFor('Edit');
-    await api.get(`/calendar/view/${docId}`).then((response) => {
-      console.log('updateDate', response.data.data);
-      setcalEvent({ ...response.data.data, id: docId });
-    });
-  };
-  const modalForm = () => (
-    <Modal
-      title={` ${modalFor} Event`}
-      visible={visible}
-      onCancel={() => setVisible(false)}
-      footer={[
-        <Button key="back" onClick={() => setVisible(false)}>
-          Cancel
-        </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          htmlType="submit"
-          disabled={disable}
-          onClick={modalFor === 'Add' ? handleSubmit : handleEdit}
-        >
-          Submit
-        </Button>,
-      ]}
-    >
-      <Form
-        {...layout}
-        name="basic"
-        fields={[
-          {
-            name: 'title',
-            value: calEvent.title,
-          },
-          {
-            name: 'description',
-            value: calEvent.description,
-          },
-          {
-            name: ['startDate'],
-            value: calEvent.startDate,
-          },
-          {
-            name: ['startTime'],
-            value: calEvent.startTime,
-          },
-          {
-            name: ['endDate'],
-            value: calEvent.endDate,
-          },
-          {
-            name: ['endTime'],
-            value: calEvent.endTime,
-          },
-          {
-            name: ['type'],
-            value: calEvent.type,
-          },
-          {
-            name: ['location'],
-            value: calEvent.location,
-          },
-          {
-            name: ['notification'],
-            checked: calEvent.notification,
-          },
-          {
-            name: ['email'],
-            checked: calEvent.email,
-          },
-          {
-            name: ['timeForReminder'],
-            value: calEvent.timeForReminder,
-          },
-        ]}
-      >
-        <Form.Item key="title" label="Title" name="title">
-          <Input onChange={handleInput('title')} />
-        </Form.Item>
-        <Form.Item key="description" label="Description" name="description">
-          <Input onChange={handleInput('description')} />
-        </Form.Item>
-        <Form.Item key="startDate" label="Start Date" name="startDate">
-          <Input type="Date" onChange={handleInput('startDate')} />
-        </Form.Item>
-        <Form.Item key="startTime" label="Start Time" name="startTime">
-          <Input type="Time" onChange={handleInput('startTime')} />
-        </Form.Item>
-        <Form.Item key="endDate" label="End Date" name="EndDate">
-          <Input type="Date" onChange={handleInput('endDate')} />
-        </Form.Item>
-        <Form.Item key="endTime" label="End Time" name="endTime">
-          <Input type="Time" onChange={handleInput('endTime')} />
-        </Form.Item>
-        <Form.Item
-          key="timeForReminder"
-          label="Time For Reminder"
-          name="timeForReminder"
-        >
-          <Input type="Time" onChange={handleInput('timeForReminder')} />
-        </Form.Item>
-        <Form.Item key="location" label="Location" name="location">
-          <Input onChange={handleInput('location')} />
-        </Form.Item>
-        <Form.Item key="type" label="Type" name="type">
-          <Input onChange={handleInput('type')} />
-        </Form.Item>
-        <Form.Item key="text" label="Get Notified on" name="text"></Form.Item>
-        <Form.Item key="email" label="Email" name="email">
-          <Checkbox defaultChecked onChange={handleInput('email')} />
-        </Form.Item>
-        <Form.Item key="notification" label="Notification" name="notification">
-          <Checkbox defaultChecked onChange={handleInput('notification')} />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-
-  const getCalendar = async () => {
-    let cal = [];
-    await api
-      .get(`/calendar/viewforuser/${props.userId}`)
-      .then((res) => {
-        res.data.data
-          .filter(
-            (item) =>
-              item.matter !== null &&
-              item.matter !== undefined &&
-              item.matter._id === props.matterId
-          )
-          .map((item, index) => {
-            cal = [...cal, { ...item, key: index }];
-          });
-      })
-      .catch((err) => console.log(err));
-    setCalendar(cal);
-    setLoading(false)
-  };
-
-  useEffect(() => {
-    getCalendar();
-  }, []);
-
-  return (
-    <Spin spinning={Loading} size = "large">
-      <div>
-      <Card
-        title="Calendar"
-        extra={
-          <span style={{ float: 'right' }}>
-            <Button
-              onClick={() => {
-                setVisible(true);
-                setModalFor('Add');
-                setcalEvent({
-                  id: '',
-                  title: '',
-                  startDate: '',
-                  startTime: '',
-                  endDate: '',
-                  endTime: '',
-                  type: '',
-                  location: '',
-                  matter: props.matterId,
-                  userId: props.userId,
-                  notification: 'true',
-                  email: 'true',
-                  timeForReminder: '',
-                  description: '',
-                });
-              }}
-            >
-              Add +
-            </Button>
-          </span>
-        }
-      >
-        {modalForm()}
-        <Table className="table-responsive"  dataSource={calendar} columns={columns} />
-      </Card>
-    </div>
-  
-    </Spin>
-    );
+const fields = {
+    id: 'Id',
+    subject: { name: 'Title' },
+    isAllDay: { name: 'IsAllDay' },
+    startTime: { name: 'StartTime' },
+    endTime: { name: 'EndTime' },
 }
+
+
+
+
+const CalendarContainer = props => {
+    
+    //Refs
+    const SchedulerRef = useRef()
+    const recurrenceRef = useRef()
+    let res = {}
+    let response = {}
+    const [options, setOptions] = useState([])
+    //State
+    const dispatch = useDispatch()
+    const userId = useSelector(state=>state.user.token.user._id)
+    const [ID, setID] = useState("")
+    let startTime = ""
+    let endTime = ""
+    const [ state, setState ] = useState({tableData : []})
+    const [ data, setData ] = useState({email : false, notification : false, startTime : "", title: ""})
+    const [listEvent, setListEvent] = useState([])
+
+    async function fetchEventData(){
+        console.log(props.matterId)
+        res =  await api.get('/calendar/fetchformatter/' + props.matterId)
+        console.log(res)
+        response =  await api.get('matter/viewforuser/'+ userId)
+        setListEvent(res.data.data)
+        setOptions(response.data.data)
+        setdata()
+      }
+    useEffect(()=>{
+      fetchEventData()
+    },[])
+    const setdata = () =>{
+        let newTableData = []
+        res.data.data.map(async(value, index)=>{
+            let matter = ""
+            if(value.matter != undefined){
+                matter = value.matter.matterDescription
+            }
+            let allday = false
+            if(value.type === "allday"){
+                allday= true
+            }
+            let repeat = false
+            if(value.type === "repeat"){
+                repeat= true
+            }
+            const tableData={
+                id: value._id,
+                Subject : value.title,
+                StartTime : value.startTime,
+                EndTime : value.endTime,
+                Location : value.location,
+                Description : value.description,
+                TimeForReminder : value.timeForReminder,
+                Matter : matter,
+                Email : value.email,
+                Notification : value.notification,
+                Allday : allday,
+                Repeat : repeat
+
+            }
+ 
+            newTableData.push(tableData)
+        })
+        setState({tableData : newTableData })
+
+    }
+
+    function onPopupOpen(args) {
+        if (args.type === 'Editor') {
+            SchedulerRef.current.eventWindow.recurrenceEditor = recurrenceRef.current;
+        }
+        /*
+        if (args.type == "QuickInfo") {
+            var dialogObj = args.element.ej2_instances[0];
+            dialogObj.hide();
+            var currentAction = args.target.classList.contains("e-work-cells") ? "Add" : "Save";
+            SchedulerRef.openEditor(args.data, currentAction);
+        }
+        */
+    }
+    const handleChange = (e) =>{
+        e.persist()
+
+        const { value, id } = e.target
+        let newdata  = data
+        if(id === "allday" || id==="repeat"){
+            if(value==="on"){
+                newdata.type = id
+            }
+        }else if(id === "email" || id==="notification"){
+            newdata[id]= !newdata[id]
+        }
+        else{
+        newdata[id] = value
+        setData(newdata)
+        }
+        console.log(data)
+    }
+
+    const DateTimeChange = (e) =>{
+        const { value, id} = e.element
+        let newData  = data
+        if(id==="startTime" ){
+            startTime = value
+        }
+        if(id==="endTime" ){
+            endTime = value
+        }
+        if(id==="matter" && e.itemData!=null){
+            newData[id]=options[e.itemData.value]._id
+        }else{
+        newData[id] = value
+        setData(newData)
+        }
+        console.log(data)
+    }
+    const openNotificationWithIcon=(type) =>{
+        notification[type]({
+          message: 'Success',
+          });
+      };
+    const openNotificationWithfailure = type => {
+        notification[type]({
+          message: 'Failure'});
+      };
+    const handleSubmit = (e) =>{
+        console.log(e.requestType)
+        if(e.requestType==="eventRemoved"){
+            const id = e.data[0].id
+            api.get('/calendar/delete/'+id).then(()=>{
+                fetchEventData()
+                openNotificationWithIcon('success')
+            }
+           ).catch(()=>openNotificationWithfailure('error'))
+            setTimeout(()=>{
+                //window.location.reload()
+                
+            },1500)
+        }
+        if(e.requestType==="eventChanged"){
+
+            let eventdata = data
+            let id = e.changedRecords[0].id
+            /*
+            if(e.data.id == undefined){
+               id = e.data[0].id
+            }
+            */
+            eventdata.userId = userId 
+            eventdata.startTime = startTime
+            eventdata.endTime = endTime
+           
+            api.post('/calendar/update/'+ id , eventdata )
+            .then((res)=>{
+                fetchEventData()
+                notification.success({message : "Event Edited"})
+            }).catch((err)=>{
+                console.log(err)
+                notification.error({message : "Failed"})
+            })
+            setData({})
+            setTimeout(()=>{
+               // window.location.reload()
+            },1500)
+            
+        }
+        if(e.requestType==="eventCreated"){
+    
+            let eventdata = data
+            eventdata.userId = userId
+            if(startTime !== "Invalid Date"){
+    
+                eventdata.startTime = startTime
+                eventdata.endTime = endTime
+                
+            }
+            console.log(data)
+            if(data.title == "" || data.title == undefined  ){
+                    notification.warning({message : "Please provide a title" })
+            }else{
+                console.log(eventdata)
+                
+                api.post('/calendar/create', eventdata).then((res)=>{
+                    console.log(res)
+                    fetchEventData()
+                    notification.success({message : "Evented Added"})
+                 }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed!"})
+                 })
+                 setData({})
+                 setTimeout(()=>{
+                    //window.location.reload()
+                },1500)
+    
+                 }
+              
+            }
+        
+    }
+    
+    
+    const setInit = (args) =>{
+    
+    
+        if(args.StartTime != undefined && args.StartTime != "Invalid Date"){
+            const props = args
+            startTime = props.StartTime
+            endTime = props.EndTime
+
+            let sdd = startTime.getDate()
+            let smm = startTime.getMonth()+1
+            let syyyy = startTime.getFullYear()
+            let shours = startTime.getHours()
+            let smins = startTime.getMinutes()
+            smins < 10 ? smins = "0"+smins : smins = smins
+
+          
+            let edd = endTime.getDate()
+            let emm = endTime.getMonth()+1
+            let eyyyy = endTime.getFullYear()
+            let ehours = endTime.getHours()
+            let emins = endTime.getMinutes()
+            emins < 10 ? emins = "0"+emins : emins = emins
+
+            
+            startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '
+            endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '
+
+
+             /*
+             if((startTime.toLocaleString()).includes("AM") || (startTime.toLocaleString()).includes("PM")){
+                 console.log("Windows")
+               
+                 
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+                
+                
+                
+                startTime = startTime.toLocaleString()
+                endTime = props.EndTime.toLocaleString()
+                
+             }else{
+                
+                let sdd = startTime.getDate()
+                let smm = startTime.getMonth()+1
+                let syyyy = startTime.getFullYear()
+                let sAMPM = "AM"
+                let shours = startTime.getHours()
+               // shours < 10 ? shours = "0"+shours : shours = shours
+               
+                if(shours > 12){
+                   shours = shours - 12
+                   sAMPM = "AM"
+               }else{
+                  shours = shours
+                  sAMPM = "PM"
+               }
+               
+                let smins = startTime.getMinutes()
+                smins < 10 ? smins = "0"+smins : smins = smins
+   
+              
+                let edd = endTime.getDate()
+                let emm = endTime.getMonth()+1
+                let eyyyy = endTime.getFullYear()
+                let eAMPM = ""
+                let ehours = endTime.getHours()
+               // ehours < 10 ? ehours = "0"+ehours : ehours = ehours
+               
+                if(ehours > 12){
+                    ehours = ehours - 12
+                    eAMPM = "AM"
+                    
+                }else{
+                   ehours = ehours
+                   eAMPM = "PM"
+                }
+                
+                let emins = endTime.getMinutes()
+                emins < 10 ? emins = "0"+emins : emins = emins
+   
+                
+                startTime = smm+'/'+sdd+'/'+syyyy+', '+shours+':'+smins+':00 '+sAMPM
+                endTime = emm+'/'+edd+'/'+eyyyy+', '+ehours+':'+emins+':00 '+eAMPM
+   
+                console.log(startTime)
+                console.log(endTime)
+   
+                 /*
+                 console.log("Mac")
+                if(startTime.getHours() > 12 || endTime.getHours() > 12){
+                    startTime.setHours(startTime.getHours()-12)
+                    startTime = startTime.toLocaleString() + " AM"
+                    endTime.setHours(endTime.getHours()-12)
+                    endTime = endTime.toLocaleString() + " AM"
+                 }else{
+                    startTime = startTime.toLocaleString() + " PM"
+                    endTime = endTime.toLocaleString() + " PM"
+                 }
+                 
+                 
+             }
+             
+             
+             */
+        }      
+    }
+   const onClickButton2 = () =>{
+    notification.destroy()
+    let eventdata = data
+    eventdata.userId = userId
+    if(startTime !== "Invalid Date"){
+      
+        eventdata.startTime = startTime
+        eventdata.endTime = endTime             
+    }
+    console.log(eventdata)
+    if(eventdata.title === ""){
+            notification.warning({message : "Please provide a title" })
+    }else{
+       
+        api.post('/calendar/create', eventdata).then((res)=>{
+            console.log(res)
+            fetchEventData()
+            notification.success({message : "Evented Added"})
+            let eventData = {
+                Id: '',
+                Subject: '',
+                StartTime: '',
+                EndTime: ''
+            };
+            setData({})
+            SchedulerRef.current.openEditor(eventData, 'Add');
+         }).catch((err)=>{
+            console.log(err)
+            notification.error({message : "Failed!"})
+         })
+        
+        
+
+         }
+
+   }
+   
+    return (        
+        <div className="row">
+            <div className="col-lg-8">
+                <Card bodyStyle={{"padding" : "0px"}}>
+                    <ScheduleComponent height='550px' 
+                        actionComplete={handleSubmit}  
+                        ref={cal=>SchedulerRef.current=cal }
+                        showQuickInfo={false} 
+                        popupOpen={onPopupOpen}
+                        eventSettings={{dataSource : state.tableData}}
+                        
+                        editorTemplate={pr=><EditorTemplate {...pr} onClickButton2={onClickButton2} setInit = {setInit(pr)} userId={userId} setInit={setInit}  handleChange={handleChange} DateTimeChange={DateTimeChange} setRecurrenceRef={ref=>recurrenceRef.current=ref} />}>
+                        <ViewsDirective>
+                        <ViewDirective option='Day'/>
+                            <ViewDirective option='Week'/>
+                            <ViewDirective option='WorkWeek'/>
+                            <ViewDirective option='Month'/>
+                        </ViewsDirective>
+                        <Inject services={[Day, Week, WorkWeek, Month, Agenda]} currentView={"Month"}/>
+                    </ScheduleComponent>
+                 </Card>
+            </div>
+            <div className="col-lg-4">
+                <Card title="Events" style={{"height" : "550px"}} className="overflow-auto" bodyStyle={{"padding" : "15px"}}>
+                    {listEvent.map((eventlist) => <div key={eventlist._id} style={{ "border-bottom" : "1px solid #e5e5e5"}} className="pb-2 mb-2">
+                        <span style={{"font-size" : "18px" , "color": "#3f51b5"}}><b>{eventlist.title}</b></span>
+                        <div className="d-flex justify-content-between">
+                            <span style={{ "padding-right" : "5%", "border-right" : "1px solid #e5e5e5"}}>
+                                <span><b>{eventlist.startTime}</b></span><br /> 
+                                <span style={{"font-size" : "11px"}}>(Starting Date & Time)</span>
+                            </span>
+                            <span>
+                                <span><b>{eventlist.endTime}</b></span><br /> 
+                                <span style={{"font-size" : "11px"}}>(Ending Date & Time)</span>
+                            </span>                            
+                        </div>
+                    </div> 
+                    )}
+                </Card>
+            </div>
+        </div>
+    )
+}
+
+export default CalendarContainer
