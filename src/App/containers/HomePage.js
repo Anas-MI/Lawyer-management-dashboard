@@ -11,7 +11,7 @@ import api from '../../resources/api'
 function Home(props) {
   console.log(props)
   const [state, setstate] = useState({
-                list1 : [],
+                list : [],
                 list2 : [],
                 description: '',
                 address: '',
@@ -38,19 +38,22 @@ function Home(props) {
   useEffect(() => {
     fetchdata()
   }, [])
-
+  const handleRoute = (route) =>{
+    console.log(route)
+    props.history.push(route)
+  }
   const handleSubscription =()=>{
     props.history.push('/login')
   }
   return (
     <div className="Home">
-        <Navigation state = { state } />
-        <Header state = { state }  />
-        <Features state = { state }  />
-        <Subscription state = { state }  handleSubscription = {handleSubscription} />
-        <Blog state = { state }  />
-        <Contact state = { state } />
-        <Footer state = { state }  />
+        <Navigation state = { state } handleRoute = {handleRoute} />
+        <Header state = { state } handleRoute = {handleRoute} />
+        <Features state = { state } handleRoute = {handleRoute} />
+        <Subscription state = { state }  handleSubscription = {handleSubscription} handleRoute = {handleRoute}/>
+        <Blog state = { state } handleRoute = {handleRoute}  />
+        <Contact state = { state } handleRoute = {handleRoute}/>
+        <Footer state = { state } handleRoute = {handleRoute}  />
     </div>
   );
 }

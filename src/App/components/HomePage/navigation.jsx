@@ -1,9 +1,40 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+import api from '../../../resources/api'
 import "bootstrap/js/src/collapse.js";
 
 export class Navigation extends Component {
+  constructor(){
+    super()
+    this.state = {
+      
+        list : [],
+        list2 : [],
+        description: '',
+        address: '',
+        socialMedia: [
+            { item : "Facebook",  url :'' },
+            { item : "Twitter",  url :'' },
+            { item : "Youtube",  url :'' },
+            { item : "Instagram",  url :'' },
+            { item : "LinkedIn",  url :'' }
+        ],
+        imageFile: '',
+        header : [],
+        logo: "",
+        banner : ["You Rely on Lawyer, Lawyers rely on us"],
+    
+    }
+  }
+
+  componentDidMount(){
+    api.get(`/footer/showall/`).then((res)=>{
+      console.log(res)
+      this.setState(res.data.data[res.data.data.length - 1])
+      //  this.setState(res.data.data)
+      })
+  }
+
   render() {
     return (
       <div
@@ -36,7 +67,18 @@ export class Navigation extends Component {
                   id="bs-example-navbar-collapse-1"
                 >
                   <ul className="navbar-nav pt-1 px-md-3" id=" topNav">
-                    <li className="nav-item">
+                  { 
+                  
+                  this.state.header.map((val, index)=>{
+                    return <li className="nav-item">
+                            <Link to={val.url} className="nav-link page-scroll">
+                              {val.item}
+                            </Link>
+                          </li>
+                  })
+                }{
+                  /*
+                   <li className="nav-item">
                       <Link to="/features" className="nav-link page-scroll">
                         Feature
                       </Link>
@@ -56,7 +98,10 @@ export class Navigation extends Component {
                         Contact us
                       </Link>
                     </li>
-                  </ul>
+
+                  */
+                }
+                </ul>
 
                   <div className="navbar-login ml-auto" id="bottomNav">
                     <ul className="navbar-nav px-md-3">

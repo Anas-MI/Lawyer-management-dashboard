@@ -21,6 +21,10 @@ export class subscription extends Component {
         })
     }
     render(){
+        const handleRoute = (route) =>{
+            console.log(route)
+            this.props.history.push(route)
+          }
     return (
         <>
             <Navigation/>
@@ -57,7 +61,7 @@ export class subscription extends Component {
                     </div>
                 </div>
             </div>
-            <Footer />
+            <Footer handleRoute = {handleRoute} />
         </>
     )
 }

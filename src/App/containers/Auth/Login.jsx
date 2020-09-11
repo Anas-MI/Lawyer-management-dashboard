@@ -30,7 +30,10 @@ const Login = (props) => {
     emailAddress: "",
     password: "",
   });
-
+  const handleRoute = (route) =>{
+    console.log(route)
+    props.history.push(route)
+  }
   const handleChange = (e) => {
     e.persist();
     setDisplay(false)
@@ -212,7 +215,7 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer handleRoute = {handleRoute} />
     </>
   );
 };

@@ -62,8 +62,8 @@ export const navigation = {
               url: '/manage/plans',
             },
             {
-              id: 'footer',
-              title: 'footer',
+              id: 'Home',
+              title: 'Home',
               type: 'item',
               icon: 'feather icon-users',
               url: '/manage/footer',

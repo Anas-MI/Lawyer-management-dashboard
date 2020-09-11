@@ -21,6 +21,10 @@ class Blogcard extends Component {
   }
 
   render() {
+    const handleRoute = (route) =>{
+      console.log(route)
+      this.props.history.push(route)
+    }
     return (
       <>
         <Navigation />
@@ -65,7 +69,7 @@ class Blogcard extends Component {
             </div>
           </div>
         </div>
-        <Footer />
+        <Footer handleRoute ={handleRoute}/>
       </>
     );
   }

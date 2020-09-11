@@ -78,7 +78,10 @@ function Forgot (props) {
   }
 
 }
-
+const handleRoute = (route) =>{
+  console.log(route)
+  this.props.history.push(route)
+}
   return (
     <>
     <Navigation />
@@ -118,7 +121,7 @@ function Forgot (props) {
         </div>
       </div>
     </div>
-    <Footer />
+    <Footer handleRoute = {handleRoute} />
     </>
   );
 }

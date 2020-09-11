@@ -8,7 +8,7 @@ class footer extends React.Component{
         super()
         this.state = {
             
-                list1 : [],
+                list : [],
                 list2 : [],
                 description: '',
                 address: '',
@@ -54,6 +54,7 @@ class footer extends React.Component{
             delete data.updated_at
             delete data._id
             delete data.__v
+            
             this.setState({disabled : true})
           
             if(data.imageFile === ""){
@@ -149,6 +150,7 @@ class footer extends React.Component{
                 </Card.Header>
                 <Card.Body>
                 <Form className="form-details">
+                <img width="30%" height="30%" alt="No Image" src = {this.state.logo}></img><br></br>
                 <Form.Group controlId="formGroupEmail">
                   <input
                     type="file"
@@ -235,9 +237,9 @@ class footer extends React.Component{
             <div className="form-add mb-4">
                   <span onClick={()=>addFeild("header")}>Add a header item</span>
             </div>
-                <h4>List 1</h4>
+                <h4>Links to navigate on other pages</h4>
                 {
-              this.state.list1.map((value, index) => {
+              this.state.list.map((value, index) => {
                 return (
                   <>
                   <Form.Row>
@@ -245,11 +247,11 @@ class footer extends React.Component{
                       <Form.Group controlId={index}>
                       <Form.Label>Items {index + 1}</Form.Label>
                       <Form.Control
-                        name="list1"
+                        name="list"
                         alt="item"
                         type="text"
-                        placeholder="List"
-                        value={this.state.list1[index].item}
+                        placeholder="Item"
+                        value={this.state.list[index].item}
                         onChange={handleDynamicData}
                       />
                       </Form.Group>
@@ -258,16 +260,16 @@ class footer extends React.Component{
                     <Form.Group controlId={index}>
                       <Form.Label>Url</Form.Label>
                       <Form.Control
-                        name="list1"
+                        name="list"
                         alt="url"
                         type="text"
                         placeholder="/pricing"
-                        value={this.state.list1[index].url}
+                        value={this.state.list[index].url}
                         onChange={handleDynamicData}
                       />
                       </Form.Group>
                     </Col>
-                    <Button id={index} name="list" style={{ "height": "45px", "margin-top": "25px"}} onClick={()=>handleDelete("list1",index)}>-</Button>
+                    <Button id={index} name="list" style={{ "height": "45px", "margin-top": "25px"}} onClick={()=>handleDelete("list",index)}>-</Button>
                   </Form.Row>
       
                 </>
@@ -276,9 +278,9 @@ class footer extends React.Component{
               
             }
             <div className="form-add mb-4">
-                  <span onClick={()=>addFeild("list1")}>Add a item</span>
+                  <span onClick={()=>addFeild("list")}>Add a item</span>
             </div>
-            <h4>List 2</h4>
+            <h4>Links to navigate on the hompage</h4>
             {
               this.state.list2.map((value, index) => {
                 return (
@@ -304,7 +306,7 @@ class footer extends React.Component{
                         name="list2"
                         alt="url"
                         type="text"
-                        placeholder="/pricing"
+                        placeholder="#pricing"
                         value={this.state.list2[index].url}
                         onChange={handleDynamicData}
                       />
@@ -319,7 +321,7 @@ class footer extends React.Component{
               
             }
             <div className="form-add mb-4">
-                  <span onClick={()=>addFeild("list2")}>Add a item</span>
+                  <span onClick={()=>addFeild("list2")}>Add a link</span>
             </div>
             <h4>Social Media</h4>
               {
