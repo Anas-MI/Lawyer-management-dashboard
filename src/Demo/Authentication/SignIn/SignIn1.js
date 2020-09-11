@@ -46,7 +46,8 @@ const AdminLogin = (props) => {
   };
 
   const handleLogin = (e) => {
-    e.preventDefault();
+   // e.preventDefault();
+    notification.destroy()
     if(!Display){
       setSpinner(true);
     const validateForm = (error) => {
@@ -86,7 +87,15 @@ const AdminLogin = (props) => {
       );
     }
   };
-
+  const enterPressed =(event)=>{
+    console.log(event)
+    var code = event.keyCode || event.which;
+    console.log(code)
+    if(code === 13) { //13 is the enter keycode
+        //Do stuff in here
+        handleLogin()
+    } 
+}
   return (
     <Aux>
       <Breadcrumb />
@@ -118,6 +127,7 @@ const AdminLogin = (props) => {
 
               <div className="input-group mb-4">
                 <input
+                  onKeyPress = {enterPressed}
                   name="password"
                   value={state["password"]}
                   onChange={handleChange}
