@@ -19,7 +19,7 @@ const Invoice = (props) => {
   const userId = useSelector((state) => state.user.token.user._id);
   const [Data, setData] = useState({
     account : {
-        name : "Law office of" + props.location.state.clientData.name,
+        name : "Law office of " + props.location.state.clientData.name,
         address : {
 
         }
@@ -28,7 +28,9 @@ const Invoice = (props) => {
   function fetchDetails(){
       api.get('/user/view/' + userId).then((res) => {
           console.log(res)
-          setData(res.data.data)
+          if(res.data.data.account !=undefined){
+            setData(res.data.data)
+          }
       })
   }
   useEffect(() => {
