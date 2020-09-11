@@ -5,12 +5,14 @@ import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { RecurrenceEditorComponent } from "@syncfusion/ej2-react-schedule";
 import { notification, Button } from "antd";
 import api from '../../../resources/api'
-
+const moment = require("moment-timezone")
+var timeZones = moment.tz.names();
 
 const EditorTemplate = props => {
 
   let options = []
   let res = {}
+  console.log(timeZones)
   useEffect(()=>{
     async function fetchData(){
       res =  await api.get('matter/viewforuser/'+props.userId)
@@ -120,16 +122,23 @@ const EditorTemplate = props => {
         <tr>
           <td className="e-textlabel">Location</td>
           <td colSpan={4}>
-            <input
+          <label for="cars">Location</label>
+            <select
               onChange={props.handleChange}
-              id="location"
               placeholder={props.location || props.Location}
               className="e-field e-input"
               data-name="Location"
-              type="text"
+              style = {{height : "60%"}}
               name="Location"
-              style={{ width: "100%" }}
-            />
+               id="location" 
+               name="Location">
+              {
+                  timeZones.map((val, i)=>{
+                    return <option value={val}>{val}</option>
+                  })
+                }
+            </select>
+           
           </td>
         </tr>
         <tr>
@@ -140,7 +149,7 @@ const EditorTemplate = props => {
               placeholder="Choose status"
               data-name="Matter"
               change={props.DateTimeChange}
-              placeholder={props.matter|| props.Matter}
+        //      placeholder={props.matter|| props.Matter}
               className="e-field"
               data-name="Matter"
               style={{ width: "100%" }}
@@ -303,17 +312,24 @@ const EditorTemplate = props => {
         <tr>
           <td className="e-textlabel">Location</td>
           <td colSpan={4}>
-            <input
-              onChange={props.handleChange}
-              id="location"
-              placeholder={props.location || props.Location}
-              className="e-field e-input"
-              data-name="Location"
-              type="text"
-              name="Location"
-              style={{ width: "100%" }}
-            />
-          </td>
+            <label for="cars">Location</label>
+              <select
+                onChange={props.handleChange}
+                placeholder={props.location || props.Location}
+                className="e-field e-input"
+                data-name="Location"
+                name="Location"
+                value={props.Location || props.location}
+                style = {{height : "60%"}}
+                id="location" 
+              name="Location">
+                {
+                  timeZones.map((val, i)=>{
+                    return <option value={val}>{val}</option>
+                  })
+                }
+              </select>
+            </td>
         </tr>
         <tr>
           <td className="e-textlabel">Matter</td>
