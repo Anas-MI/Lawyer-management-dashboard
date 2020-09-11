@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import {Card, Button, Progress} from 'antd'
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { isNull } from 'lodash';
-const Payment = () =>{
+const Payment = (props) =>{
     const user = useSelector((state) => state.user.token.user);
     let created_at = new Date(user.created_at)
         let now = new Date()
@@ -114,6 +115,9 @@ const Payment = () =>{
         {
             AutoRenewal
         }
+        <Link to="/plans/subscription" className="nav-link page-scroll">
+            Subscibe Now!
+         </Link>
     </div>
 }
  export default Payment

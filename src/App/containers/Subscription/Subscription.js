@@ -14,6 +14,12 @@ class subscription extends Component {
     };
 
     componentDidMount () {
+        const user = JSON.parse(window.localStorage.getItem('Case.user'))
+        if(user != null){
+           let newState= this.state
+           newState.data.userId = user.token.user._id
+           this.setState(newState)
+        }
         api.get('/plans/showall')
         .then(res =>{
           this.setState({

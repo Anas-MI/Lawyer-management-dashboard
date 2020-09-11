@@ -789,18 +789,19 @@ const SubscriptionManagement = (props) => {
                      setvisible(false)
                      api.post(`/communication/sendemail`, data ).then((email)=>{
                       console.log(email)
-                      setdisable(true)
+                      setdisable(false)
                       notification.success({
                         message : "Invoice sent"
                       })
                     })
-                    .catch( (err)=>{
-                      console.log(err)
-                      setdisable(true)
-                      notification.error({ message: 'Try again later.' });
-                    })
-                 
+                    
+                }).catch( (err)=>{
+                  console.log(err)
+                  setdisable(false)
+                  setvisible(false)
+                  notification.error({ message: 'Try again later.' });
                 })
+             
               
         }
       }

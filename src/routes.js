@@ -27,6 +27,7 @@ window.$ = $;
 global.jQuery = $;
 
 const DashboardDefault = React.lazy(() => import('./Demo/Dashboard/Default'));
+const SubscriptionPage = React.lazy(() => import('./App/containers/Subscription/Subscription'));
 
 const UIBasicButton = React.lazy(() =>
   import('./Demo/UIElements/Basic/Button')
@@ -192,6 +193,7 @@ export const adminRoutes = [
     name: 'Manage Features',
     component: FeaturesManage,
   },
+  
   {
     path: '/manage/plans',
     exact: true,
@@ -282,6 +284,12 @@ const routes = [
     exact: true,
     name: 'Basic Badges',
     component: UIBasicBadges,
+  },
+  {
+    path: '/plans/subscription',
+    exact: true,
+    name: 'subscription',
+    component: SubscriptionPage,
   },
   {
     path: '/documents/view',
