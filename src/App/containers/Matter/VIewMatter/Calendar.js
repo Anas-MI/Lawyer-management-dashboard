@@ -35,6 +35,8 @@ export default function Calendar(props) {
   });
   const [modalFor, setModalFor] = useState('Add');
 
+  const [disable, setDisable] = useState(false);
+
   const columns = [
     /*
     {
@@ -129,6 +131,7 @@ export default function Calendar(props) {
     },
   };
   const handleInput = (item) => (e) => {
+    setDisable(false);
     calEvent[`${item}`] =
       item === 'email' || item === 'notification'
         ? e.target.checked
@@ -137,26 +140,31 @@ export default function Calendar(props) {
   };
   const handleEdit = async () => {
     if(calEvent.title === ""){
+      setDisable(true);
       notification.warning({
         message : "Please provide a title"
       })
      }else
      if(calEvent.startDate === ""){
+      setDisable(true);
       notification.warning({
         message : "Please provide a Start Date"
       })
      }else
      if(calEvent.startTime === ""){
+      setDisable(true);
       notification.warning({
         message : "Please provide a start time"
       })
      }else
      if(calEvent.endDate === ""){
+      setDisable(true);
       notification.warning({
         message : "Please provide a end date"
       })
      }else
      if(calEvent.endTime === ""){
+      setDisable(true);
       notification.warning({
         message : "Please provide a end time"
       })
@@ -190,26 +198,31 @@ export default function Calendar(props) {
 
   const handleSubmit = async () => {
    if(calEvent.title === ""){
+    setDisable(true);
     notification.warning({
       message : "Please provide a title"
     })
    }else
    if(calEvent.startDate === ""){
+    setDisable(true);
     notification.warning({
       message : "Please provide a Start Date"
     })
    }else
    if(calEvent.startTime === ""){
+    setDisable(true);
     notification.warning({
       message : "Please provide a start time"
     })
    }else
    if(calEvent.endDate === ""){
+    setDisable(true);
     notification.warning({
       message : "Please provide a end date"
     })
    }else
    if(calEvent.endTime === ""){
+    setDisable(true);
     notification.warning({
       message : "Please provide a end time"
     })
@@ -257,6 +270,7 @@ export default function Calendar(props) {
           key="submit"
           type="primary"
           htmlType="submit"
+          disabled={disable}
           onClick={modalFor === 'Add' ? handleSubmit : handleEdit}
         >
           Submit
