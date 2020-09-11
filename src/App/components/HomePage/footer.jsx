@@ -1,6 +1,6 @@
 import React from "react";
 
-const footer = () => {
+const footer = (props) => {
   return (
     <div id="footer">
       <div className="f-top">
@@ -8,12 +8,11 @@ const footer = () => {
           <div className="row">
             <div className="col-md-3 col-sm-12 pb-4">
               <div className="ftr-set">
-                <h3>LOGO</h3>
+                <h3><img alt = "No image" height = "40%"width="40%" src = {props.state.logo}></img></h3>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-                  molestias aspernatur libero nulla, qui repellendus commodi id
-                  a deserunt magnam reprehenderit laboriosam dolorum officiis
-                  iusto hic odit fugit expedita quos.
+                  {
+                    props.state.description
+                  }
                 </p>
               </div>
             </div>
@@ -87,25 +86,40 @@ const footer = () => {
                   <h3>Address</h3>
                   <p>
                     {" "}
-                    Voluptate quidem sapiente perferendis illum hic laboriosam?
+                    {
+                      props.state.address
+                    }
                   </p>
                   <h3>Social</h3>
                   <ul className="clearfix">
                     <li>
-                      <a href="/">
-                        <i className="fa fa-facebook"></i>
+                      <a  onClick={()=>{window.location.href = props.state.socialMedia[0].url}}>
+                         <i className="fa fa-facebook"></i>
                       </a>
+                  
+                  
                     </li>
                     <li>
-                      <a href="/">
+                      <a  onClick={()=>{window.location.href = props.state.socialMedia[1].url}}>
                         <i className="fa fa-twitter"></i>
                       </a>
                     </li>
                     <li>
-                      <a href="/">
+                      <a  onClick={()=>{window.open(props.state.socialMedia[2].url)}}>
                         <i className="fa fa-youtube"></i>
                       </a>
                     </li>
+                    <li>
+                    <a onClick={()=>{window.open(props.state.socialMedia[4].url)}}>
+                      <span className="fa fa-linkedin"></span>
+                    </a>
+                  </li>
+                 
+                  <li>
+                    <a onClick={()=>{window.open(props.state.socialMedia[3].url)}}>
+                      <span className="fa fa-instagram"></span>
+                    </a>
+                  </li>
                   </ul>
                 </div>
               </div>
@@ -119,7 +133,9 @@ const footer = () => {
             <li>
               <small>© 2020 casemanagement.com</small>
             </li>
-            <li>
+            {
+              /*
+              <li>
               <a
                 href="/"
                 target="_blank"
@@ -164,31 +180,36 @@ const footer = () => {
                 </select>
               </div>
             </li>
+               */
+            }
             <li>
               <div className="l-social c-social">
                 <ul>
-                  <li>
-                    <a href="/">
-                      <span className="fa fa-facebook"></span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/">
-                      <span className="fa fa-twitter"></span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/">
+                <li>
+                      <a  onClick={()=>{window.location.href = props.state.socialMedia[0].url}}>
+                         <i className="fa fa-facebook"></i>
+                      </a>
+                  
+                  
+                    </li>
+                    <li>
+                      <a  onClick={()=>{window.location.href = props.state.socialMedia[1].url}}>
+                        <i className="fa fa-twitter"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a  onClick={()=>{window.open(props.state.socialMedia[2].url)}}>
+                        <i className="fa fa-youtube"></i>
+                      </a>
+                    </li>
+                    <li>
+                    <a onClick={()=>{window.open(props.state.socialMedia[4].url)}}>
                       <span className="fa fa-linkedin"></span>
                     </a>
                   </li>
+                 
                   <li>
-                    <a href="/">
-                      <span className="fa fa-youtube"></span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/">
+                    <a onClick={()=>{window.open(props.state.socialMedia[3].url)}}>
                       <span className="fa fa-instagram"></span>
                     </a>
                   </li>

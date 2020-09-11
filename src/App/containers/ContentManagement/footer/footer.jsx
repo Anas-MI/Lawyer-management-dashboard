@@ -15,7 +15,9 @@ class footer extends React.Component{
                 socialMedia: [
                     { item : "Facebook",  url :'' },
                     { item : "Twitter",  url :'' },
-                    { item : "Youtube",  url :'' }
+                    { item : "Youtube",  url :'' },
+                    { item : "Instagram",  url :'' },
+                    { item : "LinkedIn",  url :'' }
                 ],
                 imageFile: '',
                 header : [],
@@ -183,6 +185,7 @@ class footer extends React.Component{
                   <Form.Control
                     name="description"
                     type="text"
+                    as="textarea" rows="3"
                     placeholder="Description"
                     value={this.state['description']}
                     onChange={handleChange}

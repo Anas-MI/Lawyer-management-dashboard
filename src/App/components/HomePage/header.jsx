@@ -21,7 +21,11 @@ export class Header extends Component {
                     height={"calc(100vh - 93px)"}
                     images={images}
           />
-          <div className="head-centered overlay-slider"><h1>Your clients rely on you. Lawyers rely on Us.</h1></div>
+          <div className="head-centered overlay-slider"><h1>
+            {
+              this.props.state.banner[0]
+            }
+            </h1></div>
           
             {/* <div className="container">
               <div className="row">
