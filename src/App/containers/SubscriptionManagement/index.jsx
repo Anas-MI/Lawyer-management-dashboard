@@ -768,6 +768,7 @@ const SubscriptionManagement = (props) => {
           
           notification.warning({message : "Please upload a document"})
         }else{
+          setdisable(true)
           var docFormData = new FormData();
               docFormData.set('image', image)
           api
@@ -776,7 +777,7 @@ const SubscriptionManagement = (props) => {
                 })
                 .then((response)=>{
                   console.log(response)
-           //       notification.success({ message: 'Image Uploaded.' });
+                 notification.success({ message: 'Sending Email...' });
            //       console.log(response.data.message)
                      let data = {
                         to: email,
@@ -788,12 +789,14 @@ const SubscriptionManagement = (props) => {
                      setvisible(false)
                      api.post(`/communication/sendemail`, data ).then((email)=>{
                       console.log(email)
+                      setdisable(true)
                       notification.success({
                         message : "Invoice sent"
                       })
                     })
                     .catch( (err)=>{
                       console.log(err)
+                      setdisable(true)
                       notification.error({ message: 'Try again later.' });
                     })
                  
