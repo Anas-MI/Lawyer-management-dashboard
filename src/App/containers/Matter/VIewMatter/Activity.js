@@ -123,7 +123,7 @@
             rate: val.rate,
             billable: val.billable ? 'Yes' : 'No',
             date: val.date.substring(0, 10),
-            invoiceStatus: 'Unbilled',
+            invoiceStatus: val.billed ? "Billed" : 'Unbilled',
             //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
           };
           console.log(now)

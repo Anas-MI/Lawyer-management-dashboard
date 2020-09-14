@@ -37,73 +37,58 @@ class CreateBill extends React.Component{
     }
   }
     componentDidMount(){
-      api.get('/activity/viewforuser/' + this.props.userId).then((res) => {
-        activity = res.data.data;
-        console.log(activity)
-        var now = new Date();
-  /*
-        var end_of_week = new Date(
-          now.getTime() + (6 - now.getDay()) * 24 * 60 * 60 * 1000
-        );
-        end_of_week.setHours(23);
-        end_of_week.setMinutes(59);
-        end_of_week.setSeconds(59);
-
-        var start_of_week = new Date(now.setDate(now.getDate() - now.getDay()));
-  */
-        let timedata = [];
-        let expenseData = [];
-        let completeData = [];
+      api.get('/activity/viewforbill/' + this.props.userId).then((res) => {
+        console.log(res)
         let tableData = []
         let selected = []
-        let id = 0
-
-       // let today = [];
-       // let thisWeek = [];
-       // let thisMonth = [];
-       // let thisYear = [];
-        res.data.data.map((val, index) => {
-          //const date = this.convertTime(val.date);
-          
-          if(val.billed == false && val.billable == true){
+        Object.keys(res.data.c).map(function(key, index) {
+            let val = res.data.c[key][0]
             selected.push(false)
-           
-            let sHours = ""
-            let sMinutes = ""
-            let rate = val.rate
-              if(rate.includes("$")){
-                rate = rate.substring(0, rate.length - 1)
-              }
-              if(val.type === "time" && val.time !=undefined ){
-             
-                sHours = val.time.split(':')[0];
-                sMinutes = val.time.split(':')[1];
-              }
             let temp = {
-              key: id,
+              key: index,
+              total : 0,
               index : index,
               type: val.type,
-              id: val._id,
               hours : val.type === 'time' ? val.time : val.qty,
               client : val.matter ? val.matter.client.firstName + " " + val.matter.client.lastName : "-" ,
+              clientId :  val.matter ? val.matter.client._id : "" ,
               matter : val.matter,
               rate: val.rate,
               billable: val.billable ? 'Yes' : 'No',
               invoiceStatus: 'Unbilled',
-              amount :  val.type === 'time' ? (rate * sHours + ((rate/60)*sMinutes)).toFixed(2) : (rate * val.qty).toFixed(2),
-              trustAmount : "$0.00"
-              //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
-            };
-            id++
-            tableData.push(temp);
-          }
-        });
+              trustAmount : "$0.00",
+              activity : []
+            }
+           
+            
+            res.data.c[key].map((activity , i)=>{
+              temp.activity.push(activity._id)
+              let sHours = ""
+              let sMinutes = ""
+              let sSecs = ""
+              let rate = parseFloat(activity.rate)
+              if(activity.billed == false && activity.billable == true){
+                   
+                  
+                    if(activity.type === "time" && activity.time != undefined ){ 
+                      sHours = parseInt(activity.time.split(':')[0])
+                      sMinutes = parseInt(activity.time.split(':')[1])
+                      sSecs = parseInt(activity.time.split(':')[2])
+                    }
+                    let amount =  activity.type === 'time' ? rate * sHours + ((rate/60)*sMinutes) + ((rate/3600)*sSecs): rate * parseInt(activity.qty)
+                    temp.total = parseFloat(temp.total) + parseFloat(amount)
+                    temp.total = temp.total.toFixed('2')
+                 }
+ 
+            })
+            tableData.push(temp)
+            
+        })
         this.setState({
-          completeData: completeData,
-          tableData: tableData,
-          selected : selected
-        });
-      });
+          tableData
+        })
+        console.log(tableData)
+      })
       
       const time = window.localStorage.getItem('timer');
       let hours = Math.floor(time / 3600);
@@ -154,14 +139,16 @@ class CreateBill extends React.Component{
             },
             {
                 title : "Amount Due",
-                dataIndex : "amount",
-                key :"amount"
+                dataIndex : "total",
+                key :"total"
             },
+            /*
             {
                 title : "Amount in trust",
                 dataIndex : "trustAmount",
                 key :"trustAmount"
             }
+            */
         ]
 
         const handleCancel = ( ) =>{
@@ -224,19 +211,21 @@ class CreateBill extends React.Component{
               userId : this.props.userId,
               status : "draft",
             //  invoiceId: this.state.invoiceId,
-              client : activity[value.index].matter.client._id,
+              client : value.clientId,
               matter : value.matter._id ,
               issueDate : this.state.dates.issueDate,
               dueDate : this.state.dates.dueDate,
-              balance : value.amount,
+              balance : value.total,
             //  from : thisMatter.data.data.client ,
             //  to : this.state.to         
             }
             api.post('/billing/bill/create', data).then((res=>{
               value.billed = true
               console.log(res)
-                api
-              .post('/activity/edit/' + value.id, value )
+               
+             value.activity.map((item)=>{
+              api
+              .post('/activity/edit/' + item, value )
               .then((activity) => {
                 console.log(activity)
                 this.setState({
@@ -245,6 +234,7 @@ class CreateBill extends React.Component{
                 })
                
               })
+             })
               
               notification.success({message : "Bill Generated!"})
               this.setState({
