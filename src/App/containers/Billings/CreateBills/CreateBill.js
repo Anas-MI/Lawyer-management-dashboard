@@ -81,7 +81,10 @@ class CreateBill extends React.Component{
                  }
  
             })
-            tableData.push(temp)
+            if(temp.total != 0){
+              tableData.push(temp)
+            }
+           
             
         })
         this.setState({

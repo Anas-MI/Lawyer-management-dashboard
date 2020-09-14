@@ -34,7 +34,7 @@ class billing extends React.Component {
 
   componentDidMount(){
    
-    api.get('/billing/bill/viewforuser/'+this.props.userId).then((res)=>{
+    api.get('/billing/bill/viewforuser/' + this.props.userId + '/' + this.props.matterId).then((res)=>{
       console.log(res.data.data)
       let tableData = []
       let paidBills = []

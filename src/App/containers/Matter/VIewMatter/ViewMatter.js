@@ -502,7 +502,11 @@ function CompanyView(props) {
           <TaskFuntions id={props.location.state.id}></TaskFuntions>
         </TabPane>
         <TabPane tab="Bills" key="9">
-          <Bills handleRecordPayment={handleRecordPayment} handleBills = {handleCreateBills} />
+          <Bills 
+          userId={props.location.state.userId}
+          matterId={props.location.state.id}
+          handleRecordPayment={handleRecordPayment} 
+          handleBills = {handleCreateBills} />
         </TabPane>
       </Tabs>
     </div>
