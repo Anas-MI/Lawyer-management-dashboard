@@ -377,9 +377,23 @@ export const createBlog = (payload, cb) => {
 const updateBlogSuccess = (payload) => ({ type: UPDATE_BLOG_SUCCESS, payload });
 export const updateBlog = (payload, cb) => {
   var { id, body } = payload;
+  console.log({body})
   return (dispatch) => {
+
+    var docFormData = new FormData();
+    docFormData.set('image', body.imageFile);
+console.log({docFormData})
     api
-      .post(`/blogs/edit/${id}`, body)
+      .post('/footer/upload', docFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((response)=>{
+        console.log(response)
+        notification.success({ message: 'Image Uploaded.' });
+        console.log(response.data.message)
+
+    api
+      .post(`/blogs/edit/${id}`, {...body, image: response.data.message })
       .then((res) => {
         dispatch(updateBlogSuccess(res.data.data));
         cb(null, {
@@ -393,8 +407,11 @@ export const updateBlog = (payload, cb) => {
               });
               
       });
+    })
   };
+
 };
+
 
 const deleteBlogSuccess = (payload) => ({ type: UPDATE_BLOG_SUCCESS, payload });
 export const deleteBlog = (payload, cb)=> {

@@ -22,6 +22,7 @@ class footer extends React.Component{
                 imageFile: '',
                 header : [],
                 logo: "",
+                footer:"",
                 banner : ["You Rely on Lawyer, Lawyers rely on us"],
                 disabled: false
               }
@@ -146,7 +147,7 @@ class footer extends React.Component{
             <>
               <Card>
                 <Card.Header>
-                   <h5 className="text-center">Customise Footer</h5>
+                   <h5 className="text-center">Customise Home Page</h5>
                 </Card.Header>
                 <Card.Body>
                 <Form className="form-details">
@@ -348,8 +349,22 @@ class footer extends React.Component{
               })
               
             }
+            <h4>Footer Text</h4>
            
-               
+           <Form.Row>
+                    <Col>
+                      <Form.Group >
+                      <Form.Label>Footer Text</Form.Label>
+                      <Form.Control
+                        name="footer"
+                        type="text"
+                        placeholder= "Footer text"
+                        value={this.state.footer}
+                        onChange={handleChange}
+                      />
+                      </Form.Group>
+                    </Col>
+                  </Form.Row>
                 <Button disabled= {this.state.disabled} onClick={handleSubmit}>Update</Button>
               </Form>
               

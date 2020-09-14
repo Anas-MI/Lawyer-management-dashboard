@@ -721,7 +721,7 @@ const deleteTemplate = async (docId) => {
       key: '7',
       render: (_, record) => {
         return (
-          <Popconfirm
+       
                     title="Are you sure delete this Catagory?"
                     onConfirm={()=>deleteCategory(record._id)}
                     onCancel={()=>{}}

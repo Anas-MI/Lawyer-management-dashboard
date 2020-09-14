@@ -194,7 +194,7 @@ class footer extends React.Component{
       <div className="container">
         <ul className="clearfix f-menu-items" style={{"line-height" : "2",}}>
           <li>
-            <small>© 2020 casemanagement.com</small>
+            <small>{this.state.footer}</small>
           </li>
           {
             /*
