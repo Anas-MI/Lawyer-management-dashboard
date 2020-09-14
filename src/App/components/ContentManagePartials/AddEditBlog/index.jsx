@@ -162,11 +162,12 @@ const AddEditBlog = (props) => {
 
   // handel Image Upload
   const uploadImage = (e) => {
-    setState({ ...state, imageFile: e.target.files });
+    setState({ ...state, imageFile: e.target.files[0] });
   };
-
+  
   return (
     <>
+    {console.log({state})}
       <Card>
       <h3 className="text-center">Add New Blog</h3>
       <Form className="form-details">

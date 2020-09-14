@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space, notification, Card } from "antd";
+import { Table, Button, Input, Space,Popconfirm, message, notification, Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
@@ -34,7 +34,9 @@ const FeaturesManage = (props) => {
       })
     );
   }, []);
-
+  const cancel = (e) => {
+    message.error('Canceled');
+  }
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -162,9 +164,17 @@ const FeaturesManage = (props) => {
       key: "_id",
       render: (_, record) => {
         return (
-          <Button color="danger" onClick={() => handleDelete(record)}>
+          <Popconfirm
+          title="Are you sure you want to delete this Feature ?"
+          onConfirm={() => handleDelete(record)}
+          onCancel={() => cancel()}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger>
             Delete
           </Button>
+        </Popconfirm>
         );
       },
     },
