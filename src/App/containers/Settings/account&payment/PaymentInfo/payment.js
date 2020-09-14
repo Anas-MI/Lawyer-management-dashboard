@@ -10,14 +10,14 @@ const Payment = (props) =>{
         let now = new Date()
         let expiry_date = created_at
         expiry_date.setDate(created_at.getDate() + 15)
-    const [subscriptionRequested, setsubscriptionRequested] = useState("Trail")
-    const [renewal, setrenewal] = useState(<Row className="my-3">
-                                            <Col sm><span className="table-span-dark">Trail period expires in </span></Col>
-                                            <Col sm><span className="table-span-light">{expiry_date.getDate() - now.getDate()} Days</span></Col>
-                                        </Row> )
-    const [AutoRenewal, setAutoRenewal] = useState(null)
-    const [Amount, setAmount] = useState("")
-    const [RenewalDate, setRenewalDate] = useState("")
+        const [subscriptionRequested, setsubscriptionRequested] = useState("Trail")
+        const [renewal, setrenewal] = useState(<Row className="my-3">
+                                                <Col sm><span className="table-span-dark">Trail period expires in </span></Col>
+                                                <Col sm><span className="table-span-light">{expiry_date.getDate() - now.getDate()} Days</span></Col>
+                                            </Row> )
+        const [AutoRenewal, setAutoRenewal] = useState(null)
+        const [Amount, setAmount] = useState("")
+        const [RenewalDate, setRenewalDate] = useState("")
     console.log(user)
 
     const setValues = ( ) =>{
@@ -27,15 +27,32 @@ const Payment = (props) =>{
             console.log(user.registeredOn.subscriptionRequested)
             let renewalDate = new Date(user.registeredOn.date)
             console.log(renewalDate)
+
             if(user.registeredOn.subscriptionRequested === "monthly"){
                 renewalDate.setMonth(renewalDate.getMonth() + 1)
+                if(renewalDate.getDate() === now.getDate() &&
+                    renewalDate.getMonth() === now.getMonth() &&
+                     renewalDate.getFullYear() === now.getFullYear()
+                    ){
+                        renewalDate.setMonth(renewalDate.getMonth() + 1)
+                    }
+
                 setRenewalDate(renewalDate)
                 setrenewal(<Row className="my-3">
                             <Col sm><span className="table-span-dark">Amount on next Bill</span></Col>
                             <Col sm><span className="table-span-light">$100 on {renewalDate.toDateString()}</span></Col>
                         </Row> )
             }else{
+
                 renewalDate.setFullYear(renewalDate.getFullYear() + 1)
+
+                if(renewalDate.getDate() === now.getDate() &&
+                    renewalDate.getMonth() === now.getMonth() &&
+                     renewalDate.getFullYear() === now.getFullYear()
+                    ){
+                        renewalDate.setFullYear(renewalDate.getFullYear() + 1)
+                    }
+
                 setRenewalDate(renewalDate)
                 setrenewal(<Row className="my-3">
                             <Col sm><span className="table-span-dark">Amount on next Bill</span></Col>
