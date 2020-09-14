@@ -36,7 +36,7 @@ function CompanyView(props) {
   const [BillAmount, setBillAmount] = useState(0)
   console.log(props.location.state);
     const fetchBills = ( ) =>{
-      api.get('/billing/bill/viewforuser/'+ props.location.state.userId).then((res)=>{
+      api.get('/billing/bill/viewforuser/'+ props.location.state.userId + '/' + props.location.state.id).then((res)=>{
         console.log(res)
         let billamount = 0
         res.data.data.map((value , index)=>{

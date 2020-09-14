@@ -41,11 +41,12 @@ class CreateBill extends React.Component{
         console.log(res)
         let tableData = []
         let selected = []
+        let sel = 0
         Object.keys(res.data.c).map(function(key, index) {
             let val = res.data.c[key][0]
-            selected.push(false)
+           
             let temp = {
-              key: index,
+              key: sel,
               total : 0,
               index : index,
               type: val.type,
@@ -82,6 +83,8 @@ class CreateBill extends React.Component{
  
             })
             if(temp.total != 0){
+              selected.push(false)
+              sel++
               tableData.push(temp)
             }
            
