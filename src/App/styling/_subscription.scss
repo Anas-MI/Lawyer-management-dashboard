@@ -2,48 +2,69 @@
     background: #F4F4F4;
 }
 .sub_card {
-    box-shadow: 0 15px 30px rgba(77,87,222,.15);
     border: none !important;
     transition: all .4s ease 0s;
     padding: 25px;
     background: #fff;
     margin-bottom: 30px;
+    box-shadow: 4px 13px 48px 11px rgba(193, 193, 193, 0.59);
+    text-align: center;
+    border-radius: 10px;
+    height:100%;
+    position: relative;
 }
 
 .sub_card:hover{
     transform: scale(1.05);
-    background-image: linear-gradient(to top left, #FF6179, #FF7C5E);
+    background-image: linear-gradient(to top left, #FF4B2B,#FF416C);
     color: #fff;
     .card-title{
         color: #ffffff;
     }
     .sub-button{
-        display: block;
         color: #fff;
         border: 2px solid #fff;
-        padding: 7px 30px;
-        text-align: center;
-        display: inline-block;
-        font-size: 14px;
-        margin: 4px 2px;
-        background-color: transparent;
-        border-radius: 30px;
     }
 }
-.card-title{
+.card-title {
     font-weight: 500;
 }
-.sub-button{
-    display: none;
+.sub-title{
+    font-weight: 700;
+    font-size: 46px;
+    margin-bottom: 20px;
 }
+.sub-text{
+    margin: 0;
+    font-size: 18px !important;
+    text-transform: uppercase;
+    padding-bottom: 20px !important;
+    letter-spacing: 5.9px;
+    font-weight: 300 !important;
+}
+.sub-button{
+    color: #6b6b6b;
+    border: 2px solid #7d7d7d;
+    padding: 10px 50px;
+    text-align: center;
+    display: inline-block;
+    margin: 4px 2px;
+    background-color: transparent;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
 .sub-list {
     text-align: left;
     font-size: 0.8em;
     i {
-        margin-right: 8px;
+        margin-right: 12px;
         opacity: 0.4;
     }
     li {
-        padding: 10px 5%;
+        padding: 6px 0%;
+        font-size: 17px;
     }
 }
