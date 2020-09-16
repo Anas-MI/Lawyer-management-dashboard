@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
-import { Card, Tabs, Button, Modal, Table, Upload, notification, Spin} from 'antd';
+import { Card, Tabs, Button, Modal, Table, Popconfirm, Upload, notification, Spin} from 'antd';
 import { number } from 'prop-types';
 import { Form, Row, Col } from 'react-bootstrap';
 import Communication from './communnication';
@@ -308,24 +308,30 @@ function CompanyView(props) {
             >
               Edit
             </Button>
-            <Button
-              onClick={() =>
-                api
-                  .get('/matter/delete/' + props.location.state.id)
-                  .then(() => {
-                    notification.success({ message: 'Matter deleted.' });
-                    props.history.push(
-                      '/manage/matter',
-                      props.location.state.id
-                    );
-                  })
-                  .catch(() =>
-                    notification.error({ message: 'Failed to delete' })
-                  )
-              }
-            >
-              Delete
-            </Button>
+            <Popconfirm
+                    title="Are you sure delete this Matter?"
+                    onConfirm={() =>
+                      api
+                        .get('/matter/delete/' + props.location.state.id)
+                        .then(() => {
+                          notification.success({ message: 'Matter deleted.' });
+                          props.history.push(
+                            '/manage/matter',
+                            props.location.state.id
+                          );
+                        })
+                        .catch(() =>
+                          notification.error({ message: 'Failed to delete' })
+                        )}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button  danger>
+                      Delete
+                  </Button>
+                  </Popconfirm>
+    
           </div>
           </Col>
         </Row>
