@@ -40,13 +40,13 @@ class LawyerLayout extends Component {
     
             const now = new Date()
     
-            if(last_update < now){
-                //console.log(this.props)
-                // this.props.logoutUser()
-                localStorage.setItem('Case.user' , null)
-                window.location.reload()
-                //   this.props.history.push('/')
-            }
+            // if(last_update < now){
+            //     //console.log(this.props)
+            //     // this.props.logoutUser()
+            //     localStorage.setItem('Case.user' , null)
+            //     window.location.reload()
+            //     //   this.props.history.push('/')
+            // }
         }
 
         if (this.props.windowWidth > 992 && this.props.windowWidth <= 1024 && this.props.layout !== 'horizontal') {
