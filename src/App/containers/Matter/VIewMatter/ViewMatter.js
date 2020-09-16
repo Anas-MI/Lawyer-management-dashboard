@@ -309,7 +309,7 @@ function CompanyView(props) {
               Edit
             </Button>
             <Popconfirm
-                    title="Are you sure delete this Matter?"
+                    title="Are you sure you want to delete this Matter?"
                     onConfirm={() =>
                       api
                         .get('/matter/delete/' + props.location.state.id)
