@@ -49,7 +49,7 @@ export class Navigation extends Component {
                   className="navbar-brand-name page-scroll  mr-3 col-xs-4"
                   to="/"
                 >
-                  Case Management{" "}
+                  <img alt = "Case Management" height = "40%"width="40%" src = {this.state.headerLogo}></img>
                 </Link>
                 <button
                   class="navbar-toggler"
