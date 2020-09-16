@@ -22,6 +22,7 @@ class footer extends React.Component{
                 imageFile: '',
                 header : [],
                 logo: "",
+                headerLogo:"",
                 footer:"",
                 banner : ["You Rely on Lawyer, Lawyers rely on us"],
                 disabled: false
@@ -35,6 +36,7 @@ class footer extends React.Component{
         })
     }
     render(){
+      console.log(this.state)
         const handleChange = (e) => {
             e.persist();
         
@@ -117,6 +119,31 @@ class footer extends React.Component{
             this.setState({ ...this.state, imageFile: e.target.files[0] });
             console.log(this.state)
           };
+
+          const uploadImage2 = (e) => {
+            // this.setState({ ...this.state, imageFile: e.target.files[0] });
+            // console.log(this.state)
+          
+            var docFormData = new FormData();
+            docFormData.set('image', e.target.files[0]);
+    
+            api
+              .post('/footer/upload', docFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              })
+              .then((response)=>{
+                console.log(response)
+                notification.success({ message: 'Image Uploaded.' });
+                console.log(response.data.message)
+                 this.setState({headerLogo: response.data.message})  
+                  // data.logo = response.data.message
+              }).catch(error => {
+                console.log({error})
+              })
+          
+          
+          };
+
           const addFeild = (key) => {
             let listx = this.state
             listx[key].push({item : "", url :""})
@@ -145,12 +172,26 @@ class footer extends React.Component{
         
           return (
             <>
+            
               <Card>
                 <Card.Header>
                    <h5 className="text-center">Customise Home Page</h5>
                 </Card.Header>
                 <Card.Body>
                 <Form className="form-details">
+                
+                <Form.Label>Header Logo</Form.Label>
+                <img width="30%" height="30%" alt="No Image" src = {this.state.headerLogo}></img><br></br>
+                <Form.Group controlId="formGroupEmail">
+                  <input
+                    type="file"
+                    name="Logo"
+                    onChange={uploadImage2}
+                    placeholder="Upload Image"
+                  />
+                </Form.Group>
+                <Form.Label>Footer Logo</Form.Label>
+
                 <img width="30%" height="30%" alt="No Image" src = {this.state.logo}></img><br></br>
                 <Form.Group controlId="formGroupEmail">
                   <input
