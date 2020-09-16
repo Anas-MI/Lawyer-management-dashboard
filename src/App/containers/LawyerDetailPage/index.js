@@ -58,7 +58,7 @@ const LawyerDetail = props => {
                     </Col>
                 
 
-                    <Col md={6} xl={4}>
+                    {/* <Col md={6} xl={4}>
                         <Card>
                             <Card.Body>
                                 <h6 className='mb-4'><b>Total Matters</b></h6>
@@ -128,7 +128,7 @@ const LawyerDetail = props => {
                                 </Table>
                             </Card.Body>
                         </Card>
-                    </Col>
+                    </Col> */}
                 
                 </Row>
             </Aux>
