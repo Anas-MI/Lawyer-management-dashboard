@@ -181,6 +181,7 @@ class footer extends React.Component{
                 <Form className="form-details">
                 
                 <Form.Label>Header Logo</Form.Label>
+                <br/>
                 <img width="30%" height="30%" alt="No Image" src = {this.state.headerLogo}></img><br></br>
                 <Form.Group controlId="formGroupEmail">
                   <input
