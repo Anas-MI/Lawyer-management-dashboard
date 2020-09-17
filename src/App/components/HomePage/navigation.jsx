@@ -39,17 +39,17 @@ export class Navigation extends Component {
     return (
       <div
         id="menu"
-        className="bg-white border-bottom navigation-wrap shadow-sm sticky-top"
+        className="bg-white border-bottom navigation-wrap shadow-sm sticky-top p-0"
       >
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <nav className="navbar navbar-expand-md navbar-light">
+            <div className="col-12 p-0">
+              <nav className="navbar navbar-expand-md navbar-light p-0 pb-2 px-3">
                 <Link
-                  className="navbar-brand-name page-scroll  mr-3 col-xs-4"
+                  className="navbar-brand-name page-scroll ml-2"
                   to="/"
                 >
-                  <img alt = "Case Management" height = "40%"width="40%" src = {this.state.headerLogo}></img>
+                  <img alt = "Case Management" height = "90px" width="100px" src ={this.state.headerLogo}></img>
                 </Link>
                 <button
                   class="navbar-toggler"
@@ -105,7 +105,7 @@ export class Navigation extends Component {
 
                   <div className="navbar-login ml-auto" id="bottomNav">
                     <ul className="navbar-nav px-md-3">
-                      <li className="nav-item mr-3 mb-2">
+                      <li className="nav-item mr-3">
                         <Link to="/login" className="nav-link page-scroll">
                           Login
                         </Link>
