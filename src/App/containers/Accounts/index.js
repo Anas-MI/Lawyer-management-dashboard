@@ -127,6 +127,19 @@ const Accounts = () => {
             title: 'Default Account',
             dataIndex: 'type',
         },
+        
+        {
+            title:'Edit',
+            dataIndex: "edit",
+            key: "_id",
+            render:(_,record)=>{
+                return (
+                    <Button  onClick={() => { history.push('/edit/accounts', record._id)}} >
+                        Edit
+                    </Button>
+                )
+            }
+        },
         {
           title:'Delete',
           dataIndex: "delete",
@@ -147,18 +160,6 @@ const Accounts = () => {
                   
                   )
               }
-        },
-        {
-            title:'Edit',
-            dataIndex: "edit",
-            key: "_id",
-            render:(_,record)=>{
-                return (
-                    <Button  onClick={() => { history.push('/edit/accounts', record._id)}} >
-                        Edit
-                    </Button>
-                )
-            }
         },
       ];
       const exportPDF = () => {

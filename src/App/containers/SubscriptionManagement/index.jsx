@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Table,Button,Input, Space, notification , Popconfirm} from "antd";
-import { Card } from 'react-bootstrap'
+import { Table,Button,Input, Space, notification , Popconfirm, Modal} from "antd";
+import { Card, Form } from 'react-bootstrap'
 import { SearchOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
@@ -13,7 +13,9 @@ const { TabPane } = Tabs;
 const SubscriptionManagement = (props) => {
 
     //Search Related 
-    const [state,setState] = useState({})
+    const [state,setState] = useState({
+      imageFile : ""
+    })
     const [tableData, settableData] = useState([])
     const [dataSrc, setDataSrc] = useState([]);
     const [dataSrcforApp, setDataSrcforApp] = useState([]);
@@ -24,6 +26,10 @@ const SubscriptionManagement = (props) => {
     const [planName, setPlanName] = useState([])
     const [planAmount, setPlanAmount] = useState([])
     const [showNameInput, setShowNameInput] = useState(false);
+    const [visible, setvisible] = useState(false)
+    const [email, setemail] = useState("")
+    const [disable, setdisable] = useState(false)
+    const [image, setimage] = useState({})
     // fetch the subscription plan name and amount to filter the data in table. 
     const fetchSubs = ( ) =>{
       api.get(`subscription/showall`).then((res)=>{
@@ -377,6 +383,20 @@ const SubscriptionManagement = (props) => {
        },
      },
      {
+      title: 'SendInvoice',
+      dataIndex: 'SendInvoice',
+      key: 'send',
+      render: (_, record) => {
+        return (
+          
+            <Button onClick={()=>{
+              setemail(record.email)
+              setvisible(true)}}>Send Invoice</Button>
+         
+        );
+      },
+    },
+     {
       title: 'Invoice',
       dataIndex: 'Invoice',
       key: 'Invoice',
@@ -509,6 +529,20 @@ const SubscriptionManagement = (props) => {
         },
       },
       {
+        title: 'SendInvoice',
+        dataIndex: 'SendInvoice',
+        key: 'send',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{
+                setemail(record.email)
+                setvisible(true)}}>Send Invoice</Button>
+           
+          );
+        },
+      },
+      {
         title: 'Invoice',
         dataIndex: 'Invoice',
         key: 'Invoice',
@@ -624,6 +658,20 @@ const SubscriptionManagement = (props) => {
           //  sortDirections: ['descend'],
       },
       {
+        title: 'SendInvoice',
+        dataIndex: 'SendInvoice',
+        key: 'send',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{
+                setemail(record.email)
+                setvisible(true)}}>Send Invoice</Button>
+           
+          );
+        },
+      },
+      {
         title: 'Invoice',
         dataIndex: 'Invoice',
         key: 'Invoice',
@@ -704,26 +752,59 @@ const SubscriptionManagement = (props) => {
     ]
 
     // sample data 
-    const data = [
-        {
-          key: '1',
-          name: 'John Brown',
-          email : "xyzw@gm.com",
-          subscriptionPlan : "200$",
-          subscriptionName : "Advance",
-        },
-        {
-            key: '2',
-            name: 'xyz Brown',
-            email : "sdss@gm.com",
-            subscriptionPlan : "400$",
-            subscriptionName : "Pro Plus",
-          },
-      ];
+    
 
       const handleView = (record) => {
         props.history.push('/view/subscription', record);
       };
+      const uploadImage = (e) => {
+        setimage(e.target.files[0])
+      //  setState({ ...state, imageFile: e.target.files[0] });
+      };
+
+      const handleInvoice = ( ) => {
+        notification.destroy()
+        if(image === {} ){
+          
+          notification.warning({message : "Please upload a document"})
+        }else{
+          setdisable(true)
+          var docFormData = new FormData();
+              docFormData.set('image', image)
+          api
+                .post('/footer/upload', docFormData, {
+                  headers: { 'Content-Type': 'multipart/form-data' },
+                })
+                .then((response)=>{
+                  console.log(response)
+                 notification.success({ message: 'Sending Email...' });
+           //       console.log(response.data.message)
+                     let data = {
+                        to: email,
+                        subject : "Invoice",
+                        text : response.data.message,
+                        date  : new Date()
+                     }
+                     console.log(data)
+                     setvisible(false)
+                     api.post(`/communication/sendemail`, data ).then((email)=>{
+                      console.log(email)
+                      setdisable(false)
+                      notification.success({
+                        message : "Invoice sent"
+                      })
+                    })
+                    
+                }).catch( (err)=>{
+                  console.log(err)
+                  setdisable(false)
+                  setvisible(false)
+                  notification.error({ message: 'Try again later.' });
+                })
+             
+              
+        }
+      }
 
     return (
       
@@ -794,6 +875,36 @@ const SubscriptionManagement = (props) => {
             </Tabs>
                  
             </Card.Body>
+            <Modal
+          title="Send Invoice"
+          visible={visible}
+          onCancel={()=>{setvisible(false)}}
+          onOk={handleInvoice}
+          footer={[
+            <Button  onClick={()=>{setvisible(false)}}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {disable} onClick={handleInvoice}>
+              Send
+            </Button>,
+          ]}
+        >
+          <Form 
+           id='myForm'
+           className="form"
+           className="form-details">
+                  <Form.Group controlId="formGroupEmail">
+                  <input
+                    type="file"
+                    name="File"
+                    onChange={uploadImage}
+                    placeholder="Upload Image"
+                  />
+                </Form.Group>
+            </Form>
+    
+        </Modal>
+      
           </Card>
             
            

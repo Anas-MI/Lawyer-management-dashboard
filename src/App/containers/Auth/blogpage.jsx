@@ -20,6 +20,10 @@ class blogpage extends Component{
     }
 
     render() {
+        const handleRoute = (route) =>{
+            console.log(route)
+            this.props.history.push(route)
+          }
         var splitUrl = this.state.myMainSite.split('/blogpage/');
     return(
         <>
@@ -55,7 +59,7 @@ class blogpage extends Component{
                 </div>
             </div>
         </div>
-        <Footer />
+        <Footer handleRoute = {handleRoute} />
         </>
     )
     }

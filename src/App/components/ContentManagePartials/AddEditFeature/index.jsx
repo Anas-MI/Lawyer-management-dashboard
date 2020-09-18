@@ -8,6 +8,7 @@ const AddEditFeature = (props) => {
   const [state, setState] = useState({
     title: "",
     description: "",
+    imageFile : ""
   });
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
@@ -79,7 +80,13 @@ const AddEditFeature = (props) => {
       return notification.warning({
         message: "Fields Should Not Be Empty",
       });
-    } else {
+    } else
+    if (state.imageFile === "") {
+      setDisplay(true)
+      return notification.warning({
+        message: "Please select a image",
+      });
+    } else  {
       if (editMode) {
         dispatch(updateFeature({id:state._id,body:state},(err,response)=>{
           if(err){
@@ -100,11 +107,23 @@ const AddEditFeature = (props) => {
   }
   props.history.goBack()
 }
+const uploadImage = (e) => {
+  setState({ ...state, imageFile: e.target.files[0] });
+  console.log(state)
+};
 
   return (
     <div className='w-75 m-auto'>
         <h3 className='text-center' >Add New Feature</h3>
     <Form className="form-details">
+      <Form.Group controlId="formGroupEmail">
+                  <input
+                    type="file"
+                    name="Logo"
+                    onChange={uploadImage}
+                    placeholder="Upload Image"
+                  />
+                </Form.Group>
         <Form.Group controlId="formGroupEmail">
           <Form.Label>Title</Form.Label>
           <Form.Control

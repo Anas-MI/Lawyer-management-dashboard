@@ -35,6 +35,10 @@ function Registration(props) {
     phoneNumber: "",
   });
 
+  const handleRoute = (route) =>{
+    console.log(route)
+    props.history.push(route)
+  }
   const handleChange = (e) => {
     e.persist();
     setDisplay(false)
@@ -617,7 +621,7 @@ function Registration(props) {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer handleRoute = {handleRoute} />
     </>
   );
 }

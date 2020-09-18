@@ -19,7 +19,7 @@ const Invoice = (props) => {
   const userId = useSelector((state) => state.user.token.user._id);
   const [Data, setData] = useState({
     account : {
-        name : "Law office of" + props.location.state.clientData.name,
+        name : "Law office of " + props.location.state.clientData.name,
         address : {
 
         }
@@ -28,7 +28,9 @@ const Invoice = (props) => {
   function fetchDetails(){
       api.get('/user/view/' + userId).then((res) => {
           console.log(res)
-          setData(res.data.data)
+          if(res.data.data.account !=undefined){
+            setData(res.data.data)
+          }
       })
   }
   useEffect(() => {
@@ -108,8 +110,8 @@ const Invoice = (props) => {
   const dueDate = ddate.getDate() +"/"+ ddate.getMonth()+1 + "/" +  ddate.getFullYear()
   const invoiceForm = () => (
     
-    <Card  bodyStyle={{"padding": "30px"}} className="mb-3">
-    <div id="canvas" className="text-center P-3">
+    <Card id = "canvas" bodyStyle={{"padding": "30px"}} className="mb-3">
+    <div className="text-center P-3">
       <h6 className="text-right pb-3">
         Invoice #{props.location.state.invoiceData.id} - {props.location.state.invoiceData.date}
       </h6>

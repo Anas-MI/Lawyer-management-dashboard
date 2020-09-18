@@ -1,22 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import {Card, Button, Progress} from 'antd'
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { isNull } from 'lodash';
-const Payment = () =>{
+const Payment = (props) =>{
     const user = useSelector((state) => state.user.token.user);
     let created_at = new Date(user.created_at)
         let now = new Date()
         let expiry_date = created_at
         expiry_date.setDate(created_at.getDate() + 15)
-    const [subscriptionRequested, setsubscriptionRequested] = useState("Trail")
-    const [renewal, setrenewal] = useState(<Row className="my-3">
-                                            <Col sm><span className="table-span-dark">Trail period expires in </span></Col>
-                                            <Col sm><span className="table-span-light">{expiry_date.getDate() - now.getDate()} Days</span></Col>
-                                        </Row> )
-    const [AutoRenewal, setAutoRenewal] = useState(null)
-    const [Amount, setAmount] = useState("")
-    const [RenewalDate, setRenewalDate] = useState("")
+        const [subscriptionRequested, setsubscriptionRequested] = useState("Trail")
+        const [renewal, setrenewal] = useState(<Row className="my-3">
+                                                <Col sm><span className="table-span-dark">Trial period expires in </span></Col>
+                                                <Col sm><span className="table-span-light">{expiry_date.getDate() - now.getDate()} Days</span></Col>
+                                            </Row> )
+        const [AutoRenewal, setAutoRenewal] = useState(null)
+        const [Amount, setAmount] = useState("")
+        const [RenewalDate, setRenewalDate] = useState("")
     console.log(user)
 
     const setValues = ( ) =>{
@@ -26,15 +27,32 @@ const Payment = () =>{
             console.log(user.registeredOn.subscriptionRequested)
             let renewalDate = new Date(user.registeredOn.date)
             console.log(renewalDate)
+
             if(user.registeredOn.subscriptionRequested === "monthly"){
                 renewalDate.setMonth(renewalDate.getMonth() + 1)
+                if(renewalDate.getDate() === now.getDate() &&
+                    renewalDate.getMonth() === now.getMonth() &&
+                     renewalDate.getFullYear() === now.getFullYear()
+                    ){
+                        renewalDate.setMonth(renewalDate.getMonth() + 1)
+                    }
+
                 setRenewalDate(renewalDate)
                 setrenewal(<Row className="my-3">
                             <Col sm><span className="table-span-dark">Amount on next Bill</span></Col>
                             <Col sm><span className="table-span-light">$100 on {renewalDate.toDateString()}</span></Col>
                         </Row> )
             }else{
+
                 renewalDate.setFullYear(renewalDate.getFullYear() + 1)
+
+                if(renewalDate.getDate() === now.getDate() &&
+                    renewalDate.getMonth() === now.getMonth() &&
+                     renewalDate.getFullYear() === now.getFullYear()
+                    ){
+                        renewalDate.setFullYear(renewalDate.getFullYear() + 1)
+                    }
+
                 setRenewalDate(renewalDate)
                 setrenewal(<Row className="my-3">
                             <Col sm><span className="table-span-dark">Amount on next Bill</span></Col>
@@ -114,6 +132,9 @@ const Payment = () =>{
         {
             AutoRenewal
         }
+        <Link to="/plans/subscription" className="nav-link page-scroll">
+            Subscibe Now!
+         </Link>
     </div>
 }
  export default Payment

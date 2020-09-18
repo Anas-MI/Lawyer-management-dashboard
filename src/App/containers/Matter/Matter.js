@@ -305,6 +305,17 @@ class matterManage extends React.Component {
         key: '_id',
         sortDirections: ['descend', 'ascend'],
         sorter: (a, b) => a.OpenDate.length - b.OpenDate.length,
+      },{
+        title: 'View',
+        dataIndex: 'view',
+        key: '_id',
+        render: (_, record) => {
+          return (
+            <Button color="warning" onClick={() => handleView(record)}>
+              View
+            </Button>
+          );
+        },
       },
       {
         title: 'Edit',

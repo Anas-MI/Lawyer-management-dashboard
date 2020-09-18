@@ -11,6 +11,7 @@ import BlogsManage from './App/containers/ContentManagement/Blogs';
 import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
 import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
 import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
+import footer from './App/containers/ContentManagement/footer/footer'
 import Accounts from './App/containers/Accounts';
 import Documents from './App/containers/Documents';
 import Support from './App/containers/Support/Support';
@@ -26,6 +27,7 @@ window.$ = $;
 global.jQuery = $;
 
 const DashboardDefault = React.lazy(() => import('./Demo/Dashboard/Default'));
+const SubscriptionPage = React.lazy(() => import('./App/containers/Subscription/Subscription'));
 
 const UIBasicButton = React.lazy(() =>
   import('./Demo/UIElements/Basic/Button')
@@ -191,6 +193,7 @@ export const adminRoutes = [
     name: 'Manage Features',
     component: FeaturesManage,
   },
+  
   {
     path: '/manage/plans',
     exact: true,
@@ -214,6 +217,12 @@ export const adminRoutes = [
     exact: true,
     name: 'Add Edit Plans',
     component: AddEditPlans,
+  },
+  {
+    path: '/manage/footer',
+    exact: true,
+    name: 'Add Edit footer',
+    component: footer,
   },
   {
     path: '/manage/subscription',
@@ -275,6 +284,12 @@ const routes = [
     exact: true,
     name: 'Basic Badges',
     component: UIBasicBadges,
+  },
+  {
+    path: '/plans/subscription',
+    exact: true,
+    name: 'subscription',
+    component: SubscriptionPage,
   },
   {
     path: '/documents/view',

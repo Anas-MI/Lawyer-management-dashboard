@@ -52,7 +52,7 @@ const Notes = (props) => {
         let valid = true
         if (timeError !== '') {
             valid = false
-            notification.error({ message: 'Invalid time' });
+            notification.error({ message: 'Invalid time, Please enter time in the format : HH:MM:SS' });
           }else
         if(data.subject === '' || data.subject === undefined ){
           valid = false

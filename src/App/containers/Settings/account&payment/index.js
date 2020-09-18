@@ -43,6 +43,12 @@ class customFeilds extends React.Component {
         this.setModal2Visible(false)
 
     }
+    const handleSubs =  ( ) =>{
+      console.log("subs")
+      const user = JSON.parse(window.localStorage.getItem('Case.user'))
+      window.localStorage.setItem('userId' , user.token.user._id)
+      this.props.history.push('/plans/subscription')
+    }
     const operations = <Button onClick={() => this.setModal2Visible(true)}>Add</Button>
   
     return (
@@ -53,7 +59,7 @@ class customFeilds extends React.Component {
                 <Account state={this.state.Data}></Account>
               </TabPane>
               <TabPane tab="Payment Info" key="2">
-                <Payment></Payment>
+                <Payment handleSubs = { handleSubs }></Payment>
              </TabPane>
         </Tabs>
         <Modal

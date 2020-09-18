@@ -26,11 +26,12 @@ class AddEditMatter extends React.Component{
     this.state = {
       rate : "Flat",
       status :"Open",
-      editData : "",
+      editData : {},
       client : "",
       relatedContacts : [],
       customFields : [],
       modal : false,
+      taskOptions: []
     }
 
   }
@@ -48,6 +49,53 @@ class AddEditMatter extends React.Component{
       clientId = e.target.selectedIndex - 1
     }
   }
+   addFeild=() =>{
+      let list = this.state.relatedContacts
+      list.push({relationship : "", contact : "", billThis : "", id: ""})
+      this.setState({relatedContacts : list})
+ 
+  }
+   handleDelete = (e)=>{
+    e.persist()
+     const { name , id } = e.target
+     let newState = this.state
+     newState.relatedContacts.splice(id, 1)
+     this.setState(newState)
+  }
+
+  HandleDynamicChange = (e)=>{
+    e.persist()
+    let list = this.state
+    const { id , value, name , checked ,selectedIndex } = e.target
+    if(name==="billThis"){
+      list.relatedContacts[id][name] = checked
+    }if(name === 'contact'){
+      console.log(contacts)
+      if(selectedIndex != 0){
+        list.relatedContacts[id][name] = contacts.data.data[selectedIndex -1]._id
+      list.relatedContacts[id].id = selectedIndex
+      }
+    }else{
+    list.relatedContacts[id][name] = value
+    }
+    
+    console.log(error.relationship)
+    switch (name) {
+      case "relationship":
+        error.relationship[id] =
+        (!validNameRegex.test(value))
+        ? "Realtionship must be in characters!"
+        : (value.length > 20) 
+        ? "Relationship must be less than 20 characters long!" 
+        : "";
+   break;
+     
+      default:
+        break;
+    }
+    this.setState(list)
+    console.log(this.state)
+  }
   async componentDidMount(){
    
     const editData = await api.get('/matter/view/'+this.props.location.state)
@@ -57,22 +105,47 @@ class AddEditMatter extends React.Component{
       relatedContacts : editData.data.data.relatedContacts? editData.data.data.relatedContacts : [] })
     this.setState({client: editData.data.data.client._id})
 
+    let taskOptions = []
+    api.get('/tasks/viewforuser/' + this.props.userId).then((res) => {
+      console.log(res)
+      res.data.data.map((value, index)=>{
+        taskOptions.push(<option value={value._id}>{value.taskName}</option>)
+      })
+      this.setState({taskOptions : taskOptions})
+      const taskAuto =<Form className="form-details">
+                      <Form.Group controlId="exampleForm.ControlSelect1">
+                                <Form.Label>Task</Form.Label>
+                                <Form.Control as="select" name="task" onChange={this.handleChange} defaultValue={this.state.editData.task ? this.state.editData.task[0] : ""}>
+                                  <option>Select a task</option>
+                                  {
+                                    this.state.taskOptions.map((val)=>{
+                                      return val
+                                    })
+                                  }
+                                </Form.Control>
+                              </Form.Group>
+                        
+                      </Form>
+      this.setState({ taskAutomation : taskAuto})
+    })
     api.get('/user/view/' + this.props.userId).then((res)=>{
-   // console.log(res)
+     console.log(res)
       let customFeilds = []
   
       res.data.data.customFields.map((value, index)=>{
+
           customFeilds.push(<Col md="6">
           <Form.Group key={index} controlId={index}>
             <Form.Label>{value.name}</Form.Label>
             <Form.Control
               name={value.name}
               type={value.type}
-              defaultValue={this.state.editData.customFields.length == 0 || this.state.editData.customFields[index] == undefined ? " " : this.state.editData.customFields[index][value.name]}
+              defaultValue={editData.data.data.customFields.length == 0 || editData.data.data.customFields[index] == undefined ? " " : editData.data.data.customFields[index][value.name]}
             onChange={this.handleCustom}
             />
           </Form.Group>
         </Col>)
+        console.log(editData.data.data.customFields)
       })
       this.setState({
         customFields : customFeilds
@@ -92,6 +165,7 @@ class AddEditMatter extends React.Component{
  
       return <option value={value._id} id={index}>{value.firstName + " " + value.lastName}</option>
      })
+
      const formData = <div>
        <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Client</Form.Label>
@@ -161,7 +235,27 @@ class AddEditMatter extends React.Component{
                 </Col> 
               </Form.Row>
      </div>
-     this.setState({formData : formData})
+     
+     const contactForm = <Form className="form-details">
+     <DynamicFeild name="realtedContacts"   InputList={this.state.relatedContacts}  option={optns} error={error.relationship} change={this.HandleDynamicChange}  delete={this.handleDelete} editMode={editMode}></DynamicFeild> 
+
+
+       <br/>
+       <div className="form-add mb-4">
+         <span onClick={this.addFeild}>Add Related Contact</span>
+       </div>
+     </Form>
+     const billing =  <Form className="form-details">
+                          <Form.Group controlId="exampleForm.ControlSelect1">
+                            <Form.Label>Rate</Form.Label>
+                            <Form.Control as="select" name="billingType" onChange={this.handleChange} defaultValue={this.state.editData.billingType} >
+                              <option>Flat</option>
+                              <option>Hourly</option>
+                              <option>Contagious</option>
+                            </Form.Control>
+                          </Form.Group>
+                      </Form>
+     this.setState({formData : formData, contactForm : contactForm, billing : billing})
    
     /*
     customFields = res.data.data.customFields.map((value, index)=>{
@@ -174,6 +268,8 @@ class AddEditMatter extends React.Component{
              </Form.Group>
     })*/
     this.setState({optns : optns,})
+   
+    
   }
    openNotificationWithIcon = type => {
     notification[type]({
@@ -232,63 +328,25 @@ class AddEditMatter extends React.Component{
   render(){
     
 
-    const addFeild=() =>{
-      let list = this.state.relatedContacts
-      list.push({relationship : "", contact : "", billThis : "", id: ""})
-      this.setState({relatedContacts : list})
- 
-    }
+    
   
   const handleChange = (e) => {
     e.persist()
-    this.setState(st=>({...st,[e.target.name]:e.target.value}))
+    
     if(e.target.name==="client"){
       clientId = e.target.selectedIndex - 1
+    }else
+    if(e.target.name === "task"){
+      if(e.target.selectedIndex != 0){
+        this.setState(st=>({...st,[e.target.name]:e.target.value}))
+      }
+    }
+    else{
+      this.setState(st=>({...st,[e.target.name]:e.target.value}))
     }
   }
-  const handleDelete = (e)=>{
-    e.persist()
-     const { name , id } = e.target
-     let newState = this.state
-     newState.relatedContacts.splice(id, 1)
-     this.setState(newState)
-  }
-
-  const HandleDynamicChange = (e)=>{
-    e.persist()
-    let list = this.state
-    const { id , value, name , checked ,selectedIndex } = e.target
-    if(name==="billThis"){
-      list.relatedContacts[id][name] = checked
-    }else{
-    list.relatedContacts[id][name] = value
-    }
-    if(name=='contact'){
-      list.relatedContacts[id][name] = contacts.data.data[e.target.selectedIndex]._id
-      list.relatedContacts[id].id = selectedIndex
-    }
- 
-    switch (name) {
-      case "relationship":
-        error.relationship[id] =
-        (!validNameRegex.test(value))
-        ? "Realtionship must be in characters!"
-        : (value.length > 20) 
-        ? "Relationship must be less than 20 characters long!" 
-        : "";
-   break;
-     
-      default:
-        break;
-    }
-    this.setState(list)
-
-  }
-
- 
   
-  
-   
+
     return (
       <div className='form-width'>
       <div className="form-header-container mb-4">
@@ -316,15 +374,9 @@ class AddEditMatter extends React.Component{
       </Card>
 
       <Card title="Related Contacts" className="mb-4">
-          <Form className="form-details">
-          <DynamicFeild name="realtedContacts"   InputList={this.state.relatedContacts}  option={optns} error={error.relationship} change={HandleDynamicChange}  delete={handleDelete} editMode={editMode}></DynamicFeild> 
-
-    
-            <br/>
-            <div className="form-add mb-4">
-              <span onClick={addFeild}>Add Related Contact</span>
-            </div>
-          </Form>
+          {
+            this.state.contactForm
+          }
       </Card>
       <Card title="Custom Fields"  className="mb-4">
       <Form className="form-details">
@@ -338,30 +390,13 @@ class AddEditMatter extends React.Component{
       </Form>
       </Card>
       <Card title="Billing Preference"  className="mb-4">
-        <Form className="form-details">
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Rate</Form.Label>
-            <Form.Control as="select" onChange={handleChange} defaultValue={this.state.editData.rate} >
-              <option>Flat</option>
-              <option>Hourly</option>
-              <option>Contagious</option>
-            </Form.Control>
-          </Form.Group>
-      </Form>
+        {this.state.billing}
       </Card>
 
       <Card title="Task Automation"  className="mb-4">
-      <Form className="form-details">
-      <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Task</Form.Label>
-                <Form.Control as="select" onChange={handleChange} defaultValue={this.state.editData.task}>
-                  <option>Client Intake</option>
-                  <option>Task List</option>
-                  <option>New Task List</option>
-                </Form.Control>
-              </Form.Group>
-       
-      </Form>
+      {
+        this.state.taskAutomation
+      }
       </Card>
       <Button onClick={this.handleSubmit} className="btn btn-success" >Update</Button>
       <Button onClick={()=>{this.props.history.goBack()}} >CANCEL</Button>

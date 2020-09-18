@@ -141,13 +141,13 @@ export const loginUser = (payload, cb) => {
               message: "E-Mail not Verified",
             });
           }
-          if( res.data.token.user.registeredOn.requestGranted === "Declined"){
+          if( res.data.token.user.registeredOn.requestGranted === "Declined" && (now > expiry_date && res.data.token.user.registeredOn.requestGranted !== "Yes")){
             window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
               message: "You payment has been declined.",
             });
           }  
-          if( res.data.token.user.registeredOn.requestGranted === "No"){
+          if( res.data.token.user.registeredOn.requestGranted === "No" && (now > expiry_date && res.data.token.user.registeredOn.requestGranted !== "Yes")){
             window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
               message: "Payment confirmation awaited.",
@@ -157,24 +157,20 @@ export const loginUser = (payload, cb) => {
           if(now > expiry_date && res.data.token.user.registeredOn.requestGranted !== "Yes"){
             window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
-              message: "Your trails period is expired.",
+              message: "Your trial period expired!",
             });
           }  
         } else {
-    
           if (!res.data.token.user.admin) {
             return cb({
               message: "Only For Admin",
             });
           }
         }
-        
           dispatch(setLoginSuccess(res.data));
           cb(null, {
             message: "Logged In",
           });
-      
-        
       })
       .catch((err) => {
         console.log(err);
@@ -381,9 +377,23 @@ export const createBlog = (payload, cb) => {
 const updateBlogSuccess = (payload) => ({ type: UPDATE_BLOG_SUCCESS, payload });
 export const updateBlog = (payload, cb) => {
   var { id, body } = payload;
+  console.log({body})
   return (dispatch) => {
+
+    var docFormData = new FormData();
+    docFormData.set('image', body.imageFile);
+console.log({docFormData})
     api
-      .post(`/blogs/edit/${id}`, body)
+      .post('/footer/upload', docFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((response)=>{
+        console.log(response)
+        notification.success({ message: 'Image Uploaded.' });
+        console.log(response.data.message)
+
+    api
+      .post(`/blogs/edit/${id}`, {...body, image: response.data.message })
       .then((res) => {
         dispatch(updateBlogSuccess(res.data.data));
         cb(null, {
@@ -397,8 +407,11 @@ export const updateBlog = (payload, cb) => {
               });
               
       });
+    })
   };
+
 };
+
 
 const deleteBlogSuccess = (payload) => ({ type: UPDATE_BLOG_SUCCESS, payload });
 export const deleteBlog = (payload, cb)=> {
@@ -467,22 +480,45 @@ const updateFeatureSuccess = (payload) => ({
   payload,
 });
 export const updateFeature = (payload, cb) => {
-  var { id, body } = payload;
+  let { id, body } = payload;
+  console.log(body)
   return (dispatch) => {
-    api
-      .post(`/features/edit/${id}`, body)
-      .then((res) => {
-        dispatch(updateFeatureSuccess(res.data.data));
-        cb(null,{
-            message: "Features Updated",
-          });
-      })
-      .catch((err) => {
-        console.log(err); //Dispatch Toaster Notificaton
-        cb({
-            message: "Try Again Later",
-          });
-      });
+              var docFormData = new FormData();
+              docFormData.set('image', body.imageFile);
+      
+              api
+                .post('/footer/upload', docFormData, {
+                  headers: { 'Content-Type': 'multipart/form-data' },
+                })
+                .then((response)=>{
+                  console.log(response)
+                  notification.success({ message: 'Image Uploaded.' });
+                  console.log(response.data.message)
+                     
+                    body.logo = response.data.message
+                      api
+                        .post(`/features/edit/${id}`, body)
+                        .then((res) => {
+                          dispatch(updateFeatureSuccess(res.data.data));
+                          cb(null,{
+                              message: "Features Updated",
+                            });
+                        })
+                        .catch((err) => {
+                          console.log(err); //Dispatch Toaster Notificaton
+                          cb({
+                              message: "Try Again Later",
+                            });
+                        })  
+                }).catch( (err)=>{
+                  console.log(err)
+               //   this.setState({disabled : false})
+                    cb({
+                      message: "Try Again Later",
+                    });
+                })
+              
+    
   };
 };
 

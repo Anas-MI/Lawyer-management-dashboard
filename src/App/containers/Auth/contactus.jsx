@@ -113,6 +113,10 @@ class contactus extends Component {
   }
 
     render() {
+      const handleRoute = (route) =>{
+        console.log(route)
+        this.props.history.push(route)
+      }
     return(
         <>
          <Navigation />
@@ -213,7 +217,7 @@ class contactus extends Component {
       </Modal>    
         </div>
         
-         <Footer />
+         <Footer handleRoute = {handleRoute} />
      </>
  )
     }

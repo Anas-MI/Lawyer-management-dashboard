@@ -111,6 +111,7 @@ class Activity extends React.Component {
       this.setState({option : option})
   })
     api.get('/activity/viewforuser/' + this.props.userId).then((res) => {
+      console.log(res)
       activity = res.data.data;
       var now = new Date();
 
@@ -143,7 +144,7 @@ class Activity extends React.Component {
           rate: val.rate,
           billable: val.billable ? 'Yes' : 'No',
           date: val.date.substring(0, 10),
-          invoiceStatus: 'Unbilled',
+          invoiceStatus: val.billed ? "Billed" : 'Unbilled',
           //  invoiceStatus :  val.invoiceStatus?  val.invoiceStatus : "-" ,
         };
         console.log(now)
@@ -213,7 +214,7 @@ class Activity extends React.Component {
  
     notification.destroy();
     if (timeError !== '') {
-      notification.error({ message: 'Invalid time' });
+      notification.error({ message: 'Invalid time, Please enter time in the format : HH:MM:SS' });
     } else if (this.state.data.date === '') {
       notification.error({ message: 'Please select a Date' });
     } else if (this.state.data.rate === '') {

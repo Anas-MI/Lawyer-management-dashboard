@@ -30,7 +30,10 @@ const Login = (props) => {
     emailAddress: "",
     password: "",
   });
-
+  const handleRoute = (route) =>{
+    console.log(route)
+    props.history.push(route)
+  }
   const handleChange = (e) => {
     e.persist();
     setDisplay(false)
@@ -95,7 +98,7 @@ const Login = (props) => {
           if (err) {
             setDisplay(true)
             console.log(err)
-            if(err.message === "Your trails period is expired."  || 
+            if(err.message === "Your trial period expired."  || 
               err.message === "You payment has been declined." || 
               err.message === "Payment confirmation awaited."){
 
@@ -212,7 +215,7 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer handleRoute = {handleRoute} />
     </>
   );
 };

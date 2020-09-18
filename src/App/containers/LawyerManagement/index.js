@@ -200,7 +200,14 @@ const LawyerManagement = (props) => {
       key: "_id",
       render:(_,record)=>{
           return (
-            <Button onClick={()=>handleDelete(record._id)}>Delete</Button>
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={()=>handleDelete(record._id)}
+              okText="Yes"
+              cancelText="No"
+            >
+               <Button>Delete</Button>
+            </Popconfirm>
           //   <Popconfirm
           //   title="Are you sure you want to delete this User?"
           //   onConfirm={handleDelete(record._id)}
@@ -221,6 +228,7 @@ const LawyerManagement = (props) => {
       if(err){
         notification.error(err)
       }else{
+        dispatch(getLawyers())
         notification.success(response)
       }
     }))
@@ -245,6 +253,7 @@ const LawyerManagement = (props) => {
   
     api.get(`/user/delete/${id}`).then(res => {
       console.log({res})
+      dispatch(getLawyers())
       // notification.success({"User Deleted!"})
 
     }).catch(error => {
@@ -269,6 +278,7 @@ const LawyerManagement = (props) => {
             if(err){
               notification.error(err)
             }else{
+              dispatch(getLawyers())
               notification.success(response)
             }
           }))
@@ -277,6 +287,7 @@ const LawyerManagement = (props) => {
             if(err){
               notification.error(err)
             }else{
+              dispatch(getLawyers())
               notification.success(response)
             }
           }))

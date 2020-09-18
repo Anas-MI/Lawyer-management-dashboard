@@ -16,7 +16,7 @@ const { Search } = Input;
 let id = ""
 function getUserID(){
   const user = JSON.parse(window.localStorage.getItem('Case.user'))
-  console.log(user.token.user._id)
+  console.log({user})
   user.token == null ? id = "" : id = user.token.user._id
   console.log(id)
 }

@@ -272,7 +272,18 @@ const ContactsManage = (props) => {
       //   />
       // ),
     },
-
+    {
+      title: 'View',
+      dataIndex: 'view',
+      key: '_id',
+      render: (_, record) => {
+        return (
+          <Button variant="danger" onClick={() => handleView(record)}>
+            View
+          </Button>
+        );
+      },
+    },
     {
       title: 'Edit',
       dataIndex: 'edit',

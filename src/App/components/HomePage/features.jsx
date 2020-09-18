@@ -36,7 +36,7 @@ componentDidMount () {
                 { this.state.features.map( feature => 
                   <div  className="col-lg-4 d-flex align-items-stretch overflow-hidden " key={feature.id}>
                       <div className="work_item w-100 align-items-center">
-                        <img className="img-fluid" src={dashboard} alt="img" />
+                        <img className="img-fluid" hei src={feature.logo} alt="img" />
                         <a><h4 className="text-break">{feature.title}</h4></a>
                         <p className="text-break">{feature.description}</p>
                       </div>

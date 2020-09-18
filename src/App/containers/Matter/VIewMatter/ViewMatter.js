@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../resources/api';
-import { Card, Tabs, Button, Modal, Table, Upload, notification, Spin} from 'antd';
+import { Card, Tabs, Button, Modal, Table, Popconfirm, Upload, notification, Spin} from 'antd';
 import { number } from 'prop-types';
 import { Form, Row, Col } from 'react-bootstrap';
 import Communication from './communnication';
@@ -17,6 +17,8 @@ const { TabPane } = Tabs;
 function CompanyView(props) {
   let response = {};
   const [desc, setdesc] = useState('');
+  const [Active, setActive] = useState("1")
+  const [TabKey, setTabKey] = useState("")
   const [Loading, setLoading] = useState(true)
   const [total, settotal] = useState("0")
   const [Client, setClient] = useState('');
@@ -31,7 +33,27 @@ function CompanyView(props) {
   const [Website, setWebsite] = useState();
   const [Email, setEmail] = useState();
   const [Number, setNumber] = useState();
+  const [BillAmount, setBillAmount] = useState(0)
   console.log(props.location.state);
+    const fetchBills = ( ) =>{
+      api.get('/billing/bill/viewforuser/'+ props.location.state.userId + '/' + props.location.state.id).then((res)=>{
+        console.log(res)
+        let billamount = 0
+        res.data.data.map((value , index)=>{
+  
+          if(value.status === "Unpaid"){
+            billamount = billamount + parseFloat(value.balance).toFixed('2')
+          }
+          /*
+          if(value.status=="draft"){
+            draftBills.push(temp)
+          }
+          */
+        })
+        console.log(billamount)
+        setBillAmount(billamount)
+      })
+    }
   useEffect(() => {
     async function fetchData() {
       await api.get('/matter/view/' + props.location.state.id).then((res) => {
@@ -77,6 +99,7 @@ function CompanyView(props) {
       setValue();
     }
     fetchData();
+    fetchBills()
   }, []);
 
   useEffect(() => {
@@ -125,6 +148,7 @@ function CompanyView(props) {
 
     let data = [];
     //  setRealatedContacts(rcntct)
+    
     response.data.relatedContacts.map(async (value, index) => {
       console.log(value.contact);
       const cntct = await api.get('/contact/view/' + value.contact);
@@ -178,6 +202,7 @@ function CompanyView(props) {
         </Card>
       );
       setContact(data);
+      console.log(contact)
     });
 
     // setEvents(evnt)
@@ -225,6 +250,7 @@ function CompanyView(props) {
   };
   function callback(key) {
     console.log(key);
+    setActive(key)
   }
 
   const showModal = () => {
@@ -282,62 +308,83 @@ function CompanyView(props) {
             >
               Edit
             </Button>
-            <Button
-              onClick={() =>
-                api
-                  .get('/matter/delete/' + props.location.state.id)
-                  .then(() => {
-                    notification.success({ message: 'Matter deleted.' });
-                    props.history.push(
-                      '/manage/matter',
-                      props.location.state.id
-                    );
-                  })
-                  .catch(() =>
-                    notification.error({ message: 'Failed to delete' })
-                  )
-              }
-            >
-              Delete
-            </Button>
+            <Popconfirm
+                    title="Are you sure you want to delete this Matter?"
+                    onConfirm={() =>
+                      api
+                        .get('/matter/delete/' + props.location.state.id)
+                        .then(() => {
+                          notification.success({ message: 'Matter deleted.' });
+                          props.history.push(
+                            '/manage/matter',
+                            props.location.state.id
+                          );
+                        })
+                        .catch(() =>
+                          notification.error({ message: 'Failed to delete' })
+                        )}
+                    onCancel={()=>{}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button  danger>
+                      Delete
+                  </Button>
+                  </Popconfirm>
+    
           </div>
           </Col>
         </Row>
       </Card>
-      <Tabs defaultActiveKey="1" onChange={callback} >
+      <Tabs activeKey= { Active } onChange={callback} >
         <TabPane tab="Dashboard" key="1" style={{ padding: '0px' }}>
           <Card
           bodyStyle={{padding : "0px"}}
             title="Financial"
             extra={
-              <Button type="link" onClick={handleBills}>
-                Quick Bills
-              </Button>
+              <div>
+                <Button type="link" onClick={()=>{setActive("2")}}>Add expense/time entry</Button>
+
+                <Button type="link" onClick={()=>{setActive("9")}}>View Bills</Button>
+                <Button type="link" onClick={handleBills}>
+                  Quick Bills
+                </Button>
+              </div>
             }
             className="form-width mb-4"
           >
             <div className="text-center pt-2">
-              <div>Work In progress Amount</div>
+       
               <div class="d-flex py-2 mt-2 matter-amount">
                 <div style={{ flex: 1, 'border-right': '2px solid #B2E4D6' }}>
                   <p style={{fontSize : "13px"}}>
-                    <b>Outstanding Amount</b>
+                    <b>Work in progress amount</b>
                   </p>
                      <span>{parseFloat(total).toFixed('2')}</span>
                 </div>
-                <div style={{ flex: 1 }}>
+              
+                <div style={{ flex: 1, 'border-right': '2px solid #B2E4D6' }}>
                   <p style={{fontSize : "13px"}}>
                     <b>Trust Funds</b>
                   </p>
-                  <span>$500.00</span>
+                  <span>$0.00</span>
                 </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{fontSize : "13px"}}>
+                    <b>Outstanding balance</b>
+                  </p>
+                  <span>${BillAmount}</span>
+                </div>
+                
               </div>
             </div>
           </Card>
           <Card
             title="Details"
             extra={
-              <Button type="link" onClick={showModal}>
+              <Button type="link" onClick={() =>
+                props.history.push('/edit/matter', props.location.state.id)
+              }>
                 Add Contact
               </Button>
             }
@@ -461,7 +508,11 @@ function CompanyView(props) {
           <TaskFuntions id={props.location.state.id}></TaskFuntions>
         </TabPane>
         <TabPane tab="Bills" key="9">
-          <Bills handleRecordPayment={handleRecordPayment} handleBills = {handleCreateBills} />
+          <Bills 
+          userId={props.location.state.userId}
+          matterId={props.location.state.id}
+          handleRecordPayment={handleRecordPayment} 
+          handleBills = {handleCreateBills} />
         </TabPane>
       </Tabs>
     </div>
@@ -469,4 +520,5 @@ function CompanyView(props) {
     </Spin>
     );
 }
+
 export default CompanyView;
