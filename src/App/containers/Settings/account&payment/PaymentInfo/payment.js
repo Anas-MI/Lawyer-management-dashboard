@@ -12,7 +12,7 @@ const Payment = (props) =>{
         expiry_date.setDate(created_at.getDate() + 15)
         const [subscriptionRequested, setsubscriptionRequested] = useState("Trail")
         const [renewal, setrenewal] = useState(<Row className="my-3">
-                                                <Col sm><span className="table-span-dark">Trail period expires in </span></Col>
+                                                <Col sm><span className="table-span-dark">Trial period expires in </span></Col>
                                                 <Col sm><span className="table-span-light">{expiry_date.getDate() - now.getDate()} Days</span></Col>
                                             </Row> )
         const [AutoRenewal, setAutoRenewal] = useState(null)
