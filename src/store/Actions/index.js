@@ -157,7 +157,7 @@ export const loginUser = (payload, cb) => {
           if(now > expiry_date && res.data.token.user.registeredOn.requestGranted !== "Yes"){
             window.localStorage.setItem('userId' , res.data.token.user._id)
             return cb({
-              message: "Your trails period is expired.",
+              message: "Your trial period expired!",
             });
           }  
         } else {
