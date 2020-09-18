@@ -6,11 +6,8 @@ import api from '../../../../resources/api';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas'
-import ReactToPdf from "react-to-pdf";
 
-let activity = {
-
-}
+let activity = {}
 class CreateBill extends React.Component{
   constructor(){
     super()
