@@ -210,23 +210,7 @@ class CreateBill extends React.Component{
           canvas,
           function () {
             pdf.save('invoice.pdf')
-
-            var docFormData = new FormData();
-            docFormData.set('image', pdf);
-            api
-            .post('/footer/upload', docFormData, {
-              headers: { 'Content-Type': 'multipart/form-data' },
-            })
-            .then((response)=>{
-              console.log(response)
-              notification.success({message : "Invoice uploaded"})
-              return response.data.message
-            }).catch((err)=>{
-              console.log(err)
-              notification.warning({message : "Cannot upload invoice, Please try again later"})
-              return ""
-            })
-          }
+            }
         );
          /*
             const input = document.getElementById('divToPrint');
