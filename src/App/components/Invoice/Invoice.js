@@ -110,8 +110,8 @@ const Invoice = (props) => {
   const dueDate = ddate.getDate() +"/"+ ddate.getMonth()+1 + "/" +  ddate.getFullYear()
   const invoiceForm = () => (
     
-    <Card  bodyStyle={{"padding": "30px"}} className="mb-3">
-    <div id="canvas" className="text-center P-3">
+    <Card id = "canvas" bodyStyle={{"padding": "30px"}} className="mb-3">
+    <div className="text-center P-3">
       <h6 className="text-right pb-3">
         Invoice #{props.location.state.invoiceData.id} - {props.location.state.invoiceData.date}
       </h6>

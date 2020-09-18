@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Card, Table, Button, Popconfirm, message, notification, Spin } from 'antd';
+import { Tabs, Card, Table, Button, Popconfirm, message, notification, Spin, Modal } from 'antd';
 import { Form } from 'react-bootstrap';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -17,7 +17,11 @@ class billing extends React.Component {
       unpaidBills : [],
       paidBills : [],
       status : false,
-      loading : true
+      loading : true,
+      visible : false,
+      disable : false,
+      emailAddress : "",
+      imageFile : {}
     }
   }
   handelBills = (type) => {
@@ -52,6 +56,7 @@ class billing extends React.Component {
           id : value.invoiceId ? value.invoiceId : '-' ,
           client : value.client ? value.client.firstName + " " + value.client.lastName : "-",
           matter : value.matter ? value.matter.matterDescription : "-",
+          emailAddress : value.client ? value.client.emailAddress[0].emailAddress : "",
           issueDate : value.issueDate.substring(0,10) ,
           balance : parseFloat(value.balance).toFixed('2')
         }
@@ -189,6 +194,23 @@ class billing extends React.Component {
         key: 'balance',
       },
       {
+      title: 'SendInvoice',
+      dataIndex: 'SendInvoice',
+      key: 'send',
+      render: (_, record) => {
+        return (
+          
+            <Button onClick={()=>{
+                this.setState({
+                  visible : true,
+                  emailAddress : record.emailAddress
+                })
+              }}>Send Invoice</Button>
+         
+        );
+      },
+    },
+      {
         title: 'Delete',
         dataIndex: 'Delete',
         key: 'Delete',
@@ -271,6 +293,23 @@ class billing extends React.Component {
         key: 'balance',
       },
       {
+        title: 'SendInvoice',
+        dataIndex: 'SendInvoice',
+        key: 'send',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{
+                  this.setState({
+                    visible : true,
+                    emailAddress : record.emailAddress
+                  })
+                }}>Send Invoice</Button>
+           
+          );
+        },
+      },
+      {
         title: 'Delete',
         dataIndex: 'Delete',
         key: 'Delete',
@@ -333,6 +372,23 @@ class billing extends React.Component {
         title: 'Balance',
         dataIndex: 'balance',
         key: 'balance',
+      },
+      {
+        title: 'SendInvoice',
+        dataIndex: 'SendInvoice',
+        key: 'send',
+        render: (_, record) => {
+          return (
+            
+              <Button onClick={()=>{
+                  this.setState({
+                    visible : true,
+                    emailAddress : record.emailAddress
+                  })
+                }}>Send Invoice</Button>
+           
+          );
+        },
       },
       {
         title: 'Delete',
@@ -399,7 +455,61 @@ class billing extends React.Component {
       doc.autoTable(content);
       doc.save('Bill.pdf');
     };
+    const uploadImage = (e) => {
+      this.setState({
+        imageFile: e.target.files[0] 
+      });
+    };
 
+    const handleInvoice = ( ) => {
+      notification.destroy()
+      if(this.state.imageFile === {} ){
+        notification.warning({message : "Please upload a document"})
+      }else{
+        this.setState({
+          disable : true
+        })
+        var docFormData = new FormData();
+            docFormData.set('image', this.state.imageFile)
+        api
+              .post('/footer/upload', docFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              })
+              .then((response)=>{
+                console.log(response)
+               notification.success({ message: 'Sending Email...' });
+         //       console.log(response.data.message)
+                   let data = {
+                      to: this.state.emailAddress,
+                      subject : "Invoice",
+                      text : response.data.message,
+                      date  : new Date()
+                   }
+                   console.log(data)
+                   api.post(`/communication/sendemail`, data ).then((email)=>{
+                    console.log(email)
+                    this.setState({
+                      disable : false,
+                      visible : false
+                    })
+                    notification.success({
+                      message : "Invoice sent"
+                    })
+                  })
+                  
+              }).catch( (err)=>{
+                console.log(err)
+                this.setState({
+                  disable : false,
+                  visible : false
+                })
+              
+                notification.error({ message: 'Try again later.' });
+              })
+           
+            
+      }
+    }
     return (
       <Spin size= "large" spinning = {this.state.loading}>
         <div className="p-2 ">
@@ -448,6 +558,36 @@ class billing extends React.Component {
             </TabPane>
           </Tabs>
         </Card>
+        <Modal
+          title="Send Invoice"
+          visible={this.state.visible}
+          onCancel={()=>{this.setState({visible : false})}}
+          onOk={handleInvoice}
+          footer={[
+            <Button  onClick={()=>{this.setState({visible : false})}}>
+              Cancel
+            </Button>,
+            <Button type="primary" disabled = {this.state.disable} onClick={handleInvoice}>
+              Send
+            </Button>,
+          ]}
+        >
+          <Form 
+           id='myForm'
+           className="form"
+           className="form-details">
+                  <Form.Group controlId="formGroupEmail">
+                  <input
+                    type="file"
+                    name="File"
+                    onChange={uploadImage}
+                    placeholder="Upload Image"
+                  />
+                </Form.Group>
+            </Form>
+    
+        </Modal>
+      
       </div>
     
       </Spin>
