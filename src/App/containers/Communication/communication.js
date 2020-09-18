@@ -160,7 +160,7 @@ class Communication extends React.Component{
 
     }
     showModal = (type) => {
-      if(type==="secure"){
+      if(type === "secure"){
         this.setState({
             secure : true,
           });
@@ -175,7 +175,7 @@ class Communication extends React.Component{
                 phone : true,
               });
         }
-      
+      console.log(this.state)
       };
     
       handleOk = type => {    
@@ -387,9 +387,7 @@ class Communication extends React.Component{
                     console.log(err)
                     notification.error({message : "Failed to send the sms"})
                   })
-                }
-
-                
+                }    
                 if(emailAddress !== ""){
                   api.post(`/communication/sendemail`, email ).then((email)=>{
                     console.log(email)
@@ -417,15 +415,17 @@ class Communication extends React.Component{
                     console.log(err)
                     notification.error({message : "Failed to send the email"})
                   })
-                }
-                
-
-               
-         
+                }  
+                if (number === "" && emailAddress === "") {
+                  notification.warning({
+                    message : "Selected contact doesn't have a emailAddress and a phone number"
+                  })
+                  this.setState({
+                    disable : false,
+                  //  secure : false
+                  })
+                }      
               })
-             /* 
-                */
-  
             }
         }   
       };
@@ -575,16 +575,18 @@ class Communication extends React.Component{
             }else
             */
            console.log(record)
-            if(record.logType==="email"){
+            if(record.logType === "email"){
               if(record.type === "secure"){
                 this.setState({
                   editSecure : true
                   });
+              }else{
+                this.setState({
+                  editEmail : true,
+                    data : record ,
+                  });
               }
-              this.setState({
-                editEmail : true,
-                  data : record ,
-                });
+              
             }else
             if(record.logType==="phone"){
               this.setState({
@@ -793,7 +795,7 @@ class Communication extends React.Component{
               <Table columns={columns} dataSource={this.state.tableData}  />
             </Card>
             <Modal
-                title={this.state.secure ? "Edit Secure message" : "New Secure Message"}
+                title = "New Secure Message"
                 visible={this.state.secure}
                 onOk={this.handleSecure}
                 onCancel={()=>this.handleCancel("secure")}
