@@ -45,7 +45,7 @@ class billing extends React.Component {
       let unpaidBills = []
       let draftBills = []
       res.data.data.map((value , index)=>{
-     
+     console.log({testttt: value.client})
     //    const issueDate = today.getDate() + "/" + today.getMonth() + "/" + today.getFullYear()
         const temp = {
           key : index ,
@@ -56,7 +56,7 @@ class billing extends React.Component {
           id : value.invoiceId ? value.invoiceId : '-' ,
           client : value.client ? value.client.firstName + " " + value.client.lastName : "-",
           matter : value.matter ? value.matter.matterDescription : "-",
-          emailAddress : value.client ? value.client.emailAddress[0].emailAddress : "",
+          emailAddress : value.client.emailAddress[0] ? value.client.emailAddress[0].emailAddress : "",
           issueDate : value.issueDate.substring(0,10) ,
           balance : parseFloat(value.balance).toFixed('2')
         }
