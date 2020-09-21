@@ -62,7 +62,7 @@ class CreateBill extends React.Component{
                 hours : val.type === 'time' ? val.time : val.qty,
                 client : val.matter ? val.matter.client.firstName + " " + val.matter.client.lastName : "-" ,
                 clientId :  val.matter ? val.matter.client._id : "" ,
-                emailAddress : val.matter ? val.matter.client.emailAddress[0].emailAddress : "",
+                emailAddress : val.matter.client.emailAddress[0]? val.matter.client.emailAddress[0].emailAddress : "",
                 matter : val.matter._id,
                 matterDescription : val.matter.matterDescription,
                 rate: val.rate,
