@@ -87,6 +87,7 @@ class customFeilds extends React.Component {
             prevState : userData.account
         })
         this.setState({userData})
+     
       })
   }
 
@@ -185,7 +186,14 @@ class customFeilds extends React.Component {
 
     
       }
-
+      const HandleCurrencyChange=(e)=> {
+      e.persist();
+      let newstate = this.state;
+      newstate.Data[e.target.name] = e.target.value
+      this.setState({Data : newstate.Data})
+      console.log(this.state)
+        // console.log(e.target.value);
+      }
       const handleSubmit = ( ) =>{
         notification.destroy()
         const validateForm = () => {
@@ -230,7 +238,8 @@ class customFeilds extends React.Component {
         }
       }
   //  const operations = <Button onClick={() => this.setModal2Visible(true)}>Add Account</Button>
-  
+  console.log("_____________")
+  console.log(this.state.Data.currencyFormat)
     return (
       <Card>
         <Tabs>
@@ -735,7 +744,69 @@ class customFeilds extends React.Component {
                         <Col className="col-md-5">
                             <Form.Group controlId="Currency Format">
                                 <Form.Label>Currency Format</Form.Label>
-                                <Form.Control type="text" defaultValue={this.state.userData.account.currencyFormat} name="currencyFormat" placeholder="Currency Format" onChange={HandleChange} />
+                                {/* <Form.Control type="text" defaultValue={this.state.userData.account.currencyFormat} name="currencyFormat" placeholder="Currency Format" onChange={HandleChange} /> */}
+                                <select
+                            name="currencyFormat"
+                            id={1}
+                            value={this.state.userData.account.currencyFormat} 
+                            onChange={HandleCurrencyChange}
+                            style={{ "border-radius": "5px" }}
+                          >
+<option value="East Caribbean dollar">East Caribbean dollar</option>
+<option value="Aruban florin">Aruban florin</option>
+<option value="Bahamian dollar">Bahamian dollar</option>
+<option value="Barbadian dollar">Barbadian dollar</option>
+<option value="United States dollar">United States dollar</option>
+<option value="Cayman Islands dollar">Cayman Islands dollar</option>
+<option value="Cuban peso">Cuban peso</option>
+<option value="Dominican peso">Dominican peso</option>
+<option value="Euro">Euro</option>
+<option value="Haitian gourde">Haitian gourde</option>
+<option value="Jamaican dollar">Jamaican dollar</option>
+<option value="Trinidad and Tobago dollar">Trinidad and Tobago dollar</option>
+<option value="United States dollar">United States dollar</option>
+<option value="Algerian dinar">Algerian dinar</option>	
+<option value="Angolan kwanza">Angolan kwanza</option>
+<option value="Botswana pula">Botswana pula</option>	
+<option value="Burundian franc">Burundian franc</option>		
+<option value="Cape Verdean escudo">Cape Verdean escudo</option>		
+<option value="CFA franc">CFA franc</option> 	
+<option value="Comorian franc">Comorian franc</option>	
+<option value="Congolese franc">Congolese franc</option>		
+<option value="Dalasi">Dalasi</option>	
+<option value="Djiboutian franc">Djiboutian franc</option>	
+<option value="Egyptian pound">Egyptian pound</option>	
+<option value="Eritrean nakfa">Eritrean nakfa</option>		
+<option value="Ethiopian birr">Ethiopian birr</option>		
+<option value="Ghanaian cedi">Ghanaian cedi</option>	
+<option value="Guinean franc">Guinean franc</option>		
+<option value="Kenyan shilling">Kenyan shilling</option>		
+<option value="Lesotho loti">Lesotho loti</option>	
+<option value="Liberian dollar">Liberian dollar</option>		
+<option value="Libyan dinar">Libyan dinar</option>		
+<option value="Lilangeni">Lilangeni</option>	
+<option value="Malagasy ariary">Malagasy ariary</option>		
+<option value="Malawian kwacha">Malawian kwacha</option>		
+<option value="Mauritian rupee">Mauritian rupee</option>		
+<option value="Moroccan dirham">Moroccan dirham</option>		
+<option value="Mozambican metical">Mozambican metical</option>		
+<option value="Namibian dollar">Namibian dollar</option>	
+<option value="Nigerian naira">Nigerian naira</option>		
+<option value="Ouguiya">Ouguiya</option>	
+<option value="Rwandan franc">Rwandan franc</option>
+<option value="São Tomé and Príncipe dobra">São Tomé and Príncipe dobra</option>
+<option value="Seychellois rupee">Seychellois rupee</option>	
+<option value="Sierra Leonean leone">Sierra Leonean leone</option>	
+<option value="Somali shilling">Somali shilling</option>	
+<option value="South African rand">South African rand</option>	
+<option value="South Sudanese pound">South Sudanese pound</option>	
+<option value="Sudanese pound">Sudanese pound</option>	
+<option value="Tanzanian shilling">Tanzanian shilling</option>		
+<option value="Tunisian dinar">Tunisian dinar</option>	
+<option value="Ugandan shilling">Ugandan shilling</option>	
+<option value="Zambian kwacha">Zambian kwacha</option>	
+
+                            </select>
                             </Form.Group>
                         </Col>
                             
