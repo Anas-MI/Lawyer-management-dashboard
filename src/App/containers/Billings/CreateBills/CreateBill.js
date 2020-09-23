@@ -34,10 +34,19 @@ class CreateBill extends React.Component{
             visible : false,
             disable : false,
             invoice : {},
-            invoiceId : 0
+            invoiceId : 0,
+            userData:""
     }
   }
     componentDidMount(){
+
+      api.get('/user/view/' + this.props.userId).then((res)=>{
+        console.log({res})
+        this.setState({userData:res.data.data})}).catch(error => {
+          console.log({error})
+        })
+
+console.log({"mounted":this.state.userData})
       let invoiceId = 0
       api.get('/billing/bill/showall').then((res)=>{
         console.log(res)
@@ -318,6 +327,8 @@ class CreateBill extends React.Component{
            })          
           }
         }
+console.log({"render":this.state})
+
         return <div>
           <Card id = "canvas" bodyStyle={{"padding": "100px"}} className="mb-3">
                 <div id="divToPrint"  className="text-center P-3">
@@ -346,6 +357,7 @@ class CreateBill extends React.Component{
                           <th scope="col">Issue Date</th>
                           <th scope="col">Due Date</th>
                           <th scope="col">Amount</th>
+                          <th scope="col">Currency</th>
                           <th scope="col">Matter</th>
                         </tr>
                       </thead>
@@ -354,6 +366,7 @@ class CreateBill extends React.Component{
                             <th scope="row">{this.state.dates.issueDate}</th>
                             <td>{this.state.dates.dueDate}</td>
                             <td>{this.state.invoice.total}</td>
+                            <td>{this.state.userData.account ? this.state.userData.account.currencyFormat:"$"}</td>
                             <td>{this.state.invoice.matterDescription}</td>
                           </tr>            
                       </tbody>

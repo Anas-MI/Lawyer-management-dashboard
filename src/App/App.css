@@ -1066,3 +1066,11 @@ label {
   flex-direction: column;
 }
 }
+
+.table-responsive tr {
+  cursor: pointer;
+}
+
+a{
+  cursor: pointer;
+}
