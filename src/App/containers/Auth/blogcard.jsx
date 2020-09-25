@@ -45,7 +45,7 @@ class Blogcard extends Component {
             </div>
             <div className="row">
               {this.state.blogs.map((blog) => (
-                <div className="col-md-4 overflow-hidden" key={blog._id}>
+                <div className="col-md-4 mb-3 overflow-hidden" key={blog._id}>
                   {console.log('BLOGGIGIIGIG', blog)}
                   <div className="card shadow-sm blogcard blogcard-box">
                     <img
@@ -59,7 +59,7 @@ class Blogcard extends Component {
                           {blog.title}
                         </h5>
                       </a>
-                      <p className="card-text overflow-hidden">
+                      <p className="card-text cardblogdescription overflow-hidden">
                         {blog.shortDescription}
                       </p>
                     </div>
