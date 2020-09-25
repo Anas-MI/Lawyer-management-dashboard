@@ -5,9 +5,6 @@ import { Form, Button } from 'react-bootstrap';
 import { notification, Card } from 'antd';
 import api from '../../../../resources/api';
 import { result } from 'lodash';
-// import ReactRichEditor from 'react-rich-text-editor'
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import CKEditor from 'ckeditor4-react';
  
 const validNameRegex = RegExp(
@@ -42,15 +39,6 @@ const AddEditBlog = (props) => {
     }
   }, []);
 
-
-  const onEditorStateChange= (editorState) => {
-    // this.setState({
-    //   editorState,
-    // });
-    console.log(editorState.getCurrentContent())
-    setState((st) => ({ editorState  }));
-
-  };
 
 
   const handleChange = (e) => {
@@ -162,15 +150,7 @@ const AddEditBlog = (props) => {
             console.log({ err });
           });
 
-        // dispatch(
-        //   createBlog(state, (err, response) => {
-        //     if (err) {
-        //       notification.error(err);
-        //     } else {
-        //       notification.success(response);
-        //     }
-        //   })
-        // );
+    
       }
     }
     props.history.goBack();
@@ -231,30 +211,12 @@ const AddEditBlog = (props) => {
           <p className="help-block text-danger">{error.shortDescription}</p>
         </Form.Group>
 Description
-          {/* <Form.Label>Description</Form.Label><br/> */}
-        {/* <Form.Group controlId="formGroupEmail"> */}
-          {/* <Form.Control
-            name="description"
-            type="text"
-            placeholder="Description"
-            value={state['description']}
-            onChange={handleChange}
-            as="textarea"
-            rows="3"
-          /> */}
-  {/* <ReactRichEditor height={200} /> */}
+       
     
   <CKEditor data={state["description"]} onChange={evt => setState((st) => ({ ...st,["description"]: evt.editor.getData()}))}  />
 
-{/* <Editor
-  editorState={state['editorState']}
-  toolbarClassName="toolbarClassName"
-  wrapperClassName="wrapperClassName"
-  editorClassName="editorClassName"
-  onEditorStateChange={onEditorStateChange}
-/> */}
+
           <p className="help-block text-danger">{error.description}</p>
-        {/* </Form.Group> */}
         <Button onClick={handleSubmit}>{editMode ? 'Update' : 'Create'}</Button>
       </Form>
       </Card>
