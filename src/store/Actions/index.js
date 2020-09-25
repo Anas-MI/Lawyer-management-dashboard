@@ -382,6 +382,9 @@ export const updateBlog = (payload, cb) => {
 
     var docFormData = new FormData();
     docFormData.set('image', body.imageFile);
+    if(body.imageFile){
+
+    
 console.log({docFormData})
     api
       .post('/footer/upload', docFormData, {
@@ -401,6 +404,7 @@ console.log({docFormData})
         });
       })
       .catch((err) => {
+        
         console.log(err); //Dispatch Toaster Notificaton
             cb({
                 message: "Try Again Later",
@@ -408,7 +412,25 @@ console.log({docFormData})
               
       });
     })
-  };
+  }else {
+    api
+    .post(`/blogs/edit/${id}`, {...body })
+    .then((res) => {
+      dispatch(updateBlogSuccess(res.data.data));
+      cb(null, {
+        message: "Blog Updated",
+      });
+    })
+    .catch((err) => {
+      
+      console.log(err); //Dispatch Toaster Notificaton
+          cb({
+              message: "Try Again Later",
+            });
+            
+    });
+  
+  }}
 
 };
 
