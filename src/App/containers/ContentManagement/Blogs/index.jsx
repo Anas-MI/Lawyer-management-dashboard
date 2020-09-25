@@ -156,16 +156,16 @@ const BlogsManage = (props) => {
           ? a.shortDescription < b.shortDescription
           : a.shortDescription > b.shortDescription,
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "_id",
-      ...getColumnSearchProps("description"),
-      sorter: (a, b, c) =>
-        c === "ascend"
-          ? a.description < b.description
-          : a.description > b.description,
-    },
+    // {
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   key: "_id",
+    //   ...getColumnSearchProps("description"),
+    //   sorter: (a, b, c) =>
+    //     c === "ascend"
+    //       ? a.description < b.description
+    //       : a.description > b.description,
+    // },
     {
       title: "Edit",
       dataIndex: "edit",
