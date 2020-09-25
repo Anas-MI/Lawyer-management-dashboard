@@ -47,15 +47,15 @@ class Blogcard extends Component {
               {this.state.blogs.map((blog) => (
                 <div className="col-md-4 overflow-hidden" key={blog._id}>
                   {console.log('BLOGGIGIIGIG', blog)}
-                  <div className="border-0 card mb-3 shadow-sm blogcard">
+                  <div className="card shadow-sm blogcard blogcard-box">
                     <img
-                      className="card-img-top"
+                      className="card-img-top blogpage-image"
                       src={blog.image || 'img/portfolio/01-small.jpg'}
-                      alt="blog"
+                      alt="Blog Image"
                     />
                     <div className="card-body">
                       <a href={`/blogpage/${blog._id}`}>
-                        <h5 className="card-title overflow-hidden">
+                        <h5 className="card-title overflow-hidden cardblogtitle">
                           {blog.title}
                         </h5>
                       </a>

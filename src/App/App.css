@@ -1074,3 +1074,21 @@ label {
 a{
   cursor: pointer;
 }
+
+.blogpage-image {
+  object-fit: contain;
+  width: 100%;
+  margin: auto;
+  height: 180px;
+  padding-top: 8px;
+}
+.blogcard-box{
+  height: 100%;
+}
+
+.cardblogtitle {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}

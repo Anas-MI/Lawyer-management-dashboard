@@ -26,11 +26,14 @@ componentDidMount () {
           <div className="row">
             {blogsdata.map( blog => (
               <div className="col-md-4 overflow-hidden">
-                <div className="border-0 card mb-3 shadow-sm blogcard">
-                  <img className="card-img-top" src={blog.image} alt="blog" />
+                <div className="card shadow-sm blogcard blogcard-box">
+                  <img 
+                  className="card-img-top blogpage-image" 
+                  src={blog.image || 'img/portfolio/01-small.jpg'}
+                  alt="Blog Image" />
                     <div className="card-body">
                         <a href={`/blogpage/${blog._id}`}>
-                          <h5 className="card-title overflow-hidden">{blog.title}</h5>
+                          <h5 className="card-title overflow-hidden cardblogtitle">{blog.title}</h5>
                         </a>
                         <p className="card-text overflow-hidden">{blog.shortDescription}</p>
                     </div>
