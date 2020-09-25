@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Footer from '../../components/HomePage/footer'
 import Navigation from '../../components/HomePage/navigation'
 import { apiUrl }from '../../../resources/api'
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 import axios from 'axios'
 
@@ -48,7 +49,7 @@ class blogpage extends Component{
                                 </p>
                             </div>
                             <div className="content overflow-hidden">
-                                <p style={{ "word-break": "break-all"}}>{blog.description}</p>
+                                <p style={{ "word-break": "break-all"}}>{ ReactHtmlParser(blog.description) }</p>
                             </div>
                         </>
                         ) : ('')
