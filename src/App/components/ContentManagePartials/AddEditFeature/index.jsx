@@ -114,7 +114,7 @@ const uploadImage = (e) => {
 
   return (
     <div className='w-75 m-auto'>
-        <h3 className='text-center' >Add New Feature</h3>
+        <h3 className='text-center' >{editMode ? "Edit Feature" : "Add New Feature"}</h3>
     <Form className="form-details">
       <Form.Group controlId="formGroupEmail">
                   <input
