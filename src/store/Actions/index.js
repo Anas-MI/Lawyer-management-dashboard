@@ -479,6 +479,7 @@ const createFeatureSuccess = (payload) => ({
   payload,
 });
 export const createFeature = (payload, cb) => {
+  console.log({payload})
   return (dispatch) => {
     api
       .post("/features/createlist", payload)
