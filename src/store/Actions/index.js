@@ -507,7 +507,7 @@ export const updateFeature = (payload, cb) => {
   return (dispatch) => {
               var docFormData = new FormData();
               docFormData.set('image', body.imageFile);
-      
+      if(body.imageFile){
               api
                 .post('/footer/upload', docFormData, {
                   headers: { 'Content-Type': 'multipart/form-data' },
@@ -531,7 +531,8 @@ export const updateFeature = (payload, cb) => {
                           cb({
                               message: "Try Again Later",
                             });
-                        })  
+                        
+                          })  
                 }).catch( (err)=>{
                   console.log(err)
                //   this.setState({disabled : false})
@@ -539,7 +540,23 @@ export const updateFeature = (payload, cb) => {
                       message: "Try Again Later",
                     });
                 })
-              
+  } else {
+    api
+    .post(`/features/edit/${id}`, body)
+    .then((res) => {
+      dispatch(updateFeatureSuccess(res.data.data));
+      cb(null,{
+          message: "Features Updated",
+        });
+    })
+    .catch((err) => {
+      console.log(err); //Dispatch Toaster Notificaton
+      cb({
+          message: "Try Again Later",
+        });
+    
+      })  
+  }
     
   };
 };
