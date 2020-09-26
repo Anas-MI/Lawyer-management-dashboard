@@ -87,6 +87,7 @@ const AddEditFeature = (props) => {
         message: "Please select a image",
       });
     } else  {
+     console.log({editMode})
       if (editMode) {
         dispatch(updateFeature({id:state._id,body:state},(err,response)=>{
           if(err){
