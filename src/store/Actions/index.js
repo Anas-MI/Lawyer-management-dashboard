@@ -480,21 +480,38 @@ const createFeatureSuccess = (payload) => ({
 });
 export const createFeature = (payload, cb) => {
   console.log({payload})
+  // let { id, body } = payload;
   return (dispatch) => {
-    api
-      .post("/features/createlist", payload)
-      .then((res) => {
-          dispatch(createFeatureSuccess(res.data))
-        cb(null,{
-            message: "Features Created",
-          });
-  })
-      .catch((err) => {
-        console.log(err); //Dispatch Toaster Notificaton
-        cb({
+
+    var docFormData = new FormData();
+              docFormData.set('image', payload.imageFile);
+      if(payload.imageFile){
+              api
+                .post('/footer/upload', docFormData, {
+                  headers: { 'Content-Type': 'multipart/form-data' },
+                })
+                .then((response)=>{
+                  console.log(response)
+                  notification.success({ message: 'Image Uploaded.' });
+                  console.log(response.data.message)
+                     
+                    payload.logo = response.data.message
+                    api
+                    .post("/features/createlist", payload)
+                    .then((res) => {
+                      dispatch(createFeatureSuccess(res.data))
+                      cb(null,{
+                        message: "Features Created",
+                      });
+                    })
+                    .catch((err) => {
+                      console.log(err); //Dispatch Toaster Notificaton
+                      cb({
             message: "Features Created",
           });
       });
+    })}
+
   };
 };
 
