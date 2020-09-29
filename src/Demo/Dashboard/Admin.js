@@ -376,7 +376,7 @@ class AdminDashboard extends React.Component {
         return (
             <Aux>
                 <Tabs
-                    defaultActiveKey="1"
+                    defaultActiveKey="3"
                     onChange={callback}
                     className="card p-4 overflow-auto"
                     >
