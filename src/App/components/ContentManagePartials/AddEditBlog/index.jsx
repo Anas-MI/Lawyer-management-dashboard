@@ -132,12 +132,14 @@ const AddEditBlog = (props) => {
           .post('/blogs/create', state)
           .then((result) => {
             // image upload to the server
+            console.log(result.data.data._id)
+            let idToUpdate = result.data.data._id
             const files = state.imageFile;
             const uploadData = new FormData();
-            uploadData.append('image', files[0]);
+            uploadData.append('image', files);
             console.log('data ', uploadData);
             api
-              .post('/blogs/upload/' + result.data.data._id, uploadData, {
+              .post(`/blogs/upload/${idToUpdate}` , uploadData, {
                 headers: {
                   'content-type': 'multipart/form-data',
                 },
