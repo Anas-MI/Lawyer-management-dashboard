@@ -102,6 +102,7 @@ const AddEditFeature = (props) => {
             notification.error(err)
           }else{
             notification.success(response)
+            window.location.reload()
           }
         }));
       }
