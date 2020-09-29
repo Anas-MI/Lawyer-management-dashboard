@@ -167,7 +167,7 @@ const AddEditBlog = (props) => {
     <>
     {console.log({state})}
       <Card>
-      <h3 className="text-center">Add New Blog</h3>
+      <h3 className="text-center">{editMode ? 'Edit Blog' : 'Add New Blog'}</h3>
       <Form className="form-details">
         <Form.Group controlId="formGroupEmail">
           <input
