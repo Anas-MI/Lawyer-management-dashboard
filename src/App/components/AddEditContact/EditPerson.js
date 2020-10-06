@@ -295,7 +295,7 @@ class editPerson extends React.Component {
                 duration: 5,
               });
             };
-            if (dataList.fileList.length !== 0) {
+            if (dataList.fileList && dataList.fileList.length !== 0) {
               openMessage();
               const formData = new FormData();
               dataList.fileList.forEach((file) => {
