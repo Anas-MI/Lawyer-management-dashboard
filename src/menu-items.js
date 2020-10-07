@@ -68,6 +68,20 @@ export const navigation = {
               icon: 'feather icon-users',
               url: '/manage/footer',
             },
+            {
+              id: 'About',
+              title: 'About',
+              type: 'item',
+              icon: 'feather icon-users',
+              url: '/manage/about',
+            },
+            {
+              id: 'Contact Us',
+              title: 'ContactUs',
+              type: 'item',
+              icon: 'feather icon-users',
+              url: '/manage/contactus',
+            },
           ],
         },
         /*
