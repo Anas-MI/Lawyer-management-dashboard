@@ -9,6 +9,8 @@ import FeaturesManage from './App/containers/ContentManagement/Features';
 import PlansManage from './App/containers/ContentManagement/Plans';
 import BlogsManage from './App/containers/ContentManagement/Blogs';
 import AddEditBlogs from './App/components/ContentManagePartials/AddEditBlog';
+import ManageAbout from './App/components/ContentManagePartials/About';
+import ManageContactUs from './App/components/ContentManagePartials/Contactus';
 import AddEditFeatures from './App/components/ContentManagePartials/AddEditFeature';
 import AddEditPlans from './App/components/ContentManagePartials/AddEditPlan';
 import footer from './App/containers/ContentManagement/footer/footer'
@@ -187,6 +189,7 @@ export const adminRoutes = [
     name: 'Manage Blogs',
     component: BlogsManage,
   },
+  
   {
     path: '/manage/features',
     exact: true,
@@ -205,6 +208,18 @@ export const adminRoutes = [
     exact: true,
     name: 'Add Edit Blogs',
     component: AddEditBlogs,
+  },
+  {
+    path: '/manage/about',
+    exact: true,
+    name: 'Edit About',
+    component: ManageAbout,
+  },
+  {
+    path: '/manage/contactus',
+    exact: true,
+    name: 'Edit Contact Us',
+    component: ManageContactUs,
   },
   {
     path: '/manage/features/:manage',
