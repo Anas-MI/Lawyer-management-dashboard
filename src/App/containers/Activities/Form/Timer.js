@@ -79,6 +79,8 @@ const Timer = props => {
                     ></div>
                 }
                 </div>
+                <div className="cdh-ico cdh-tray-stopico cdh-trayico-small" onClick={handleStart}
+                    ></div>
             </div>
         </div>:<TimePicker value={''}
          onChange={handleChange} />
