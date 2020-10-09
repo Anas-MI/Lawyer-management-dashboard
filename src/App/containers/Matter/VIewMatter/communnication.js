@@ -865,6 +865,102 @@
                      
                     }
               </Modal>
+              //Send sms
+              <Modal
+                  title={this.state.secure ? "Edit Secure message" : "New Secure Message"}
+                  visible={this.state.smsmodal}
+                  onOk={this.handleSecure}
+                  onCancel={()=>this.handleCancel("secure")}
+                  footer={[
+                    <Button  onClick={()=>this.handleCancel("secure")}>
+                      Cancel
+                    </Button>,
+                    <Button type="primary" disabled = {this.state.disable} onClick={this.handleSecure}>
+                      {this.state.editSecure ? "Update Log" : "Send"}
+                    </Button>,
+                  ]}
+                  >
+                    {           
+          
+                        <Form  
+                        id='myForm'
+                        className="form"
+                        ref={ form => this.messageForm = form }>
+                         <Row>
+                             
+                             <Col>
+                             <Form.Group>
+                         <Form.Label>Matter</Form.Label>
+                                <Form.Control 
+                                    as="select"
+                                    name="matter" 
+                                    placeholder="Matter"
+                                    onChange={handleChange}>
+                                <option>Select a matter</option>
+                                {this.state.option}
+                                </Form.Control>
+                         </Form.Group>
+                             </Col>
+                         </Row>
+                       
+                        <Row>
+                            <Col >
+                            <Form.Group>
+                                 <Form.Label>From</Form.Label>
+                                 <Form.Control 
+                                     as="select"
+                                     name="from" 
+                                     placeholder="Select a contact"
+                                     onChange={handleChange}>
+                                <option>{name}</option>    
+                               
+                                 </Form.Control>
+                                 </Form.Group>
+                            </Col>
+                            
+                            <Col>
+                            <Form.Group >
+                                 <Form.Label>To</Form.Label>
+                                 <Form.Control 
+                                     as="select"
+                                     name="to" 
+                                     placeholder="Select a contact"
+                                     onChange={handleChange}>
+                                     <option>Select a contact</option>
+                                     {this.state.contacts}
+                                 </Form.Control>
+                                 </Form.Group>
+                            </Col>
+                        </Row>
+                         
+                       
+                        <Form.Group controlId="subject">
+                                 <Form.Label>Subject</Form.Label>
+                                 <Form.Control 
+                                 name="subject" 
+                                 rows="3"
+                                 placeholder="subject"
+                                 onChange={handleChange} />
+                             </Form.Group>  
+                     
+                        
+                             <Form.Group controlId="body">
+                                 <Form.Label>Body</Form.Label>
+                                 <Form.Control 
+                                 name="body" 
+                                 as="textarea" 
+                                 rows="3"
+                                 placeholder="body"
+                                 onChange={handleChange} />
+                             </Form.Group>
+                        
+                     
+                    </Form>    
+                     
+                    }
+              </Modal>
+
+
               
               <Modal
                   title={this.state.editEmail ? "Edit email log" : "Add a email log"}
