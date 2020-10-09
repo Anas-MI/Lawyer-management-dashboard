@@ -29,6 +29,7 @@ class Communication extends React.Component{
             phone : false,
             email : false,
             secure : false,
+            sms: false,
             tableData : [],
             data : {
                 subject : "",
@@ -38,6 +39,7 @@ class Communication extends React.Component{
             },
             loading : true,
             emailData : [],
+            smsData : [],
             phoneData : [],
             completeData : [],
             tableData : [],
@@ -98,6 +100,7 @@ class Communication extends React.Component{
        console.log(communication)
 
         let emailData = [];
+        let smsData = [];
         let phoneData = [];
         let completeData = [];
         
@@ -132,13 +135,16 @@ class Communication extends React.Component{
           if (val.logType === 'phone') {
             phoneData.push(temp);
           }
-          
+          if (val.logType === 'sms') {
+            smsData.push(temp);
+          }
           completeData.push(temp);
         });
         this.setState({
           completeData: completeData,
           phoneData: phoneData,
           emailData: emailData,
+          smsData: smsData,
           tableData: completeData,
           loading : false
         });
@@ -174,7 +180,11 @@ class Communication extends React.Component{
             this.setState({
                 phone : true,
               });
-        }
+        } else  if(type==="sms"){
+          this.setState({
+              sms : true,
+            });
+      }
       console.log(this.state)
       };
     
@@ -267,28 +277,160 @@ class Communication extends React.Component{
               this.setState({phone : false})
             }
             data.userId = this.props.userId;
-            console.log(data)
-            api
-              .post('/communication/create', data)
-              .then((res) => {
-                console.log(res)
-                this.setState({
-                  disable : false
+            console.log({data})
+            api.get(`/contact/view/${data.to}`).then((res)=>{
+              let emailAddress = res.data.data.emailAddress.length != 0 ? res.data.data.emailAddress[0].emailAddress : ""
+              
+            let email = {
+              to: emailAddress,
+              subject : data.subject,
+              text : data.body,
+              date  : new Date()
+
+            }
+              api.post(`/communication/sendemail`, email ).then((email)=>{
+                console.log(email)
+                notification.success({
+                  message : "Email Sent"
                 })
-                this.componentDidMount()
-                notification.success({ message: 'Log Added !' });
+                api
+                .post('/communication/create', data)
+                .then((res) => {
+                  console.log(res)              
+                  this.componentDidMount()
+                  notification.success({ message: 'Log Added !' });
+                })
+                .catch((err) => {
+                  notification.error({ message: 'Failed' });
+                }).then(()=>{
+                  this.setState({
+                    disable : false,
+                    secure : false,
+                    editSecure : false
+                  })
+                  ReactDOM.findDOMNode(this.messageForm).reset()
+                })
+              }).catch((err)=>{
+                console.log(err)
+                notification.error({message : "Failed to send the email"})
+              })}).catch((err) => {
+                console.log(err)
+                notification.error({message : "Failed to send the email"})
+
               })
-              .catch((err) => {
-                notification.error({ message: 'Failed' });
-              }).then(()=>{
+            }
+            // api
+            //   .post('/communication/create', data)
+            //   .then((res) => {
+            //     console.log(res)
+            //     this.setState({
+            //       disable : false
+            //     })
+            //     this.componentDidMount()
+            //     notification.success({ message: 'Log Added !' });
+            //   })
+            //   .catch((err) => {
+            //     notification.error({ message: 'Failed' });
+            //   }).then(()=>{
                 
-                ReactDOM.findDOMNode(this.messageForm).reset()
-              })
+            //     ReactDOM.findDOMNode(this.messageForm).reset()
+            //   })
              
   
-            }
+            // }
         }   
       };
+
+      //Send sms 
+      handleSms = () => {    
+  
+        notification.destroy()
+        if(this.state.data.to == ""){
+          notification.error({message : "Please add a contact to send message"})
+        }else if(this.state.data.subject == ""){
+            notification.error({message : "Please add Text"})
+        }else{
+          this.setState({
+            disable : true
+          })
+           
+              let data = this.state.data
+              data.logType = "sms"
+              data.userId = this.props.userId;
+              data.time = new Date().getHours() + ":" + new Date().getMinutes()
+              data.from = user.token.user._id
+              console.log(data)
+
+              api.get(`/contact/view/${data.to}`).then((res)=>{
+                console.log(res)
+                let emailAddress = res.data.data.emailAddress.length != 0 ? res.data.data.emailAddress[0].emailAddress : ""
+                let number = res.data.data.phone.length != 0 ? res.data.data.phone[0].phone : ""
+                console.log(data)
+                let email = {
+                  to: emailAddress,
+                  subject : data.subject,
+                  text : data.body,
+                  date  : new Date()
+
+                }
+                let sms = {
+                  mobile : number,
+                  content : data.subject
+                }
+                console.log(email)
+                console.log(sms)
+                if(number !== ""){
+                  api.post(`/communication/sendsms`, sms ).then((smsres)=>{
+                    console.log(smsres)
+                    notification.success({
+                      message : "SMS Sent"
+                    })
+                    api
+                    .post('/communication/create', data)
+                    .then((res) => {
+                      console.log(res)              
+                      this.componentDidMount()
+                      notification.success({ message: 'Log Added !' });
+                    })
+                    .catch((err) => {
+                      notification.error({ message: 'Failed' });
+                    }).then(()=>{
+                      this.setState({
+                        disable : false,
+                        sms : false,
+                        editSecure : false
+                      })
+                      ReactDOM.findDOMNode(this.messageForm).reset()
+                    })
+                  }).catch((err)=>{
+                    console.log(err)
+                    notification.error({message : "Failed to send the sms"})
+                  })
+                } else {
+                  notification.error({message : "This contact doesnt have a number added"})
+
+                }   
+           
+
+                
+                
+                 
+      
+                if (number === "" && emailAddress === "") {
+                  notification.warning({
+                    message : "Selected contact doesn't have a emailAddress and a phone number"
+                  })
+                  this.setState({
+                    disable : false,
+                  //  secure : false
+                  })
+                }      
+              })
+            
+        }   
+      };
+
+
 
       handleSecure = () => {    
         notification.destroy()
@@ -483,7 +625,23 @@ class Communication extends React.Component{
               });
               console.log(this.state)
         
-        }
+        } else  if(type==="sms"){
+          this.setState({
+              phone : false,
+              email : false,
+              editPhone: false,
+              sms: false,
+              disable : false,
+              data : {
+                subject : "",
+                body : "",
+                to : "",
+                from : name
+            },
+            });
+            console.log(this.state)
+      
+      }
         
         setTimeout(() => {
         //  window.location.reload();
@@ -627,6 +785,11 @@ class Communication extends React.Component{
               this.setState({
                 tableData: this.state.completeData,
               });
+            }else
+            if(type==="sms"){
+              this.setState({
+                tableData: this.state.smsData,
+              });
             }
           }
         const columns = [
@@ -677,9 +840,9 @@ class Communication extends React.Component{
                 key: "_id",
                 render:(_,record)=>{
                     return (
-                        <Button variant='danger' onClick={()=>handleEdit(record)}>
-                            Edit
-                        </Button>
+                      record.type === "sms"?"":<Button variant='danger' onClick={()=>handleEdit(record)}>
+                        Edit
+                    </Button>
                     )
                 }
             },
@@ -764,13 +927,20 @@ class Communication extends React.Component{
                     className="btn  btn-outline-primary   btn-sm"
                     onClick={()=>this.showModal("secure")}
                 >
-                  New secure message
+                  Send Email & SMS
                 </button>
+                <button
+                    className="btn  btn-outline-primary   btn-sm"
+                    onClick={()=>this.showModal("sms")}
+                >
+                  Send SMS
+                </button>
+
                 <button
                     className="btn  btn-outline-primary   btn-sm"
                     onClick={()=>this.showModal("email")}
                 >
-                    New Email Log
+                    Send Email
                 </button>
                 
                 <button
@@ -788,6 +958,8 @@ class Communication extends React.Component{
                   <Button  onClick={()=>setTableData("all")}>All</Button>
                   <Button onClick={()=>setTableData("email")}>Email</Button>
                   <Button onClick={()=>setTableData("phone")}>Phone</Button>
+                  <Button onClick={()=>setTableData("sms")}>Sms</Button>
+                  
                   </div>
                 </div>
             </Card>
@@ -888,8 +1060,102 @@ class Communication extends React.Component{
                   }
             </Modal>
             
+          {/* send sms */}
             <Modal
-                title={this.state.editEmail ? "Edit email log" : "Add a email log"}
+                title = "Send SMS"
+                visible={this.state.sms}
+                onOk={this.handleSms}
+                onCancel={()=>this.handleCancel("sms")}
+                footer={[
+                  <Button  onClick={()=>this.handleCancel("sms")}>
+                    Cancel
+                  </Button>,
+                  <Button type="primary" disabled = {this.state.disable} onClick={this.handleSms}>
+                  Send
+                  </Button>,
+                ]}
+                >
+                  {           
+        
+                      <Form  
+                      id='myForm'
+                      className="form"
+                      ref={ form => this.messageForm = form }>
+                       <Row>
+                           
+                           <Col sm>
+                           <Form.Group>
+                       <Form.Label>Matter</Form.Label>
+                              <Form.Control 
+                                  as="select"
+                                  name="matter" 
+                                  placeholder="Matter"
+                                  onChange={handleChange}>
+                              <option>Select a matter</option>
+                              {this.state.option}
+                              </Form.Control>
+                       </Form.Group>
+                           </Col>
+                       </Row>
+                     
+                      <Row>
+                          <Col  sm>
+                          <Form.Group>
+                               <Form.Label>From</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="from" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                              <option>{name}</option>    
+                             
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                          
+                          <Col sm>
+                          <Form.Group >
+                               <Form.Label>To</Form.Label>
+                               <Form.Control 
+                                   as="select"
+                                   name="to" 
+                                   placeholder="Select a contact"
+                                   onChange={handleChange}>
+                                   <option>Select a contact</option>
+                                   {this.state.contacts}
+                               </Form.Control>
+                               </Form.Group>
+                          </Col>
+                      </Row>
+                       
+                     
+                      <Form.Group controlId="subject">
+                               <Form.Label>Text</Form.Label>
+                               <Form.Control 
+                               name="subject" 
+                               rows="3"
+                               placeholder="Text"
+                               onChange={handleChange} />
+                           </Form.Group>  
+                   
+                      
+                           {/* <Form.Group controlId="body">
+                               <Form.Label>Body</Form.Label>
+                               <Form.Control 
+                               name="body" 
+                               as="textarea" 
+                               rows="3"
+                               placeholder="body"
+                               onChange={handleChange} />
+                           </Form.Group> */}
+                      
+                   
+                  </Form>    
+                   
+                  }
+            </Modal>
+            <Modal
+                title={this.state.editEmail ? "Edit email log" : "Add an email log"}
                 visible={this.state.editEmail}
                 onOk={()=>this.handleOk("email")}
                 onCancel={()=>this.handleCancel("email")}
