@@ -41,6 +41,14 @@ const Timer = props => {
         },1000)
     }
 
+    const handleReset = e => {
+        setTimer(s=>{
+            var n = 0;
+            localStorage.setItem('timer',n)
+            return n
+        })
+    }
+
     const handlePause = e => {
         setStarted(false)
         clearInterval(intervalId.current)
@@ -85,8 +93,15 @@ const Timer = props => {
                     :
                     <div className="cdh-ico cdh-tray-playico cdh-trayico-small" onClick={handleStart}
                     ></div>
+                    
                 }
+               
                 </div>
+                {/* <div style={{cursor:'pointer'}} className="cdh-timeaction--btn w-inline-block"> */}
+                
+                <div className="" style={{cursor:'pointer',"marginLeft": "10px"}} onClick={handleReset}
+            ><i style={{"color": "white", "fontSize": "15px"}} class="fa fa-refresh" aria-hidden="true"></i></div>
+            {/* </div> */}
             </div>
         </div>:<TimePicker value={''}
          onChange={handleChange} />
