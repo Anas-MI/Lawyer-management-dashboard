@@ -26,9 +26,11 @@ class NavBar extends Component {
                         <a className={toggleClass.join(' ')} id="mobile-collapse1" href={DEMO.BLANK_LINK} onClick={this.props.onToggleNavigation}><span/></a>
                         <a href={DEMO.BLANK_LINK} className="b-brand">
                             <div className="b-bg">
-                                <i className="feather icon-trending-up"/>
+                                {/* <i className="feather icon-trending-up"/> */}
+                                <img src="" alt="Precedent Online"/>
+
                             </div>
-                            <span className="b-title">Case Management</span>
+                            <span className="b-title">Precedent Online</span>
                         </a>
                     </div>
                     <a className="mobile-menu" id="mobile-header" href={DEMO.BLANK_LINK}><i className="feather icon-more-horizontal"/></a>
