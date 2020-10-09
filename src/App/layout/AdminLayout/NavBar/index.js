@@ -20,15 +20,16 @@ class NavBar extends Component {
         }
 
         return (
+            //Admin dashboard
             <Aux>
                 <header className={headerClass.join(' ')}>
                     <div className="m-header">
                         <a className={toggleClass.join(' ')} id="mobile-collapse1" href={DEMO.BLANK_LINK} onClick={this.props.onToggleNavigation}><span/></a>
                         <a href={DEMO.BLANK_LINK} className="b-brand">
-                            <div className="b-bg">
-                                <i className="feather icon-trending-up"/>
-                            </div>
-                            <span className="b-title">Case Management</span>
+                                {/* <i className="feather icon-trending-up"/> */}
+                        <img style={{"width": "30%"}}src="https://res.cloudinary.com/casemanagement/image/upload/v1600287856/gtfwyjkqpb3auwrkftag.png" alt="Precedent Online"/>
+                           
+                            <span className="b-title">Precedent Online</span>
                         </a>
                     </div>
                     <a className="mobile-menu" id="mobile-header" href={DEMO.BLANK_LINK}><i className="feather icon-more-horizontal"/></a>
