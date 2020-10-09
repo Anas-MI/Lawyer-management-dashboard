@@ -267,8 +267,9 @@ const AddAccount = () =>{
                                     onChange={handelChange}
                                 >
                                     <option value="default">Select Currency</option>
-                                    <option value="USD $">USD $</option>
-                                    <option value="EUR €">EUR €</option>
+                                    <option value="$">$</option>
+                                    <option value="Euro">Euro</option>
+                                    <option value="Pound">Pound</option>
                                 </Form.Control>
                                 <p className="help-block text-danger">{error.currency}</p>
                             </Form.Group>
