@@ -15,7 +15,6 @@ const EditAbout = (props) => {
   const [state, setState] = useState({
     title: '',
     author: '',
-    shortDescription: '',
     description: '',
     imageFile: '',
     
@@ -31,12 +30,18 @@ const EditAbout = (props) => {
   const selectedBlog = useSelector((state) => state.Blog.selected);
 
   useEffect(() => {
-    if (!selectedBlog) {
-      setEditMode(false);
-    } else {
-      setState({ ...selectedBlog });
-      setEditMode(true);
-    }
+    // if (!selectedBlog) {
+    //   setEditMode(false);
+    // } else {
+    //   setState({ ...selectedBlog });
+    //   setEditMode(true);
+    // }
+    api.get("/footer/getaboutus").then(data => {
+      console.log(data.data.data[0])
+      let savedData = data.data.data[0];
+      setState({ ...savedData });
+console.log({state})
+    })
   }, []);
 
 
@@ -103,7 +108,7 @@ const EditAbout = (props) => {
       } else {
         setDisplay(true);
         return notification.warning({
-          message: 'Failed to Add New Blog',
+          message: 'Failed to save data',
         });
       }
     }
@@ -116,46 +121,39 @@ const EditAbout = (props) => {
         message: 'Fields Should Not Be Empty',
       });
     } else {
-      if (editMode) {
-        console.log('blog', state);
-        dispatch(
-          updateBlog({ id: state._id, body: state }, (err, response) => {
-            if (err) {
-              notification.error(err);
-            } else {
-              notification.success(response);
-            }
-          })
-        );
-      } else {
+    
+      const files = state.imageFile;
+ 
+        const uploadData = new FormData();
+        uploadData.append('image', files);
+        console.log('data ', uploadData);
         api
-          .post('/blogs/create', state)
-          .then((result) => {
-            // image upload to the server
-            console.log(result.data.data._id)
-            let idToUpdate = result.data.data._id
-            const files = state.imageFile;
-            const uploadData = new FormData();
-            uploadData.append('image', files);
-            console.log('data ', uploadData);
-            api
-              .post(`/blogs/upload/${idToUpdate}` , uploadData, {
-                headers: {
-                  'content-type': 'multipart/form-data',
-                },
-              })
-              .then((newresult) => {
-                console.log(newresult);
-              });
+          .post(`/footer/upload` , uploadData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
           })
-          .catch((err) => {
-            console.log({ err });
+          .then((newresult) => {
+            console.log(newresult); 
+             api
+            .post('/footer/updateaboutus', {...state, banner:newresult.data.message})
+            .then((result) => {
+              // image upload to the server
+              console.log({result})
+             
+            })
+            .catch((err) => {
+              console.log({ err });
+            });
           });
+        
+     
+      
 
     
-      }
+      
     }
-    props.history.goBack();
+    // props.history.goBack();
   }
 
   // handel Image Upload
@@ -195,11 +193,11 @@ const EditAbout = (props) => {
 Description
        
     
-  <CKEditor data={state["description"]} onChange={evt => setState((st) => ({ ...st,["description"]: evt.editor.getData()}))}  />
+  <CKEditor data={state["description"].toString()} onChange={evt => setState((st) => ({ ...st,["description"]: evt.editor.getData()}))}  />
 
 
           <p className="help-block text-danger">{error.description}</p>
-        <Button onClick={handleSubmit}>{editMode ? 'Update' : 'Create'}</Button>
+        <Button onClick={handleSubmit}>Save</Button>
       </Form>
       </Card>
     </>
