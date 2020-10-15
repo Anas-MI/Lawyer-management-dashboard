@@ -209,6 +209,13 @@ export default {
           url: '/help',
         },
         {
+          id: 'Report',
+          title: 'Report',
+          type: 'item',
+          icon: 'feather icon-book',
+          url: '/reports',
+        },
+        {
           id: 'profile',
           title: 'Profile',
           type: 'item',

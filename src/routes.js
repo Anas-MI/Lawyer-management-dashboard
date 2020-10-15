@@ -132,6 +132,9 @@ const EditAccount = React.lazy(() =>
 const profile = React.lazy(() =>
   import('./App/containers/Settings/profile/index')
 );
+const Reports = React.lazy(() =>
+  import('./App/containers/Reports/index')
+);
 const viewTicket = React.lazy(() =>
   import('./App/containers/SupportManagement/ViewTicket/view')
 );
@@ -139,7 +142,7 @@ const viewFolder = React.lazy(() =>
   import('./App/containers/Documents/ViewFolder')
 );
 
-const viewSubscription = React.lazy(()=>import('./App/containers/SubscriptionManagement/ViewTicket/view'))
+const viewSubscription = React.lazy(() => import('./App/containers/SubscriptionManagement/ViewTicket/view'))
 
 
 const Target = React.lazy(() => import('./App/containers/Target'));
@@ -189,14 +192,14 @@ export const adminRoutes = [
     name: 'Manage Blogs',
     component: BlogsManage,
   },
-  
+
   {
     path: '/manage/features',
     exact: true,
     name: 'Manage Features',
     component: FeaturesManage,
   },
-  
+
   {
     path: '/manage/plans',
     exact: true,
@@ -284,7 +287,7 @@ const routes = [
     name: 'Default',
     component: DashboardDefault,
   },
-  
+
   { path: '/tasks', exact: true, name: 'Tasks', component: tasks },
   { path: '/tasks/view/list', exact: true, name: 'View List', component: list },
   { path: '/profile', exact: true, name: 'Profile', component: Profile },
@@ -435,7 +438,7 @@ const routes = [
     name: 'Invoice',
     component: Invoice,
   },
- 
+
   { path: '/settings', exact: true, name: 'Settings', component: Settings },
   {
     path: '/settings/customFeilds',
@@ -524,6 +527,12 @@ const routes = [
     exact: true,
     name: 'Target',
     component: Target,
+  },
+  {
+    path: '/reports',
+    exact: true,
+    name: 'Reports',
+    component: Reports,
   },
 ];
 
