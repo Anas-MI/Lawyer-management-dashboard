@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
 import { Tabs } from 'antd';
-import ClientListing from './pages/clients'
+import ClientListing from './pages/clients';
+import Activity from './pages/Activity';
+import Earnings from './pages/Earnings';
 const { TabPane } = Tabs;
 
 const Reports = () => {
@@ -8,13 +10,13 @@ const Reports = () => {
         <Tabs defaultActiveKey="1">
             <TabPane tab="Clients Listing" key="1">
                 <ClientListing />
-        </TabPane>
-            <TabPane tab="Tab 2" key="2">
-                Content of Tab Pane 2
-        </TabPane>
-            <TabPane tab="Tab 3" key="3">
-                Content of Tab Pane 3
-        </TabPane>
+            </TabPane>
+            <TabPane tab="Activity" key="2">
+                <Activity></Activity>
+            </TabPane>
+            <TabPane tab="Total Earnings" key="3">
+                <Earnings />
+            </TabPane>
         </Tabs>
     )
 }
