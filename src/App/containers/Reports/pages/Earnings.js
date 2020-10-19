@@ -44,7 +44,7 @@ const ContactsManage = (props) => {
                         invoice: details.last_invoice === '' ? "-" : new Date(details.last_invoice).toUTCString()
                     }
                     matters.push(matter)
-                    settableData(matters)
+                    settableData(matters) //Todo : check the async execution of this function
                 }
             })
             setLoading(false);

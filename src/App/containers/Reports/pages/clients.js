@@ -41,7 +41,7 @@ const ContactsManage = (props) => {
                     date: clientdata.created_at === '' ? "-" : new Date(clientdata.created_at).toUTCString()
                 };
                 Clients.push(data)
-                setcontactData(Clients)
+                setcontactData(Clients) //Todo : check the async execution of this function
             })
             setLoading(false)
         })
