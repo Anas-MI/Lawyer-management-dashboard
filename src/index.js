@@ -10,9 +10,6 @@ import App from './App/index';
 import * as serviceWorker from './serviceWorker';
 import config from './config';
 
-
-
-
 const app = (
     <Provider store={store}>
         <BrowserRouter>
