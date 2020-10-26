@@ -31,12 +31,13 @@ const Accounts = () => {
         let tableData = []
         let secound = []
         let third = []
+        console.log(res,'.........')
         res.data.data.map((value, index) => {
           const data = {
             _id: value._id,
             key: index,
             accountName: value.accountName,
-            accountHolder : value.contactId.firstName + " " + value.contactId.lastName,
+            accountHolder : value.contactId ? value.contactId.firstName + " " + value.contactId.lastName : "-",
             currency: value.currency,
             openingBalance: value.openingBalance,
             default: value.defaultAccount ? "Yes" : "No",

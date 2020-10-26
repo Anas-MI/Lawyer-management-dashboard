@@ -26,7 +26,7 @@ const AddAccount = (props) => {
         swiftCode: "",
         transitNumber: "",
         currency: "",
-        openingBalance: ""
+        openingBalance: "",
     })
     const [error, setError] = useState({})
     const [display, setDisplay] = useState(false)
@@ -115,7 +115,13 @@ const AddAccount = (props) => {
     // handel Submit of form 
     const handelSubmit = e => {
         e.preventDefault();
-        notification.destroy()
+        notification.destroy();
+        let newState = state;
+        if(state.type == "Operating Account"){
+            newState.contactId = userId;
+        }
+        newState.balance = newState.openingBalance
+        setState(newState)
         if (!display) {
             const validateForm = (error) => {
                 let valid = true;
@@ -141,7 +147,7 @@ const AddAccount = (props) => {
                 message: "Please select a type",
             });
         } else
-            if (state.contactId === "") {
+            if (state.contactId === "" && state.type !== "Operating Account") {
                 return notification.warning({
                     message: "Please provide a Account holder",
                 });

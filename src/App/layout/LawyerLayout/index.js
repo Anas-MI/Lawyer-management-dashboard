@@ -112,12 +112,8 @@ class LawyerLayout extends Component {
                             let yyyy = today.getFullYear();
                             let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours() ;
                             let plusonehour = parseInt(hours) + 1
-                            console.log(plusonehour)
                             let mins = today.getMinutes() < 10 ? '0' + today.getMinutes()  :  today.getMinutes()
                             let plusmins = parseInt(mins + 0)
-                           
-                            console.log("1" + ddd + "/" + mmm + "/" + yyyyy + " " + hourss + ":" + minss)
-                            console.log("2" +dd + "/" + mm + "/" + yyyy + " " + hours + ":" + mins)
                             /*
                                 if(dd<10) {
                                     dd = '0'+dd
@@ -174,9 +170,6 @@ class LawyerLayout extends Component {
                                   });
                                 console.log(value)
                                 */
-                            }
-                            else{
-                                console.log("i min passed")
                             }   
                         }
                         /*
