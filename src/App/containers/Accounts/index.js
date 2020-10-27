@@ -31,18 +31,18 @@ const Accounts = (props) => {
         let tableData = []
         let secound = []
         let third = []
-        console.log(res,'.........')
+        console.log(res, '.........')
         res.data.data.map((value, index) => {
           const data = {
             _id: value._id,
             key: index,
             accountName: value.accountName,
-            accountHolder : value.contactId ? value.contactId.firstName + " " + value.contactId.lastName : "-",
+            accountHolder: value.contactId ? value.contactId.firstName + " " + value.contactId.lastName : "-",
             currency: value.currency,
-            balance : value.balance,
+            balance: value.balance,
             openingBalance: value.openingBalance,
             default: value.defaultAccount ? "Yes" : "No",
-            type : value.type
+            type: value.type
           }
           if (data.type === "Client Account") {
             tableData.push(data)
@@ -167,6 +167,17 @@ const Accounts = (props) => {
       }
     },
     {
+      title: 'View',
+      key: "view",
+      render: (_, record) => {
+        return (
+          <Button onClick={() => { handleView(record) }} >
+            View
+          </Button>
+        )
+      }
+    },
+    {
       title: 'Delete',
       dataIndex: "delete",
       key: "_id",
@@ -223,6 +234,17 @@ const Accounts = (props) => {
       }
     },
     {
+      title: 'View',
+      key: "view",
+      render: (_, record) => {
+        return (
+          <Button onClick={() => { handleView(record) }} >
+            View
+          </Button>
+        )
+      }
+    },
+    {
       title: 'Delete',
       dataIndex: "delete",
       key: "_id",
@@ -270,6 +292,17 @@ const Accounts = (props) => {
         return (
           <Button onClick={() => { history.push('/edit/accounts', record._id) }} >
             Edit
+          </Button>
+        )
+      }
+    },
+    {
+      title: 'View',
+      key: "view",
+      render: (_, record) => {
+        return (
+          <Button onClick={() => { handleView(record) }} >
+            View
           </Button>
         )
       }
@@ -338,8 +371,8 @@ const Accounts = (props) => {
     doc.save('Accounts.pdf');
   };
   const callBack = (key) => {
-     setActive(key)
-     console.log(Active)
+    setActive(key)
+    console.log(Active)
   }
 
   const handleView = (record) => {
@@ -362,7 +395,7 @@ const Accounts = (props) => {
             <ExportExcel dataSource={state || []} />
             <button
               className="btn  btn-outline-primary   btn-sm"
-              onClick={() => { history.push('/add/accounts', Active ) }}
+              onClick={() => { history.push('/add/accounts', Active) }}
             >
               Add Account
                   </button>
@@ -393,7 +426,7 @@ const Accounts = (props) => {
                     onClick: () => handleView(record), // double click row
                   };
                 }}
-                 />
+              />
             </TabPane>
             <TabPane tab="Operating Acount" key="3">
               <Table
