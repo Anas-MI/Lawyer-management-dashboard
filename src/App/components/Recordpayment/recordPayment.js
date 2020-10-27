@@ -57,8 +57,6 @@ class Record extends React.Component {
         const { balance, _id } = account.data.data
         let total = 0;
         this.state.payment.map((value) => total = total + parseFloat(value));
-        console.log(balance, '.balance')
-        console.log(total, ' ......total')
         if (balance - total >= 0) {
             api.post(`/account/edit/${_id}`, { balance: parseFloat(balance) - total })
             api.post(`/account/edit/${this.state.data.destination}`, { balance: parseFloat(destination.data.data.balance) + total })

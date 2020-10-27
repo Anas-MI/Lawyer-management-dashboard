@@ -213,6 +213,10 @@ const Accounts = (props) => {
     },
     {
       title: 'Balance',
+      dataIndex: 'balance',
+    },
+    {
+      title: 'Opening Balance',
       dataIndex: 'openingBalance',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.openingBalance - b.openingBalance,
@@ -276,6 +280,10 @@ const Accounts = (props) => {
     },
     {
       title: 'Balance',
+      dataIndex: 'balance',
+    },
+    {
+      title: 'Opening Balance',
       dataIndex: 'openingBalance',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.openingBalance - b.openingBalance,
