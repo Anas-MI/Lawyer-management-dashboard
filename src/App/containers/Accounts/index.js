@@ -12,7 +12,7 @@ import 'jspdf-autotable';
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
 
-const Accounts = () => {
+const Accounts = (props) => {
   const history = useHistory()
   const [state, setState] = useState([])
   const [Loading, setLoading] = useState(true)
@@ -39,6 +39,7 @@ const Accounts = () => {
             accountName: value.accountName,
             accountHolder : value.contactId ? value.contactId.firstName + " " + value.contactId.lastName : "-",
             currency: value.currency,
+            balance : value.balance,
             openingBalance: value.openingBalance,
             default: value.defaultAccount ? "Yes" : "No",
             type : value.type
@@ -141,6 +142,10 @@ const Accounts = () => {
     },
     {
       title: 'Balance',
+      dataIndex: 'balance',
+    },
+    {
+      title: 'Opening Balance',
       dataIndex: 'openingBalance',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.openingBalance - b.openingBalance,
@@ -336,6 +341,10 @@ const Accounts = () => {
      setActive(key)
      console.log(Active)
   }
+
+  const handleView = (record) => {
+    props.history.push('/account/statements', record._id)
+  }
   return (
     <>
       <Spin size="large" spinning={Loading}>
@@ -365,6 +374,11 @@ const Accounts = () => {
               <Table
                 className="table-responsive"
                 columns={columns}
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: () => handleView(record), // double click row
+                  };
+                }}
                 dataSource={
                   dataSrc.length === 0 && value === '' ? state : dataSrc
                 } />
@@ -373,12 +387,23 @@ const Accounts = () => {
               <Table
                 className="table-responsive"
                 columns={columns2}
-                dataSource={trustAccount} />
+                dataSource={trustAccount}
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: () => handleView(record), // double click row
+                  };
+                }}
+                 />
             </TabPane>
             <TabPane tab="Operating Acount" key="3">
               <Table
                 className="table-responsive"
                 columns={columns3}
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: () => handleView(record), // double click row
+                  };
+                }}
                 dataSource={operatingAccount} />
             </TabPane>
           </Tabs>

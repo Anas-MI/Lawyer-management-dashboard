@@ -53,18 +53,33 @@ class Record extends React.Component {
     }
     async checkBalance() {
         const account = await api.get(`/account/view/${this.state.data.source}`)
-        const {balance, _id} = account.data.data
+        const destination = await api.get(`/account/view/${this.state.data.destination}`)
+        const { balance, _id } = account.data.data
         let total = 0;
-        this.state.payment.map((value)=> total = total + parseFloat(value) );
-        console.log(balance , '.balance')
-        console.log(total,' ......total')
-        if(balance - total >= 0){
-            api.post(`/account/edit/${_id}`, {balance  : parseFloat(balance) - total } )
-            api.post(`/account/edit/${this.state.data.destination}`, {balance  : parseFloat(balance) + total } )
+        this.state.payment.map((value) => total = total + parseFloat(value));
+        console.log(balance, '.balance')
+        console.log(total, ' ......total')
+        if (balance - total >= 0) {
+            api.post(`/account/edit/${_id}`, { balance: parseFloat(balance) - total })
+            api.post(`/account/edit/${this.state.data.destination}`, { balance: parseFloat(destination.data.data.balance) + total })
+            const source_log = {
+                accountId: _id,
+                before: balance,
+                after: parseFloat(balance) - total,
+                userId : this.props.userId
+            }
+            const destination_log = {
+                accountId: this.state.data.destination,
+                before: destination.data.data.balance,
+                after: parseFloat(destination.data.data.balance) + total,
+                userId : this.props.userId
+            }
+            api.post('logs/create', source_log)
+            api.post('logs/create', destination_log)
             return true
         }
         notification.error({ message: "Source account has Insufficient balance" })
-        this.setState({disabled: false})
+        this.setState({ disabled: false })
         return false
     }
     render() {
@@ -165,7 +180,7 @@ class Record extends React.Component {
             console.log(this.state)
 
         }
-        const handleSubmit = async(e) => {
+        const handleSubmit = async (e) => {
             notification.destroy()
             if (this.state.data.client === "" || this.state.data.source === "Select a client") {
                 notification.error({ message: "Please select a client" })
@@ -181,7 +196,6 @@ class Record extends React.Component {
                 })
                 if (await this.checkBalance()) {
                     this.state.clientData.map((value, id) => {
-
                         const data = value
                         data.lastSeen = new Date()
                         if (this.state.fromTotal) {
@@ -212,7 +226,7 @@ class Record extends React.Component {
                         console.log(res)
                         this.props.history.goBack()
                     })
-                    
+
                 }
             }
         }

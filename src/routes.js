@@ -146,7 +146,7 @@ const viewSubscription = React.lazy(() => import('./App/containers/SubscriptionM
 
 
 const Target = React.lazy(() => import('./App/containers/Target'));
-
+const Statement = React.lazy(() => import('./App/containers/Accounts/Statement'));
 export const adminRoutes = [
   {
     path: '/admin/dashboard',
@@ -296,6 +296,12 @@ const routes = [
     exact: true,
     name: 'Basic Button',
     component: UIBasicButton,
+  },
+  {
+    path: '/account/statements',
+    exact: true,
+    name: 'Account Statement',
+    component: Statement,
   },
   {
     path: '/basic/badges',
