@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, notification, Button, Popconfirm, Spin, Space, Card } from 'antd';
-import { } from 'react-bootstrap'
+import { Modal, Form } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 import api from '../../../resources/api'
 import { useSelector } from 'react-redux'
@@ -17,21 +17,32 @@ const Accounts = (props) => {
   const [state, setState] = useState([])
   const [Loading, setLoading] = useState(true)
   const userId = useSelector((state) => state.user.token.user._id);
+  const [disable, setdisable] = useState(false)
   const [value, setValue] = useState('');
   const [dataSrc, setDataSrc] = useState([]);
   const [showNameInput, setShowNameInput] = useState(false);
   const [trustAccount, settrustAccount] = useState([])
   const [operatingAccount, setoperatingAccount] = useState([])
   const [Active, setActive] = useState(0)
+  const [show, setShow] = useState(false);
+  const [accounts, setaccounts] = useState([])
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [log, setlog] = useState({
+    destination: "",
+    source: "",
+    amount: ""
+  })
 
   const fetchAccount = () => {
+    setLoading(true)
     api
       .get('/account/viewforuser/' + userId)
       .then((res) => {
         let tableData = []
         let secound = []
         let third = []
-        console.log(res, '.........')
+        setaccounts(res.data.data)
         res.data.data.map((value, index) => {
           const data = {
             _id: value._id,
@@ -382,9 +393,62 @@ const Accounts = (props) => {
     setActive(key)
     console.log(Active)
   }
-
+  const handleChange = (e) => {
+    e.persist()
+    const { name, id, value } = e.target
+    setlog({ ...log, [name]: value })
+    console.log(log)
+  }
   const handleView = (record) => {
     props.history.push('/account/statements', record._id)
+  }
+
+  const checkBalance = async () => {
+    setdisable(true)
+    const account = await api.get(`/account/view/${log.source}`)
+    const destination = await api.get(`/account/view/${log.destination}`)
+    const { balance, _id } = account.data.data
+    if (balance - parseFloat(log.amount) >= 0) {
+      api.post(`/account/edit/${_id}`, { balance: parseFloat(balance) - parseFloat(log.amount) })
+      api.post(`/account/edit/${log.destination}`, { balance: parseFloat(destination.data.data.balance) + parseFloat(log.amount) })
+      const source_log = {
+        accountId: _id,
+        before: balance,
+        after: parseFloat(balance) - parseFloat(log.amount),
+        userId: userId
+      }
+      const destination_log = {
+        accountId: log.destination,
+        before: destination.data.data.balance,
+        after: parseFloat(destination.data.data.balance) + parseFloat(log.amount),
+        userId: userId
+      }
+      api.post('logs/create', source_log)
+      api.post('logs/create', destination_log)
+      return true
+    }
+    notification.error({ message: "Source account has Insufficient balance" })
+    setdisable(false)
+    handleClose()
+    fetchAccount()
+    return false
+  }
+  const handleSubmit = async() => {
+    if (log.source === "" || log.source === "Select a Source") {
+      return notification.warning({ message: "Please select a source account" })
+    }
+    if (log.destination === "" || log.destination === "Select a Destination") {
+      return notification.warning({ message: "Please select a destination account" })
+    }
+    if (log.amount === "" || log.amount == "0") {
+      return notification.warning({ message: "Please provide a valid amount" })
+    }
+    if (await checkBalance()) {
+      notification.success({ message: "Log added successfully" })
+      setdisable(false)
+      handleClose()
+      fetchAccount()
+    }
   }
   return (
     <>
@@ -406,7 +470,13 @@ const Accounts = (props) => {
               onClick={() => { history.push('/add/accounts', Active) }}
             >
               Add Account
-                  </button>
+            </button>
+            <button
+              className="btn  btn-outline-primary   btn-sm"
+              onClick={handleShow}
+            >
+              Add log
+            </button>
           </div>
         </div>
         <Card>
@@ -448,10 +518,64 @@ const Accounts = (props) => {
                 dataSource={operatingAccount} />
             </TabPane>
           </Tabs>
-
         </Card>
-      </Spin>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="source">
+                <Form.Label>Source</Form.Label>
+                <Form.Control
+                  name="source"
+                  as="select"
+                  onChange={handleChange}>
+                  <option>Select a Source</option>
+                  {
+                    accounts.map((account, index) => {
+                      if (account.type === "Client Account" || account.type === "Trust Account")
+                        return <option value={account._id} id={index}>{account.accountName}</option>
+                    })
+                  }
 
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="destinaation">
+                <Form.Label>Destination</Form.Label>
+                <Form.Control
+                  name="destination"
+                  as="select"
+                  onChange={handleChange}>
+                  <option>Select a Destination</option>
+                  {accounts.map((account, index) => {
+                    if (account.type === "Operating Account")
+                      return <option value={account._id} id={index}>{account.accountName}</option>
+                  })}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="amount">
+                <Form.Label>Amount</Form.Label>
+                <Form.Control
+                  name="amount"
+                  type="text"
+                  placeholder="Amount"
+                  onChange={handleChange}>
+                </Form.Control>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+          </Button>
+            <Button disabled={disable} variant="primary" onClick={handleSubmit}>
+              Save Changes
+          </Button>
+          </Modal.Footer>
+        </Modal>
+
+      </Spin>
     </>
   )
 }
