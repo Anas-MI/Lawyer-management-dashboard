@@ -69,8 +69,6 @@ class footer extends React.Component{
                 this.setState({disabled : false})
                 this.componentDidMount()
                 notification.success({ message: 'Data Updated.' });
-                
-              
               })
               .catch( (err)=>{
                 console.log(err)
