@@ -147,6 +147,8 @@ const viewSubscription = React.lazy(() => import('./App/containers/SubscriptionM
 
 const Target = React.lazy(() => import('./App/containers/Target'));
 const Statement = React.lazy(() => import('./App/containers/Accounts/Statement'));
+const AddEditFAQ = React.lazy(() => import('./App/components/AddEditFAQ/index'));
+
 export const adminRoutes = [
   {
     path: '/admin/dashboard',
@@ -199,7 +201,12 @@ export const adminRoutes = [
     name: 'Manage Features',
     component: FeaturesManage,
   },
-
+  {
+    path: '/manage/FAQ',
+    exact: true,
+    name: 'Manage FAQ',
+    component: AddEditFAQ,
+  },
   {
     path: '/manage/plans',
     exact: true,

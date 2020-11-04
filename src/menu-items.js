@@ -69,6 +69,13 @@ export const navigation = {
               url: '/manage/footer',
             },
             {
+              id: 'FAQ',
+              title: 'FAQ',
+              type: 'item',
+              icon: 'feather icon-users',
+              url: '/manage/FAQ',
+            },
+            {
               id: 'About',
               title: 'About',
               type: 'item',
