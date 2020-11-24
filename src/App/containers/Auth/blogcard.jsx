@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Footer from '../../components/HomePage/footer';
 import Navigation from '../../components/HomePage/navigation';
-import { apiUrl } from '../../../resources/api';
+import api , { apiUrl } from '../../../resources/api';
 import Contactimg from '../../components/img/Lawyer-Blog.png';
 
 import axios from 'axios';
@@ -9,6 +9,7 @@ import axios from 'axios';
 class Blogcard extends Component {
   state = {
     blogs: [],
+    data: {}
   };
 
   componentDidMount() {
@@ -18,6 +19,14 @@ class Blogcard extends Component {
       })
     );
     console.log(this.state.blogs);
+    api.get(`/footer/showall/`).then((res) => {
+      if (!res.data.data[res.data.data.length - 1].blogTitle) {
+          res.data.data[res.data.data.length - 1].blogTitle = ""
+      }
+      this.setState({
+          ...this.state, data: res.data.data[res.data.data.length - 1]
+      })
+  })
   }
 
   render() {
@@ -34,9 +43,7 @@ class Blogcard extends Component {
               <div className="banner-text col-lg-8 p-5 section-title">
                 <h2 className="text-center">Blog</h2>
                 <p className="pt-3 text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-                  molestias aspernatur libero nulla, qui repellendus commodi id
-                  a deserunt magnam.
+                  {this.state.data.blogTitle}
                 </p>
               </div>
               <div className="banner-img col-lg-4">

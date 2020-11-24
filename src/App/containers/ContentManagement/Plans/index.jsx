@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space,Popconfirm, message, notification,Card } from "antd";
+import { Table, Button, Input, Space, Popconfirm, message, notification, Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import Highlighter from "react-highlight-words";
+import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { getPlans, deletePlan, selectPlan } from "../../../../store/Actions";
+import api from "../../../../resources/api";
 
 const PlansManage = (props) => {
   const dispatch = useDispatch();
   const [tableData, setTableData] = useState([]);
-
+  const [data, setdata] = useState({})
   //Search Related
   const [state, setState] = useState({});
 
@@ -20,10 +22,19 @@ const PlansManage = (props) => {
   }, [plans]);
 
   useEffect(() => {
-    dispatch(getPlans(null,(err,response)=>{
-      if(err){
+    api.get(`/footer/showall/`).then((res) => {
+      if (!res.data.data[res.data.data.length - 1].subscriptionTitle) {
+        res.data.data[res.data.data.length - 1].subscriptionTitle = ""
+      }
+      setdata(res.data.data[res.data.data.length - 1])
+    })
+  }, []);
+
+  useEffect(() => {
+    dispatch(getPlans(null, (err, response) => {
+      if (err) {
         notification.error(err)
-      }else{
+      } else {
         notification.success(response)
       }
     }));
@@ -31,6 +42,7 @@ const PlansManage = (props) => {
   const cancel = (e) => {
     message.error('Canceled');
   }
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -38,39 +50,39 @@ const PlansManage = (props) => {
       confirm,
       clearFilters,
     }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={(node) => {
-            // console.log('Node',node)
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={(node) => {
+              // console.log('Node',node)
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: "block" }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
           </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
+            <Button
+              onClick={() => handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
           </Button>
-        </Space>
-      </div>
-    ),
+          </Space>
+        </div>
+      ),
     filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
@@ -96,8 +108,8 @@ const PlansManage = (props) => {
           textToHighlight={text.toString()}
         />
       ) : (
-        text
-      ),
+          text
+        ),
   });
 
   const handleAddNew = () => {
@@ -111,10 +123,10 @@ const PlansManage = (props) => {
   };
 
   const handleDelete = (record) => {
-    dispatch(deletePlan({ id: record._id },(err,response)=>{
-      if(err){
+    dispatch(deletePlan({ id: record._id }, (err, response) => {
+      if (err) {
         notification.error(err)
-      }else{
+      } else {
         notification.success(response)
       }
     }));
@@ -163,16 +175,16 @@ const PlansManage = (props) => {
       render: (_, record) => {
         return (
           <Popconfirm
-          title="Are you sure you want to delete this Plan ?"
-          onConfirm={() => handleDelete(record)}
-          onCancel={() => cancel()}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button danger>
-            Delete
+            title="Are you sure you want to delete this Plan ?"
+            onConfirm={() => handleDelete(record)}
+            onCancel={() => cancel()}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger>
+              Delete
           </Button>
-        </Popconfirm>
+          </Popconfirm>
         );
       },
     },
@@ -190,25 +202,56 @@ const PlansManage = (props) => {
     clearFilters();
     setState({ searchText: "" });
   };
+  const handleChange = (e) => {
+    setdata({
+      ...data,
+      subscriptionTitle: e.target.value
+    })
+  }
+  const handleDescription = () => {
+    notification.destroy()
+    api.post(`footer/edit/${data._id}`, data).then((res) => {
+      console.log(res)
+      notification.success({ message: "Changes saved" })
+    }).catch((err) => {
+      notification.error({ message: "Please try again later." })
+    })
+
+  }
 
   return (
     <div>
+      <div style={{ margin: "1%" }}>
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            name="description"
+            as="textarea"
+            placeholder="Description"
+            value={data['subscriptionTitle']}
+            onChange={handleChange}
+          />
+        </Form.Group>
+      </div>
+      <div className='p-2 '>
+        <Button className='ml-auto' color='success' onClick={handleDescription}>Save Changes</Button>
+      </div>
       <div className='p-2 '>
         <Button className='ml-auto' color='success' onClick={handleAddNew}>Add New</Button>
       </div>
       <Card bodyStyle={{ padding: '0px' }} className="overflow-auto">
-      <Table className="overflow-auto"
-        dataSource={tableData}
-        columns={columns}
-        onRow={(record, rowIndex) => {
-          return {
-            onDoubleClick: (event) => {}, // double click row
-            onContextMenu: (event) => {}, // right button click row
-            onMouseEnter: (event) => {}, // mouse enter row
-            onMouseLeave: (event) => {}, // mouse leave row
-          };
-        }}
-      ></Table>
+        <Table className="overflow-auto"
+          dataSource={tableData}
+          columns={columns}
+          onRow={(record, rowIndex) => {
+            return {
+              onDoubleClick: (event) => { }, // double click row
+              onContextMenu: (event) => { }, // right button click row
+              onMouseEnter: (event) => { }, // mouse enter row
+              onMouseLeave: (event) => { }, // mouse leave row
+            };
+          }}
+        ></Table>
       </Card>
     </div>
   );
