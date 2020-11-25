@@ -18,9 +18,9 @@ class AboutUs extends Component {
     }
   }
   componentDidMount() {
-    api.get("/footer/getaboutus").then(data => {
-      console.log(data.data.data[0])
-      let savedData = data.data.data[0];
+    api.get("/aboutus/showall").then(data => {
+      //console.log(data.data.data[0])
+      let savedData = data.data.data[data.data.data.length - 1];
       this.setState({ ...savedData });
       console.log(this.statem, '.....about us')
     }).catch(error => {
@@ -48,7 +48,7 @@ class AboutUs extends Component {
                 </p>
               </div>
               <div className="banner-img col-lg-4">
-                <img src={this.state.banner} width="90%" alt="Banner Img" />
+                <img src={this.state.image} width="90%" alt="Banner Img" />
               </div>
             </div>
           </div>

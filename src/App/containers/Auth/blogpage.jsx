@@ -55,7 +55,6 @@ class blogpage extends Component{
                         ) : ('')
                     ))
                     }
-                        
                     </div>
                 </div>
             </div>
