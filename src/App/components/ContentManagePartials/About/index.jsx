@@ -22,13 +22,25 @@ const EditAbout = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [display, setDisplay] = useState(false);
   const [error, setError] = useState({});
-
+  const [disabled, setdisabled] = useState(false)
   //image url
   const [image, setImage] = useState('');
 
   const dispatch = useDispatch();
   const selectedBlog = useSelector((state) => state.Blog.selected);
 
+  const fetch = () => {
+    api.get("/aboutus/showall").then(data => {
+      console.log(data.data.data[data.data.data.length - 1])
+      let savedData = data.data.data[data.data.data.length - 1];
+      setState({
+        title: savedData.title,
+        description: savedData.description,
+        image: savedData.image
+      })
+      console.log({ state })
+    })
+  }
   useEffect(() => {
     // if (!selectedBlog) {
     //   setEditMode(false);
@@ -36,12 +48,7 @@ const EditAbout = (props) => {
     //   setState({ ...selectedBlog });
     //   setEditMode(true);
     // }
-    api.get("/aboutus/showall").then(data => {
-      console.log(data.data.data[data.data.data.length - 1])
-      let savedData = data.data.data[data.data.data.length - 1];
-      setState({ ...savedData });
-      console.log({ state })
-    })
+    fetch()
   }, []);
 
 
@@ -123,38 +130,55 @@ const EditAbout = (props) => {
         message: 'Fields Should Not Be Empty',
       });
     } else {
+      setdisabled(true);
+      if (state.imageFile) {
+        //console.log("image")
+        const files = state.imageFile;
+        const uploadData = new FormData();
+        uploadData.append('image', files);
+        console.log('data ', uploadData);
+        api
+          .post(`/footer/upload`, uploadData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+          })
+          .then((newresult) => {
+            console.log(newresult);
+            api
+              .post('/aboutus/create', { ...state, image: newresult.data.message })
+              .then((result) => {
+                // image upload to the server
+                console.log({ result })
+                notification.success({ message: "Changes Saved!" })
+                fetch()
+                setdisabled(false);
+              })
+              .catch((err) => {
+                console.log({ err });
+                notification.error({ message: "Please try again later!" })
+                setdisabled(false);
 
-      const files = state.imageFile;
-      const uploadData = new FormData();
-      uploadData.append('image', files);
-      console.log('data ', uploadData);
-      api
-        .post(`/footer/upload`, uploadData, {
-          headers: {
-            'content-type': 'multipart/form-data',
-          },
-        })
-        .then((newresult) => {
-          console.log(newresult);
-          api
-            .post('/aboutus/create', { ...state, image: newresult.data.message })
-            .then((result) => {
-              // image upload to the server
-              console.log({ result })
-              notification.success({ message: "Changes Saved!" })
+              });
+          });
 
-            })
-            .catch((err) => {
-              console.log({ err });
-              notification.error({ message: "Please try again later!" })
-            });
-        });
+      } else {
+        //console.log("not image")
+        api
+          .post('/aboutus/create', { ...state })
+          .then((result) => {
+            // image upload to the server
+            console.log({ result })
+            setdisabled(false);
+            notification.success({ message: "Changes Saved!" })
 
-
-
-
-
-
+          })
+          .catch((err) => {
+            setdisabled(false);
+            console.log({ err });
+            notification.error({ message: "Please try again later!" })
+          });
+      }
     }
     // props.history.goBack();
   }
@@ -166,7 +190,6 @@ const EditAbout = (props) => {
 
   return (
     <>
-      {console.log({ state })}
       <Card>
         <h3 className="text-center">Edit About Page</h3>
         <div className="banner-img col-lg-4">
@@ -194,9 +217,9 @@ const EditAbout = (props) => {
             <p className="help-block text-danger">{error.title}</p>
           </Form.Group>
             Description
-          <CKEditor data={state["description"] ? state["description"].toString() : ""} onChange={evt => setState((st) => ({ ...st, ["description"]: evt.editor.getData() }))} />
+          <CKEditor data={state.description} onChange={evt => setState((st) => ({ ...st, ["description"]: evt.editor.getData() }))} />
           <p className="help-block text-danger">{error.description}</p>
-          <Button onClick={handleSubmit}>Save</Button>
+          <Button disabled={disabled} onClick={handleSubmit}>Save</Button>
         </Form>
       </Card>
     </>
