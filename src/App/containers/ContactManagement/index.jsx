@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Table, Button, Input, Space, notification, Card , Popconfirm , Spin} from 'antd';
+import { Table, Button, Input, Space, notification, Card, Popconfirm, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Highlighter from 'react-highlight-words';
@@ -50,11 +50,11 @@ const ContactsManage = (props) => {
   useEffect(() => {
     dispatch(getBlogs());
   }, []); */
-  
+
   async function fetchEventData() {
     response = await api.get('/contact/viewforuser/' + userId);
     company = await api.get('/company/viewforuser/' + userId);
-    
+
     setTable();
   }
   useEffect(() => {
@@ -78,7 +78,7 @@ const ContactsManage = (props) => {
       newtableData.push(data);
       setcontactData(newtableData);
     });
-    console.log(company)
+    //console.log(company)
     company.data.data.map((value, id) => {
       let key = id;
       const data = {
@@ -86,7 +86,7 @@ const ContactsManage = (props) => {
         _id: value._id,
         billingCustomRate: value.billingCustomRate,
         emailAddress: value.emailAddress.map((value) => {
-          if(value != null ){
+          if (value != null) {
             return value.emailType + ' : ' + value.emailAddress + ' ,\n '
           }
         }),
@@ -96,16 +96,16 @@ const ContactsManage = (props) => {
       setcompanyData(newtableData);
     });
     const nav = window.localStorage.getItem('company')
-    if(nav === "true"){
+    if (nav === "true") {
       setState({ tableData: companyData });
       setType('company')
-    }else{
+    } else {
       setState({ tableData: contactData });
       setType('contact')
     }
-    
+
     window.localStorage.setItem('company', "false")
-    
+
   };
 
   //   const handleciSelect = (record) => {
@@ -137,7 +137,7 @@ const ContactsManage = (props) => {
 
   const handleEdit = (record) => {
     //   dispatch(selectBlog(record))
- 
+
     if (type === 'contact') {
       props.history.push('/edit/contact', record);
     } else if (type === 'company') {
@@ -148,28 +148,43 @@ const ContactsManage = (props) => {
   const handleDelete = (record) => {
 
     if (type === 'contact') {
-      api
-        .get('/contact/delete/' + record._id)
-        .then(() =>{
-          //fetchEventData()
-          notification.success({ message: 'Contact deleted.' })
-        }
-        )
-        .catch(() => notification.error({ message: 'Failed to delete' }));
+      api.get('/matter/viewforuser/' + userId)
+        .then((res) => {
+          console.log(res)
+
+          const matters = res.data.data.filter((item) => {
+            if (item.client && item.client._id === record._id)
+              return item
+          })
+          console.log(matters.length)
+          if (matters.length != 0)
+            return notification.warning({ message: "This contact cannot be deleted since it has a assoiated matter with it" })
+
+          api
+            .get('/contact/delete/' + record._id)
+            .then(() => {
+              //fetchEventData()
+              window.location.reload();
+              notification.success({ message: 'Contact deleted.' })
+            }
+            )
+            .catch(() => notification.error({ message: 'Failed to delete' }));
+        })
     } else if (type === 'company') {
       api
         .get('/company/delete/' + record._id)
-        .then(() => notification.success({ message: 'Company deleted.' }))
+        .then(() => {
+          window.location.reload();
+          notification.success({ message: 'Company deleted.' })
+        })
         .catch(() => notification.error({ message: 'Failed to delete' }));
     }
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+
   };
   const FilterByNameInput = (
     <div>
       <SearchOutlined
-      style={{"vertical-align": "revert"}}
+        style={{ "vertical-align": "revert" }}
         onClick={() => {
           var dump =
             showNameInput === false
@@ -177,10 +192,10 @@ const ContactsManage = (props) => {
               : setShowNameInput(false);
         }}
       />
-      <span style={{paddingLeft : "8px"}}> Name </span>
+      <span style={{ paddingLeft: "8px" }}> Name </span>
 
       {showNameInput && (
-        <div style={{paddingTop : "10px"}}>
+        <div style={{ paddingTop: "10px" }}>
           <input
             placeholder="Search"
             value={value}
@@ -248,7 +263,7 @@ const ContactsManage = (props) => {
 
       render: (text) => (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0}}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[value]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -304,16 +319,16 @@ const ContactsManage = (props) => {
       render: (_, record) => {
         return (
           <Popconfirm
-          title="Are you sure delete this contact?"
-          onConfirm={() => handleDelete(record)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button danger>
-            Delete
+            title="Are you sure delete this contact?"
+            onConfirm={() => handleDelete(record)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger>
+              Delete
           </Button>
-        </Popconfirm>
-          
+          </Popconfirm>
+
         );
       },
     },
@@ -357,76 +372,76 @@ const ContactsManage = (props) => {
     doc.save('contact.pdf');
   };
   return (
-    <Spin size = "large" spinning={Loading}>
-      
+    <Spin size="large" spinning={Loading}>
+
       <div className="d-flex mb-2 title-component-header">
-            <div className="title-header-name">
-              <h5>Contacts</h5>
-            </div>
-            <div className="d-flex extra-iteam-div">
-                <button
-                    className="btn  btn-outline-primary   btn-sm"
-                    onClick={exportPDF}
-                >
-                    Export to Pdf
+        <div className="title-header-name">
+          <h5>Contacts</h5>
+        </div>
+        <div className="d-flex extra-iteam-div">
+          <button
+            className="btn  btn-outline-primary   btn-sm"
+            onClick={exportPDF}
+          >
+            Export to Pdf
                 </button>
-                <ExportExcel dataSource={state.tableData || []} />
-            </div> 
+          <ExportExcel dataSource={state.tableData || []} />
+        </div>
       </div>
       <Card>
-        <div className = "d-flex justify-content-between give-box-direction">
+        <div className="d-flex justify-content-between give-box-direction">
           <div>
-          <Button
-            color="success"
-            style={{"margin": "0 10px 10px 0"}}
-            onClick={() => setTableData('Person')}
-          >
-            Person
+            <Button
+              color="success"
+              style={{ "margin": "0 10px 10px 0" }}
+              onClick={() => setTableData('Person')}
+            >
+              Person
           </Button>
-          <Button
-            color="success"
-            style={{"margin": "0 10px 10px 0"}}
-            onClick={() => setTableData('Company')}
-          >
-            Company
+            <Button
+              color="success"
+              style={{ "margin": "0 10px 10px 0" }}
+              onClick={() => setTableData('Company')}
+            >
+              Company
           </Button>
           </div>
           <div>
             <Button
               color="success"
-              style={{"margin": "0 10px 10px 0"}}
+              style={{ "margin": "0 10px 10px 0" }}
               onClick={() => handleAddNew('Person')}
             >
               Add Person
             </Button>
             <Button
               color="success"
-              style={{"margin": "0 10px 10px 0"}}
+              style={{ "margin": "0 10px 10px 0" }}
               onClick={() => handleAddNew('Company')}
             >
               Add Company
             </Button>
           </div>
         </div>
-      <Table
-        className = "table-responsive"
-        dataSource={
-          dataSrc.length === 0 && value === '' ? state.tableData : dataSrc
-        }
-        columns={columns}
-        onRow={(record, rowIndex) => {
-          return {
-            onDoubleClick: () => handleView(record), // double click row
-            onContextMenu: (event) => {}, // right button click row
-            onMouseEnter: (event) => {}, // mouse enter row
-            onMouseLeave: (event) => {}, // mouse leave row
-          };
-        }}
-      ></Table>
-    </Card>
-  
+        <Table
+          className="table-responsive"
+          dataSource={
+            dataSrc.length === 0 && value === '' ? state.tableData : dataSrc
+          }
+          columns={columns}
+          onRow={(record, rowIndex) => {
+            return {
+              onDoubleClick: () => handleView(record), // double click row
+              onContextMenu: (event) => { }, // right button click row
+              onMouseEnter: (event) => { }, // mouse enter row
+              onMouseLeave: (event) => { }, // mouse leave row
+            };
+          }}
+        ></Table>
+      </Card>
+
     </Spin>
-    );
+  );
 };
 
 export default ContactsManage;

@@ -37,6 +37,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         color: #04a9f5;
     }
 }
+.form-minus{
+    span{
+        cursor: pointer;
+        font-weight: 600;
+        color: #04a9f5;
+    }
+}
 .form-width{
     width: 75% !important;
 }
@@ -48,6 +55,17 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     height: 20px;
     font-size: 12px;
     padding: 1px 5px;
+    border-radius: 50%;
+    background-color: #04a9f5;
+    color: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.form-minus::before {
+    content: "-";
+    height: 20px;
+    font-size: 12px;
+    padding: 1px 6px;
     border-radius: 50%;
     background-color: #04a9f5;
     color: #fff;
