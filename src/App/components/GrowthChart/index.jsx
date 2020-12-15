@@ -43,7 +43,7 @@
                     res.data.data.map((val, index)=>{
                         const date = new Date(val.created_at)
                     
-                        if(date >= month.date && date < months[num + 1].date)
+                        if(date >= month.date && months[num + 1] && date < months[num + 1].date)
                             {
                                 value ++                      
                             }
