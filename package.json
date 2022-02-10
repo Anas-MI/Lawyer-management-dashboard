@@ -68,7 +68,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react-to-print": "^2.1.1",
     "sass-loader": "^8.0.2"
   }
